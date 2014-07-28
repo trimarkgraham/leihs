@@ -37,39 +37,12 @@
 
         .float-right= render :partial => "manage/users/hand_over/selection"
 
-    #lines.padding-inset-m.padding-top-xxs= render :partial => "manage/lines/grouped_lines_with_action_date", :locals => {:grouped_lines_by_date => @grouped_lines_by_date, :line_partial => "manage/lines/hand_over"}
+    #lines
+      .padding-inset-m.padding-top-xxs= render :partial => "manage/lines/grouped_lines_with_action_date", :locals => {:grouped_lines_by_date => @grouped_lines_by_date, :line_partial => "manage/lines/hand_over"}
 
 :coffeescript
 
-  jQuery ->
-
-    App.User.addRecord new App.User $.extend {groupIds: #{@group_ids}}, #{@user.to_json}
-
-    for purpose in #{@purposes.to_json}
-      if purpose != null
-        App.Purpose.addRecord new App.Purpose purpose 
-
-    App.Contract.addRecord new App.Contract #{@contract.to_json}
-
-    for model in #{@models.to_json}
-      App.Model.addRecord new App.Model model
-
-    for software in #{@software.to_json}
-      App.Software.addRecord new App.Software software
-
-    for option in #{@options.to_json}
-      App.Option.addRecord new App.Option option
-
-    for contract_line in #{@lines.to_json}
-      App.ContractLine.addRecord new App.ContractLine contract_line
-
-    for item in #{@items.to_json}
-      App.Item.addRecord new App.Item item
-
-    for license in #{@licenses.to_json}
-      App.License.addRecord new App.License license
-
-    new App.HandOverController
+    new App.TestHandOverController
       el: "#hand-over-view"
-      user: App.User.find(#{@user.id})
-      contract: App.Contract.find #{@contract.id}
+      contract_id: "#{@contract.id}"
+      user_id: "#{@user.id}"
