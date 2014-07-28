@@ -37,8 +37,7 @@
 
         .float-right= render :partial => "manage/users/hand_over/selection"
 
-    #lines
-      .padding-inset-m.padding-top-xxs= render :partial => "manage/lines/grouped_lines_with_action_date", :locals => {:grouped_lines_by_date => @grouped_lines_by_date, :line_partial => "manage/lines/hand_over"}
+    #lines.padding-inset-m.padding-top-xxs= render :partial => "manage/lines/grouped_lines_with_action_date", :locals => {:grouped_lines_by_date => @grouped_lines_by_date, :line_partial => "manage/lines/hand_over"}
 
 :coffeescript
 

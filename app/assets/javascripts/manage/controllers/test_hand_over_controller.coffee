@@ -22,12 +22,15 @@ class window.App.TestHandOverController extends Spine.Controller
       code: inventoryCode
       contract_id: @contract_id
 
-    .done((data) => @el.find("#lines").load("/manage/1/users/#{@user_id}/hand_over #lines"))
+    .done (data) =>
+      $.get "/manage/1/users/#{@user_id}/hand_over", { partial: true }
+      .done (data) =>
+        @el.find("#lines").html data
 
     .error((e) =>
       App.Flash
-          type: "error"
-          message: e.responseText)
+        type: "error"
+        message: e.responseText)
 
     @input.val("")
 
