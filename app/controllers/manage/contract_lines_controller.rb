@@ -151,7 +151,22 @@ class Manage::ContractLinesController < Manage::ApplicationController
     end
     
     if @error.blank?
-      render :status => :ok, :json => line
+      if params[:partial]
+        set_shared_visit_variables 0 do
+          @contract = @user.get_approved_contract(current_inventory_pool)
+          @lines = @contract.lines.includes([:purpose, :model])
+          @models = @contract.models.where(type: :Model)
+          @software = @contract.models.where(type: :Software)
+          @options = @contract.options  
+          @items = @contract.items.items
+          @licenses = @contract.items.licenses
+        end
+        @start_date, @end_date = @grouped_lines.keys.sort.first || [Date.today, Date.today]
+        add_visitor(@user)
+        render :partial => "manage/lines/grouped_lines_with_action_date", :locals => {:grouped_lines_by_date => @grouped_lines_by_date, :line_partial => "manage/lines/hand_over"}
+      else
+        render :status => :ok, :json => line
+      end
     else
       render :status => :bad_request, :text => @error
     end
@@ -238,6 +253,25 @@ class Manage::ContractLinesController < Manage::ApplicationController
     contract_line.purpose = Purpose.where(id: purpose_id).first
     contract_line.save!
     return contract_line
+  end
+
+  def set_shared_visit_variables(date_index)
+    @user = User.find(params[:user_id]) if params[:user_id]
+    @group_ids = @user.group_ids
+    yield
+    @grouped_lines = @lines.group_by{|g| [g.start_date, g.end_date]}
+    @grouped_lines.each_pair do |k,lines|
+      @grouped_lines[k] = lines.sort_by{|line| [line.model.name, line.id]}
+    end
+    @count_today = @grouped_lines.keys.select{|range| range[date_index] == Date.today}.length
+    @count_future = @grouped_lines.keys.select{|range| range[date_index] > Date.today}.length
+    @count_overdue = @grouped_lines.keys.select{|range| range[date_index] < Date.today}.length
+    @purposes = @lines.map(&:purpose).uniq
+    @grouped_lines_by_date = []
+    @grouped_lines.each_pair do |range, lines|
+      @grouped_lines_by_date.push({:date => range[date_index], :grouped_lines => {range => lines}})
+    end
+    @grouped_lines_by_date = @grouped_lines_by_date.sort_by{|g| g[:date]}
   end
 
 end

@@ -16,21 +16,13 @@ class window.App.TestHandOverController extends Spine.Controller
 
     return false unless inventoryCode.length
 
-    App.ContractLine.assignOrCreate
+    @el.find("#lines").load "/manage/#{App.InventoryPool.current.id}/contract_lines/assign_or_create",
       start_date: @getStartDate().format("YYYY-MM-DD")
       end_date: @getEndDate().format("YYYY-MM-DD")
       code: inventoryCode
       contract_id: @contract_id
-
-    .done (data) =>
-      $.get "/manage/1/users/#{@user_id}/hand_over", { partial: true }
-      .done (data) =>
-        @el.find("#lines").html data
-
-    .error((e) =>
-      App.Flash
-        type: "error"
-        message: e.responseText)
+      user_id: @user_id
+      partial: true
 
     @input.val("")
 

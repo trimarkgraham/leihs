@@ -318,11 +318,6 @@ class Manage::UsersController < Manage::ApplicationController
     end
     @start_date, @end_date = @grouped_lines.keys.sort.first || [Date.today, Date.today]
     add_visitor(@user)
-
-    if params[:partial]
-      render :partial => "manage/lines/grouped_lines_with_action_date", :locals => {:grouped_lines_by_date => @grouped_lines_by_date, :line_partial => "manage/lines/hand_over"}
-      return
-    end
   end
 
   def take_back
