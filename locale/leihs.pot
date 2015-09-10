@@ -2883,3 +2883,12 @@ msgstr ""
 
 msgid "Hide this field from all item forms"
 msgstr ""
+
+msgid "activerecord.errors.models.model.attributes.product.blank"
+msgstr ""
+
+msgid "activerecord.errors.models.model.attributes.product.empty"
+msgstr ""
+
+msgid "product"
+msgstr ""
