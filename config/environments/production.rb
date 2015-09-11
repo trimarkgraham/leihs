@@ -75,6 +75,4 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.gettext_i18n_rails.use_for_active_record_attributes = false
-
 end

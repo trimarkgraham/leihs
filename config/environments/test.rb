@@ -43,6 +43,4 @@ Rails.application.configure do
   # Access to rack session
   config.middleware.use RackSessionAccess::Middleware
 
-  config.gettext_i18n_rails.use_for_active_record_attributes = false
-
 end
