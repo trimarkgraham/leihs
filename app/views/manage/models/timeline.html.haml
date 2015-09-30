@@ -28,8 +28,8 @@
   # iterate through model reservations and prepare necessary parameters to construct events inside with Timeline
   def reservations_to_events(av)
     events = {}
-    av.document_lines.each do |line|
-      line.reload # NOTE this is quick fix because we have a running_line
+    av.running_reservations.each do |line|
+      line.reload # NOTE this is quick fix because we have a running_reservation
       user = line.user
       group_id = line.allocated_group_id.to_i
   
@@ -47,9 +47,9 @@
                            :description   => begin
                               # construct the popup that is being displayed when you click on an event
                               link_string, link_path =
-                                if line.contract.status == :submitted
+                                if line.status == :submitted
                                   [ _("Acknowledge"), manage_edit_contract_path(current_inventory_pool, line.contract) ]
-                                elsif line.contract.status == :approved
+                                elsif line.status == :approved
                                   [ _("Hand Over"), manage_hand_over_path(current_inventory_pool, user) ]
                                 else
                                   [ _("Take Back"), manage_take_back_path(current_inventory_pool, user) ]

@@ -12,8 +12,6 @@ Leihs::Application.routes.draw do
   match 'authenticator/login',                      to: "authenticator/database_authentication#login", via: [:get, :post]
 
   # For RESTful_Authentication
-  match 'activate/:activation_code',  to: 'users#activate', :activation_code => nil, via: [:get, :post]
-  match 'signup',                     to: 'users#new',                               via: [:get, :post]
   match 'login',                      to: 'sessions#new', as: :login,                via: [:get, :post]
   match 'logout',                     to: 'sessions#destroy',                        via: [:get, :post]
 
@@ -31,24 +29,11 @@ Leihs::Application.routes.draw do
   # Models
   get "models/:id/image",       to: "models#image", as: "model_image"
   get "models/:id/image_thumb", to: "models#image", as: "model_image_thumb", size: :thumb
-  get "models/placeholder",     to: "models#placeholder"
 
   # Properties
   get "properties", to: "properties#index", as: "properties"
 
-  namespace :admin do
-    # Statistics
-    get "statistics", to: "statistics#show", as: "statistics"
-
-    # Database Check
-    get "database/indexes", to: "database#indexes"
-    match "database/empty_columns", to: "database#empty_columns", as: "empty_columns", via: [:get, :delete]
-    match "database/consistency", to: "database#consistency", as: "consistency", via: [:get, :delete]
-    match "database/access_rights", to: "database#access_rights", as: "access_rights", via: [:get, :post]
-
-    # Test report
-    get "scenarios", to: "scenarios#index"
-  end
+  mount LeihsAdmin::Engine => '/admin', :as => 'admin'
 
   # Borrow Section
   namespace :borrow do
@@ -71,10 +56,10 @@ Leihs::Application.routes.draw do
     get     "order",        to: "contracts#current", as: "current_order"
     post    "order",        to: "contracts#submit"
     delete  "order/remove", to: "contracts#remove"
-    post    "contract_lines",                   to: "contract_lines#create"
-    post    "contract_lines/change_time_range", to: "contract_lines#change_time_range", as: "change_time_range"
-    delete  "contract_lines/:line_id",          to: "contract_lines#destroy"
-    delete  "order/remove_lines", to: "contracts#remove_lines"
+    post    "reservations",                   to: "reservations#create"
+    post    "reservations/change_time_range", to: "reservations#change_time_range", as: "change_time_range"
+    delete  "reservations/:line_id",          to: "reservations#destroy"
+    delete  "order/remove_reservations", to: "contracts#remove_reservations"
     get     "order/timed_out", to: "contracts#timed_out"
     post    "order/delete_unavailables", to: "contracts#delete_unavailables"
     get     "orders", to: "contracts#index", as: "orders"
@@ -106,49 +91,25 @@ Leihs::Application.routes.draw do
   # Manage Section
   namespace :manage do
     root to: "application#root"
-    
-    # maintenance
-    get "maintenance", to: "application#maintenance"
-
-    # Location
-    get 'locations', to: "locations#index"
-
-    # Building
-    get 'buildings', to: "buildings#index"
-
-    # Users
-    post "users/:user_id/set_start_screen", to: "users#set_start_screen"
-
-    # # Users
-    # delete "manage/users/:id", to: "manage/users#destroy", as: "delete_manage_user"
 
     # Administrate inventory pools
-    get     'inventory_pools',          to: 'inventory_pools#index'
-    get     'inventory_pools/new',      to: 'inventory_pools#new',      as: 'new_inventory_pool'
-    post    'inventory_pools',          to: 'inventory_pools#create'
-    get     'inventory_pools/:id/edit', to: 'inventory_pools#edit',     as: 'edit_inventory_pool'
-    put     'inventory_pools/:id',      to: 'inventory_pools#update',   as: 'update_inventory_pool'
-    delete  'inventory_pools/:id',      to: 'inventory_pools#destroy',  as: 'delete_inventory_pool'
+    # get     'inventory_pools',                         to: 'inventory_pools#index'
+    # get     'inventory_pools/new',                     to: 'inventory_pools#new',      as: 'new_inventory_pool'
+    # post    'inventory_pools',                         to: 'inventory_pools#create'
+    get     'inventory_pools/:inventory_pool_id/edit', to: 'inventory_pools#edit',     as: 'edit_inventory_pool'
+    put     'inventory_pools/:inventory_pool_id',      to: 'inventory_pools#update',   as: 'update_inventory_pool'
+    # delete  'inventory_pools/:inventory_pool_id',      to: 'inventory_pools#destroy',  as: 'delete_inventory_pool'
 
-    # Export inventory of all inventory pools
-    get 'inventory/csv',              :to => "inventory#csv_export",  :as => "global_inventory_csv_export"
+    # Users
+    post 'users/:id/set_start_screen', to: 'users#set_start_screen'
 
-    # Administrate users
-    get     'users',          to: 'users#index'
-    get     'users/new',      to: 'users#new'
-    get     'users/:id/edit', to: 'users#edit',   as: 'edit_user'
-    post    'users',          to: 'users#create', as: 'create_user'
-    put     'users/:id',      to: 'users#update', as: 'update_user'
-    delete  'users/:id',      to: 'users#destroy'
-
-    # Access rights
-    get "access_rights", to: "access_rights#index"
-
-    # Administrate settings
-    get 'settings', to: 'settings#edit',    as: 'edit_settings'
-    put 'settings', to: 'settings#update',  as: 'update_settings'
+    # Locations
+    get     'locations',          to: 'locations#index'
 
     scope ":inventory_pool_id/" do
+
+      # maintenance
+      get 'maintenance', to: 'application#maintenance'
 
       ## Availability
       get 'availabilities',           to: 'availability#index', as: 'inventory_pool_availabilities'
@@ -164,17 +125,16 @@ Leihs::Application.routes.draw do
       post  "contracts/:id/reject",       to: "contracts#reject"
       post  'contracts/:id/sign',         to: "contracts#sign"
       get   'contracts/:id/edit',         to: "contracts#edit",       as: "edit_contract"
-      get   'contracts/:id/hand_over',    to: "contracts#hand_over",  as: "hand_over_contract"
       post  'contracts/:id/swap_user',    to: "contracts#swap_user"
       get   "contracts/:id/value_list",   to: "contracts#value_list", as: "value_list"
       get   "contracts/:id/picking_list", to: "contracts#picking_list", as: "picking_list"
 
       ## Visits
-      delete  'visits/hand_overs/:visit_id',        to: 'visits#destroy',   type: "hand_over", as: "inventory_pool_destroy_hand_over"
-      get     'visits/hand_overs',                  to: 'visits#index',     type: "hand_over", as: "inventory_pool_hand_overs"
-      post    'visits/take_backs/:visit_id/remind', to: 'visits#remind',    type: "take_back", as: "inventory_pool_remind_take_back"
-      get     'visits/take_backs',                  to: 'visits#index',     type: "take_back", as: "inventory_pool_take_backs"
-      get     'visits',                             to: "visits#index",                        as: "inventory_pool_visits"
+      delete  'visits/:visit_id',        to: 'visits#destroy'
+      post    'visits/:visit_id/remind', to: 'visits#remind'
+      get     'visits/hand_overs',       to: 'visits#index',     status: "approved"
+      get     'visits/take_backs',       to: 'visits#index',     status: "signed"
+      get     'visits',                  to: "visits#index",     as: "inventory_pool_visits"
 
       ## Workload
       get 'workload', to: 'inventory_pools#workload'
@@ -192,30 +152,27 @@ Leihs::Application.routes.draw do
       ## Holidays
       get 'holidays', to: "holidays#index"
 
-      ## ContractLines
-      get     "contract_lines",                        to: "contract_lines#index"
-      post    "contract_lines",                        to: "contract_lines#create"
-      delete  "contract_lines",                        to: "contract_lines#destroy"
-      post    "contract_lines/swap_user",              to: "contract_lines#swap_user"
-      post    "contract_lines/assign_or_create",       to: "contract_lines#assign_or_create"
-      post    "contract_lines/change_time_range",      to: "contract_lines#change_time_range"
-      post    "contract_lines/for_template",           to: "contract_lines#create_for_template"
-      post    "contract_lines/:id/assign",             to: "contract_lines#assign"
-      post    "contract_lines/:id/remove_assignment",  to: "contract_lines#remove_assignment"
-      put     "contract_lines/:line_id",               to: "contract_lines#update"
-      delete  "contract_lines/:line_id",               to: "contract_lines#destroy"
-      post    "contract_lines/take_back",              to: "contract_lines#take_back"
-      post    "contract_lines/print",                  to: "contract_lines#print", as: "print_contract_lines"
-
-      # Hand Over
-      get 'users/:user_id/hand_over', to: "users#hand_over", as: "hand_over"
-
-      # Take Back
-      get 'users/:user_id/take_back', to: "users#take_back", as: "take_back"
+      ## Reservations
+      get     "reservations",                        to: "reservations#index"
+      post    "reservations",                        to: "reservations#create"
+      delete  "reservations",                        to: "reservations#destroy"
+      post    "reservations/swap_user",              to: "reservations#swap_user"
+      post    "reservations/swap_model",             to: "reservations#swap_model"
+      post    "reservations/assign_or_create",       to: "reservations#assign_or_create"
+      post    "reservations/change_time_range",      to: "reservations#change_time_range"
+      post    "reservations/for_template",           to: "reservations#create_for_template"
+      post    "reservations/:id/assign",             to: "reservations#assign"
+      post    "reservations/:id/remove_assignment",  to: "reservations#remove_assignment"
+      put     "reservations/:line_id",               to: "reservations#update"
+      delete  "reservations/:line_id",               to: "reservations#destroy"
+      post    "reservations/take_back",              to: "reservations#take_back"
+      post    "reservations/print",                  to: "reservations#print", as: "print_reservations"
 
       # Inventory
       get 'inventory',                  :to => "inventory#index",       :as => "inventory"
       get 'inventory/csv',              :to => "inventory#csv_export",  :as => "inventory_csv_export"
+      get 'inventory/csv_import',       :to => "inventory#csv_import"
+      post 'inventory/csv_import',      :to => "inventory#csv_import"
       get 'inventory/helper',           :to => "inventory#helper",      :as => "inventory_helper"
       get 'inventory/:inventory_code',  :to => "inventory#show"
 
@@ -282,17 +239,21 @@ Leihs::Application.routes.draw do
 
       # Users
       get      "users",          to: "users#index",                     as: "inventory_pool_users"
-      get      "users/new",      to: "users#new_in_inventory_pool",     as: "new_inventory_pool_user"
-      post     "users",          to: "users#create_in_inventory_pool",  as: "create_inventory_pool_user"
-      get      "users/:id/edit", to: "users#edit_in_inventory_pool",    as: "edit_inventory_pool_user"
-      put      "users/:id",      to: "users#update_in_inventory_pool",  as: "update_inventory_pool_user"
-      delete   "users/:id",      to: "users#destroy"
+      get      "users/new",      to: "users#new",     as: "new_inventory_pool_user"
+      post     "users",          to: "users#create",  as: "create_inventory_pool_user"
+      get      "users/:id/edit", to: "users#edit",    as: "edit_inventory_pool_user"
+      put      "users/:id",      to: "users#update",  as: "update_inventory_pool_user"
+
+      get      'users/:id/hand_over', to: "users#hand_over", as: "hand_over"
+      get      'users/:id/take_back', to: "users#take_back", as: "take_back"
 
       # Access rights
       get "access_rights", to: "access_rights#index"
 
       # Fields
-      get 'fields', to: "fields#index", as: "fields"
+      get 'fields', to: 'fields#index', as: 'fields'
+      post 'fields/:id', to: 'fields#hide'
+      delete 'fields', to: 'fields#reset'
 
       # Search
       post 'search',               to: 'search#search',        as: "search"
@@ -305,6 +266,22 @@ Leihs::Application.routes.draw do
       get  'search/contracts',     to: "search#contracts",     as: "search_contracts"
       get  'search/orders',        to: "search#orders",        as: "search_orders"
       get  'search/options',       to: "search#options",       as: "search_options"
+
+      # Mail templates
+      get 'mail_templates', to: 'mail_templates#index'
+      get 'mail_templates/:dir/:name', to: 'mail_templates#edit'
+      put 'mail_templates/:dir/:name', to: 'mail_templates#update'
+
+      # Buildings
+      get     'buildings',          to: 'buildings#index'
+      get     'buildings/:id/edit', to: 'buildings#edit',     as: 'edit_inventory_pool_building'
+      delete  'buildings/:id',      to: 'buildings#destroy',  as: 'delete_inventory_pool_building'
+
+      # Suppliers
+      get     'suppliers',          to: 'suppliers#index'
+      get     'suppliers/:id',      to: 'suppliers#show',     as: 'inventory_pool_supplier'
+      delete  'suppliers/:id',      to: 'suppliers#destroy',  as: 'delete_inventory_pool_supplier'
+
     end
 
   end

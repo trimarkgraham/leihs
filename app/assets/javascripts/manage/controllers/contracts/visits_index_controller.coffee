@@ -13,7 +13,7 @@ class window.App.VisitsIndexController extends Spine.Controller
     @pagination = new App.ListPaginationController {el: @list, fetch: @fetch}
     @search = new App.ListSearchController {el: @el.find("#list-search"), reset: @reset}
     @range = new App.ListRangeController {el: @el.find("#list-range"), reset: @reset}
-    @tabs = new App.ListTabsController {el: @el.find("#list-tabs"), reset: @reset, data:{actions: ["hand_over", "take_back"]}}
+    @tabs = new App.ListTabsController {el: @el.find("#list-tabs"), reset: @reset, data:{status: ["approved", "signed"]}}
     do @reset
 
   reset: =>
@@ -23,7 +23,7 @@ class window.App.VisitsIndexController extends Spine.Controller
 
   fetch: (page, target)=>
     @fetchVisits(page).done =>
-      @fetchContractLines page, =>
+      @fetchReservations page, =>
         @fetchUsers(page).done =>
           @fetchPurposes page, => 
             @render target, @visits[page], page
@@ -39,12 +39,12 @@ class window.App.VisitsIndexController extends Spine.Controller
       visits = (App.Visit.find(datum.id) for datum in data)
       @visits[page] = visits
 
-  fetchContractLines: (page, callback)=>
-    ids = _.flatten _.map @visits[page], (v)-> v.contract_line_ids
+  fetchReservations: (page, callback)=>
+    ids = _.flatten _.map @visits[page], (v)-> v.reservation_ids
     do callback unless ids.length
     done = _.after Math.ceil(ids.length/300), callback
     _(ids).each_slice 300, (slice)=>
-      App.ContractLine.ajaxFetch
+      App.Reservation.ajaxFetch
         data: $.param
           ids: slice
       .done done
@@ -60,7 +60,7 @@ class window.App.VisitsIndexController extends Spine.Controller
       App.User.fetchDelegators users
 
   fetchPurposes: (page, callback)=>
-    ids = _.compact _.filter (_.map (_.flatten (_.map @visits[page], (o) -> o.lines().all())), (l) -> l.purpose_id), (id) -> not App.Purpose.exists(id)?
+    ids = _.compact _.filter (_.map (_.flatten (_.map @visits[page], (o) -> o.reservations().all())), (l) -> l.purpose_id), (id) -> not App.Purpose.exists(id)?
     do callback unless ids.length
     done = _.after Math.ceil(ids.length/300), callback
     _(ids).each_slice 300, (slice)=>

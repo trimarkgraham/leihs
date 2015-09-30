@@ -8,7 +8,7 @@
     .col2of5.text-align-right
       .modal-close {{jed "Cancel"/}}
       %button.button.green{:"data-hand-over" => true}
-        %i.icon-mail-forward
+        %i.fa.fa-mail-forward
         {{jed "Hand Over"/}}
 
   .row.margin-top-s.padding-horizontal-l
@@ -33,15 +33,11 @@
           {{if ~showAddPurpose}}
           %button#add-purpose.button.inset {{jed 'Add Purpose'/}}
           {{/if}}
-      #purpose-input.hidden
+      {{/if}}
+      #purpose-input{class: "{{if purpose}}hidden{{/if}}" }
         .row.padding-bottom-s
           %p {{jed "Please provide a purpose..."/}}
         %textarea#purpose.row.height-xs{:name => :purpose}
-      {{else}}
-      .row.padding-bottom-s
-        %p {{jed "Please provide a purpose..."/}}
-      %textarea#purpose.row.height-xs{:name => :purpose}
-      {{/if}}
 
     .modal-body
 
@@ -55,12 +51,12 @@
               {{date end_date/}}
           .col1of2.text-align-right
             %strong {{diffDatesInDays start_date end_date/}}
-        {{for lines}}
+        {{for reservations}}
         .row
           .col1of8.text-align-center
             .paragraph-s
-              {{if sublines}}
-              {{sum sublines "quantity"/}}
+              {{if subreservations}}
+              {{sum subreservations "quantity"/}}
               {{else}}
               {{> quantity}}
               {{/if}}

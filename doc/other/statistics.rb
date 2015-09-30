@@ -16,11 +16,11 @@
 
 
 
-def contracts_for(options = {:inventory_pool_id => 1, :year => 2010})
+def contracts_for(options = {inventory_pool_id: 1, year: 2010})
 
   return Contract.find(:all, 
-                       :conditions => {:created_at => Date.parse("#{options[:year]}-01-01")..Date.parse("#{options[:year]}-12-31"),
-                       :inventory_pool_id => options[:inventory_pool_id]})
+                       conditions: {created_at: Date.parse("#{options[:year]}-01-01")..Date.parse("#{options[:year]}-12-31"),
+                       inventory_pool_id: options[:inventory_pool_id]})
 end
 
 def yearly_contracts(year)
@@ -31,10 +31,10 @@ def yearly_contracts(year)
   InventoryPool.all.each do |ip|
     ip_item_total = 0
     ip_contract_total = 0
-    contracts = contracts_for(:inventory_pool_id => ip.id, :year => year)
+    contracts = contracts_for(inventory_pool_id: ip.id, year: year)
     contracts.each do |c|
       ip_contract_total += 1
-      c.lines.each do |l|
+      c.reservations.each do |l|
         ip_item_total += l.quantity
       end
     end
@@ -47,8 +47,8 @@ end
 def dump_all
   [2007, 2008, 2009, 2010, 2011].each do |year|
     data = yearly_contracts(year)
-    header = ["Geraetepark", "Jahr", "Vertraege", "Gegenstaende"]
-    save_to_file("/tmp/big_stats2.csv", data, header)
+    header = ['Geraetepark', 'Jahr', 'Vertraege', 'Gegenstaende']
+    save_to_file('/tmp/big_stats2.csv', data, header)
   end
 end
 
@@ -59,13 +59,13 @@ def csv_counts_for_year_by_user(year)
   users.each do |us|
     items = 0
     
-    if us.contracts.count > 0
-      interesting_contracts = us.contracts.find(:all, :conditions => ['YEAR(created_at) = ? AND inventory_pool_id = ?', year, 1]) 
+    if us.reservations_bundles.exists?
+      interesting_contracts = us.reservations_bundles.find(:all, conditions: ['YEAR(created_at) = ? AND inventory_pool_id = ?', year, 1])
       contract_count = interesting_contracts.size.to_i
       
       interesting_contracts.each do |co|
-        @line_count = co.lines.count
-        co.lines.each do |cl|
+        @line_count = co.reservations.count
+        co.reservations.each do |cl|
           items += cl.quantity            
         end
       end
@@ -79,11 +79,11 @@ end
 
 def save_to_file(path, data, header = nil)
   if header == nil
-    header = ["Nachname", "Vorname", "Vertraege", "Geliehene Geraete"]
+    header = ['Nachname', 'Vorname', 'Vertraege', 'Geliehene Geraete']
   end
   
   require 'csv'
-  CSV.open(path, "a", {:headers => true, :col_sep => ';', }) do |csv|
+  CSV.open(path, 'a', {headers: true, col_sep: ';', }) do |csv|
     csv << header
     data.each do |item|
       csv << item

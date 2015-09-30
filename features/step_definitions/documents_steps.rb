@@ -1,232 +1,118 @@
 # -*- encoding : utf-8 -*-
 
-When(/^ich unter meinem Benutzernamen auf "([^"]*)" klicke$/) do |arg|
-  step "ich über meinen Namen fahre"
+When(/^I click on "([^"]*)" underneath my username$/) do |arg|
+  #step "ich über meinen Namen fahre"
+  step 'I hover over my name'
   find("a[href='#{borrow_user_documents_path}']").click
 end
 
-Dann(/^gelange ich zu der Dokumentenübersichtsseite/) do
-  expect(current_path).to eq borrow_user_documents_path
-end
-
-Angenommen(/^ich befinde mich auf der Dokumentenübersichtsseite$/) do
-  visit borrow_user_documents_path
-end
-
-Dann(/^sind die Verträge nach neuestem Zeitfenster sortiert$/) do
-  dates = all("div.line-col", text: /\d{2}.\d{2}.\d{4}\s\-\s\d{2}.\d{2}.\d{4}/).map {|x| Date.parse(x.text.split.first) }
+Then(/^my contracts are ordered by the earliest time window$/) do
+  dates = all('div.line-col', text: /\d{2}.\d{2}.\d{4}\s\-\s\d{2}.\d{2}.\d{4}/).map {|x| Date.parse(x.text.split.first) }
   expect(dates.sort).to eq dates
 end
 
-Dann(/^für jede Vertrag sehe ich folgende Informationen$/) do |table|
-  contracts = @current_user.contracts.includes(:contract_lines).where(status: [:signed, :closed]).sort {|a,b| b.time_window_min <=> a.time_window_min}
+Then(/^I see the following information for each contract:$/) do |table|
+  contracts = @current_user.reservations_bundles.signed_or_closed.sort {|a,b| b.time_window_min <=> a.time_window_min}
   contracts.each do |contract|
     within(".line[data-id='#{contract.id}']") do
       table.raw.flatten.each do |s|
         case s
-          when "Vertragsnummer"
+          when 'Contract number'
             expect(has_content?(contract.id)).to be true
-          when "Zeitfenster mit von bis Datum und Dauer"
-            expect(has_content?(contract.time_window_min.strftime("%d.%m.%Y"))).to be true
-            expect(has_content?(contract.time_window_max.strftime("%d.%m.%Y"))).to be true
+          when 'Time window with its start and end'
+            expect(has_content?(contract.time_window_min.strftime('%d/%m/%Y'))).to be true
+            expect(has_content?(contract.time_window_max.strftime('%d/%m/%Y'))).to be true
             expect(has_content?((contract.time_window_max - contract.time_window_min).to_i.abs + 1)).to be true
-          when "Gerätepark"
+          when 'Inventory pool'
             expect(has_content?(contract.inventory_pool.shortname)).to be true
-          when "Zweck"
+          when 'Purpose'
             expect(has_content?(contract.purpose)).to be true
-          when "Status"
-            expect(has_content?(_("Open"))).to be true if contract.status == :signed
-          when "Vertraglink"
-            expect(has_selector?("a[href='#{borrow_user_contract_path(contract.id)}']", text: _("Contract"))).to be true
-          when "Wertelistelink"
+          when 'Status'
+            expect(has_content?(_('Open'))).to be true if contract.status == :signed
+          when 'Link to the contract'
+            expect(has_selector?("a[href='#{borrow_user_contract_path(contract.id)}']", text: _('Contract'))).to be true
+          when 'Link to the value list'
             find("a[href='#{borrow_user_contract_path(contract.id)}'] + .dropdown-holder > .dropdown-toggle").click
             expect(has_selector?("a[href='#{borrow_user_value_list_path(contract.id)}']")).to be true
             find("a[href='#{borrow_user_contract_path(contract.id)}']").click # release the previous click
           else
-            raise "unkown section"
+            raise 'unkown section'
         end
       end
     end
   end
 end
 
-Angenommen(/^ich drücke auf den Wertelistelink$/) do
-  @contract = @current_user.contracts.where(status: [:signed, :closed]).sample
+Given(/^I click the value list link$/) do
+  @contract = @current_user.reservations_bundles.signed_or_closed.order('RAND()').first
   within(".row.line[data-id='#{@contract.id}']") do
-    find(".dropdown-toggle").click
+    find('.dropdown-toggle').click
     document_window = window_opened_by do
-      click_link _("Value List")
+      click_link _('Value List')
     end
     page.driver.browser.switch_to.window(document_window.handle)
   end
 end
 
-Dann(/^öffnet sich die Werteliste$/) do
+Then(/^the value list opens$/) do
   expect(current_path).to eq borrow_user_value_list_path(@contract.id)
 end
 
-Angenommen(/^ich drücke auf den Vertraglink$/) do
-  @contract = @current_user.contracts.where(status: [:signed, :closed]).sample
+Given(/^I click the contract link$/) do
+  @contract = @current_user.reservations_bundles.signed_or_closed.order('RAND()').first
   document_window = window_opened_by do
-    find("a[href='#{borrow_user_contract_path(@contract.id)}']", text: _("Contract")).click
+    find("a[href='#{borrow_user_contract_path(@contract.id)}']", text: _('Contract')).click
   end
   page.driver.browser.switch_to.window(document_window.handle)
 end
 
-Dann(/^öffnet sich der Vertrag$/) do
+Then(/^the contract opens$/) do
   expect(current_path).to eq borrow_user_contract_path(@contract.id)
 end
 
-Wenn(/^ich eine Werteliste aus meinen Dokumenten öffne$/) do
-  @contract = @current_user.contracts.where(status: [:signed, :closed]).sample
+When(/^I open a value list from my documents$/) do
+  @contract = @current_user.reservations_bundles.signed_or_closed.order('RAND()').first
   visit borrow_user_value_list_path(@contract.id)
-  step "öffnet sich die Werteliste"
-  @list_element = find(".value_list")
+  #step "öffnet sich die Werteliste"
+  step 'the value list opens'
+  @list_element = find('.value_list')
 end
 
-Wenn(/^ich einen Vertrag aus meinen Dokumenten öffne$/) do
-  @contract = @current_user.contracts.where(status: [:signed, :closed]).sample
+When(/^I open a contract from my documents$/) do
+  @contract = @current_user.reservations_bundles.signed_or_closed.order('RAND()').first
   visit borrow_user_contract_path(@contract.id)
-  step "öffnet sich der Vertrag"
-  @contract_element = find(".contract", match: :first)
+  step 'the contract opens'
+  @contract_element = find('.contract', match: :first)
 end
 
-Wenn(/^ich einen Vertrag mit zurück gebrachten Gegenständen aus meinen Dokumenten öffne$/) do
-  @contract = @current_user.contracts.where(status: [:signed, :closed]).find {|c| c.lines.any? &:returned_to_user}
+When(/^I open a contract with returned items from my documents$/) do
+  @contract = @current_user.reservations_bundles.signed_or_closed.find {|c| c.reservations.any? &:returned_to_user}
   visit borrow_user_contract_path(@contract.id)
-  step "öffnet sich der Vertrag"
+  step 'the contract opens'
 end
 
-Dann(/^sehe ich die Werteliste genau wie im Verwalten\-Bereich$/) do
-  steps %{
-    Dann möchte ich die folgenden Bereiche in der Werteliste sehen:
-    | Bereich          |
-    | Datum            |
-    | Titel            |
-    | Ausleihender     |
-    | Verleier         |
-    | Liste            |
-    Und die Modelle in der Werteliste sind alphabetisch sortiert
-
-    Dann beinhaltet die Liste folgende Spalten:
-    | Spaltenname     |
-    | Laufende Nummer |
-    | Inventarcode    |
-    | Modellname      |
-    | End Datum       |
-    | Anzahl          |
-    | Wert            |
-
-    Dann gibt es eine Zeile für die totalen Werte
-    Und diese summierte die Spalten:
-     | Spaltenname |
-     | Anzahl      |
-     | Wert        |
-  }
+Then(/^I see the contract and it looks like in the manage section$/) do
+  expect(has_selector?('.contract')).to be true
+  # The rest is deleted: Dito, see above.
 end
 
-Dann(/^sehe ich den Vertrag genau wie im Verwalten-Bereich$/) do
-  expect(has_selector?(".contract")).to be true
-
-  steps %{
-    Dann möchte ich die folgenden Bereiche sehen:
-      | Bereich                       |
-      | Datum                         |
-      | Titel                         |
-      | Ausleihender                  |
-      | Verleier                      |
-      | Liste 1                       |
-      | Liste 2                       |
-      | Liste der Zwecke              |
-      | Zusätzliche Notiz             |
-      | Hinweis auf AGB               |
-      | Unterschrift des Ausleihenden |
-      | Seitennummer                  |
-      | Barcode                       |
-      | Vertragsnummer                |
-    Und die Modelle sind innerhalb ihrer Gruppe alphabetisch sortiert
-
-    Dann seh ich den Hinweis auf AGB "Es gelten die Ausleih- und Benutzungsreglemente des Verleihers."
-
-    Dann beinhalten Liste 1 und Liste 2 folgende Spalten:
-    | Spaltenname   |
-    | Anzahl        |
-    | Inventarcode  |
-    | Modellname    |
-    | Enddatum      |
-    | Rückgabedatum / Rücknehmende Person |
-
-    Dann sehe ich eine Liste Zwecken, getrennt durch Kommas
-     Und jeder identische Zweck ist maximal einmal aufgelistet
-
-    Dann sehe ich das heutige Datum oben rechts
-
-    Dann sehe ich den Titel im Format "Leihvertrag Nr. #"
-
-    Dann sehe ich den Barcode oben links
-
-    Dann sehe ich den Ausleihenden oben links
-
-    Dann sehe ich den Verleiher neben dem Ausleihenden
-
-    Dann möchte ich im Feld des Ausleihenden die folgenden Bereiche sehen:
-    | Bereich      |
-    | Vorname      |
-    | Nachname     |
-    | Strasse      |
-    | Hausnummer   |
-    | Länderkürzel |
-    | PLZ          |
-    | Stadt        |
-  }
-
-  not_returned_lines, returned_lines = @contract.lines.partition {|line| line.returned_date.blank? }
-
-  unless returned_lines.empty?
-    expect(@contract_element.has_content?(_("Returned Items"))).to be true
-    returned_lines.each do |line|
-      within @contract_element.find(".returned_items tbody tr", match: :prefer_exact, text: line.item.inventory_code) do
-        text = find(".returning_date").text
-        expect(text).to match (I18n.l line.returned_date)
-        expect(text).to match line.returned_to_user.short_name
-      end
-    end
-  end
-
-  unless not_returned_lines.empty?
-    expect(@contract_element.has_content?(_("Borrowed Items"))).to be true
-    within @contract_element.find(".not_returned_items tbody") do
-      not_returned_lines.each do |line|
-        within find(".inventory_code", text: line.item.inventory_code).find(:xpath, 'ancestor::tr') do
-          find(".model_name", text: line.model.name)
-          find(".returning_date", text: "")
-        end
-      end
-    end
-  end
-
-  steps %{
-    Dann wird die Adresse des Verleihers aufgeführt
-  }
-end
-
-Dann(/^sieht man bei den betroffenen Linien die rücknehmende Person im Format "V. Nachname"$/) do
-  if @contract_lines_to_take_back
-    @contract_lines_to_take_back.map(&:contract).uniq.each do |contract|
+Then(/^the relevant reservations show the person taking back the item in the format "F. Lastname"$/) do
+  if @reservations_to_take_back
+    @reservations_to_take_back.map(&:contract).uniq.each do |contract|
       new_window = window_opened_by do
         find(".button[target='_blank'][href='#{manage_contract_path(@current_inventory_pool, contract)}']").click
       end
       within_window new_window do
-        contract.lines.each do |cl|
-          find(".contract .list.returned_items tr", text: /#{cl.quantity}.*#{cl.item.inventory_code}.*#{I18n.l cl.end_date}/).find(".returning_date", text: cl.returned_to_user.short_name)
+        contract.reservations.each do |cl|
+          find('.contract .list.returned_items tr', text: /#{cl.quantity}.*#{cl.item.inventory_code}.*#{I18n.l cl.end_date}/).find('.returning_date', text: cl.returned_to_user.short_name)
         end
       end
     end
   elsif @contract
-    lines = @contract.lines.where.not(returned_date: nil)
-    expect(lines.size).to be > 0
-    lines.each do |cl|
-      find(".contract .list.returned_items tr", text: cl.item.inventory_code).find(".returning_date", text: cl.returned_to_user.short_name)
+    reservations = @contract.reservations.where.not(returned_date: nil)
+    expect(reservations.size).to be > 0
+    reservations.each do |cl|
+      find('.contract .list.returned_items tr', text: cl.item.inventory_code).find('.returning_date', text: cl.returned_to_user.short_name)
     end
   end
 end

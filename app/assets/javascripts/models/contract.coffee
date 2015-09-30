@@ -6,7 +6,7 @@
 
 class window.App.Contract extends Spine.Model
 
-  @configure "Contract", "id", "user_id", "inventory_pool_id", "status_const", "delegated_user_id"
+  @configure "Contract", "id", "user_id", "inventory_pool_id", "status", "delegated_user_id"
 
   @extend Spine.Model.Ajax
   @extend App.Modules.FindOrBuild
@@ -14,14 +14,14 @@ class window.App.Contract extends Spine.Model
 
   @belongsTo "user", "App.User", "user_id"
   @belongsTo "delegatedUser", "App.User", "delegated_user_id"
-  @hasMany "lines", "App.ContractLine", "contract_id"
+  @hasMany "reservations", "App.Reservation", "contract_id"
 
   @url: => "/contracts"
 
-  isAvailable: => _.all @.lines().all(), (line) -> line["available?"]
+  isAvailable: => _.all @.reservations().all(), (line) -> line["available?"]
 
   quantity: =>
-    _.reduce @.lines().all(), ((mem, line) -> mem + line["quantity"]), 0
+    _.reduce @.reservations().all(), ((mem, line) -> mem + line["quantity"]), 0
 
   concatenatedPurposes: =>
-    (_.uniq _.map @.lines().all(), (l)->l.purpose().description).join ", "
+    (_.uniq _.map @.reservations().all(), (l)->l.purpose().description).join ", "

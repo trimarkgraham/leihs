@@ -12,9 +12,7 @@
         .col2of6
           %h1.headline-l= _("Edit %s") % _("Order")
           %h2.headline-s.light
-            = @user
-            - if @user.suspended?(current_inventory_pool)
-              %span.darkred-text= "%s!" % _("Suspended")
+            = render partial: "manage/users/tooltip", locals: {user: @user}
           - if dg_user = @contract.delegated_user
             %h2.headline-s.light= "(#{dg_user})"
 
@@ -41,29 +39,29 @@
 
         .float-right= render :partial => "manage/contracts/edit/selection"
 
-    #lines.padding-inset-m= render :partial => "manage/lines/grouped_lines", :locals => {:grouped_lines => @grouped_lines, :line_partial => "manage/lines/order"}
+    #lines.padding-inset-m= render :partial => "manage/reservations/grouped_lines", :locals => {:grouped_lines => @grouped_lines, :line_partial => "manage/reservations/order"}
 
 :coffeescript
   
   jQuery ->
 
-    App.User.addRecord new App.User $.extend {groupIds: #{@group_ids}}, #{@user.to_json}
-    App.User.addRecord new App.User(#{@contract.delegated_user.to_json})
+    App.User.addRecord new App.User $.extend {groupIds: #{@group_ids}}, #{@user.to_json(methods: :image_url, except: :extended_info)}
+    App.User.addRecord new App.User(#{@contract.delegated_user.to_json(except: :extended_info)})
 
     for purpose in #{@purposes.to_json}
       App.Purpose.addRecord new App.Purpose purpose
 
     App.Contract.addRecord new App.Contract #{@contract.to_json}
-    App.Contract.current = App.Contract.find(#{@contract.id})
+    App.Contract.current = App.Contract.find('#{@contract.id}')
 
     for model in #{@models.to_json}
       App.Model.addRecord new App.Model model
 
-    for contract_line in #{@contract_lines.to_json}
-      App.ContractLine.addRecord new App.ContractLine contract_line
+    for reservation in #{@reservations.to_json}
+      App.Reservation.addRecord new App.Reservation reservation
 
     new App.ContractsEditController
       el: "#edit-contract-view"
-      contract: App.Contract.find #{@contract.id}
+      contract: App.Contract.find '#{@contract.id}'
       purpose: App.Purpose.find #{@purposes.first.id}
 -#                                # TODO forward all purposes ??

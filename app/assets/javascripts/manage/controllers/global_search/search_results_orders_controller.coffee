@@ -5,7 +5,6 @@ class window.App.SearchResultsOrdersController extends App.SearchResultsControll
   templatePath: "manage/views/contracts/line"
 
   constructor: ->
-    @additionalData = { accessRight: App.AccessRight, currentUserRole: App.User.current.role }
     super
     new App.LinesCellTooltipController {el: @el}
     new App.UserCellTooltipController {el: @el}
@@ -16,7 +15,7 @@ class window.App.SearchResultsOrdersController extends App.SearchResultsControll
     @fetchOrders(page).done (data)=>
       orders = (App.Contract.find datum.id for datum in data)
       @fetchUsers(orders).done =>
-        @fetchContractLines(orders).done =>
+        @fetchReservations(orders).done =>
           @fetchPurposes(orders).done =>
             do callback
 
@@ -38,15 +37,15 @@ class window.App.SearchResultsOrdersController extends App.SearchResultsControll
       users = (App.User.find datum.id for datum in data)
       App.User.fetchDelegators users
 
-  fetchContractLines: (orders)=>
+  fetchReservations: (orders)=>
     ids = _.flatten _.map orders, (r)-> r.id
     return {done: (c)->c()} unless ids.length
-    App.ContractLine.ajaxFetch
+    App.Reservation.ajaxFetch
       data: $.param
         contract_ids: ids
 
   fetchPurposes: (orders)=>
-    ids = _.compact _.filter (_.map (_.flatten (_.map orders, (o) -> o.lines().all())), (l) -> l.purpose_id), (id) -> not App.Purpose.exists(id)?
+    ids = _.compact _.filter (_.map (_.flatten (_.map orders, (o) -> o.reservations().all())), (l) -> l.purpose_id), (id) -> not App.Purpose.exists(id)?
     return {done: (c)=>c()} unless ids.length
     App.Purpose.ajaxFetch
       data: $.param

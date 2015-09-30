@@ -4,11 +4,11 @@
 
 .row.line{:"data-model_link_id" => line[:model_link_id]}
 
-  %input{:type => :hidden, :name => "lines[][model_id]", :value => line[:model_id]}
-  %input{:type => :hidden, :name => "lines[][quantity]", :value => line[:quantity]}
-  %input{:type => :hidden, :name => "lines[][start_date]", :value => line[:start_date]}
-  %input{:type => :hidden, :name => "lines[][end_date]", :value => line[:end_date]}
-  %input{:type => :hidden, :name => "lines[][inventory_pool_id]", :value => line[:inventory_pool_id]}
+  %input{:type => :hidden, :name => "reservations[][model_id]", :value => line[:model_id]}
+  %input{:type => :hidden, :name => "reservations[][quantity]", :value => line[:quantity]}
+  %input{:type => :hidden, :name => "reservations[][start_date]", :value => line[:start_date]}
+  %input{:type => :hidden, :name => "reservations[][end_date]", :value => line[:end_date]}
+  %input{:type => :hidden, :name => "reservations[][inventory_pool_id]", :value => line[:inventory_pool_id]}
 
   - if line.has_key?(:available) and not line[:available]
     .line-info.red{title: _("Not available")}
@@ -37,7 +37,7 @@
     - if line[:unborrowable]
 
       %button.button.red{:"data-destroy-template-line" => true}
-        %i.icon-trash
+        %i.fa.fa-trash
         = _("Delete")
 
     - else
@@ -49,7 +49,7 @@
                              :"data-quantity" => line[:quantity],
                              :"data-start-date" => line[:start_date],
                              :"data-end-date" => line[:end_date]}
-          %i.icon-calendar
+          %i.fa.fa-calendar
           = _("Change")
 
         .dropdown-holder.inline-block
@@ -60,5 +60,5 @@
           .dropdown.right
 
             %a.dropdown-item.red{:"data-destroy-template-line" => true}
-              %i.icon-trash
+              %i.fa.fa-trash
               = _("Delete")

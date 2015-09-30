@@ -10,8 +10,8 @@ module LineModules
 
     module ClassMethods
 
-      def grouped_and_merged_lines(lines, date = :start_date)
-        gmlines = lines.group_by do |l|
+      def grouped_and_merged_lines(reservations, date = :start_date)
+        gmlines = reservations.group_by do |l|
           case date
             when :start_date
               {start_date: l.start_date, inventory_pool: l.inventory_pool}
@@ -38,7 +38,7 @@ module LineModules
                   start_date: array.first.start_date,
                   end_date: array.first.end_date
               }
-              h[:available?] = array.all? {|l| l.available? } if array.all? {|l| l.contract.status == :unsubmitted } and array.any? {|l| l.contract.user.timeout? }
+              h[:available?] = array.all? {|l| l.available? } if array.all? {|l| l.status == :unsubmitted } and array.any? {|l| l.user.timeout? }
               h
             }
           end

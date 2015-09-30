@@ -1,6 +1,6 @@
 module Availability
 
-  ETERNITY = Date.parse("3000-01-01")
+  ETERNITY = Date.parse('3000-01-01')
 
   class Changes < Hash
 
@@ -48,50 +48,50 @@ module Availability
 #########################################################
 
   class Main
-    attr_reader :document_lines, :partitions, :changes, :inventory_pool_and_model_group_ids
+    attr_reader :running_reservations, :partitions, :changes, :inventory_pool_and_model_group_ids
 
     def initialize(attr)
       @model          = attr[:model]
       @inventory_pool = attr[:inventory_pool]
-      # we use array select instead of sql where condition to fetch once all document_lines during the same request, instead of hit the db multiple times
-      @document_lines = @inventory_pool.running_lines.select {|line| line.model_id == @model.id}
+      # we use array select instead of sql where condition to fetch once all running_reservations during the same request, instead of hit the db multiple times
+      @running_reservations = @inventory_pool.running_reservations.select {|line| line.model_id == @model.id}
       @partitions     = @inventory_pool.partitions_with_generals.hash_for_model_and_groups(@model)
       @inventory_pool_and_model_group_ids = (@inventory_pool.loaded_group_ids ||= @inventory_pool.group_ids) & @partitions.keys
 
       initial_change = {}
       @partitions.each_pair do |group_id, quantity|
-        initial_change[group_id] = {:in_quantity => quantity, :out_document_lines => {}}
+        initial_change[group_id] = {in_quantity: quantity, running_reservations: {}}
       end
       @changes = Changes[Date.today => initial_change]
 
-      @document_lines.each do |document_line|
-        document_line_group_ids = document_line.concat_group_ids.to_s.split(',').map(&:to_i) # read from the running_line
-        document_line.is_late = document_line.is_late > 0 if document_line.is_late.is_a? Fixnum # read from the running_line 
+      @running_reservations.each do |reservation|
+        reservation_group_ids = reservation.concat_group_ids.to_s.split(',').map(&:to_i) # read from the running_reservation
 
         # if overdue, extend end_date to today
         # given a reservation is running until the 24th and maintenance period is 0 days:
         # - if today is the 15th, thus the item is available again from the 25th
         # - if today is the 27th, thus the item is available again from the 28th
-        # the replacement_interval is 1 month 
-        unavailable_until = [(document_line.is_late ? Date.today + 1.month : document_line.end_date), Date.today].max + @model.maintenance_period.day
+        # the replacement_interval is 1 month
+        unavailable_until = [(reservation.is_late? ? Date.today + 1.month : reservation.end_date), Date.today].max + @model.maintenance_period.day
 
         # we don't recalculate the past
-        inner_changes = @changes.insert_changes_and_get_inner(document_line.unavailable_from, unavailable_until)
+        unavailable_from = reservation.item_id ? Date.today : [reservation.start_date, Date.today].max
+        inner_changes = @changes.insert_changes_and_get_inner(unavailable_from, unavailable_until)
 
-        # this is the order on the groups we check on:   
-        # 1. groups that this particular document_line can be possibly assigned to, TODO sort groups by quantity desc ??
+        # this is the order on the groups we check on:
+        # 1. groups that this particular reservation can be possibly assigned to, TODO sort groups by quantity desc ??
         # 2. general group
         # 3. groups which the user is not even member
-        groups_to_check = (document_line_group_ids & @inventory_pool_and_model_group_ids) + [Group::GENERAL_GROUP_ID] + (@inventory_pool_and_model_group_ids - document_line_group_ids)
+        groups_to_check = (reservation_group_ids & @inventory_pool_and_model_group_ids) + [Group::GENERAL_GROUP_ID] + (@inventory_pool_and_model_group_ids - reservation_group_ids)
         maximum = available_quantities_for_groups(groups_to_check, inner_changes)
         # if still no group has enough available quantity, we allocate to general as fallback
-        document_line.allocated_group_id = groups_to_check.detect(proc {Group::GENERAL_GROUP_ID}) {|group_id| maximum[group_id] >= document_line.quantity }
+        reservation.allocated_group_id = groups_to_check.detect(proc {Group::GENERAL_GROUP_ID}) {|group_id| maximum[group_id] >= reservation.quantity }
 
         inner_changes.each_pair do |key, ic|
-          qty = ic[document_line.allocated_group_id]
-          qty[:in_quantity]  -= document_line.quantity
-          qty[:out_document_lines]["ItemLine"] ||= []
-          qty[:out_document_lines]["ItemLine"] << document_line.id
+          qty = ic[reservation.allocated_group_id]
+          qty[:in_quantity] -= reservation.quantity
+          qty[:running_reservations]['ItemLine'] ||= []
+          qty[:running_reservations]['ItemLine'] << reservation.id
         end
       end
     end
@@ -110,7 +110,7 @@ module Availability
       Hash[@changes.sort].map do |date, change|
         total = change.values.sum{|x| x[:in_quantity]}
         groups = change.map do |g, q|
-          q.merge({:group_id => g})
+          q.merge({group_id: g})
         end
         [date, total, groups]
       end

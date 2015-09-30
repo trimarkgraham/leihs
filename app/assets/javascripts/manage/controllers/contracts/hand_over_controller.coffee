@@ -2,7 +2,7 @@ class window.App.HandOverController extends Spine.Controller
 
   elements:
     "#status": "status"
-    "#lines": "linesContainer"
+    "#lines": "reservationsContainer"
 
   events:
     "click [data-hand-over-selection]": "handOver"
@@ -15,18 +15,19 @@ class window.App.HandOverController extends Spine.Controller
       "Model": "Item"
       "Software": "License"
     do @initalFetch
-    new App.ContractLinesDestroyController {el: @el}
-    new App.ContractLineAssignItemController {el: @el}
+    new App.SwapModelController {el: @el}
+    new App.ReservationsDestroyController {el: @el}
+    new App.ReservationAssignItemController {el: @el}
     new App.TimeLineController {el: @el}
-    new App.ContractLineAssignOrCreateController {el: @el.find("#assign-or-add"), user: @user, contract: @contract}
-    new App.ContractLinesEditController {el: @el, user: @user, contract: @contract}
+    new App.ReservationAssignOrCreateController {el: @el.find("#assign-or-add"), user: @user, contract: @contract}
+    new App.ReservationsEditController {el: @el, user: @user, contract: @contract}
     new App.OptionLineChangeController {el: @el}
 
   delegateEvents: =>
     super
-    App.ContractLine.on "change destroy", (data)=> if data.option_id? then @render(true) else do @fetchAvailability
+    App.Reservation.on "change destroy", (data)=> if data.option_id? then @render(true) else do @fetchAvailability
     App.Contract.on "refresh", @fetchAvailability
-    App.ContractLine.on "update", (data)=>
+    App.Reservation.on "update", (data)=>
       fi = @fetchItems() if @notFetchedItemIds().length
       fl = @fetchLicenses() if @notFetchedLicenseIds().length
       if fi or fl
@@ -59,7 +60,7 @@ class window.App.HandOverController extends Spine.Controller
     else
       @status.html App.Render "manage/views/users/hand_over/no_handover_found"
 
-  getLines: => _.flatten _.map(@user.contracts().all(), (c)->c.lines().all())
+  getLines: => _.flatten _.map(@user.contracts().all(), (c)->c.reservations().all())
 
   fetchFunctionsSetup: (classTypePairs) =>
     # macro for providing functions like 'notFetchedItemIds' and 'fetchItems'
@@ -79,8 +80,8 @@ class window.App.HandOverController extends Spine.Controller
       this["fetch" + itemClassName + "s"] = => fetchHelper itemClassName, do this[filterFunctionName]
 
   render: (renderAvailability)=> 
-    @linesContainer.html App.Render "manage/views/lines/grouped_lines_with_action_date", App.Modules.HasLines.groupByDateRange(@getLines(), false, "start_date"), 
-      linePartial: "manage/views/lines/hand_over_line"
+    @reservationsContainer.html App.Render "manage/views/reservations/grouped_lines_with_action_date", App.Modules.HasLines.groupByDateRange(@getLines(), false, "start_date"),
+      linePartial: "manage/views/reservations/hand_over_line"
       renderAvailability: renderAvailability
     do @lineSelection.restore
 
@@ -95,12 +96,12 @@ class window.App.HandOverController extends Spine.Controller
         message: _jed('End Date cannot be in the past')
 
   swapUser: =>
-    lines = (App.ContractLine.find id for id in App.LineSelectionController.selected)
+    reservations = (App.Reservation.find id for id in App.LineSelectionController.selected)
     new App.SwapUsersController
-      lines: lines
+      reservations: reservations
 
   validate: =>
-    lines = (App.ContractLine.find id for id in App.LineSelectionController.selected)
-    _.all lines, (line)->
+    reservations = (App.Reservation.find id for id in App.LineSelectionController.selected)
+    _.all reservations, (line)->
       # checking if end_date are in the past
       not moment(line.end_date).isBefore(moment().format("YYYY-MM-DD"))

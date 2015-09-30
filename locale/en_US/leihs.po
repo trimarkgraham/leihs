@@ -258,6 +258,9 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
+msgid "Body"
+msgstr ""
+
 msgid "Book"
 msgstr ""
 
@@ -274,7 +277,9 @@ msgid "Broken"
 msgstr ""
 
 msgid "Building"
-msgstr ""
+msgid_plural "Buildings"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid ""
 "By not returning these items, you are blocking other people's reservations. "
@@ -468,7 +473,7 @@ msgstr ""
 msgid "Edit Selection"
 msgstr ""
 
-msgid "Edit multiple selected lines"
+msgid "Edit multiple selected reservations"
 msgstr ""
 
 msgid "Edit purpose for order from"
@@ -477,10 +482,13 @@ msgstr ""
 msgid "Edit this Order"
 msgstr ""
 
-msgid "Empty Username and/or Password"
+msgid "Editing mail templates for the inventory pool %s"
 msgstr ""
 
-msgid "End Date"
+msgid "Editing system-wide mail templates"
+msgstr ""
+
+msgid "Empty Username and/or Password"
 msgstr ""
 
 msgid "End date"
@@ -517,6 +525,9 @@ msgid "Finish this hand over"
 msgstr ""
 
 msgid "Finish this take back"
+msgstr ""
+
+msgid "Format"
 msgstr ""
 
 msgid "Found %d matches"
@@ -562,9 +573,6 @@ msgid "Help"
 msgstr ""
 
 msgid "Highlight available items."
-msgstr ""
-
-msgid "History"
 msgstr ""
 
 msgid "IMEI-Number"
@@ -719,6 +727,9 @@ msgstr ""
 msgid "Kind regards,"
 msgstr ""
 
+msgid "Language"
+msgstr ""
+
 msgid "Last Checked"
 msgstr ""
 
@@ -752,6 +763,12 @@ msgstr ""
 msgid "Lending Contracts No. %s"
 msgstr ""
 
+msgid "List of available variables"
+msgstr ""
+
+msgid "List of Buildings"
+msgstr ""
+
 msgid "List of Contracts"
 msgstr ""
 
@@ -776,6 +793,11 @@ msgstr ""
 msgid "Locations"
 msgstr ""
 
+msgid "%s location"
+msgid_plural "%s locations"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Location not defined"
 msgstr ""
 
@@ -791,6 +813,9 @@ msgstr ""
 msgid "MAC-Address"
 msgstr ""
 
+msgid "Mail Templates"
+msgstr ""
+
 msgid "Manufacturer"
 msgstr ""
 
@@ -801,6 +826,9 @@ msgid "Manufacturer (Z-A)"
 msgstr ""
 
 msgid "Matching Templates"
+msgstr ""
+
+msgid "Max. visits"
 msgstr ""
 
 msgid "Mobile"
@@ -915,9 +943,6 @@ msgid "%s Order"
 msgid_plural "%s Orders"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Order History"
-msgstr ""
 
 msgid "Order approved"
 msgstr ""
@@ -1211,9 +1236,6 @@ msgstr ""
 msgid "Show Availability"
 msgstr ""
 
-msgid "Show Full History"
-msgstr ""
-
 msgid "Show all %s..."
 msgstr ""
 
@@ -1238,9 +1260,6 @@ msgid "Something went wrong!"
 msgstr ""
 
 msgid "Start"
-msgstr ""
-
-msgid "Start Date"
 msgstr ""
 
 msgid "Start Date must be before End Date"
@@ -1277,6 +1296,9 @@ msgid "Successfully set."
 msgstr ""
 
 msgid "Supplier"
+msgstr ""
+
+msgid "Suppliers"
 msgstr ""
 
 msgid "Swapped %{from} for %{to}"
@@ -1415,7 +1437,7 @@ msgstr ""
 msgid "The properties have been updated."
 msgstr ""
 
-msgid "The selected lines have been moved"
+msgid "The selected reservations have been moved"
 msgstr ""
 
 msgid "The selected model is not a package"
@@ -1433,13 +1455,13 @@ msgid "These are the comments of the inventory manager:"
 msgstr ""
 
 msgid ""
-"This contract is not signable because it doesn't have any contract lines."
+"This contract is not signable because it doesn't have any contract reservations."
 msgstr ""
 
-msgid "This contract is not signable because none of the lines have a purpose."
+msgid "This contract is not signable because none of the reservations have a purpose."
 msgstr ""
 
-msgid "This contract is not signable because some lines are not assigned."
+msgid "This contract is not signable because some reservations are not assigned."
 msgstr ""
 
 msgid ""
@@ -1619,9 +1641,6 @@ msgstr ""
 msgid "Value List for Lending Contract No. %s"
 msgstr ""
 
-msgid "Value list"
-msgstr ""
-
 msgid "View %s"
 msgstr ""
 
@@ -1691,7 +1710,7 @@ msgid "You can't add a package to a package."
 msgstr ""
 
 msgid ""
-"You cannot delete all lines of an order. Perhaps you want to reject it "
+"You cannot delete all reservations of an order. Perhaps you want to reject it "
 "instead?"
 msgstr ""
 
@@ -1987,7 +2006,7 @@ msgstr ""
 msgid "while deleting hand over for"
 msgstr ""
 
-msgid "while deleting multiple order lines"
+msgid "while deleting multiple order reservations"
 msgstr ""
 
 msgid "while deleting order line for"
@@ -2002,13 +2021,13 @@ msgstr ""
 msgid "without conflict"
 msgstr ""
 
-msgid "you cannot hand out lines which are starting in the future"
+msgid "you cannot hand out reservations which are starting in the future"
 msgstr ""
 
-msgid "you cannot hand out lines which are ending in the past"
+msgid "you cannot hand out reservations which are ending in the past"
 msgstr ""
 
-msgid "you cannot hand out lines with unassigned inventory codes"
+msgid "you cannot hand out reservations with unassigned inventory codes"
 msgstr ""
 
 msgid "Helper"
@@ -2391,7 +2410,7 @@ msgid "Continue this order"
 msgstr ""
 
 msgid ""
-"Please solve the conflicts for all highlighted lines in order to continue."
+"Please solve the conflicts for all highlighted reservations in order to continue."
 msgstr ""
 
 msgid "You have permission to access the following inventory pool"
@@ -2452,9 +2471,6 @@ msgid "Availability"
 msgstr ""
 
 msgid "Entry"
-msgstr ""
-
-msgid "Delete entry"
 msgstr ""
 
 msgid "%s will be removed from the template and not been added to your order."
@@ -2921,4 +2937,10 @@ msgid "Used on the start page in the borrow section"
 msgstr ""
 
 msgid "A package item must belong to a package model"
+msgstr ""
+
+msgid "Status note"
+msgstr ""
+
+msgid "Fields"
 msgstr ""

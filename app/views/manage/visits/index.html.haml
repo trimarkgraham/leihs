@@ -14,33 +14,33 @@
       
       #list-tabs.inline-tab-navigation
 
-        %a.inline-tab-item.active{:"data-actions" => ["hand_over", "take_back"]}
+        %a.inline-tab-item{data: {status: ["approved", "signed"]}, class: (params[:status] != "approved" and params[:status] != "signed" ? "active" : nil)}
           = _("All")
 
-        %a.inline-tab-item{:"data-actions" => ["hand_over"]}
+        %a.inline-tab-item{data: {status: "approved"}, class: (params[:status] == "approved" ? "active" : nil)}
           = _("Hand Over")
 
-        %a.inline-tab-item{:"data-actions" => ["take_back"]}
+        %a.inline-tab-item{data: {status: "signed"}, class: (params[:status] == "signed" ? "active" : nil)}
           = _("Take Back")
 
       .row.margin-vertical-xs.padding-horizontal-m
 
-        .col2of6.padding-right-s
+        .col2of4.padding-right-s
           %input#list-search.width-full{type: "text", name: "input", placeholder: _("Search..."), autocomplete: :off}
 
-        #list-range.col2of6.padding-right-s
+        #list-range.col2of4.padding-right-s
           .col4of10
             %label.row
-              %input.has-addon{type: "text", name: "start_date", placeholder: _("from"), autocomplete: :off}
+              %input.has-addon{type: "text", name: "start_date", placeholder: _("from"), autocomplete: :off, value: params[:start_date]}
               %span.addon
-                %i.icon-calendar
+                %i.fa.fa-calendar
           .col1of10.text-align-center
             .padding-top-s= "-"
           .col4of10
             %label.row
-              %input.has-addon{type: "text", name: "end_date", placeholder: _("to"), autocomplete: :off}
+              %input.has-addon{type: "text", name: "end_date", placeholder: _("to"), autocomplete: :off, value: params[:end_date]}
               %span.addon
-                %i.icon-calendar
+                %i.fa.fa-calendar
 
       #visits.list-of-lines.even.separated-top.padding-bottom-s.min-height-l
         .height-s

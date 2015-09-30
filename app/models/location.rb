@@ -1,18 +1,19 @@
 class Location < ActiveRecord::Base
+  audited
 
   has_many :items, dependent: :nullify
   belongs_to :building
 
-  validates_uniqueness_of :building_id, :scope => [:room, :shelf]
+  validates_uniqueness_of :building_id, scope: [:room, :shelf]
 
   def self.find_or_create(attributes = {})
+    attributes = attributes.to_h.symbolize_keys
     attributes.delete(:id)
-    attributes.delete("id")
-    attributes["building_id"] = nil if attributes["building_id"].blank? or not Building.where(id: attributes["building_id"]).exists?
-    attributes["room"] = nil if attributes["room"].blank?
-    attributes["shelf"] = nil if attributes["shelf"].blank?
+    attributes[:building_id] = nil if attributes[:building_id].blank? or not Building.where(id: attributes[:building_id]).exists?
+    attributes[:room] = nil if attributes[:room].blank?
+    attributes[:shelf] = nil if attributes[:shelf].blank?
 
-    create_with(attributes).find_or_create_by(attributes)
+    unscoped.find_or_create_by(attributes)
   end
 
   def to_s
@@ -21,7 +22,7 @@ class Location < ActiveRecord::Base
 
 #################################################################
 
-  default_scope { includes(:building) }
+  default_scope { order(:room, :shelf).includes(:building) }
 
 #################################################################
 

@@ -1,36 +1,51 @@
-# language: de
+Feature: Availability
 
-Funktionalität: Verfügbarkeit
+  @personas
+  Scenario: Maximum availability considering groups
+    Given I am Normin
+    And the model "Kamera Nikon X12" has following partitioning in inventory pool "A-Ausleihe":
+      | group    | quantity |
+      | Cast     | 1       |
+      | IAD      | 1       |
+      | General  | 3       |
+    When I am member of group "Cast"
+    And I am not member of group "IAD"
+    Then the maximum available quantity of this model for me is 4
+    When I am member of group "IAD"
+    Then the maximum available quantity of this model for me is 5
+    When I am not member of any group
+    Then the maximum available quantity of this model for me is 3
 
+  @personas
+  Scenario: Group priorities when assigning
+    Given I am Normin
+    And the model "Kamera Nikon X12" has following partitioning in inventory pool "A-Ausleihe":
+      | group    | quantity |
+      | Cast     | 1       |
+      | IAD      | 1       |
+      | General  | 3       |
+    And I am member of group "Cast"
+    And I am member of group "IAD"
+    Then the general group is used last in assignments
 
-  @personas @personas
-  Szenario: Zuweisung einer Bestellungs-Zeile für ein Nicht-Gruppenmitglied
-    Angenommen der Kunde ist nicht in der Gruppe "CAST"
-    Und es gibt ein Modell, welches folgende Partitionen hat:
-      | gruppe    | anzahl |
-      | CAST      | 3      |
-      | Allgemein | 5      |
-    Wenn dieser Kunde das Modell bestellen möchte
-    Dann ist dieses Modell für den Kunden "5" Mal verfügbar
-    Dann ist dieses Modell für den Kunden nicht "8" Mal verfügbar
-
-  @personas @personas
-  Szenario: Zuweisung einer Bestellungs-Zeile für ein Gruppenmitglied
-    Angenommen der Kunde ist in der Gruppe "CAST"
-    Und es gibt ein Modell, welches folgende Partitionen hat:
-      | gruppe    | anzahl |
-      | CAST      | 3      |
-      | Allgemein | 5      |
-    Wenn dieser Kunde das Modell bestellen möchte
-    Dann ist dieses Modell für den Kunden "8" Mal verfügbar
-
-  @personas @personas
-  Szenario: Prioritäten der Gruppen bei der Zuweisung
-    Wenn ein Modell in mehreren Gruppen verfügbar ist
-    Dann wird zuletzt die Gruppe "Allgemein" belastet
+  @personas
+  Scenario: Splitting capacities (Group General / Another Group)
+    Given I am Normin
+    And the model "Kamera Nikon X12" has following partitioning in inventory pool "A-Ausleihe":
+      | group    | quantity |
+      | Cast     | 1       |
+      | IAD      | 1       |
+      | General  | 3       |
+    And I am member of group "Cast"
+    And I am member of group "IAD"
+    When I have 5 approved reservations for this model in this inventory pool
+    Then 1 of these reservations is allocated to group "Cast"
+    And 1 of these reservations is allocated to group "IAD"
+    And 3 of these reservations are allocated to group "General"
+    And all these reservations are available
 
   @javascript @browser @personas
-  Szenario: Keine Verfügbarkeitsberechnung bei Optionen
-    Angenommen ich bin Pius
-    Wenn eine Rücknahme nur Optionen enthält
-    Dann wird für diese Optionen keine Verfügbarkeit berechnet
+  Scenario: No availability for options
+    Given I am Pius
+    When a take back contains only options
+    Then no availability will be computed for these options

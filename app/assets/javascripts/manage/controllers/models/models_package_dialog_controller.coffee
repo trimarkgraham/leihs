@@ -27,6 +27,7 @@ class window.App.ModelsPackageDialogController extends Spine.Controller
       itemType: "item"
       forPackage: true
       writeable: true
+      hideable: false
 
   setupAutocomplete: (e)=>
     input = $ e.currentTarget
@@ -50,6 +51,7 @@ class window.App.ModelsPackageDialogController extends Spine.Controller
       data: $.param
         search_term: searchTerm
         not_packaged: true
+        packages: false
         retired: false
 
   fetchModels: (items)=>

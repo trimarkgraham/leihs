@@ -2,7 +2,7 @@ class window.App.TakeBackController extends Spine.Controller
 
   elements:
     "#status": "status"
-    "#lines": "linesContainer"
+    "#lines": "reservationsContainer"
     "form#assign": "form"
     "#assign-input": "input"
 
@@ -23,12 +23,12 @@ class window.App.TakeBackController extends Spine.Controller
       do @fetchAvailability
     do @setupAutocomplete
     new App.TimeLineController {el: @el}
-    new App.ContractLinesEditController {el: @el, user: @user, contract: @contract, startDateDisabled: true, quantityDisabled: true}
+    new App.ReservationsEditController {el: @el, user: @user, contract: @contract, startDateDisabled: true, quantityDisabled: true}
     new PreChange "[data-quantity-returned]"
 
   delegateEvents: =>
     super
-    App.ContractLine.on "refresh", @fetchAvailability
+    App.Reservation.on "refresh", @fetchAvailability
     App.Item.on "refresh", => @render(true)
 
   fetchAvailability: =>
@@ -48,19 +48,19 @@ class window.App.TakeBackController extends Spine.Controller
     else
       do done
 
-  getLines: => _.flatten _.map(@user.contracts().all(), (c)->c.lines().all())
+  getLines: => _.flatten _.map(@user.contracts().all(), (c)->c.reservations().all())
 
   render: (renderAvailability)=> 
-    @linesContainer.html App.Render "manage/views/lines/grouped_lines_with_action_date", App.Modules.HasLines.groupByDateRange(@getLines(), false, "end_date"), 
-      linePartial: "manage/views/lines/take_back_line"
+    @reservationsContainer.html App.Render "manage/views/reservations/grouped_lines_with_action_date", App.Modules.HasLines.groupByDateRange(@getLines(), false, "end_date"),
+      linePartial: "manage/views/reservations/take_back_line"
       renderAvailability: renderAvailability
     do @returnedQuantitiesController.restore
     do @lineSelection.restore
 
   takeBack: => 
     returnedQuantity = {}
-    lines = (App.ContractLine.find id for id in App.LineSelectionController.selected)
-    for line in lines
+    reservations = (App.Reservation.find id for id in App.LineSelectionController.selected)
+    for line in reservations
       if line.option_id?
         quantity = @getQuantity(line)
         if quantity == 0
@@ -70,7 +70,7 @@ class window.App.TakeBackController extends Spine.Controller
           return false
         else
           returnedQuantity[line.id] = @getQuantity(line)
-    new App.TakeBackDialogController {user: @user, lines: lines, returnedQuantity: returnedQuantity}
+    new App.TakeBackDialogController {user: @user, reservations: reservations, returnedQuantity: returnedQuantity}
 
   assign: (e)=>
     e.preventDefault() if e?
@@ -83,7 +83,7 @@ class window.App.TakeBackController extends Spine.Controller
       App.LineSelectionController.add line.id
       @increaseOption line if line.option_id
     # line for assignment not found because it was already assigned maximum possible before
-    else if App.ContractLine.findByAttribute("option_id", App.Option.findByAttribute("inventory_code", inventoryCode)?.id)
+    else if App.Reservation.findByAttribute("option_id", App.Option.findByAttribute("inventory_code", inventoryCode)?.id)
       App.Flash
         type: "error"
         message: _jed "You can not take back more options then you handed over"
@@ -128,7 +128,7 @@ class window.App.TakeBackController extends Spine.Controller
       focus: => return false
       select: @select
     .data("uiAutocomplete")._renderItem = (ul, item) => 
-      $(App.Render "manage/views/lines/assign/autocomplete_element", item).data("value", item).appendTo(ul)
+      $(App.Render "manage/views/reservations/assign/autocomplete_element", item).data("value", item).appendTo(ul)
 
   select: (e, ui)=>
     @input.val ui.item.record.inventoryCode()
@@ -138,7 +138,7 @@ class window.App.TakeBackController extends Spine.Controller
 
   changeQuantity: (e)=>
     target = $ e.currentTarget
-    line = App.ContractLine.find target.closest("[data-id]").data "id"
+    line = App.Reservation.find target.closest("[data-id]").data "id"
     App.LineSelectionController.add(line.id)
     @lineSelection.markVisitLinesController?.update App.LineSelectionController.selected
     quantity = parseInt target.val()

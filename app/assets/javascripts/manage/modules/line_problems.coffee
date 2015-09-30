@@ -6,17 +6,17 @@ window.App.Modules.LineProblems =
     problems = []
 
     if @model_id?
-      linesToExclude = if @sublines? then @sublines else [@]
-      maxAvailableForUser = @model().availability().withoutLines(linesToExclude).maxAvailableForGroups(@start_date, @end_date, @user().groupIds)
-      quantity = if @sublines? 
-        _.reduce @sublines, ((mem, l)-> mem + l.quantity), 0
+      reservationsToExclude = if @subreservations? then @subreservations else [@]
+      maxAvailableForUser = @model().availability().withoutLines(reservationsToExclude).maxAvailableForGroups(@start_date, @end_date, @user().groupIds)
+      quantity = if @subreservations?
+        _.reduce @subreservations, ((mem, l)-> mem + l.quantity), 0
       else
         @quantity
 
     # OVERDUE
-    if moment(@start_date).endOf("day").diff(moment().endOf("day"), "days") < 0 and _.include(["approved", "submitted"], @contract().status) or 
-       moment(@end_date).endOf("day").diff(moment().endOf("day"), "days") < 0 and @contract().status is "signed"
-      days = if _.include(["approved", "submitted"], @contract().status)
+    if moment(@start_date).endOf("day").diff(moment().endOf("day"), "days") < 0 and _.include(["approved", "submitted"], @status) or
+       moment(@end_date).endOf("day").diff(moment().endOf("day"), "days") < 0 and @status is "signed"
+      days = if _.include(["approved", "submitted"], @status)
         Math.abs moment(@start_date).diff(moment().endOf("day"), "days")
       else
         Math.abs moment(@end_date).diff(moment().endOf("day"), "days")
@@ -26,7 +26,7 @@ window.App.Modules.LineProblems =
 
     # AVAILABILITY
     else if maxAvailableForUser? and maxAvailableForUser < quantity
-      maxAvailableInTotal = @model().availability().withoutLines(linesToExclude, true).maxAvailableInTotal(@start_date, @end_date)
+      maxAvailableInTotal = @model().availability().withoutLines(reservationsToExclude, true).maxAvailableInTotal(@start_date, @end_date)
       problems.push 
         type: "availability"
         message: "#{_jed("Not available")} #{maxAvailableForUser}(#{maxAvailableInTotal})/#{@model().availability().total_rentable}"

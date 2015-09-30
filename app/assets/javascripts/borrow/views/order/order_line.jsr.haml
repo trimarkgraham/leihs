@@ -11,8 +11,8 @@
   .line-col.col4of9.text-align-left
 
     .col1of10.text-align-right.padding-right-s
-      {{if sublines}}
-      {{sum sublines "quantity"/}}
+      {{if subreservations}}
+      {{sum subreservations "quantity"/}}
       {{else}}
       {{> quantity}}
       {{/if}}
@@ -36,7 +36,7 @@
                            :"data-ids" => "[{{>ids}}]",
                            :"data-start-date" => "{{>start_date}}",
                            :"data-end-date" => "{{>end_date}}"}
-        %i.icon-calendar
+        %i.fa.fa-calendar
         {{jed "Change entry"/}}
 
       .dropdown-holder.inline-block
@@ -46,8 +46,8 @@
 
         .dropdown.right
 
-          %a.dropdown-item.red{:href => "/borrow/order/remove_lines?{{param ids 'line_ids'/}}",
-             :"data-confirm" => "{{jed 'Are you sure?'/}}",
+          %a.dropdown-item.red{:href => "/borrow/order/remove_reservations?{{param ids 'line_ids'/}}",
+             :"data-confirm" => "{{jed 'Delete'/}}",
              :"data-method" => :delete}
-            %i.icon-trash
+            %i.fa.fa-trash
             {{jed 'Delete'/}}

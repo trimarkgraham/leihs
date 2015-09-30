@@ -1,38 +1,39 @@
 class Borrow::TemplatesController < Borrow::ApplicationController
 
-  before_filter :only => [:availability, :show, :add_to_order, :select_dates] do
+  before_filter only: [:availability, :show, :add_to_order, :select_dates] do
     @template = current_user.templates.detect{|t| t.id == params[:id].to_i}
   end
 
   def add_to_order
-    lines = params[:lines].map do |line|
+    reservations = params[:reservations].map do |line|
       {
-        :model => Model.find_by_id(line["model_id"]),
-        :quantity => line["quantity"].to_i,
-        :start_date => Date.parse(line["start_date"]),
-        :end_date => Date.parse(line["end_date"]),
-        :inventory_pool => InventoryPool.find_by_id(line["inventory_pool_id"])
+        model: Model.find_by_id(line['model_id']),
+        quantity: line['quantity'].to_i,
+        start_date: Date.parse(line['start_date']),
+        end_date: Date.parse(line['end_date']),
+        inventory_pool: InventoryPool.find_by_id(line['inventory_pool_id'])
       }
     end
 
-    unavailable_lines, available_lines = lines.partition {|l| l[:inventory_pool].blank? or not l[:model].availability_in(l[:inventory_pool]).maximum_available_in_period_summed_for_groups(l[:start_date], l[:end_date], current_user.groups.map(&:id)) >= l[:quantity] }
+    unavailable_lines, available_lines = reservations.partition {|l| l[:inventory_pool].blank? or not l[:model].availability_in(l[:inventory_pool]).maximum_available_in_period_summed_for_groups(l[:start_date], l[:end_date], current_user.groups.map(&:id)) >= l[:quantity] }
 
     if not unavailable_lines.empty? and params[:force_continue].blank?
       availability and render :availability
     else
       available_lines.each do |l|
-        l[:model].add_to_contract(current_user.get_unsubmitted_contract(l[:inventory_pool]), current_user.id, l[:quantity], l[:start_date], l[:end_date])
+        contract = current_user.reservations_bundles.unsubmitted.find_or_initialize_by(inventory_pool_id: l[:inventory_pool].id)
+        l[:model].add_to_contract(contract, current_user, l[:quantity], l[:start_date], l[:end_date], session[:delegated_user_id])
       end
-      redirect_to borrow_current_order_path, :flash => {:success => _("The template has been added to your order.")}
+      redirect_to borrow_current_order_path, flash: {success: _('The template has been added to your order.')}
     end
   end
 
   def select_dates
     model_links = @template.model_links
     @models = @template.models
-    @lines = params[:lines].delete_if{|l| l["quantity"].to_i == 0}.map do |line|
-      model = @models.detect{|m| m.id == line["model_id"].to_i}
-      quantity = line["quantity"].to_i
+    @reservations = params[:reservations].delete_if{|l| l['quantity'].to_i == 0}.map do |line|
+      model = @models.detect{|m| m.id == line['model_id'].to_i}
+      quantity = line['quantity'].to_i
       {
         model_link_id: model_links.detect{|link| link.model_id == model.id}.id,
         template_id: @template.id,
@@ -46,11 +47,11 @@ class Borrow::TemplatesController < Borrow::ApplicationController
     unborrowable_models = @template.unaccomplishable_models current_user, 1
     model_links = @template.model_links
     @models = @template.models
-    @lines = params[:lines].delete_if{|l| l["quantity"].to_i == 0}.map do |line|
-      model = @models.detect{|m| m.id == line["model_id"].to_i}
-      quantity = line["quantity"].to_i
-      start_date = line["start_date"] ? Date.parse(line["start_date"]) : Date.parse(params[:start_date])
-      end_date = line["end_date"] ? Date.parse(line["end_date"]) : Date.parse(params[:end_date])
+    @reservations = params[:reservations].delete_if{|l| l['quantity'].to_i == 0}.map do |line|
+      model = @models.detect{|m| m.id == line['model_id'].to_i}
+      quantity = line['quantity'].to_i
+      start_date = line['start_date'] ? Date.parse(line['start_date']) : Date.parse(params[:start_date])
+      end_date = line['end_date'] ? Date.parse(line['end_date']) : Date.parse(params[:end_date])
       inventory_pool = nil
       {
         model_link_id: model_links.detect{|link| link.model_id == model.id}.id,
@@ -69,7 +70,7 @@ class Borrow::TemplatesController < Borrow::ApplicationController
         unborrowable: unborrowable_models.include?(model)
       }
     end
-    @grouped_and_merged_lines = @lines.group_by do |l|
+    @grouped_and_merged_lines = @reservations.group_by do |l|
       {start_date: l[:start_date], inventory_pool_name: InventoryPool.find_by_id(l[:inventory_pool_id]).try(&:name), inventory_pool_id: l[:inventory_pool_id]}
     end
   end

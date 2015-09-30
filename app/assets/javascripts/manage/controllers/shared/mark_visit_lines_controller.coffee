@@ -2,7 +2,7 @@
 
   Marked Lines
  
-  This script sets up functionalities for marking selected visit lines
+  This script sets up functionalities for marking selected visit reservations
   
 ###
 
@@ -18,13 +18,13 @@ class window.App.MarkVisitLinesController extends Spine.Controller
 
   markSelectedLines: (ids) =>
     for id in ids
-      cl = App.ContractLine.find(id)
+      cl = App.Reservation.find(id)
       if cl.item()
         line = @el.find(".line[data-id='#{id}']")
         line.removeClass("light").addClass("green")
       else if cl.option()
         line = @el.find(".line[data-id='#{id}']")
-        c_status = cl.contract().status
+        c_status = cl.status
         if c_status == "approved"
           line.removeClass("light").addClass("green") if Number(line.find("input[data-line-quantity]").val()) >= 1
         else if c_status == "signed"

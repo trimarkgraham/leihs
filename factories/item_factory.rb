@@ -10,6 +10,9 @@ FactoryGirl.define do
       if item.properties?
         item.properties = item.properties.with_indifferent_access
       end
+      if item.is_inventory_relevant
+        item.properties[:anschaffungskategorie] ||= 'AV-Technik'
+      end
     end
   end
 
@@ -25,17 +28,16 @@ FactoryGirl.define do
     is_incomplete 0
     is_borrowable 1
     is_inventory_relevant 1
-    properties { {anschaffungskategorie: "AV-Technik" } }
   end
 
   factory :license, class: :Item do
     shared_item_license_attributes
 
     model { FactoryGirl.create :software }
-    properties { { license_type: "single_workplace",
-                   activation_type: "serial_number",
-                   operating_system: ["windows", "linux"],
-                   installation: ["citrix", "web"],
+    properties { { license_type: 'single_workplace',
+                   activation_type: 'serial_number',
+                   operating_system: ['windows', 'linux'],
+                   installation: ['citrix', 'web'],
                    procured_by: [true, false].sample ? User.all.sample.to_s : nil
                   } }
   end

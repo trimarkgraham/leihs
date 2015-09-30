@@ -65,10 +65,10 @@ class BookingCalendar
           @resetDate el
 
   increaseDate: (el)=>
-    el.val(moment(el.val(), df).add("days", 1).format(df)).change()
+    el.val(moment(el.val(), df).add(1, "days").format(df)).change()
 
   decreaseDate: (el)=>
-    el.val(moment(el.val(), df).subtract("days", 1).format(df)).change()
+    el.val(moment(el.val(), df).subtract(1, "days").format(df)).change()
 
   validateDate: (date_el)=>
     if date_el.val().length and moment(date_el.val(), df).format(df) is date_el.val() and moment(date_el.val(), df).year() < 9999
@@ -111,8 +111,8 @@ class BookingCalendar
       dayNamesShort: BookingCalendar.local.dayNamesShort
 
   setupCalendarNavigation: =>
-    @fullcalendar.find(".fc-button-next .fc-button-content").html "<span class='icon-chevron-right'></span>"
-    @fullcalendar.find(".fc-button-prev .fc-button-content").html "<span class='icon-chevron-left'></span>"
+    @fullcalendar.find(".fc-button-next .fc-button-content").html "<span class='fa fa-chevron-right'></span>"
+    @fullcalendar.find(".fc-button-prev .fc-button-content").html "<span class='fa fa-chevron-left'></span>"
 
   setMaxQuantity: (quantity)=> 
     @quantity_el.attr "max", quantity if @limitMaxQuantity
@@ -205,22 +205,10 @@ class BookingCalendar
     if @isClosedDay date
       dayElement.addClass "closed"
 
-  closedDayValidation: =>
-    for date_el in [@startDate_el, @endDate_el]
-      date = moment(date_el.val(),df).toDate()
-      el = @getElementByDate date
-      if el # is in view
-        if @isClosedDay(date) or @holidaysBetween(@getHolidays(), date, date).length > 0
-          @addClosedDayAlert el 
+  validation: => @el.trigger "validation-alert"
 
-  isClosedDay: (date)=> 
-    @getInventoryPool().workday().closedDays().indexOf(date.getDay()) isnt -1
-
-  addClosedDayAlert: (el)=>
-    el = $(el)
-    setTimeout =>
-      @el.trigger "closed-day-alert", el
-    , 100
+  isClosedDay: (date)=>
+    @getInventoryPool().isClosedOn(moment(date))
 
   setOtherMonth: =>
     for dayElement in @fullcalendar.find(".fc-other-month")
@@ -282,19 +270,20 @@ class BookingCalendar
       dayElement.addClass "selected"
     else
       dayElement.removeClass "selected"
+    do @validation
 
   setAvailability: (dayElement, available)=>
     if available then dayElement.removeClass("unavailable").addClass("available") else dayElement.removeClass("available").addClass("unavailable")
 
   getDateByElement: (el)=>
-    return @fullcalendar.fullCalendar("getView").cellDate
+    return @fullcalendar.fullCalendar("getView").cellToDate
       col: $(el).index()
       row: $(el).parent().index()
 
   getElementByDate: (date)=>
     view = @fullcalendar.fullCalendar("getView")
     if view.visStart <= date <= view.visEnd
-      cell = view.dateCell(date)
+      cell = view.dateToCell(date)
       row = @fullcalendar.find(".fc-view > table > tbody > tr")[cell.row]
       return $(row).find("td")[cell.col]
     else
@@ -307,10 +296,10 @@ class BookingCalendar
         target.removeClass "selected_for_target_selection"
         if target.data("tooltipster") and not target.data("tooltipster").hasClass("tooltipster-dying")
           target.tooltipster("enable").tooltipster("destroy")
-    $(window).bind "click", (e)=> 
+    $(window).on "click", (e)=>
       unless $(e.target).closest(".target-selection").length
         do resetSelection
-    @fullcalendar.find(".fc-widget-content").bind "click", (e)=>
+    @fullcalendar.on "click", ".fc-widget-content", (e)=>
       date = @getDateByElement e.currentTarget
       target = $(e.currentTarget)
       if moment(date).startOf("day").diff(moment().startOf("day"), "days") < 0
@@ -333,7 +322,7 @@ class BookingCalendar
                 @startDate_el.val(moment(date).format(df)).change()
               else if $(e.currentTarget).is "#set-end-date"
                 @endDate_el.val(moment(date).format(df)).change()
-              do @closedDayValidation
+              do @validation
         target.tooltipster("enable")
         target.tooltipster("show")
         target.tooltipster("disable")

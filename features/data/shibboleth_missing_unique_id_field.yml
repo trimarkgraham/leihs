@@ -1,0 +1,8 @@
+test:
+  firstname_field: givenName
+  lastname_field: sn
+  mail_field: email
+  admin_uids:
+    - admin_user
+    - dewey
+    - louie

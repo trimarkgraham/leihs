@@ -1,11 +1,12 @@
 # -*- encoding : utf-8 -*-
 class Address < ActiveRecord::Base
+  audited
 
   geocoded_by :to_s
   
   before_save :geocode
 
-  validates_uniqueness_of :street, :scope => [:zip_code, :city, :country_code]
+  validates_uniqueness_of :street, scope: [:zip_code, :city, :country_code]
   
   def to_s
     zip = [country, zip_code].compact.join('-')

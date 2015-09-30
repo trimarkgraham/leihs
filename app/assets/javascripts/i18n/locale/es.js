@@ -159,6 +159,10 @@ window.i18n.locale_data = {
          null,
          ""
       ],
+      "Body": [
+         null,
+         ""
+      ],
       "By not returning these items, you are blocking other people's reservations. This is very unfair to the other clients and to the inventory manager, since you are causing a significant amount of trouble and annoyance.": [
          null,
          "Si no devuelve estos artículos, estará bloqueando las reservas de otras personas. Esto es muy injusto para los demás clientes y administradores de stock ya que estaría provocando un gran número de problemas y molestias."
@@ -227,6 +231,14 @@ window.i18n.locale_data = {
          null,
          ""
       ],
+      "Editing mail templates for the inventory pool %s": [
+         null,
+         ""
+      ],
+      "Editing system-wide mail templates": [
+         null,
+         ""
+      ],
       "Empty Username and/or Password": [
          null,
          "Nombre de Usuario ó Contraseña Vacios"
@@ -246,6 +258,10 @@ window.i18n.locale_data = {
       "Expected to be returned.": [
          null,
          "Se espera su devolución."
+      ],
+      "Format": [
+         null,
+         ""
       ],
       "In the interest of all our clients we ask you to observe the return dates.": [
          null,
@@ -287,6 +303,14 @@ window.i18n.locale_data = {
          null,
          "Saludos cordiales,"
       ],
+      "Language": [
+         null,
+         ""
+      ],
+      "List of available variables": [
+         null,
+         ""
+      ],
       "Loading": [
          null,
          "Cargando"
@@ -294,6 +318,10 @@ window.i18n.locale_data = {
       "Logged in successfully": [
          null,
          "Inicio de Sesión exitoso"
+      ],
+      "Mail Templates": [
+         null,
+         ""
       ],
       "Model": [
          null,
@@ -543,15 +571,15 @@ window.i18n.locale_data = {
          null,
          "Estos son los comentarios del administrador de inventario:"
       ],
-      "This contract is not signable because it doesn't have any contract lines.": [
+      "This contract is not signable because it doesn't have any contract reservations.": [
          null,
          ""
       ],
-      "This contract is not signable because none of the lines have a purpose.": [
+      "This contract is not signable because none of the reservations have a purpose.": [
          null,
          ""
       ],
-      "This contract is not signable because some lines are not assigned.": [
+      "This contract is not signable because some reservations are not assigned.": [
          null,
          ""
       ],
@@ -627,10 +655,6 @@ window.i18n.locale_data = {
          null,
          ""
       ],
-      "Value list": [
-         null,
-         "Lista de precios"
-      ],
       "Warning": [
          null,
          ""
@@ -659,7 +683,7 @@ window.i18n.locale_data = {
          null,
          ""
       ],
-      "You cannot delete all lines of an order. Perhaps you want to reject it instead?": [
+      "You cannot delete all reservations of an order. Perhaps you want to reject it instead?": [
          null,
          ""
       ],
@@ -831,11 +855,11 @@ window.i18n.locale_data = {
          null,
          ""
       ],
-      "you cannot hand out lines wich are starting in the future": [
+      "you cannot hand out reservations wich are starting in the future": [
          null,
          ""
       ],
-      "you cannot hand out lines with unassigned inventory codes": [
+      "you cannot hand out reservations with unassigned inventory codes": [
          null,
          ""
       ],

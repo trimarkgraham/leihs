@@ -7,7 +7,7 @@ class Template < ModelGroup
   # TODO 12** has_many :models through
 
   after_save do
-    raise _("Template must have at least one model") if model_links.blank?
+    raise _('Template must have at least one model') if model_links.blank?
   end
 
   def self.filter(params, inventory_pool)
@@ -20,10 +20,10 @@ class Template < ModelGroup
 
   ####################################################################################
 
-  # returns an array of contract_lines
-  def add_to_contract(contract, user_id, quantity = nil, start_date = nil, end_date = nil)
+  # returns an array of reservations
+  def add_to_contract(contract, user, _quantity = nil, start_date = nil, end_date = nil, delegated_user_id = nil)
     model_links.flat_map do |ml|
-      ml.model.add_to_contract(contract, user_id, ml.quantity, start_date, end_date)
+      ml.model.add_to_contract(contract, user, ml.quantity, start_date, end_date, delegated_user_id)
     end
   end  
   
@@ -36,7 +36,7 @@ class Template < ModelGroup
   end
 
   def unaccomplishable_models(user = nil, quantity = nil)
-    models.keep_if do |model|
+    models.to_a.keep_if do |model|
       q = quantity || model_links.detect{|l| l.model_id == model.id}.quantity
       not inventory_pools.any? do |ip|
         if user

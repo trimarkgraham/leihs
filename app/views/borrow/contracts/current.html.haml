@@ -9,8 +9,8 @@
       - if current_user.timeout? and @grouped_and_merged_lines.values.flatten.any?{|x| not x[:available?]}
         .emboss.red.padding-inset-m.text-align-center
           %strong.font-size-m
-            = _("Please solve the conflicts for all highlighted lines in order to continue.")
-      - elsif unsubmitted_contracts.flat_map(&:lines).empty?
+            = _("Please solve the conflicts for all highlighted reservations in order to continue.")
+      - elsif current_user.reservations.unsubmitted.empty?
         .emboss.padding-inset-m.text-align-center
           %h3.headline-m
             = _("Your order ist empty.")
@@ -35,13 +35,13 @@
 
           = render :partial => "borrow/contracts/unsubmitted/merged_lines", :collection => v, :as => :line
 
-    - if not unsubmitted_contracts.flat_map(&:lines).empty?
+    - if not current_user.reservations.unsubmitted.empty?
       .emboss.padding-inset-l.separated-top
         - if current_user.timeout? or @timed_out
           .row
             .col1of2
               = link_to borrow_order_remove_path, method: :delete, data: { confirm: _("The order will be discarded.") }, class: "button red" do
-                %i.icon-trash
+                %i.fa.fa-trash
                 = _("Delete %s") % _("Order")
 
             .col1of2.text-align-right
@@ -62,11 +62,11 @@
                 = _("Purpose of the order")
                 *
               %textarea.padding-inset-s.width-full{name: "purpose", placeholder: _("Specification of the purpose is required")}
-                = unsubmitted_contracts.first.purpose
+                = current_user.reservations.unsubmitted.first.purpose
             .row.padding-top-l
               .col1of2
                 = link_to borrow_order_remove_path, method: :delete, data: { confirm: _("The order will be discarded.") }, class: "button red" do
-                  %i.icon-trash
+                  %i.fa.fa-trash
                   = _("Delete %s") % _("Order")
               .col1of2.text-align-right
                 %button.button.green
@@ -74,14 +74,14 @@
 
 :coffeescript
 
-  for contract_json in #{unsubmitted_contracts.to_json}
+  for contract_json in #{current_user.reservations_bundles.unsubmitted.to_json}
     App.Contract.addRecord new App.Contract contract_json
     App.Contract.currents.push App.Contract.find(contract_json.id)
 
   App.Contract.timedOut = #{(!!@timed_out).to_json}
 
-  for contract_line in #{@lines.to_json}
-    App.ContractLine.addRecord new App.ContractLine contract_line
+  for reservation in #{current_user.reservations.unsubmitted.to_json}
+    App.Reservation.addRecord new App.Reservation reservation
 
   for model in #{@models.to_json}
     App.Model.addRecord new App.Model model

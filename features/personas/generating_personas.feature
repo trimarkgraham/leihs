@@ -12,6 +12,8 @@ Feature: Generating Personas
   @generating_personas
   Scenario: Genarating Minimal Dataset
     Given the minimal setup exists
+    And the item fields are initialized
+    Then there are 50 fields in total
     Then the minimal seed dump is generated
 
   @generating_personas
@@ -21,19 +23,19 @@ Feature: Generating Personas
 
     And the following users exist
       | firstname                 | lastname                 | email                    | language | address                                 |
-      | Gino                      | #{Faker::Name.last_name} | gino@zhdk.ch             | de-CH    |                                         |
-      | Ramon                     | #{Faker::Name.last_name} | ramon@zhdk.ch            | de-CH    |                                         |
-      | Matti                     | #{Faker::Name.last_name} | matti@zhdk.ch            | de-CH    |                                         |
-      | Mike                      | #{Faker::Name.last_name} | mike@zhdk.ch             | de-CH    |                                         |
-      | Pius                      | #{Faker::Name.last_name} | pius@zhdk.ch             | de-CH    |                                         |
-      | Normin                    | #{Faker::Name.last_name} | normin@zhdk.ch           | de-CH    |                                         |
-      | #{Faker::Name.first_name} | #{Faker::Name.last_name} | lending_manager1@zhdk.ch | de-CH    |                                         |
-      | Peter                     | Silie                    | peter@silie.com          | de-CH    |                                         |
-      | Andi                      | #{Faker::Name.last_name} | andi@zhdk.ch             | de-CH    |                                         |
-      | Mina                      | #{Faker::Name.last_name} | mina@zhdk.ch             | de-CH    |                                         |
-      | Petra                     | #{Faker::Name.last_name} | petra@zhdk.ch            | de-CH    | #{Faker::Address.street_address + ", "} |
+      | Gino                      | #{Faker::Name.last_name} | gino@zhdk.ch             | en-GB    |                                         |
+      | Ramon                     | #{Faker::Name.last_name} | ramon@zhdk.ch            | en-GB    |                                         |
+      | Matti                     | #{Faker::Name.last_name} | matti@zhdk.ch            | en-GB    |                                         |
+      | Mike                      | #{Faker::Name.last_name} | mike@zhdk.ch             | en-GB    |                                         |
+      | Pius                      | #{Faker::Name.last_name} | pius@zhdk.ch             | en-GB    |                                         |
+      | Normin                    | Normalo                  | normin@zhdk.ch           | en-GB    |                                         |
+      | #{Faker::Name.first_name} | #{Faker::Name.last_name} | lending_manager1@zhdk.ch | en-GB    |                                         |
+      | Peter                     | Silie                    | peter@silie.com          | en-GB    |                                         |
+      | Andi                      | #{Faker::Name.last_name} | andi@zhdk.ch             | en-GB    |                                         |
+      | Mina                      | #{Faker::Name.last_name} | mina@zhdk.ch             | en-GB    |                                         |
+      | Petra                     | #{Faker::Name.last_name} | petra@zhdk.ch            | en-GB    | #{Faker::Address.street_address + ", "} |
       | Julie                     | #{Faker::Name.last_name} | julie@zhdk.ch            |          |                                         |
-      | Lisa                      | #{Faker::Name.last_name} | lisa@zhdk.ch             | de-CH    |                                         |
+      | Lisa                      | #{Faker::Name.last_name} | lisa@zhdk.ch             | en-GB    |                                         |
       | #{Faker::Name.first_name} | #{Faker::Name.last_name} | customer1@zhdk.ch        |          |                                         |
       | #{Faker::Name.first_name} | #{Faker::Name.last_name} | customer2@zhdk.ch        |          |                                         |
       | #{Faker::Name.first_name} | #{Faker::Name.last_name} | customer3@zhdk.ch        |          |                                         |
@@ -116,7 +118,7 @@ Feature: Generating Personas
       | customer4@zhdk.ch        |                 | customer          | A-Ausleihe     |                   |                 |                          |
       | customer5@zhdk.ch        |                 | customer          | A-Ausleihe     |                   |                 |                          |
       | customer6@zhdk.ch        |                 | customer          | A-Ausleihe     |                   |                 |                          |
-      | customer7@zhdk.ch        |                 | customer          | A-Ausleihe     | #{Date.today}     |                 |                          |
+      | customer7@zhdk.ch        |                 | customer          | A-Ausleihe     |                   |                 |                          |
       | customer8@zhdk.ch        |                 | customer          | A-Ausleihe     |                   |                 |                          |
       | customer9@zhdk.ch        |                 | customer          | A-Ausleihe     |                   |                 |                          |
 
@@ -129,6 +131,13 @@ Feature: Generating Personas
     Then there are 43 access rights in total
 
     Then there are 6 inventory pools in total
+    Then there are 6 workdays in total
+
+    And the following workdays exist
+      | inventory pool | monday | tuesday | wednesday | thursday | friday | saturday | sunday | reservation_advance_days | max_visits                  |
+      | A-Ausleihe     | 1      | 1       | 1         | 1        | 1      | 0        | 0      | 0                        | {"1": 10, "2": 20, "3": 30} |
+
+    Then there are 6 workdays in total
 
     # NOTE we consider xxxx as this year and next year
     And the following holidays exist
@@ -278,7 +287,7 @@ Feature: Generating Personas
 
     And each of the models has from 1 to 5 accessories possibly activated for the inventory pool "A-Ausleihe"
 
-    And the following items exists:
+    And the following items exist:
       | inventory code | serial number | product name         | name       | retired       | retired reason           | is borrowable | is broken | is incomplete | inventory pool name | owner name  | location room | location shelf | building code |
       | book1          | book1         | MacBookPro           |            |               |                          |               |           |               |                     | IT-Ausleihe | SQ2           | Desk           | AU60          |
       | book2          | book2         | MacBookPro           |            |               |                          |               |           |               |                     | IT-Ausleihe | SQ2           | Desk           | AU60          |
@@ -330,7 +339,7 @@ Feature: Generating Personas
     Then there are 2 broken items in total
     Then there are 2 incomplete items in total
 
-    And the following software exist:
+    And the following software exists:
       | product       | technical detail                                 |
       | Adobe Acrobat | test http://test.ch\r\nwww.foo.ch\r\njust a text |
       | MS Word       | test http://test.ch\r\nwww.foo.ch\r\njust a text |
@@ -461,145 +470,149 @@ Feature: Generating Personas
 
     Then there are 10 partitions in total
 
-    And 1 unsubmitted contract exists
-    And 1 unsubmitted contract for user "normin@zhdk.ch" exists
+    And 3 unsubmitted contract reservation exists
+    And 3 unsubmitted contract reservation for user "normin@zhdk.ch" exists
 
-    And a submitted contract with following properties exist:
+    And all unsubmitted contract reservations are available
+    
+    And 3 to 5 submitted item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 3 to 5 item lines:
       | purpose    | Benötige ich für die Aufnahmen meiner Abschlussarbeit. |
       | start date | #{Date.today + 7.days}                                 |
       | end date   | #{Date.today + 10.days}                                |
       | model name | Kamera Nikon X12                                       |
-    And this contract has from 3 to 5 item lines:
+    And 3 to 5 submitted item reservations with following properties exists:
+      | user email          | normin@zhdk.ch |
+      | inventory pool name | A-Ausleihe     |
       | purpose    | Benötige ich für die Aufnahmen meiner Abschlussarbeit. |
       | start date | #{Date.today + 7.days}                                 |
       | end date   | #{Date.today + 10.days}                                |
       | model name | Kamera Stativ 123                                      |
 
-    And a submitted contract with following properties exist:
+    And 1 to 1 submitted item reservations with following properties exists:
       | user email          | customer6@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 1 to 1 item lines:
       | assigned   | false                 |
       | model name | Thinkpad Carbon       |
       | start date | #{Date.today}         |
       | end date   | #{Date.today + 1.day} |
 
-    And 4 submitted contracts for user "normin@zhdk.ch" exist
+    And 4 submitted contract reservations for user "normin@zhdk.ch" exist
 
     And today is "#{Time.now - rand(1..7).days}"
-    And a submitted contract with following properties exist:
+    And 3 to 5 submitted item reservations with following properties exists:
       | user email          | customer1@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 submitted item reservations with following properties exists:
+      | user email          | customer1@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
       | purpose    | Ersatzstativ für die Ausstellung. |
       | model name | MacBook Air                       |
     And today is back to initial random date
 
-    And a submitted contract with following properties exist:
+    And 3 to 5 submitted item reservations with following properties exists:
       | user email          | customer2@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 submitted item reservations with following properties exists:
+      | user email          | customer2@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
       | purpose    | Ersatzstativ für die Ausstellung. |
       | model name | Thinkpad X301                     |
 
-    And a submitted contract with following properties exist:
+    And 3 to 5 submitted item reservations with following properties exists:
       | user email          | customer3@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
 
-    And a submitted contract with following properties exist:
+    And 3 to 5 submitted item reservations with following properties exists:
       | user email          | customer4@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
 
-    And a submitted contract with following properties exist:
+    And 3 to 5 submitted item reservations with following properties exists:
       | user email          | customer5@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
 
     And today is "#{Time.now - rand(1..7).days}"
-    And a submitted contract with following properties exist:
+    And 3 to 5 submitted item reservations with following properties exists:
       | user email          | customer1@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
-    And this contract has from 2 to 2 item lines:
+    And 2 to 2 submitted item reservations with following properties exists:
+      | user email          | customer1@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
       | purpose    | Ersatzstativ für die Ausstellung. |
       | model name | Thinkpad X230                     |
     And today is back to initial random date
 
     And today is "#{Time.now - rand(1..7).days}"
-    And a submitted contract with following properties exist:
+    And 3 to 5 submitted item reservations with following properties exists:
       | user email          | customer1@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
     And today is back to initial random date
 
-    And a submitted contract with following properties exist:
+    And 1 to 1 submitted item reservations with following properties exists:
       | user email          | petra@zhdk.ch |
       | inventory pool name | A-Ausleihe    |
-    And this contract has from 1 to 1 item lines:
       | purpose    | Für meinen aktuellen Kurs. |
       | start date | #{Date.today + 7.days}     |
       | end date   | #{Date.today + 10.days}    |
       | model name | Kamera Nikon X12           |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 submitted item reservations with following properties exists:
+      | user email          | petra@zhdk.ch |
+      | inventory pool name | A-Ausleihe    |
       | purpose    | Für meinen aktuellen Kurs. |
       | start date | #{Date.today + 7.days}     |
       | end date   | #{Date.today + 10.days}    |
       | model name | Kamera Stativ 123          |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 submitted item reservations with following properties exists:
+      | user email          | petra@zhdk.ch |
+      | inventory pool name | A-Ausleihe    |
       | purpose    | Für meinen aktuellen Kurs. |
       | start date | #{Date.today + 8.days}     |
       | end date   | #{Date.today + 11.days}    |
       | model name | Kamera Stativ 123          |
 
-    And a submitted contract with following properties exist:
+    And 1 to 1 submitted item reservations with following properties exists:
       | user email          | petra@zhdk.ch |
       | inventory pool name | A-Ausleihe    |
-    And this contract has from 1 to 1 item lines:
       | purpose    | Für meinen aktuellen Kurs. |
       | start date | #{Date.today}              |
       | end date   | #{Date.today + 1.days}     |
       | model name | Ultra Compact Beamer       |
 
-    And 1 approved contract exists
+    And 1 approved contract reservation exists
 
-    And an approved contract with following properties exist:
+    And 30 to 40 approved item reservations with following properties exists:
       | user email          | customer9@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 30 to 40 item lines:
       | assigned | true |
-    And this contract has from 1 to 2 item lines:
+    And 1 to 2 approved item reservations with following properties exists:
+      | user email          | customer9@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
       | assigned | false |
 
     And today is "#{Time.now - rand(1..7).days}"
-    And a approved contract with following properties exist:
+    And 3 to 5 approved item reservations with following properties exists:
       | user email          | customer1@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 approved item reservations with following properties exists:
+      | user email          | customer1@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
       | purpose    | Ersatzstativ für die Ausstellung. |
       | model name | MacBook Air                       |
     And today is back to initial random date
 
     And today is "#{Time.now - rand(3..5).months}"
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | customer1@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 1 to 1 item lines:
       | assigned   | true                              |
       | item       | air123                            |
       | model name | MacBook Air                       |
@@ -608,50 +621,50 @@ Feature: Generating Personas
     And this contract is closed on "#{Date.today}" by "pius@zhdk.ch"
     And today is back to initial random date
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | customer8@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 1 to 1 item lines:
       | assigned | true |
-    And this contract has from 1 to 1 option lines:
+    And 1 to 1 more approved option reservations with following properties exists:
+      | user email          | customer8@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
       | quantity | 2 |
     And this contract is signed by "pius@zhdk.ch"
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved option reservations with following properties exists:
       | user email          | peter@silie.com |
       | inventory pool name | A-Ausleihe      |
-    And this contract has from 1 to 1 option lines:
       | inventory code | sandsack123       |
       | quantity       | 2                 |
       | start date     | #{Date.yesterday} |
       | end date       | #{Date.today}     |
-    And this contract has from 1 to 1 option lines:
+    And 1 to 1 more approved option reservations with following properties exists:
+      | user email          | peter@silie.com |
+      | inventory pool name | A-Ausleihe      |
       | inventory code | sandsack123             |
       | quantity       | 1                       |
       | start date     | #{Date.yesterday}       |
       | end date       | #{Date.today + 1.month} |
     And this contract is signed by "pius@zhdk.ch"
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved license reservations with following properties exists:
       | inventory pool name | A-Ausleihe |
-    And this contract has from 1 to 1 license lines:
       | assigned | true |
     And this contract is signed by "pius@zhdk.ch"
 
     And today is "#{Time.now - 5.days}"
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | inventory pool name | IT-Ausleihe |
-    And this contract has from 1 to 1 item lines:
       | start date | #{Date.today}          |
       | end date   | #{Date.today + 4.days} |
-    And this contract has from 1 to 1 option lines:
+    And 1 to 1 approved option reservations with following properties exists:
+      | inventory pool name | IT-Ausleihe |
       | start date | #{Date.today}          |
       | end date   | #{Date.today + 4.days} |
     And today is back to initial random date
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | inventory pool name | A-Ausleihe |
-    And this contract has from 1 to 1 item lines:
       | assigned       | true       |
       | inventory code | minibeam56 |
     And this contract is signed by "pius@zhdk.ch"
@@ -660,9 +673,8 @@ Feature: Generating Personas
       | retired        | #{Date.today}            |
       | retired reason | #{Faker::Lorem.sentence} |
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | inventory pool name | A-Ausleihe |
-    And this contract has from 1 to 1 item lines:
       | assigned       | true       |
       | inventory code | minibeam78 |
     And this contract is signed by "pius@zhdk.ch"
@@ -671,79 +683,89 @@ Feature: Generating Personas
       | inventory pool name | IT-Ausleihe |
       | owner name          | IT-Ausleihe |
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | customer7@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 1 to 1 item lines:
       | assigned | true |
     And this contract is signed by "pius@zhdk.ch"
     And this contract is closed on "#{Date.today}" by "pius@zhdk.ch"
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
+      | user email          | customer7@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
+      | model package name | Kamera Set2 |
+      | item               | in_stock    |
+      | assigned           | true        |
+    And this contract is signed by "pius@zhdk.ch"
+    And this contract is closed on "#{Date.today}" by "pius@zhdk.ch"
+
+    And the following access right is revoked:
+      | user email          | customer7@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
+    
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 1 to 1 item lines:
       | purpose    | Ersatzstativ für die Ausstellung. |
       | model name | Kamera Stativ 123                 |
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 1 to 1 item lines:
       | purpose    | Für das zweite Austellungswochenende. |
       | model name | Kamera Stativ 123                     |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 more approved item reservations with following properties exists:
+      | user email          | normin@zhdk.ch |
+      | inventory pool name | A-Ausleihe     |
       | purpose    | Für das zweite Austellungswochenende. |
       | model name | Sharp Beamer 123                      |
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 1 to 1 item lines:
       | purpose    | Für das dritte Austellungswochenende. |
       | start date | #{Date.today + 7.days}                |
       | end date   | #{Date.today + 8.days}                |
       | model name | Kamera Stativ 123                     |
 
-    And an approved contract with following properties exist:
+    And 3 to 3 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 3 to 3 item lines:
       | purpose    | Für die Abschlussarbeit. |
       | model name | Sharp Beamer 123         |
 
-    And an approved contract with following properties exist:
+    And 3 to 3 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 3 to 3 item lines:
       | purpose    | Ersatzstativ für die Ausstellung. |
       | model name | Kamera Nikon X12                  |
-    And this contract has from 3 to 3 item lines:
+    And 3 to 3 more approved item reservations with following properties exists:
+      | user email          | normin@zhdk.ch |
+      | inventory pool name | A-Ausleihe     |
       | purpose    | Ersatzstativ für die Ausstellung. |
       | model name | Kamera Stativ 123                 |
-    And this contract has from 1 to 1 option lines:
+    And 1 to 1 more approved option reservations with following properties exists:
+      | user email          | normin@zhdk.ch |
+      | inventory pool name | A-Ausleihe     |
       | purpose        | Ersatzstativ für die Ausstellung. |
       | inventory code | akku-aa                           |
       | quantity       | 5                                 |
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved license reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 1 to 1 license lines:
       | purpose | Bestellung mit Software |
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 1 to 1 item lines:
       | purpose       | Bestellung mit Gegenstand ohne Ort |
       | item          | owned                              |
       | item location | nil                                |
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 1 to 1 item lines:
       | assigned   | true                                       |
       | purpose    | Um meine Abschlussarbeit zu fotografieren. |
       | start date | #{Date.yesterday}                          |
@@ -753,77 +775,71 @@ Feature: Generating Personas
     And this contract is signed by "pius@zhdk.ch"
 
     And today is "#{Time.now - 5.days}"
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | lisa@zhdk.ch |
       | inventory pool name | A-Ausleihe   |
-    And this contract has from 1 to 1 item lines:
       | assigned   | true                   |
       | purpose    | Als Ersatz.            |
       | start date | #{Date.today}          |
       | end date   | #{Date.today + 4.days} |
       | model name | Inspiron 7000          |
       | item       | in_stock               |
-    And this contract has from 1 to 1 option lines:
+    And 1 to 1 more approved option reservations with following properties exists:
+      | user email          | lisa@zhdk.ch |
+      | inventory pool name | A-Ausleihe   |
       | quantity | 1 |
     And this contract is signed by "pius@zhdk.ch"
     And today is back to initial random date
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 1 to 1 item lines:
       | assigned   | true              |
       | start date | #{Date.yesterday} |
       | end date   | #{Date.today}     |
       | item       | owned             |
     And this contract is signed by "pius@zhdk.ch"
 
-    And an approved contract with following properties exist:
+    And 2 to 2 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | IT-Ausleihe    |
-    And this contract has from 1 to 1 item lines:
       | assigned   | true                                       |
       | purpose    | Um meine Abschlussarbeit zu fotografieren. |
       | start date | #{Date.yesterday}                          |
       | end date   | #{Date.today}                              |
-    And this contract has from 1 to 1 item lines:
-      | assigned         | true                                       |
-      | purpose          | Um meine Abschlussarbeit zu fotografieren. |
-      | start date       | #{Date.yesterday}                          |
-      | end date         | #{Date.today}                              |
+    And this contract is signed by "pius@zhdk.ch"
+    And 1 to 1 of these item reservations is returned:
       | returned date    | #{Date.today}                              |
       | returned to user | pius@zhdk.ch                               |
-    And this contract is signed by "pius@zhdk.ch"
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | IT-Ausleihe    |
-    And this contract has from 1 to 1 item lines:
       | assigned   | true                                       |
       | purpose    | Um meine Abschlussarbeit zu fotografieren. |
       | start date | #{Date.yesterday}                          |
       | end date   | #{Date.today}                              |
       | model name | Sharp Beamer 123                           |
       | item       | lic111                                     |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 more approved item reservations with following properties exists:
+      | user email          | normin@zhdk.ch |
+      | inventory pool name | IT-Ausleihe    |
       | assigned | true    |
       | item     | beam749 |
     And this contract is signed by "pius@zhdk.ch"
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved license reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | IT-Ausleihe    |
-    And this contract has from 1 to 1 license lines:
       | assigned   | true              |
       | start date | #{Date.yesterday} |
       | end date   | #{Date.today}     |
       | item       | owned             |
     And this contract is signed by "pius@zhdk.ch"
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved license reservations with following properties exists:
       | user email          | normin@zhdk.ch |
       | inventory pool name | A-Ausleihe     |
-    And this contract has from 1 to 1 license lines:
       | assigned           | true              |
       | purpose            | Paketausgabe      |
       | start date         | #{Date.yesterday} |
@@ -832,59 +848,58 @@ Feature: Generating Personas
       | item               | in_stock          |
     And this contract is signed by "pius@zhdk.ch"
 
-    And a approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | petra@zhdk.ch |
       | inventory pool name | A-Ausleihe    |
-    And this contract has from 1 to 1 item lines:
       | purpose    | Ersatzstativ für die Ausstellung. |
       | start date | #{Date.yesterday - 1.day}         |
       | end date   | #{Date.today + 1.day}             |
       | model name | Sharp Beamer 123                  |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 more approved item reservations with following properties exists:
+      | user email          | petra@zhdk.ch |
+      | inventory pool name | A-Ausleihe    |
       | purpose    | Ersatzstativ für die Ausstellung. |
       | start date | #{Date.yesterday - 1.day}         |
       | end date   | #{Date.today + 1.day}             |
 
-    And a submitted contract with following properties exist:
+    And 1 to 1 submitted item reservations with following properties exists:
       | user email          | lisa@zhdk.ch |
       | inventory pool name | A-Ausleihe   |
-    And this contract has from 1 to 1 item lines:
       | assigned         | false                                             |
       | purpose          | Ganz dringend benötigt für meine Abschlussarbeit. |
       | model name       | Thinkpad Carbon                                   |
       | soft overbooking | true                                              |
 
-    And an approved contract with following properties exist:
+    And 1 to 1 approved item reservations with following properties exists:
       | user email          | petra@zhdk.ch |
       | inventory pool name | A-Ausleihe    |
-    And this contract has from 1 to 1 item lines:
       | assigned   | true                                       |
       | purpose    | Um meine Abschlussarbeit zu fotografieren. |
       | start date | #{Date.yesterday}                          |
       | end date   | #{Date.today}                              |
       | model name | Sharp Beamer 123                           |
       | item       | in_stock                                   |
-    And this contract has from 1 to 1 option lines:
+    And 1 to 1 more approved option reservations with following properties exists:
+      | user email          | petra@zhdk.ch |
+      | inventory pool name | A-Ausleihe    |
       | purpose        | Um meine Abschlussarbeit zu fotografieren. |
       | inventory code | akku-aa                                    |
       | start date     | #{Date.yesterday}                          |
       | end date       | #{Date.today}                              |
     And this contract is signed by "pius@zhdk.ch"
 
-    And a submitted contract with following properties exist:
+    And 1 to 1 submitted item reservations with following properties exists:
       | user email          | lisa@zhdk.ch |
       | inventory pool name | A-Ausleihe   |
-    And this contract has from 1 to 1 item lines:
       | assigned   | false                           |
       | purpose    | Fotoshooting (Kurs Fotografie). |
       | start date | #{Date.today + 37.days}         |
       | end date   | #{Date.today + 45.days}         |
       | model name | Kamera Nikon X12                |
 
-    And a submitted contract with following properties exist:
+    And 1 to 1 submitted item reservations with following properties exists:
       | user email          | lisa@zhdk.ch |
       | inventory pool name | A-Ausleihe   |
-    And this contract has from 1 to 1 item lines:
       | assigned         | false                                 |
       | purpose          | Brauche ich zwingend für meinen Kurs. |
       | start date       | #{Date.today + 52.days}               |
@@ -892,60 +907,60 @@ Feature: Generating Personas
       | model name       | Kamera Nikon X12                      |
       | real overbooking | true                                  |
 
-    And a submitted contract with following properties exist:
+    And 3 to 5 submitted item reservations with following properties exists:
       | delegation name      | Delegation 1 |
       | delegated user email | mina@zhdk.ch |
       | inventory pool name  | A-Ausleihe   |
-    And this contract has from 3 to 5 item lines:
       | assigned | false |
 
-    And an approved contract with following properties exist:
+    And 3 to 5 approved item reservations with following properties exists:
       | delegation name      | Delegation 1  |
       | delegated user email | julie@zhdk.ch |
       | inventory pool name  | A-Ausleihe    |
-    And this contract has from 3 to 5 item lines:
       | assigned   | false         |
       | start date | #{Date.today} |
 
-    And an approved contract with following properties exist:
+    And 3 to 5 approved item reservations with following properties exists:
       | delegation name      | Delegation 5       |
       | delegated user email | delegated1@zhdk.ch |
       | inventory pool name  | A-Ausleihe         |
-    And this contract has from 3 to 5 item lines:
       | assigned   | true          |
       | start date | #{Date.today} |
 
-    And an approved contract with following properties exist:
+    And 3 to 5 approved item reservations with following properties exists:
       | delegation name      | Delegation 1 |
       | delegated user email | mina@zhdk.ch |
       | inventory pool name  | A-Ausleihe   |
-    And this contract has from 3 to 5 item lines:
       | assigned   | true          |
       | start date | #{Date.today} |
     And this contract is signed by "pius@zhdk.ch"
 
     And today is "#{Time.now - 5.days}"
-    And an approved contract with following properties exist:
+    And 3 to 5 approved item reservations with following properties exists:
       | delegation name      | Delegation 1 |
       | delegated user email | mina@zhdk.ch |
       | inventory pool name  | A-Ausleihe   |
-    And this contract has from 3 to 5 item lines:
       | assigned   | true          |
       | start date | #{Date.today} |
     And this contract is signed by "pius@zhdk.ch"
     And today is back to initial random date
 
     And today is "#{Time.now - rand(1..7).days}"
-    And a rejected contract with following properties exist:
+    And 3 to 5 rejected item reservations with following properties exists:
       | user email          | customer1@zhdk.ch |
       | inventory pool name | A-Ausleihe        |
-    And this contract has from 3 to 5 item lines:
       | purpose | Ersatzstativ für die Ausstellung. |
-    And this contract has from 1 to 1 item lines:
+    And 1 to 1 rejected item reservations with following properties exists:
+      | user email          | customer1@zhdk.ch |
+      | inventory pool name | A-Ausleihe        |
       | purpose    | Ersatzstativ für die Ausstellung. |
       | model name | MacBook Air                       |
     And today is back to initial random date
 
-    Then there are 53 contracts in total
+    Then there are 18 contracts in total
+
+    And all unsubmitted contract reservations are available
+
+    Then there are 50 fields in total
 
     Then the current time dump is generated

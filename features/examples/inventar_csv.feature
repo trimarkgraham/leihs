@@ -1,101 +1,98 @@
-# language: de
-
-Funktionalität: Inventar
-
-  @personas
-  Szenario: Globaler Export des Inventars aller Geräteparks
-    Angenommen ich bin Gino
-    Und man öffnet die Liste der Geräteparks
-    Dann kann man das globale Inventar als CSV-Datei exportieren
+Feature: Inventory (CSV export)
 
   @javascript @personas @browser
-  Szenario: Export der aktuellen Ansicht als CSV
-    Angenommen ich bin Mike
-    Und man öffnet die Liste des Inventars
-    Wenn ich den Reiter "Modelle" einsehe
-    Dann kann man diese Daten als CSV-Datei exportieren
-    Und die Datei enthält die gleichen Zeilen, wie gerade angezeigt werden (inkl. Filter)
-    Und die Zeilen enthalten die folgenden Felder in aufgeführter Reihenfolge
-    | Felder                            |
-    | Erstellt am                       |
-    | Aktualisiert am                   |
-    | Produkt                           |
-    | Version                           |
-    | Hersteller                        |
-    | Beschreibung                      |
-    | Technische Details                |
-    | Interne Beschreibung              |
-    | Wichtige Notizen zur Aushändigung |
-    | Kategorien                        |
-    | Zubehör                           |
-    | Ergänzende Modelle                |
-    | Eigenschaften                     |
-    | Inventarcode                      |
-    | Seriennummer                      |
-    | MAC-Adresse                       |
-    | IMEI-Nummer                       |
-    | Name                              |
-    | Notiz                             |
-    | Ausmusterung                      |
-    | Grund der Ausmusterung            |
-    | Zustand                           |
-    | Vollständigkeit                   |
-    | Ausleihbar                        |
-    | Gebäude                           |
-    | Raum                              |
-    | Gestell                           |
-    | Inventarrelevant                  |
-    | Besitzer                          |
-    | Letzte Inventur                   |
-    | Verantwortliche Abteilung         |
-    | Verantwortliche Person            |
-    | Benutzer/Verwendung               |
-    | Anschaffungskategorie             |
-    | Bezug                             |
-    | Projektnummer                     |
-    | Rechnungsnummer                   |
-    | Rechnungsdatum                    |
-    | Anschaffungswert                  |
-    | Lieferant                         |
-    | Garantieablaufdatum               |
-    | Vertragsablaufdatum               |
-    | Umzug                             |
-    | Zielraum                          |
-    | Ankunftsdatum                     |
-    | Ankunftszustand                   |
-    | Ankunftsnotiz                     |
-    Wenn ich den Reiter "Software" einsehe
-    Dann kann man diese Daten als CSV-Datei exportieren
-    Und die Datei enthält die gleichen Zeilen, wie gerade angezeigt werden (inkl. Filter)
-    Und die Zeilen enthalten die folgenden Felder in aufgeführter Reihenfolge
-    | Felder                            |
-    | Erstellt am                       |
-    | Aktualisiert am                   |
-    | Produkt                           |
-    | Version                           |
-    | Hersteller                        |
-    | Software Informationen            |
-    | Inventarcode                      |
-    | Seriennummer                      |
-    | Notiz                             |
-    | Aktivierungstyp                   |
-    | Dongle ID                         |
-    | Lizenztyp                         |
-    | Gesamtanzahl                      |
-    | Anzahl-Zuteilungen                |
-    | Betriebssystem                    |
-    | Installation                      |
-    | Lizenzablaufdatum                 |
-    | Maintenance-Vertrag               |
-    | Maintenance-Ablaufdatum           |
-    | Ausmusterung                      |
-    | Grund der Ausmusterung            |
-    | Ausleihbar                        |
-    | Besitzer                          |
-    | Verantwortliche Abteilung         |
-    | Bezug                             |
-    | Projektnummer                     |
-    | Rechnungsdatum                    |
-    | Anschaffungswert                  |
-    | Lieferant                         |
-    | Beschafft durch                   |
+  Scenario: Export der aktuellen Ansicht als CSV
+    Given I am Mike
+    And I open the inventory
+    When I view the tab "Models"
+    Then I can export this data as a CSV file
+    And the file contains the same reservations as are shown right now, including any filtering
+    And the reservations contain the following fields in order:
+      | Fields                        |
+      | Created at                    |
+      | Updated at                    |
+      | Product                       |
+      | Version                       |
+      | Manufacturer                  |
+      | Description                   |
+      | Technical Details             |
+      | Internal Description          |
+      | Important notes for hand over |
+      | Categories                    |
+      | Accessories                   |
+      | Compatibles                   |
+      | Properties                    |
+      | Inventory Code                |
+      | Serial Number                 |
+      | MAC-Address                   |
+      | IMEI-Number                   |
+      | Name                          |
+      | Note                          |
+      | Retirement                    |
+      | Reason for Retirement         |
+      | Working order                 |
+      | Completeness                  |
+      | Borrowable                    |
+      | Status note                   |
+      | Building                      |
+      | Room                          |
+      | Shelf                         |
+      | Relevant for inventory        |
+      | Owner                         |
+      | Last Checked                  |
+      | Responsible department        |
+      | Responsible person            |
+      | User/Typical usage            |
+      | Supply Category               |
+      | Reference                     |
+      | Project Number                |
+      | Invoice Number                |
+      | Invoice Date                  |
+      | Initial Price                 |
+      | Supplier                      |
+      | Warranty expiration           |
+      | Contract expiration           |
+      | Move                          |
+      | Target area                   |
+      | Check-In Date                 |
+      | Check-In State                |
+      | Check-In Note                 |
+      | Borrower                      |
+    When I view the tab "Software"
+    Then I can export this data as a CSV file
+    And the file contains the same reservations as are shown right now, including any filtering
+    And the reservations contain the following fields in order:
+      | Fields                 |
+      | Created at             |
+      | Updated at             |
+      | Product                |
+      | Version                |
+      | Manufacturer           |
+      | Software Information   |
+      | Inventory Code         |
+      | Serial Number          |
+      | Note                   |
+      | Activation Type        |
+      | Dongle ID              |
+      | License Type           |
+      | Total quantity         |
+      | Quantity allocations   |
+      | Operating System       |
+      | Installation           |
+      | License expiration     |
+      | Retirement             |
+      | Reason for Retirement  |
+      | Borrowable             |
+      | Owner                  |
+      | Responsible department |
+      | Reference              |
+      | Project Number         |
+      | Invoice Date           |
+      | Initial Price          |
+      | Supplier               |
+      | Procured by            |
+      | Maintenance contract   |
+      | Maintenance expiration |
+      | Currency               |
+      | Price                  |
+      | Borrower               |

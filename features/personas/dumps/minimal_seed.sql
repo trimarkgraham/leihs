@@ -29,8 +29,8 @@ CREATE TABLE `access_rights` (
   `suspended_until` date DEFAULT NULL,
   `suspended_reason` text COLLATE utf8_unicode_ci,
   `deleted_at` date DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   `role` enum('customer','group_manager','lending_manager','inventory_manager','admin') COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_access_rights_on_suspended_until` (`suspended_until`),
@@ -38,8 +38,8 @@ CREATE TABLE `access_rights` (
   KEY `index_access_rights_on_inventory_pool_id` (`inventory_pool_id`),
   KEY `index_access_rights_on_role` (`role`),
   KEY `index_on_user_id_and_inventory_pool_id_and_deleted_at` (`user_id`,`inventory_pool_id`,`deleted_at`),
-  CONSTRAINT `access_rights_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `access_rights_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_rails_c10a7fd1fd` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_rails_b36d97eb0c` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -66,7 +66,7 @@ CREATE TABLE `accessories` (
   `quantity` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_accessories_on_model_id` (`model_id`),
-  CONSTRAINT `accessories_model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_rails_54c6f19548` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -91,8 +91,8 @@ CREATE TABLE `accessories_inventory_pools` (
   `inventory_pool_id` int(11) DEFAULT NULL,
   UNIQUE KEY `index_accessories_inventory_pools` (`accessory_id`,`inventory_pool_id`),
   KEY `index_accessories_inventory_pools_on_inventory_pool_id` (`inventory_pool_id`),
-  CONSTRAINT `accessories_inventory_pools_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`),
-  CONSTRAINT `accessories_inventory_pools_accessory_id_fk` FOREIGN KEY (`accessory_id`) REFERENCES `accessories` (`id`)
+  CONSTRAINT `fk_rails_e9daa88f6c` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`),
+  CONSTRAINT `fk_rails_9511c9a747` FOREIGN KEY (`accessory_id`) REFERENCES `accessories` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -150,7 +150,7 @@ CREATE TABLE `attachments` (
   `size` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_attachments_on_model_id` (`model_id`),
-  CONSTRAINT `attachments_model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_rails_f6d36cd48e` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -161,6 +161,48 @@ CREATE TABLE `attachments` (
 LOCK TABLES `attachments` WRITE;
 /*!40000 ALTER TABLE `attachments` DISABLE KEYS */;
 /*!40000 ALTER TABLE `attachments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `audits`
+--
+
+DROP TABLE IF EXISTS `audits`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `audits` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `auditable_id` int(11) DEFAULT NULL,
+  `auditable_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `associated_id` int(11) DEFAULT NULL,
+  `associated_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `user_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `action` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `audited_changes` text COLLATE utf8_unicode_ci,
+  `version` int(11) DEFAULT '0',
+  `comment` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `remote_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `request_uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `auditable_index` (`auditable_id`,`auditable_type`),
+  KEY `associated_index` (`associated_id`,`associated_type`),
+  KEY `user_index` (`user_id`,`user_type`),
+  KEY `index_audits_on_request_uuid` (`request_uuid`),
+  KEY `index_audits_on_created_at` (`created_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `audits`
+--
+
+LOCK TABLES `audits` WRITE;
+/*!40000 ALTER TABLE `audits` DISABLE KEYS */;
+INSERT INTO `audits` VALUES (1,1,'Setting',NULL,NULL,NULL,NULL,NULL,'create','---\nsmtp_address: smtp.zhdk.ch\nsmtp_port: 25\nsmtp_domain: beta.ausleihe.zhdk.ch\nlocal_currency_string: CHF\ncontract_terms: Die Benutzerin/der Benutzer ist bei unsachgemässer Handhabung oder\n  Verlust schadenersatzpflichtig. Sie/Er verpflichtet sich, das Material sorgfältig\n  zu behandeln und gereinigt zu retournieren. Bei mangelbehafteter oder verspäteter\n  Rückgabe kann eine Ausleihsperre (bis zu 6 Monaten) verhängt werden. Das geliehene\n  Material bleibt jederzeit uneingeschränktes Eigentum der Zürcher Hochschule der\n  Künste und darf ausschliesslich für schulische Zwecke eingesetzt werden. Mit ihrer/seiner\n  Unterschrift akzeptiert die Benutzerin/der Benutzer diese Bedingungen sowie die\n  \'Richtlinie zur Ausleihe von Sachen\' der ZHdK und etwaige abteilungsspezifische\n  Ausleih-Richtlinien.\ncontract_lending_party_string: |-\n  Your\n  Address\n  Here\nemail_signature: Das PZ-leihs Team\ndefault_email: sender@example.com\ndeliver_order_notifications: false\nuser_image_url: http://www.zhdk.ch/?person/foto&width=100&compressionlevel=0&id={:id}\nldap_config: \nlogo_url: \"/assets/image-logo-zhdk.png\"\nmail_delivery_method: test\nsmtp_username: \nsmtp_password: \nsmtp_enable_starttls_auto: false\nsmtp_openssl_verify_mode: none\ntime_zone: Bern\ndisable_manage_section: false\ndisable_manage_section_message: \ndisable_borrow_section: false\ndisable_borrow_section_message: \ntext: \ntimeout_minutes: 30\n',1,NULL,NULL,'a9811d55-2348-42b0-9b01-934f83e9e219','2015-09-20 22:33:43'),(2,1,'Language',NULL,NULL,NULL,NULL,NULL,'create','---\nname: English (UK)\nlocale_name: en-GB\ndefault: true\nactive: true\n',1,NULL,NULL,'fd6347d6-07e3-40c2-8ba6-c74e8cb2a203','2015-09-20 22:33:43'),(3,2,'Language',NULL,NULL,NULL,NULL,NULL,'create','---\nname: English (US)\nlocale_name: en-US\ndefault: false\nactive: true\n',1,NULL,NULL,'d93d7998-9462-47c7-8bf6-b9d69934572f','2015-09-20 22:33:43'),(4,3,'Language',NULL,NULL,NULL,NULL,NULL,'create','---\nname: Deutsch\nlocale_name: de-CH\ndefault: false\nactive: true\n',1,NULL,NULL,'fac60237-fd83-4b04-9364-046b85e4b75a','2015-09-20 22:33:43'),(5,4,'Language',NULL,NULL,NULL,NULL,NULL,'create','---\nname: Züritüütsch\nlocale_name: gsw-CH\ndefault: false\nactive: true\n',1,NULL,NULL,'5dffed56-e872-4839-9037-f9b56fceee46','2015-09-20 22:33:43'),(6,1,'AuthenticationSystem',NULL,NULL,NULL,NULL,NULL,'create','---\nname: Database Authentication\nclass_name: DatabaseAuthentication\nis_default: true\nis_active: true\n',1,NULL,NULL,'b6453231-7feb-4306-b596-1bf093b3e4bd','2015-09-20 22:33:43'),(7,2,'AuthenticationSystem',NULL,NULL,NULL,NULL,NULL,'create','---\nname: LDAP Authentication\nclass_name: LdapAuthentication\nis_default: false\nis_active: false\n',1,NULL,NULL,'383710e6-7f09-48f3-9348-9000bbefae28','2015-09-20 22:33:43'),(8,3,'AuthenticationSystem',NULL,NULL,NULL,NULL,NULL,'create','---\nname: ZHDK Authentication\nclass_name: Zhdk\nis_default: false\nis_active: false\n',1,NULL,NULL,'612b4d68-0f96-449b-a589-2c0cb8deaa24','2015-09-20 22:33:43'),(9,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Inventory Code\n  attribute: inventory_code\n  required: true\n  permissions:\n    role: inventory_manager\n    owner: true\n  type: text\n  group: \n  forPackage: true\nactive: true\nposition: 1\n',1,NULL,NULL,'f9a77047-82df-40c3-8155-6157ad11315f','2015-09-20 22:33:43'),(10,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Model\n  attribute:\n  - model\n  - id\n  value_label:\n  - model\n  - product\n  value_label_ext:\n  - model\n  - version\n  form_name: model_id\n  required: true\n  type: autocomplete-search\n  target_type: item\n  search_path: models\n  search_attr: search_term\n  value_attr: id\n  display_attr: product\n  display_attr_ext: version\n  group: \nactive: true\nposition: 2\n',2,NULL,NULL,'d57dcf8b-8865-4ce0-a238-c4b50263e674','2015-09-20 22:33:43'),(11,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Software\n  attribute:\n  - model\n  - id\n  value_label:\n  - model\n  - product\n  value_label_ext:\n  - model\n  - version\n  form_name: model_id\n  required: true\n  type: autocomplete-search\n  target_type: license\n  search_path: software\n  search_attr: search_term\n  value_attr: id\n  display_attr: product\n  display_attr_ext: version\n  group: \nactive: true\nposition: 3\n',3,NULL,NULL,'5c3a40fa-b418-4da9-8152-7dae043c5bf4','2015-09-20 22:33:43'),(12,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Serial Number\n  attribute: serial_number\n  permissions:\n    role: lending_manager\n    owner: true\n  type: text\n  group: General Information\nactive: true\nposition: 4\n',4,NULL,NULL,'44802e3d-0ce6-422a-9f5b-ba158572e600','2015-09-20 22:33:43'),(13,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: MAC-Address\n  attribute:\n  - properties\n  - mac_address\n  permissions:\n    role: lending_manager\n    owner: true\n  type: text\n  target_type: item\n  group: General Information\nactive: true\nposition: 5\n',5,NULL,NULL,'5eba0727-c488-4f41-91cc-2638680e3378','2015-09-20 22:33:43'),(14,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: IMEI-Number\n  attribute:\n  - properties\n  - imei_number\n  permissions:\n    role: lending_manager\n    owner: true\n  type: text\n  target_type: item\n  group: General Information\nactive: true\nposition: 6\n',6,NULL,NULL,'316a19da-f14c-434a-9f6d-cf7759e81965','2015-09-20 22:33:43'),(15,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Name\n  attribute: name\n  type: text\n  target_type: item\n  group: General Information\n  forPackage: true\nactive: true\nposition: 7\n',7,NULL,NULL,'df246be0-46eb-452c-92c2-40ca5803e04c','2015-09-20 22:33:43'),(16,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Note\n  attribute: note\n  type: textarea\n  group: General Information\n  forPackage: true\nactive: true\nposition: 8\n',8,NULL,NULL,'fce8d630-1306-486a-b44d-2d2f8fe3d59e','2015-09-20 22:33:43'),(17,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Retirement\n  attribute: retired\n  type: select\n  permissions:\n    role: lending_manager\n    owner: true\n  values:\n  - label: \'No\'\n    value: false\n  - label: \'Yes\'\n    value: true\n  default: false\n  group: Status\nactive: true\nposition: 9\n',9,NULL,NULL,'f75146de-2a79-4167-a4f5-3a02f3ca4bc7','2015-09-20 22:33:43'),(18,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Reason for Retirement\n  attribute: retired_reason\n  type: textarea\n  required: true\n  permissions:\n    role: lending_manager\n    owner: true\n  visibility_dependency_field_id: retired\n  visibility_dependency_value: \'true\'\n  group: Status\nactive: true\nposition: 10\n',10,NULL,NULL,'79415113-c2e1-477e-acd6-781050d6e14d','2015-09-20 22:33:43'),(19,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Working order\n  attribute: is_broken\n  type: radio\n  target_type: item\n  values:\n  - label: OK\n    value: false\n  - label: Broken\n    value: true\n  default: false\n  group: Status\n  forPackage: true\nactive: true\nposition: 11\n',11,NULL,NULL,'8c950948-43f6-4cb9-8390-bc18d62c9274','2015-09-20 22:33:43'),(20,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Completeness\n  attribute: is_incomplete\n  type: radio\n  target_type: item\n  values:\n  - label: OK\n    value: false\n  - label: Incomplete\n    value: true\n  default: false\n  group: Status\n  forPackage: true\nactive: true\nposition: 12\n',12,NULL,NULL,'9216f231-fc56-4f77-b960-ab659f561f8b','2015-09-20 22:33:43'),(21,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Borrowable\n  attribute: is_borrowable\n  type: radio\n  values:\n  - label: OK\n    value: true\n  - label: Unborrowable\n    value: false\n  default: false\n  group: Status\n  forPackage: true\nactive: true\nposition: 13\n',13,NULL,NULL,'6eed71e0-aac9-4eb0-8200-027ff3823384','2015-09-20 22:33:43'),(22,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Status note\n  attribute: status_note\n  type: textarea\n  target_type: item\n  group: Status\n  forPackage: true\nactive: true\nposition: 14\n',14,NULL,NULL,'0fc97e96-bf13-424a-9399-5a43ddbb52dc','2015-09-20 22:33:43'),(23,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Building\n  attribute:\n  - location\n  - building_id\n  type: autocomplete\n  target_type: item\n  values: all_buildings\n  group: Location\n  forPackage: true\nactive: true\nposition: 15\n',15,NULL,NULL,'2daa6718-bd1e-495f-a6ba-9d82520e68eb','2015-09-20 22:33:43'),(24,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Room\n  attribute:\n  - location\n  - room\n  type: text\n  target_type: item\n  group: Location\n  forPackage: true\nactive: true\nposition: 16\n',16,NULL,NULL,'f4b65523-ada2-4e51-8cff-d44f272dcb2d','2015-09-20 22:33:43'),(25,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Shelf\n  attribute:\n  - location\n  - shelf\n  type: text\n  target_type: item\n  group: Location\n  forPackage: true\nactive: true\nposition: 17\n',17,NULL,NULL,'1a04b454-6d5e-464c-ac74-44e92764b669','2015-09-20 22:33:43'),(26,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Relevant for inventory\n  attribute: is_inventory_relevant\n  type: select\n  target_type: item\n  permissions:\n    role: inventory_manager\n    owner: true\n  values:\n  - label: \'No\'\n    value: false\n  - label: \'Yes\'\n    value: true\n  default: true\n  group: Inventory\n  forPackage: true\nactive: true\nposition: 18\n',18,NULL,NULL,'71023f8c-c5bc-48fa-a8e0-9cb63d53cbdc','2015-09-20 22:33:43'),(27,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Owner\n  attribute:\n  - owner\n  - id\n  type: autocomplete\n  permissions:\n    role: inventory_manager\n    owner: true\n  values: all_inventory_pools\n  group: Inventory\nactive: true\nposition: 19\n',19,NULL,NULL,'85dddea2-4e94-441b-a812-acbdd9b72136','2015-09-20 22:33:43'),(28,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Last Checked\n  attribute: last_check\n  permissions:\n    role: lending_manager\n    owner: true\n  default: today\n  type: date\n  target_type: item\n  group: Inventory\n  forPackage: true\nactive: true\nposition: 20\n',20,NULL,NULL,'37c8c679-9313-419a-b0f3-9e41eed64334','2015-09-20 22:33:43'),(29,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Responsible department\n  attribute:\n  - inventory_pool\n  - id\n  type: autocomplete\n  values: all_inventory_pools\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: Inventory\n  forPackage: true\nactive: true\nposition: 21\n',21,NULL,NULL,'7e896d8a-7888-4240-b69e-1c8e5677e04f','2015-09-20 22:33:43'),(30,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Responsible person\n  attribute: responsible\n  permissions:\n    role: lending_manager\n    owner: true\n  type: text\n  target_type: item\n  group: Inventory\n  forPackage: true\nactive: true\nposition: 22\n',22,NULL,NULL,'70226751-9853-4e13-b881-01253540a628','2015-09-20 22:33:43'),(31,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: User/Typical usage\n  attribute: user_name\n  permissions:\n    role: inventory_manager\n    owner: true\n  type: text\n  target_type: item\n  group: Inventory\n  forPackage: true\nactive: true\nposition: 23\n',23,NULL,NULL,'7df73ba5-a75d-430e-a4aa-3afba2ab4c2e','2015-09-20 22:33:43'),(32,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Reference\n  attribute:\n  - properties\n  - reference\n  permissions:\n    role: inventory_manager\n    owner: true\n  required: true\n  values:\n  - label: Running Account\n    value: invoice\n  - label: Investment\n    value: investment\n  default: invoice\n  type: radio\n  group: Invoice Information\nactive: true\nposition: 24\n',24,NULL,NULL,'8cb77694-e040-47e6-948f-6387073bea27','2015-09-20 22:33:43'),(33,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Project Number\n  attribute:\n  - properties\n  - project_number\n  permissions:\n    role: inventory_manager\n    owner: true\n  type: text\n  required: true\n  visibility_dependency_field_id: properties_reference\n  visibility_dependency_value: investment\n  group: Invoice Information\nactive: true\nposition: 25\n',25,NULL,NULL,'241545b3-f226-44f7-ac36-fe1843b93572','2015-09-20 22:33:43'),(34,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Invoice Number\n  attribute: invoice_number\n  permissions:\n    role: lending_manager\n    owner: true\n  type: text\n  target_type: item\n  group: Invoice Information\nactive: true\nposition: 26\n',26,NULL,NULL,'8c0168ec-fae0-4b23-928e-d0ee0d1c9d38','2015-09-20 22:33:43'),(35,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Invoice Date\n  attribute: invoice_date\n  permissions:\n    role: lending_manager\n    owner: true\n  type: date\n  group: Invoice Information\nactive: true\nposition: 27\n',27,NULL,NULL,'de6cf61b-2df3-48db-b2f8-e6900a543438','2015-09-20 22:33:43'),(36,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Initial Price\n  attribute: price\n  permissions:\n    role: lending_manager\n    owner: true\n  type: text\n  currency: true\n  group: Invoice Information\n  forPackage: true\nactive: true\nposition: 28\n',28,NULL,NULL,'7e71f95a-84f8-468c-98fe-71020f1ab815','2015-09-20 22:33:43'),(37,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Supplier\n  attribute:\n  - supplier\n  - id\n  type: autocomplete\n  extensible: true\n  extended_key:\n  - supplier\n  - name\n  permissions:\n    role: lending_manager\n    owner: true\n  values: all_suppliers\n  group: Invoice Information\nactive: true\nposition: 29\n',29,NULL,NULL,'6f2700e5-7656-47f2-b50d-508a54564cc7','2015-09-20 22:33:43'),(38,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Warranty expiration\n  attribute:\n  - properties\n  - warranty_expiration\n  permissions:\n    role: lending_manager\n    owner: true\n  type: date\n  target_type: item\n  group: Invoice Information\nactive: true\nposition: 30\n',30,NULL,NULL,'8b312454-4ab6-406d-af12-28a90afa39ad','2015-09-20 22:33:43'),(39,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Contract expiration\n  attribute:\n  - properties\n  - contract_expiration\n  permissions:\n    role: lending_manager\n    owner: true\n  type: date\n  target_type: item\n  group: Invoice Information\nactive: true\nposition: 31\n',31,NULL,NULL,'5fd5b82c-db19-4120-ae89-ad231d81abda','2015-09-20 22:33:43'),(40,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Umzug\n  attribute:\n  - properties\n  - umzug\n  type: select\n  target_type: item\n  values:\n  - label: zügeln\n    value: zügeln\n  - label: sofort entsorgen\n    value: sofort entsorgen\n  - label: bei Umzug entsorgen\n    value: bei Umzug entsorgen\n  - label: bei Umzug verkaufen\n    value: bei Umzug verkaufen\n  default: zügeln\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: Umzug\nactive: true\nposition: 32\n',32,NULL,NULL,'dc82efb9-1e88-4d1a-b39d-74e2056bd1d7','2015-09-20 22:33:43'),(41,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Zielraum\n  attribute:\n  - properties\n  - zielraum\n  type: text\n  target_type: item\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: Umzug\nactive: true\nposition: 33\n',33,NULL,NULL,'274a2d99-26c0-463d-bef9-23c026b94c1b','2015-09-20 22:33:43'),(42,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Ankunftsdatum\n  attribute:\n  - properties\n  - ankunftsdatum\n  type: date\n  target_type: item\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: Toni Ankunftskontrolle\nactive: true\nposition: 34\n',34,NULL,NULL,'6433ada0-f5bd-48e3-bcaa-0f1bb6f81f88','2015-09-20 22:33:43'),(43,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Ankunftszustand\n  attribute:\n  - properties\n  - ankunftszustand\n  type: select\n  target_type: item\n  values:\n  - label: intakt\n    value: intakt\n  - label: transportschaden\n    value: transportschaden\n  default: intakt\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: Toni Ankunftskontrolle\nactive: true\nposition: 35\n',35,NULL,NULL,'94acfa7c-5a30-4f3d-b8a5-9a37b5dc3109','2015-09-20 22:33:43'),(44,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Ankunftsnotiz\n  attribute:\n  - properties\n  - ankunftsnotiz\n  type: textarea\n  target_type: item\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: Toni Ankunftskontrolle\nactive: true\nposition: 36\n',36,NULL,NULL,'ab1268e0-49f6-48a0-bc8b-1bdb92bc7ca0','2015-09-20 22:33:43'),(45,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Anschaffungskategorie\n  attribute:\n  - properties\n  - anschaffungskategorie\n  value_label:\n  - properties\n  - anschaffungskategorie\n  required: true\n  type: select\n  target_type: item\n  values:\n  - label: \'\'\n    value: \n  - label: Werkstatt-Technik\n    value: Werkstatt-Technik\n  - label: Produktionstechnik\n    value: Produktionstechnik\n  - label: AV-Technik\n    value: AV-Technik\n  - label: Musikinstrumente\n    value: Musikinstrumente\n  - label: Facility Management\n    value: Facility Management\n  - label: IC-Technik/Software\n    value: IC-Technik/Software\n  default: \n  visibility_dependency_field_id: is_inventory_relevant\n  visibility_dependency_value: \'true\'\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: Inventory\nactive: true\nposition: 37\n',37,NULL,NULL,'0b49097e-b0a8-47a4-922b-e9967d941887','2015-09-20 22:33:43'),(46,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Activation Type\n  attribute:\n  - properties\n  - activation_type\n  type: select\n  target_type: license\n  values:\n  - label: None\n    value: none\n  - label: Dongle\n    value: dongle\n  - label: Serial Number\n    value: serial_number\n  - label: License Server\n    value: license_server\n  - label: Challenge Response/System ID\n    value: challenge_response\n  default: none\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: General Information\nactive: true\nposition: 38\n',38,NULL,NULL,'b6b3d20a-fa27-4f01-abcf-6b3f0f2b3817','2015-09-20 22:33:43'),(47,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Dongle ID\n  attribute:\n  - properties\n  - dongle_id\n  type: text\n  target_type: license\n  required: true\n  permissions:\n    role: inventory_manager\n    owner: true\n  visibility_dependency_field_id: properties_activation_type\n  visibility_dependency_value: dongle\n  group: General Information\nactive: true\nposition: 39\n',39,NULL,NULL,'25c59bda-eceb-469d-967d-441c3f45df27','2015-09-20 22:33:43'),(48,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: License Type\n  attribute:\n  - properties\n  - license_type\n  type: select\n  target_type: license\n  values:\n  - label: Free\n    value: free\n  - label: Single Workplace\n    value: single_workplace\n  - label: Multiple Workplace\n    value: multiple_workplace\n  - label: Site License\n    value: site_license\n  - label: Concurrent\n    value: concurrent\n  default: free\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: General Information\nactive: true\nposition: 40\n',40,NULL,NULL,'47567448-5b06-4ea2-9259-bb62116a81ae','2015-09-20 22:33:43'),(49,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Total quantity\n  attribute:\n  - properties\n  - total_quantity\n  type: text\n  target_type: license\n  permissions:\n    role: inventory_manager\n    owner: true\n  visibility_dependency_field_id: properties_license_type\n  visibility_dependency_value:\n  - multiple_workplace\n  - site_license\n  - concurrent\n  group: General Information\nactive: true\nposition: 41\n',41,NULL,NULL,'dbc5023b-61ee-482f-88de-fb5549c99864','2015-09-20 22:33:43'),(50,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Quantity allocations\n  attribute:\n  - properties\n  - quantity_allocations\n  type: composite\n  target_type: license\n  permissions:\n    role: inventory_manager\n    owner: true\n  visibility_dependency_field_id: properties_total_quantity\n  data_dependency_field_id: properties_total_quantity\n  group: General Information\nactive: true\nposition: 42\n',42,NULL,NULL,'f296489e-e8de-477c-9c15-60666086fdfe','2015-09-20 22:33:43'),(51,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Operating System\n  attribute:\n  - properties\n  - operating_system\n  type: checkbox\n  target_type: license\n  values:\n  - label: Windows\n    value: windows\n  - label: Mac OS X\n    value: mac_os_x\n  - label: Linux\n    value: linux\n  - label: iOS\n    value: ios\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: General Information\nactive: true\nposition: 43\n',43,NULL,NULL,'a28de43b-4502-40f6-8564-3083ccdc8d60','2015-09-20 22:33:43'),(52,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Installation\n  attribute:\n  - properties\n  - installation\n  type: checkbox\n  target_type: license\n  values:\n  - label: Citrix\n    value: citrix\n  - label: Local\n    value: local\n  - label: Web\n    value: web\n  permissions:\n    role: inventory_manager\n    owner: true\n  group: General Information\nactive: true\nposition: 44\n',44,NULL,NULL,'8a6cb4b3-63a8-4e60-a7e3-8f052346fcbe','2015-09-20 22:33:43'),(53,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: License expiration\n  attribute:\n  - properties\n  - license_expiration\n  permissions:\n    role: inventory_manager\n    owner: true\n  type: date\n  target_type: license\n  group: General Information\nactive: true\nposition: 45\n',45,NULL,NULL,'50198a53-1933-49e3-bcd9-20c06b65f338','2015-09-20 22:33:43'),(54,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Maintenance contract\n  attribute:\n  - properties\n  - maintenance_contract\n  type: select\n  target_type: license\n  permissions:\n    role: inventory_manager\n    owner: true\n  values:\n  - label: \'No\'\n    value: \'false\'\n  - label: \'Yes\'\n    value: \'true\'\n  default: \'false\'\n  group: Maintenance\nactive: true\nposition: 46\n',46,NULL,NULL,'a0eafd13-93e1-4f95-bc44-6db5a5af6c43','2015-09-20 22:33:43'),(55,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Maintenance expiration\n  attribute:\n  - properties\n  - maintenance_expiration\n  type: date\n  target_type: license\n  permissions:\n    role: inventory_manager\n    owner: true\n  visibility_dependency_field_id: properties_maintenance_contract\n  visibility_dependency_value: \'true\'\n  group: Maintenance\nactive: true\nposition: 47\n',47,NULL,NULL,'4e6da1b8-2c2f-47cf-bafd-6ec86dce1ca5','2015-09-20 22:33:43'),(56,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Currency\n  attribute:\n  - properties\n  - maintenance_currency\n  type: select\n  values: all_currencies\n  default: CHF\n  target_type: license\n  permissions:\n    role: inventory_manager\n    owner: true\n  visibility_dependency_field_id: properties_maintenance_expiration\n  group: Maintenance\nactive: true\nposition: 48\n',48,NULL,NULL,'8fdc9bfd-f871-4848-96a8-d4a3498bcfb4','2015-09-20 22:33:43'),(57,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Price\n  attribute:\n  - properties\n  - maintenance_price\n  type: text\n  currency: true\n  target_type: license\n  permissions:\n    role: inventory_manager\n    owner: true\n  visibility_dependency_field_id: properties_maintenance_currency\n  group: Maintenance\nactive: true\nposition: 49\n',49,NULL,NULL,'f1fa7293-d8ea-4201-b3c0-b2753a553b19','2015-09-20 22:33:43'),(58,0,'Field',NULL,NULL,NULL,NULL,NULL,'create','---\ndata:\n  label: Procured by\n  attribute:\n  - properties\n  - procured_by\n  permissions:\n    role: inventory_manager\n    owner: true\n  type: text\n  target_type: license\n  group: Invoice Information\nactive: true\nposition: 50\n',50,NULL,NULL,'0f5244a4-9f28-48c2-985f-3eb208647735','2015-09-20 22:33:43');
+/*!40000 ALTER TABLE `audits` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -215,57 +257,6 @@ LOCK TABLES `buildings` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `contract_lines`
---
-
-DROP TABLE IF EXISTS `contract_lines`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `contract_lines` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contract_id` int(11) DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ItemLine',
-  `item_id` int(11) DEFAULT NULL,
-  `model_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT '1',
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `returned_date` date DEFAULT NULL,
-  `option_id` int(11) DEFAULT NULL,
-  `purpose_id` int(11) DEFAULT NULL,
-  `returned_to_user_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_contract_lines_on_start_date` (`start_date`),
-  KEY `index_contract_lines_on_end_date` (`end_date`),
-  KEY `index_contract_lines_on_option_id` (`option_id`),
-  KEY `index_contract_lines_on_contract_id` (`contract_id`),
-  KEY `index_contract_lines_on_item_id` (`item_id`),
-  KEY `index_contract_lines_on_model_id` (`model_id`),
-  KEY `index_contract_lines_on_returned_date_and_contract_id` (`returned_date`,`contract_id`),
-  KEY `index_contract_lines_on_type_and_contract_id` (`type`,`contract_id`),
-  KEY `contract_lines_purpose_id_fk` (`purpose_id`),
-  KEY `contract_lines_returned_to_user_id_fk` (`returned_to_user_id`),
-  CONSTRAINT `contract_lines_returned_to_user_id_fk` FOREIGN KEY (`returned_to_user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `contract_lines_contract_id_fk` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `contract_lines_item_id_fk` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`),
-  CONSTRAINT `contract_lines_model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`),
-  CONSTRAINT `contract_lines_option_id_fk` FOREIGN KEY (`option_id`) REFERENCES `options` (`id`),
-  CONSTRAINT `contract_lines_purpose_id_fk` FOREIGN KEY (`purpose_id`) REFERENCES `purposes` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `contract_lines`
---
-
-LOCK TABLES `contract_lines` WRITE;
-/*!40000 ALTER TABLE `contract_lines` DISABLE KEYS */;
-/*!40000 ALTER TABLE `contract_lines` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `contracts`
 --
 
@@ -274,24 +265,10 @@ DROP TABLE IF EXISTS `contracts`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `contracts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
-  `delegated_user_id` int(11) DEFAULT NULL,
-  `inventory_pool_id` int(11) DEFAULT NULL,
   `note` text COLLATE utf8_unicode_ci,
-  `handed_over_by_user_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `status` enum('unsubmitted','submitted','rejected','approved','signed','closed') COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_contracts_on_inventory_pool_id` (`inventory_pool_id`),
-  KEY `index_contracts_on_status` (`status`),
-  KEY `index_contracts_on_user_id` (`user_id`),
-  KEY `contracts_delegated_user_id_fk` (`delegated_user_id`),
-  KEY `contracts_handed_over_by_user_id_fk` (`handed_over_by_user_id`),
-  CONSTRAINT `contracts_handed_over_by_user_id_fk` FOREIGN KEY (`handed_over_by_user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `contracts_delegated_user_id_fk` FOREIGN KEY (`delegated_user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `contracts_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`),
-  CONSTRAINT `contracts_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -317,11 +294,11 @@ CREATE TABLE `database_authentications` (
   `crypted_password` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
   `salt` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `database_authentications_user_id_fk` (`user_id`),
-  CONSTRAINT `database_authentications_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  KEY `fk_rails_85650bffa9` (`user_id`),
+  CONSTRAINT `fk_rails_85650bffa9` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -346,8 +323,8 @@ CREATE TABLE `delegations_users` (
   `user_id` int(11) DEFAULT NULL,
   UNIQUE KEY `index_delegations_users_on_user_id_and_delegation_id` (`user_id`,`delegation_id`),
   KEY `index_delegations_users_on_delegation_id` (`delegation_id`),
-  CONSTRAINT `delegations_users_delegation_id_fk` FOREIGN KEY (`delegation_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `delegations_users_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `fk_rails_b5f7f9c898` FOREIGN KEY (`delegation_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_rails_df1fb72b34` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -358,6 +335,33 @@ CREATE TABLE `delegations_users` (
 LOCK TABLES `delegations_users` WRITE;
 /*!40000 ALTER TABLE `delegations_users` DISABLE KEYS */;
 /*!40000 ALTER TABLE `delegations_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `fields`
+--
+
+DROP TABLE IF EXISTS `fields`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fields` (
+  `id` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `data` text COLLATE utf8_unicode_ci,
+  `active` tinyint(1) DEFAULT '1',
+  `position` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_fields_on_active` (`active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fields`
+--
+
+LOCK TABLES `fields` WRITE;
+/*!40000 ALTER TABLE `fields` DISABLE KEYS */;
+INSERT INTO `fields` VALUES ('inventory_code','{\"label\":\"Inventory Code\",\"attribute\":\"inventory_code\",\"required\":true,\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"type\":\"text\",\"group\":null,\"forPackage\":true}',1,1),('inventory_pool_id','{\"label\":\"Responsible department\",\"attribute\":[\"inventory_pool\",\"id\"],\"type\":\"autocomplete\",\"values\":\"all_inventory_pools\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"Inventory\",\"forPackage\":true}',1,21),('invoice_date','{\"label\":\"Invoice Date\",\"attribute\":\"invoice_date\",\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"date\",\"group\":\"Invoice Information\"}',1,27),('invoice_number','{\"label\":\"Invoice Number\",\"attribute\":\"invoice_number\",\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"text\",\"target_type\":\"item\",\"group\":\"Invoice Information\"}',1,26),('is_borrowable','{\"label\":\"Borrowable\",\"attribute\":\"is_borrowable\",\"type\":\"radio\",\"values\":[{\"label\":\"OK\",\"value\":true},{\"label\":\"Unborrowable\",\"value\":false}],\"default\":false,\"group\":\"Status\",\"forPackage\":true}',1,13),('is_broken','{\"label\":\"Working order\",\"attribute\":\"is_broken\",\"type\":\"radio\",\"target_type\":\"item\",\"values\":[{\"label\":\"OK\",\"value\":false},{\"label\":\"Broken\",\"value\":true}],\"default\":false,\"group\":\"Status\",\"forPackage\":true}',1,11),('is_incomplete','{\"label\":\"Completeness\",\"attribute\":\"is_incomplete\",\"type\":\"radio\",\"target_type\":\"item\",\"values\":[{\"label\":\"OK\",\"value\":false},{\"label\":\"Incomplete\",\"value\":true}],\"default\":false,\"group\":\"Status\",\"forPackage\":true}',1,12),('is_inventory_relevant','{\"label\":\"Relevant for inventory\",\"attribute\":\"is_inventory_relevant\",\"type\":\"select\",\"target_type\":\"item\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"values\":[{\"label\":\"No\",\"value\":false},{\"label\":\"Yes\",\"value\":true}],\"default\":true,\"group\":\"Inventory\",\"forPackage\":true}',1,18),('last_check','{\"label\":\"Last Checked\",\"attribute\":\"last_check\",\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"default\":\"today\",\"type\":\"date\",\"target_type\":\"item\",\"group\":\"Inventory\",\"forPackage\":true}',1,20),('location_building_id','{\"label\":\"Building\",\"attribute\":[\"location\",\"building_id\"],\"type\":\"autocomplete\",\"target_type\":\"item\",\"values\":\"all_buildings\",\"group\":\"Location\",\"forPackage\":true}',1,15),('location_room','{\"label\":\"Room\",\"attribute\":[\"location\",\"room\"],\"type\":\"text\",\"target_type\":\"item\",\"group\":\"Location\",\"forPackage\":true}',1,16),('location_shelf','{\"label\":\"Shelf\",\"attribute\":[\"location\",\"shelf\"],\"type\":\"text\",\"target_type\":\"item\",\"group\":\"Location\",\"forPackage\":true}',1,17),('model_id','{\"label\":\"Model\",\"attribute\":[\"model\",\"id\"],\"value_label\":[\"model\",\"product\"],\"value_label_ext\":[\"model\",\"version\"],\"form_name\":\"model_id\",\"required\":true,\"type\":\"autocomplete-search\",\"target_type\":\"item\",\"search_path\":\"models\",\"search_attr\":\"search_term\",\"value_attr\":\"id\",\"display_attr\":\"product\",\"display_attr_ext\":\"version\",\"group\":null}',1,2),('name','{\"label\":\"Name\",\"attribute\":\"name\",\"type\":\"text\",\"target_type\":\"item\",\"group\":\"General Information\",\"forPackage\":true}',1,7),('note','{\"label\":\"Note\",\"attribute\":\"note\",\"type\":\"textarea\",\"group\":\"General Information\",\"forPackage\":true}',1,8),('owner_id','{\"label\":\"Owner\",\"attribute\":[\"owner\",\"id\"],\"type\":\"autocomplete\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"values\":\"all_inventory_pools\",\"group\":\"Inventory\"}',1,19),('price','{\"label\":\"Initial Price\",\"attribute\":\"price\",\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"text\",\"currency\":true,\"group\":\"Invoice Information\",\"forPackage\":true}',1,28),('properties_activation_type','{\"label\":\"Activation Type\",\"attribute\":[\"properties\",\"activation_type\"],\"type\":\"select\",\"target_type\":\"license\",\"values\":[{\"label\":\"None\",\"value\":\"none\"},{\"label\":\"Dongle\",\"value\":\"dongle\"},{\"label\":\"Serial Number\",\"value\":\"serial_number\"},{\"label\":\"License Server\",\"value\":\"license_server\"},{\"label\":\"Challenge Response/System ID\",\"value\":\"challenge_response\"}],\"default\":\"none\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"General Information\"}',1,38),('properties_ankunftsdatum','{\"label\":\"Ankunftsdatum\",\"attribute\":[\"properties\",\"ankunftsdatum\"],\"type\":\"date\",\"target_type\":\"item\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"Toni Ankunftskontrolle\"}',1,34),('properties_ankunftsnotiz','{\"label\":\"Ankunftsnotiz\",\"attribute\":[\"properties\",\"ankunftsnotiz\"],\"type\":\"textarea\",\"target_type\":\"item\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"Toni Ankunftskontrolle\"}',1,36),('properties_ankunftszustand','{\"label\":\"Ankunftszustand\",\"attribute\":[\"properties\",\"ankunftszustand\"],\"type\":\"select\",\"target_type\":\"item\",\"values\":[{\"label\":\"intakt\",\"value\":\"intakt\"},{\"label\":\"transportschaden\",\"value\":\"transportschaden\"}],\"default\":\"intakt\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"Toni Ankunftskontrolle\"}',1,35),('properties_anschaffungskategorie','{\"label\":\"Anschaffungskategorie\",\"attribute\":[\"properties\",\"anschaffungskategorie\"],\"value_label\":[\"properties\",\"anschaffungskategorie\"],\"required\":true,\"type\":\"select\",\"target_type\":\"item\",\"values\":[{\"label\":\"\",\"value\":null},{\"label\":\"Werkstatt-Technik\",\"value\":\"Werkstatt-Technik\"},{\"label\":\"Produktionstechnik\",\"value\":\"Produktionstechnik\"},{\"label\":\"AV-Technik\",\"value\":\"AV-Technik\"},{\"label\":\"Musikinstrumente\",\"value\":\"Musikinstrumente\"},{\"label\":\"Facility Management\",\"value\":\"Facility Management\"},{\"label\":\"IC-Technik/Software\",\"value\":\"IC-Technik/Software\"}],\"default\":null,\"visibility_dependency_field_id\":\"is_inventory_relevant\",\"visibility_dependency_value\":\"true\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"Inventory\"}',1,37),('properties_contract_expiration','{\"label\":\"Contract expiration\",\"attribute\":[\"properties\",\"contract_expiration\"],\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"date\",\"target_type\":\"item\",\"group\":\"Invoice Information\"}',1,31),('properties_dongle_id','{\"label\":\"Dongle ID\",\"attribute\":[\"properties\",\"dongle_id\"],\"type\":\"text\",\"target_type\":\"license\",\"required\":true,\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"visibility_dependency_field_id\":\"properties_activation_type\",\"visibility_dependency_value\":\"dongle\",\"group\":\"General Information\"}',1,39),('properties_imei_number','{\"label\":\"IMEI-Number\",\"attribute\":[\"properties\",\"imei_number\"],\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"text\",\"target_type\":\"item\",\"group\":\"General Information\"}',1,6),('properties_installation','{\"label\":\"Installation\",\"attribute\":[\"properties\",\"installation\"],\"type\":\"checkbox\",\"target_type\":\"license\",\"values\":[{\"label\":\"Citrix\",\"value\":\"citrix\"},{\"label\":\"Local\",\"value\":\"local\"},{\"label\":\"Web\",\"value\":\"web\"}],\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"General Information\"}',1,44),('properties_license_expiration','{\"label\":\"License expiration\",\"attribute\":[\"properties\",\"license_expiration\"],\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"type\":\"date\",\"target_type\":\"license\",\"group\":\"General Information\"}',1,45),('properties_license_type','{\"label\":\"License Type\",\"attribute\":[\"properties\",\"license_type\"],\"type\":\"select\",\"target_type\":\"license\",\"values\":[{\"label\":\"Free\",\"value\":\"free\"},{\"label\":\"Single Workplace\",\"value\":\"single_workplace\"},{\"label\":\"Multiple Workplace\",\"value\":\"multiple_workplace\"},{\"label\":\"Site License\",\"value\":\"site_license\"},{\"label\":\"Concurrent\",\"value\":\"concurrent\"}],\"default\":\"free\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"General Information\"}',1,40),('properties_mac_address','{\"label\":\"MAC-Address\",\"attribute\":[\"properties\",\"mac_address\"],\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"text\",\"target_type\":\"item\",\"group\":\"General Information\"}',1,5),('properties_maintenance_contract','{\"label\":\"Maintenance contract\",\"attribute\":[\"properties\",\"maintenance_contract\"],\"type\":\"select\",\"target_type\":\"license\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"values\":[{\"label\":\"No\",\"value\":\"false\"},{\"label\":\"Yes\",\"value\":\"true\"}],\"default\":\"false\",\"group\":\"Maintenance\"}',1,46),('properties_maintenance_currency','{\"label\":\"Currency\",\"attribute\":[\"properties\",\"maintenance_currency\"],\"type\":\"select\",\"values\":\"all_currencies\",\"default\":\"CHF\",\"target_type\":\"license\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"visibility_dependency_field_id\":\"properties_maintenance_expiration\",\"group\":\"Maintenance\"}',1,48),('properties_maintenance_expiration','{\"label\":\"Maintenance expiration\",\"attribute\":[\"properties\",\"maintenance_expiration\"],\"type\":\"date\",\"target_type\":\"license\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"visibility_dependency_field_id\":\"properties_maintenance_contract\",\"visibility_dependency_value\":\"true\",\"group\":\"Maintenance\"}',1,47),('properties_maintenance_price','{\"label\":\"Price\",\"attribute\":[\"properties\",\"maintenance_price\"],\"type\":\"text\",\"currency\":true,\"target_type\":\"license\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"visibility_dependency_field_id\":\"properties_maintenance_currency\",\"group\":\"Maintenance\"}',1,49),('properties_operating_system','{\"label\":\"Operating System\",\"attribute\":[\"properties\",\"operating_system\"],\"type\":\"checkbox\",\"target_type\":\"license\",\"values\":[{\"label\":\"Windows\",\"value\":\"windows\"},{\"label\":\"Mac OS X\",\"value\":\"mac_os_x\"},{\"label\":\"Linux\",\"value\":\"linux\"},{\"label\":\"iOS\",\"value\":\"ios\"}],\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"General Information\"}',1,43),('properties_procured_by','{\"label\":\"Procured by\",\"attribute\":[\"properties\",\"procured_by\"],\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"type\":\"text\",\"target_type\":\"license\",\"group\":\"Invoice Information\"}',1,50),('properties_project_number','{\"label\":\"Project Number\",\"attribute\":[\"properties\",\"project_number\"],\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"type\":\"text\",\"required\":true,\"visibility_dependency_field_id\":\"properties_reference\",\"visibility_dependency_value\":\"investment\",\"group\":\"Invoice Information\"}',1,25),('properties_quantity_allocations','{\"label\":\"Quantity allocations\",\"attribute\":[\"properties\",\"quantity_allocations\"],\"type\":\"composite\",\"target_type\":\"license\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"visibility_dependency_field_id\":\"properties_total_quantity\",\"data_dependency_field_id\":\"properties_total_quantity\",\"group\":\"General Information\"}',1,42),('properties_reference','{\"label\":\"Reference\",\"attribute\":[\"properties\",\"reference\"],\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"required\":true,\"values\":[{\"label\":\"Running Account\",\"value\":\"invoice\"},{\"label\":\"Investment\",\"value\":\"investment\"}],\"default\":\"invoice\",\"type\":\"radio\",\"group\":\"Invoice Information\"}',1,24),('properties_total_quantity','{\"label\":\"Total quantity\",\"attribute\":[\"properties\",\"total_quantity\"],\"type\":\"text\",\"target_type\":\"license\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"visibility_dependency_field_id\":\"properties_license_type\",\"visibility_dependency_value\":[\"multiple_workplace\",\"site_license\",\"concurrent\"],\"group\":\"General Information\"}',1,41),('properties_umzug','{\"label\":\"Umzug\",\"attribute\":[\"properties\",\"umzug\"],\"type\":\"select\",\"target_type\":\"item\",\"values\":[{\"label\":\"zügeln\",\"value\":\"zügeln\"},{\"label\":\"sofort entsorgen\",\"value\":\"sofort entsorgen\"},{\"label\":\"bei Umzug entsorgen\",\"value\":\"bei Umzug entsorgen\"},{\"label\":\"bei Umzug verkaufen\",\"value\":\"bei Umzug verkaufen\"}],\"default\":\"zügeln\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"Umzug\"}',1,32),('properties_warranty_expiration','{\"label\":\"Warranty expiration\",\"attribute\":[\"properties\",\"warranty_expiration\"],\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"date\",\"target_type\":\"item\",\"group\":\"Invoice Information\"}',1,30),('properties_zielraum','{\"label\":\"Zielraum\",\"attribute\":[\"properties\",\"zielraum\"],\"type\":\"text\",\"target_type\":\"item\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"group\":\"Umzug\"}',1,33),('responsible','{\"label\":\"Responsible person\",\"attribute\":\"responsible\",\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"text\",\"target_type\":\"item\",\"group\":\"Inventory\",\"forPackage\":true}',1,22),('retired','{\"label\":\"Retirement\",\"attribute\":\"retired\",\"type\":\"select\",\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"values\":[{\"label\":\"No\",\"value\":false},{\"label\":\"Yes\",\"value\":true}],\"default\":false,\"group\":\"Status\"}',1,9),('retired_reason','{\"label\":\"Reason for Retirement\",\"attribute\":\"retired_reason\",\"type\":\"textarea\",\"required\":true,\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"visibility_dependency_field_id\":\"retired\",\"visibility_dependency_value\":\"true\",\"group\":\"Status\"}',1,10),('serial_number','{\"label\":\"Serial Number\",\"attribute\":\"serial_number\",\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"type\":\"text\",\"group\":\"General Information\"}',1,4),('software_model_id','{\"label\":\"Software\",\"attribute\":[\"model\",\"id\"],\"value_label\":[\"model\",\"product\"],\"value_label_ext\":[\"model\",\"version\"],\"form_name\":\"model_id\",\"required\":true,\"type\":\"autocomplete-search\",\"target_type\":\"license\",\"search_path\":\"software\",\"search_attr\":\"search_term\",\"value_attr\":\"id\",\"display_attr\":\"product\",\"display_attr_ext\":\"version\",\"group\":null}',1,3),('status_note','{\"label\":\"Status note\",\"attribute\":\"status_note\",\"type\":\"textarea\",\"target_type\":\"item\",\"group\":\"Status\",\"forPackage\":true}',1,14),('supplier_id','{\"label\":\"Supplier\",\"attribute\":[\"supplier\",\"id\"],\"type\":\"autocomplete\",\"extensible\":true,\"extended_key\":[\"supplier\",\"name\"],\"permissions\":{\"role\":\"lending_manager\",\"owner\":true},\"values\":\"all_suppliers\",\"group\":\"Invoice Information\"}',1,29),('user_name','{\"label\":\"User/Typical usage\",\"attribute\":\"user_name\",\"permissions\":{\"role\":\"inventory_manager\",\"owner\":true},\"type\":\"text\",\"target_type\":\"item\",\"group\":\"Inventory\",\"forPackage\":true}',1,23);
+/*!40000 ALTER TABLE `fields` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -372,12 +376,12 @@ CREATE TABLE `groups` (
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `inventory_pool_id` int(11) DEFAULT NULL,
   `is_verification_required` tinyint(1) DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_groups_on_inventory_pool_id` (`inventory_pool_id`),
   KEY `index_groups_on_is_verification_required` (`is_verification_required`),
-  CONSTRAINT `groups_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`)
+  CONSTRAINT `fk_rails_45f96f9df2` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -402,8 +406,8 @@ CREATE TABLE `groups_users` (
   `group_id` int(11) DEFAULT NULL,
   UNIQUE KEY `index_groups_users_on_user_id_and_group_id` (`user_id`,`group_id`),
   KEY `index_groups_users_on_group_id` (`group_id`),
-  CONSTRAINT `groups_users_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `groups_users_group_id_fk` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
+  CONSTRAINT `fk_rails_8546c71994` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_rails_4e63edbd27` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -417,35 +421,27 @@ LOCK TABLES `groups_users` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `histories`
+-- Table structure for table `hidden_fields`
 --
 
-DROP TABLE IF EXISTS `histories`;
+DROP TABLE IF EXISTS `hidden_fields`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `histories` (
+CREATE TABLE `hidden_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `text` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-  `type_const` int(11) DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `target_id` int(11) NOT NULL,
-  `target_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `field_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_histories_on_target_type_and_target_id` (`target_type`,`target_id`),
-  KEY `index_histories_on_type_const` (`type_const`),
-  KEY `index_histories_on_user_id` (`user_id`),
-  CONSTRAINT `histories_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `histories`
+-- Dumping data for table `hidden_fields`
 --
 
-LOCK TABLES `histories` WRITE;
-/*!40000 ALTER TABLE `histories` DISABLE KEYS */;
-/*!40000 ALTER TABLE `histories` ENABLE KEYS */;
+LOCK TABLES `hidden_fields` WRITE;
+/*!40000 ALTER TABLE `hidden_fields` DISABLE KEYS */;
+/*!40000 ALTER TABLE `hidden_fields` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -464,7 +460,7 @@ CREATE TABLE `holidays` (
   PRIMARY KEY (`id`),
   KEY `index_holidays_on_inventory_pool_id` (`inventory_pool_id`),
   KEY `index_holidays_on_start_date_and_end_date` (`start_date`,`end_date`),
-  CONSTRAINT `holidays_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_rails_c189a29194` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -486,6 +482,8 @@ DROP TABLE IF EXISTS `images`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `target_id` int(11) DEFAULT NULL,
+  `target_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `is_main` tinyint(1) DEFAULT '0',
   `content_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `filename` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -494,8 +492,6 @@ CREATE TABLE `images` (
   `width` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `thumbnail` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `target_id` int(11) DEFAULT NULL,
-  `target_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_images_on_target_id_and_target_type` (`target_id`,`target_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -537,8 +533,8 @@ CREATE TABLE `inventory_pools` (
   `automatic_access` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_inventory_pools_on_name` (`name`),
-  KEY `inventory_pools_address_id_fk` (`address_id`),
-  CONSTRAINT `inventory_pools_address_id_fk` FOREIGN KEY (`address_id`) REFERENCES `addresses` (`id`)
+  KEY `fk_rails_6a55965722` (`address_id`),
+  CONSTRAINT `fk_rails_6a55965722` FOREIGN KEY (`address_id`) REFERENCES `addresses` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -563,8 +559,8 @@ CREATE TABLE `inventory_pools_model_groups` (
   `model_group_id` int(11) DEFAULT NULL,
   KEY `index_inventory_pools_model_groups_on_inventory_pool_id` (`inventory_pool_id`),
   KEY `index_inventory_pools_model_groups_on_model_group_id` (`model_group_id`),
-  CONSTRAINT `inventory_pools_model_groups_model_group_id_fk` FOREIGN KEY (`model_group_id`) REFERENCES `model_groups` (`id`),
-  CONSTRAINT `inventory_pools_model_groups_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`)
+  CONSTRAINT `fk_rails_cb04742a0b` FOREIGN KEY (`model_group_id`) REFERENCES `model_groups` (`id`),
+  CONSTRAINT `fk_rails_6a7781d99f` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -592,6 +588,7 @@ CREATE TABLE `items` (
   `location_id` int(11) DEFAULT NULL,
   `supplier_id` int(11) DEFAULT NULL,
   `owner_id` int(11) NOT NULL,
+  `inventory_pool_id` int(11) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `invoice_number` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `invoice_date` date DEFAULT NULL,
@@ -602,17 +599,17 @@ CREATE TABLE `items` (
   `is_broken` tinyint(1) DEFAULT '0',
   `is_incomplete` tinyint(1) DEFAULT '0',
   `is_borrowable` tinyint(1) DEFAULT '0',
+  `status_note` text COLLATE utf8_unicode_ci,
   `needs_permission` tinyint(1) DEFAULT '0',
-  `inventory_pool_id` int(11) NOT NULL,
   `is_inventory_relevant` tinyint(1) DEFAULT '0',
   `responsible` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `insurance_number` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `note` text COLLATE utf8_unicode_ci,
   `name` text COLLATE utf8_unicode_ci,
   `user_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `properties` varchar(2048) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
+  `properties` text COLLATE utf8_unicode_ci,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_items_on_inventory_code` (`inventory_code`),
   KEY `index_items_on_inventory_pool_id` (`inventory_pool_id`),
@@ -624,13 +621,13 @@ CREATE TABLE `items` (
   KEY `index_items_on_owner_id` (`owner_id`),
   KEY `index_items_on_parent_id_and_retired` (`parent_id`,`retired`),
   KEY `index_items_on_model_id_and_retired_and_inventory_pool_id` (`model_id`,`retired`,`inventory_pool_id`),
-  KEY `items_supplier_id_fk` (`supplier_id`),
-  CONSTRAINT `items_supplier_id_fk` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`),
-  CONSTRAINT `items_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`),
-  CONSTRAINT `items_location_id_fk` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`),
-  CONSTRAINT `items_model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`),
-  CONSTRAINT `items_owner_id_fk` FOREIGN KEY (`owner_id`) REFERENCES `inventory_pools` (`id`),
-  CONSTRAINT `items_parent_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `items` (`id`) ON DELETE SET NULL
+  KEY `fk_rails_538506beaf` (`supplier_id`),
+  CONSTRAINT `fk_rails_538506beaf` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`),
+  CONSTRAINT `fk_rails_042cf7b23c` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`),
+  CONSTRAINT `fk_rails_0ed18b3bf9` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`),
+  CONSTRAINT `fk_rails_8757b4d49c` FOREIGN KEY (`owner_id`) REFERENCES `inventory_pools` (`id`),
+  CONSTRAINT `fk_rails_e8ed83a2e6` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`),
+  CONSTRAINT `fk_rails_ed5bf219ac` FOREIGN KEY (`parent_id`) REFERENCES `items` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -686,7 +683,7 @@ CREATE TABLE `locations` (
   `building_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_locations_on_building_id` (`building_id`),
-  CONSTRAINT `locations_building_id_fk` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`id`)
+  CONSTRAINT `fk_rails_b81dc66f92` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -697,6 +694,33 @@ CREATE TABLE `locations` (
 LOCK TABLES `locations` WRITE;
 /*!40000 ALTER TABLE `locations` DISABLE KEYS */;
 /*!40000 ALTER TABLE `locations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mail_templates`
+--
+
+DROP TABLE IF EXISTS `mail_templates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mail_templates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `inventory_pool_id` int(11) DEFAULT NULL,
+  `language_id` int(11) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `format` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `body` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mail_templates`
+--
+
+LOCK TABLES `mail_templates` WRITE;
+/*!40000 ALTER TABLE `mail_templates` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mail_templates` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -717,8 +741,8 @@ CREATE TABLE `model_group_links` (
   KEY `index_model_group_links_on_ancestor_id` (`ancestor_id`),
   KEY `index_model_group_links_on_direct` (`direct`),
   KEY `index_on_descendant_id_and_ancestor_id_and_direct` (`descendant_id`,`ancestor_id`,`direct`),
-  CONSTRAINT `model_group_links_descendant_id_fk` FOREIGN KEY (`descendant_id`) REFERENCES `model_groups` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `model_group_links_ancestor_id_fk` FOREIGN KEY (`ancestor_id`) REFERENCES `model_groups` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_rails_c32706c682` FOREIGN KEY (`descendant_id`) REFERENCES `model_groups` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rails_1e0f0d42e8` FOREIGN KEY (`ancestor_id`) REFERENCES `model_groups` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -742,8 +766,8 @@ CREATE TABLE `model_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_model_groups_on_type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -773,8 +797,8 @@ CREATE TABLE `model_links` (
   PRIMARY KEY (`id`),
   KEY `index_model_links_on_model_id_and_model_group_id` (`model_id`,`model_group_id`),
   KEY `index_model_links_on_model_group_id_and_model_id` (`model_group_id`,`model_id`),
-  CONSTRAINT `model_links_model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `model_links_model_group_id_fk` FOREIGN KEY (`model_group_id`) REFERENCES `model_groups` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_rails_9b7295b085` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rails_11add1a9a3` FOREIGN KEY (`model_group_id`) REFERENCES `model_groups` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -808,11 +832,11 @@ CREATE TABLE `models` (
   `is_package` tinyint(1) DEFAULT '0',
   `technical_detail` text COLLATE utf8_unicode_ci,
   `hand_over_note` text COLLATE utf8_unicode_ci,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `index_models_on_is_package` (`is_package`),
-  KEY `index_models_on_type` (`type`)
+  KEY `index_models_on_type` (`type`),
+  KEY `index_models_on_is_package` (`is_package`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -837,8 +861,8 @@ CREATE TABLE `models_compatibles` (
   `compatible_id` int(11) DEFAULT NULL,
   KEY `index_models_compatibles_on_compatible_id` (`compatible_id`),
   KEY `index_models_compatibles_on_model_id` (`model_id`),
-  CONSTRAINT `models_compatibles_compatible_id_fk` FOREIGN KEY (`compatible_id`) REFERENCES `models` (`id`),
-  CONSTRAINT `models_compatibles_model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`)
+  CONSTRAINT `fk_rails_e63411efbd` FOREIGN KEY (`compatible_id`) REFERENCES `models` (`id`),
+  CONSTRAINT `fk_rails_5c311e46b1` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -865,7 +889,8 @@ CREATE TABLE `notifications` (
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_notifications_on_user_id` (`user_id`),
-  CONSTRAINT `notifications_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  KEY `index_notifications_on_created_at_and_user_id` (`created_at`,`user_id`),
+  CONSTRAINT `fk_rails_b080fb4855` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -918,7 +943,7 @@ CREATE TABLE `options` (
   `price` decimal(8,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_options_on_inventory_pool_id` (`inventory_pool_id`),
-  CONSTRAINT `options_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`)
+  CONSTRAINT `fk_rails_fd8397be78` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -946,11 +971,11 @@ CREATE TABLE `partitions` (
   `quantity` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_partitions_on_model_id_and_inventory_pool_id_and_group_id` (`model_id`,`inventory_pool_id`,`group_id`),
-  KEY `partitions_group_id_fk` (`group_id`),
-  KEY `partitions_inventory_pool_id_fk` (`inventory_pool_id`),
-  CONSTRAINT `partitions_model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `partitions_group_id_fk` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
-  CONSTRAINT `partitions_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`)
+  KEY `fk_rails_44495fc6cf` (`group_id`),
+  KEY `fk_rails_b10a540212` (`inventory_pool_id`),
+  CONSTRAINT `fk_rails_69c88ff594` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rails_44495fc6cf` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+  CONSTRAINT `fk_rails_b10a540212` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -993,7 +1018,7 @@ CREATE TABLE `properties` (
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_properties_on_model_id` (`model_id`),
-  CONSTRAINT `properties_model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_rails_a52b96ad3d` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1030,6 +1055,71 @@ LOCK TABLES `purposes` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `reservations`
+--
+
+DROP TABLE IF EXISTS `reservations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reservations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contract_id` int(11) DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ItemLine',
+  `item_id` int(11) DEFAULT NULL,
+  `model_id` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT '1',
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `returned_date` date DEFAULT NULL,
+  `option_id` int(11) DEFAULT NULL,
+  `purpose_id` int(11) DEFAULT NULL,
+  `returned_to_user_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `inventory_pool_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `delegated_user_id` int(11) DEFAULT NULL,
+  `handed_over_by_user_id` int(11) DEFAULT NULL,
+  `status` enum('unsubmitted','submitted','rejected','approved','signed','closed') COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_contract_lines_on_start_date` (`start_date`),
+  KEY `index_contract_lines_on_end_date` (`end_date`),
+  KEY `index_contract_lines_on_option_id` (`option_id`),
+  KEY `index_contract_lines_on_contract_id` (`contract_id`),
+  KEY `index_contract_lines_on_item_id` (`item_id`),
+  KEY `index_contract_lines_on_model_id` (`model_id`),
+  KEY `index_contract_lines_on_returned_date_and_contract_id` (`returned_date`,`contract_id`),
+  KEY `index_contract_lines_on_type_and_contract_id` (`type`,`contract_id`),
+  KEY `fk_rails_f33ca08ef1` (`purpose_id`),
+  KEY `fk_rails_2b7f188fdb` (`returned_to_user_id`),
+  KEY `index_reservations_on_status` (`status`),
+  KEY `fk_rails_151794e412` (`inventory_pool_id`),
+  KEY `fk_rails_48a92fce51` (`user_id`),
+  KEY `fk_rails_6f10314351` (`delegated_user_id`),
+  KEY `fk_rails_3cc4562273` (`handed_over_by_user_id`),
+  CONSTRAINT `fk_rails_3cc4562273` FOREIGN KEY (`handed_over_by_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_rails_01f262b19b` FOREIGN KEY (`model_id`) REFERENCES `models` (`id`),
+  CONSTRAINT `fk_rails_0a28b8427a` FOREIGN KEY (`option_id`) REFERENCES `options` (`id`),
+  CONSTRAINT `fk_rails_151794e412` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`),
+  CONSTRAINT `fk_rails_2b7f188fdb` FOREIGN KEY (`returned_to_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_rails_48a92fce51` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_rails_6f10314351` FOREIGN KEY (`delegated_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_rails_82d8de4d2e` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rails_f33ca08ef1` FOREIGN KEY (`purpose_id`) REFERENCES `purposes` (`id`),
+  CONSTRAINT `fk_rails_f9a0667817` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reservations`
+--
+
+LOCK TABLES `reservations` WRITE;
+/*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `schema_migrations`
 --
 
@@ -1048,7 +1138,7 @@ CREATE TABLE `schema_migrations` (
 
 LOCK TABLES `schema_migrations` WRITE;
 /*!40000 ALTER TABLE `schema_migrations` DISABLE KEYS */;
-INSERT INTO `schema_migrations` VALUES ('20140410180000'),('20140414100000'),('20140415083535'),('20140417113831'),('20140428092844'),('20140515131025'),('20140812132326'),('20140820100242'),('20140828082448'),('20140901141016'),('20140903105715'),('20140905091014');
+INSERT INTO `schema_migrations` VALUES ('20140410180000'),('20140903105715'),('20150129121330'),('20150427062734'),('20150428160035'),('20150507143147'),('20150527084404'),('20150616123337'),('20150909134614'),('20150918164018');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1084,6 +1174,7 @@ CREATE TABLE `settings` (
   `disable_borrow_section` tinyint(1) NOT NULL DEFAULT '0',
   `disable_borrow_section_message` text COLLATE utf8_unicode_ci,
   `text` text COLLATE utf8_unicode_ci,
+  `timeout_minutes` int(11) NOT NULL DEFAULT '30',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1094,7 +1185,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'smtp.zhdk.ch',25,'beta.ausleihe.zhdk.ch','CHF','Die Benutzerin/der Benutzer ist bei unsachgemässer Handhabung oder Verlust schadenersatzpflichtig. Sie/Er verpflichtet sich, das Material sorgfältig zu behandeln und gereinigt zu retournieren. Bei mangelbehafteter oder verspäteter Rückgabe kann eine Ausleihsperre (bis zu 6 Monaten) verhängt werden. Das geliehene Material bleibt jederzeit uneingeschränktes Eigentum der Zürcher Hochschule der Künste und darf ausschliesslich für schulische Zwecke eingesetzt werden. Mit ihrer/seiner Unterschrift akzeptiert die Benutzerin/der Benutzer diese Bedingungen sowie die \'Richtlinie zur Ausleihe von Sachen\' der ZHdK und etwaige abteilungsspezifische Ausleih-Richtlinien.','Your\nAddress\nHere','Das PZ-leihs Team','sender@example.com',0,'http://www.zhdk.ch/?person/foto&width=100&compressionlevel=0&id={:id}',NULL,'/assets/image-logo-zhdk.png','test',NULL,NULL,0,'none','Bern',0,NULL,0,NULL,NULL);
+INSERT INTO `settings` VALUES (1,'smtp.zhdk.ch',25,'beta.ausleihe.zhdk.ch','CHF','Die Benutzerin/der Benutzer ist bei unsachgemässer Handhabung oder Verlust schadenersatzpflichtig. Sie/Er verpflichtet sich, das Material sorgfältig zu behandeln und gereinigt zu retournieren. Bei mangelbehafteter oder verspäteter Rückgabe kann eine Ausleihsperre (bis zu 6 Monaten) verhängt werden. Das geliehene Material bleibt jederzeit uneingeschränktes Eigentum der Zürcher Hochschule der Künste und darf ausschliesslich für schulische Zwecke eingesetzt werden. Mit ihrer/seiner Unterschrift akzeptiert die Benutzerin/der Benutzer diese Bedingungen sowie die \'Richtlinie zur Ausleihe von Sachen\' der ZHdK und etwaige abteilungsspezifische Ausleih-Richtlinien.','Your\nAddress\nHere','Das PZ-leihs Team','sender@example.com',0,'http://www.zhdk.ch/?person/foto&width=100&compressionlevel=0&id={:id}',NULL,'/assets/image-logo-zhdk.png','test',NULL,NULL,0,'none','Bern',0,NULL,0,NULL,NULL,30);
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1108,8 +1199,8 @@ DROP TABLE IF EXISTS `suppliers`;
 CREATE TABLE `suppliers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_suppliers_on_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1148,16 +1239,16 @@ CREATE TABLE `users` (
   `language_id` int(11) DEFAULT NULL,
   `extended_info` text COLLATE utf8_unicode_ci,
   `settings` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
   `delegator_user_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_users_on_authentication_system_id` (`authentication_system_id`),
-  KEY `users_language_id_fk` (`language_id`),
-  KEY `users_delegator_user_id_fk` (`delegator_user_id`),
-  CONSTRAINT `users_delegator_user_id_fk` FOREIGN KEY (`delegator_user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `users_authentication_system_id_fk` FOREIGN KEY (`authentication_system_id`) REFERENCES `authentication_systems` (`id`),
-  CONSTRAINT `users_language_id_fk` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`)
+  KEY `fk_rails_45f4f12508` (`language_id`),
+  KEY `fk_rails_cc67a09e58` (`delegator_user_id`),
+  CONSTRAINT `fk_rails_cc67a09e58` FOREIGN KEY (`delegator_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_rails_330f34f125` FOREIGN KEY (`authentication_system_id`) REFERENCES `authentication_systems` (`id`),
+  CONSTRAINT `fk_rails_45f4f12508` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1169,27 +1260,6 @@ LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary table structure for view `visit_lines`
---
-
-DROP TABLE IF EXISTS `visit_lines`;
-/*!50001 DROP VIEW IF EXISTS `visit_lines`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `visit_lines` (
-  `visit_id` varchar(148),
-  `inventory_pool_id` int(11),
-  `user_id` int(11),
-  `delegated_user_id` int(11),
-  `status` enum('unsubmitted','submitted','rejected','approved','signed','closed'),
-  `action` varchar(9),
-  `date` date,
-  `quantity` int(11),
-  `contract_line_id` int(11)
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Temporary table structure for view `visits`
@@ -1204,7 +1274,6 @@ SET character_set_client = utf8;
   `inventory_pool_id` int(11),
   `user_id` int(11),
   `status` enum('unsubmitted','submitted','rejected','approved','signed','closed'),
-  `action` varchar(9),
   `date` date,
   `quantity` decimal(32,0)
 ) ENGINE=MyISAM */;
@@ -1227,9 +1296,11 @@ CREATE TABLE `workdays` (
   `friday` tinyint(1) DEFAULT '1',
   `saturday` tinyint(1) DEFAULT '0',
   `sunday` tinyint(1) DEFAULT '0',
+  `reservation_advance_days` int(11) DEFAULT '0',
+  `max_visits` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `index_workdays_on_inventory_pool_id` (`inventory_pool_id`),
-  CONSTRAINT `workdays_inventory_pool_id_fk` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_rails_a18bc267df` FOREIGN KEY (`inventory_pool_id`) REFERENCES `inventory_pools` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1261,24 +1332,6 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
--- Final view structure for view `visit_lines`
---
-
-/*!50001 DROP TABLE IF EXISTS `visit_lines`*/;
-/*!50001 DROP VIEW IF EXISTS `visit_lines`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50001 VIEW `visit_lines` AS select hex(concat_ws('_',if((`c`.`status` = 'approved'),`cl`.`start_date`,`cl`.`end_date`),`c`.`inventory_pool_id`,`c`.`user_id`,`c`.`status`)) AS `visit_id`,`c`.`inventory_pool_id` AS `inventory_pool_id`,`c`.`user_id` AS `user_id`,`c`.`delegated_user_id` AS `delegated_user_id`,`c`.`status` AS `status`,if((`c`.`status` = 'approved'),'hand_over','take_back') AS `action`,if((`c`.`status` = 'approved'),`cl`.`start_date`,`cl`.`end_date`) AS `date`,`cl`.`quantity` AS `quantity`,`cl`.`id` AS `contract_line_id` from (`contract_lines` `cl` join `contracts` `c` on((`cl`.`contract_id` = `c`.`id`))) where ((`c`.`status` in ('approved','signed')) and isnull(`cl`.`returned_date`)) order by if((`c`.`status` = 'approved'),`cl`.`start_date`,`cl`.`end_date`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
 -- Final view structure for view `visits`
 --
 
@@ -1291,7 +1344,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50001 VIEW `visits` AS select hex(concat_ws('_',`visit_lines`.`date`,`visit_lines`.`inventory_pool_id`,`visit_lines`.`user_id`,`visit_lines`.`status`)) AS `id`,`visit_lines`.`inventory_pool_id` AS `inventory_pool_id`,`visit_lines`.`user_id` AS `user_id`,`visit_lines`.`status` AS `status`,`visit_lines`.`action` AS `action`,`visit_lines`.`date` AS `date`,sum(`visit_lines`.`quantity`) AS `quantity` from `visit_lines` group by `visit_lines`.`user_id`,`visit_lines`.`status`,`visit_lines`.`date`,`visit_lines`.`inventory_pool_id` */;
+/*!50001 VIEW `visits` AS select hex(concat_ws('_',if((`reservations`.`status` = 'signed'),`reservations`.`end_date`,`reservations`.`start_date`),`reservations`.`inventory_pool_id`,`reservations`.`user_id`,`reservations`.`status`)) AS `id`,`reservations`.`inventory_pool_id` AS `inventory_pool_id`,`reservations`.`user_id` AS `user_id`,`reservations`.`status` AS `status`,if((`reservations`.`status` = 'signed'),`reservations`.`end_date`,`reservations`.`start_date`) AS `date`,sum(`reservations`.`quantity`) AS `quantity` from `reservations` where (`reservations`.`status` in ('submitted','approved','signed')) group by `reservations`.`user_id`,`reservations`.`status`,if((`reservations`.`status` = 'signed'),`reservations`.`end_date`,`reservations`.`start_date`),`reservations`.`inventory_pool_id` order by if((`reservations`.`status` = 'signed'),`reservations`.`end_date`,`reservations`.`start_date`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1305,4 +1358,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-27 16:24:07
+-- Dump completed on 2015-09-21  0:33:44

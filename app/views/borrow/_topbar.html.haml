@@ -3,7 +3,7 @@
   .wrapper 
 
     %a.topbar-logo.padding-horizontal-s.margin-right-s{href: borrow_root_path}
-      = render :partial => "logo"
+      = render partial: 'application/logo'
 
     %ul.topbar-navigation.padding-right-m
 
@@ -12,18 +12,18 @@
       %li#topbar-search.topbar-item.topbar-search.position-absolute-left
         = render :partial => 'topbar_search'
 
-      - if (q3 = current_user.contracts.submitted.count) > 0
+      - if (q3 = current_user.reservations_bundles.submitted.to_a.count) > 0 # NOTE count returns a Hash because the group() in default scope
         %li.topbar-item{:class => current_page?(:controller => :contracts) ? "active" : nil}
           %a.topbar-item-inner{href: borrow_orders_path}
             != n_("%s Order", "%s Orders", q3) % "<span class='badge'>#{q3}</span>"
 
-      - if (q1 = current_user.visits.hand_over.count) > 0
+      - if (q1 = current_user.visits.hand_over.to_a.count) > 0 # NOTE Visit.count returns a Hash because the group() in default scope
         %li.topbar-item{:class => current_page?(:controller => :to_pick_up) ? "active" : nil}
           %a.topbar-item-inner{href: borrow_to_pick_up_path}
             %span.badge= q1
             = _("To pick up")
 
-      - if (q2 = current_user.visits.take_back.count) > 0
+      - if (q2 = current_user.visits.take_back.to_a.count) > 0 # NOTE Visit.count returns a Hash because the group() in default scope
         %li.topbar-item{:class => current_page?(:controller => :returns) ? "active" : nil}
           %a.topbar-item-inner{href: borrow_returns_path}
             != n_("%s Return", "%s Returns", q2) % "<span class='badge'>#{q2}</span>"
@@ -32,52 +32,8 @@
         %a.topbar-item-inner{href: borrow_inventory_pools_path}= _("Inventory Pools")
 
     %ul.topbar-navigation.float-right
-
-      - if current_user.has_role?(:group_manager) or current_user.has_role?(:admin)
-        %li.topbar-item.with-icon
-          %a.topbar-item-inner{href: manage_root_path}
-            %i.icon-gears
-            %span= _("Manage")
-
-      %li.topbar-item.dropdown-holder{:class => current_page?(borrow_current_user_path) ? "active" : nil}
-        %a.topbar-item-inner{href: borrow_current_user_path}
-          - if current_user.is_delegation
-            .icon-group
-          - else
-            %img.max-height-xxxs.max-width-xxs.emboss.deep{:src => current_user.image_url}
-          %span
-            = current_user.short_name
-          %i.arrow.down
-
-        %ul.dropdown.right.straight-top
-          %li
-            %a.dropdown-item{href: borrow_current_user_path}
-              .width-xxxs.inline-block.text-align-center
-                .icon-user
-              = _("User data")
-          %li
-            %a.dropdown-item{href: borrow_user_documents_path}
-              .width-xxxs.inline-block.text-align-center
-                .icon-copy
-              = _("My documents")
-          - if current_user.delegations.exists?
-            %li.separated-top
-              %a.dropdown-item{href: borrow_user_delegations_path}
-                .width-xxxs.inline-block.text-align-center
-                  .icon-group
-                = _("Delegations")
-          - elsif current_user.is_delegation and @current_delegated_user
-            %li.separated-top
-              %a.dropdown-item{href: borrow_user_switch_back_path}
-                .width-xxxs.inline-block.text-align-center
-                  %img.max-height-xxxs.max-width-xxs.emboss.deep{:src => @current_delegated_user.image_url}
-                = _("Back to %s") % @current_delegated_user.to_s
-
-          %li.separated-top
-            %a.dropdown-item{href: logout_path}
-              .width-xxxs.inline-block.text-align-center
-                .icon-signout
-              = _("Logout")
+      = render partial: 'application/navigation'
+      = render partial: 'application/user'
 
 :coffeescript
   

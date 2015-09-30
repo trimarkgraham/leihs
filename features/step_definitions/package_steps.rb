@@ -12,13 +12,13 @@ Given "item '$item' is part of package item $package_item" do |item, package_ite
   item.save
 end
 
-When /^lending_manager clicks to add an additional model$/ do
-  get_via_redirect add_line_backend_inventory_pool_acknowledge_path(@inventory_pool, :start_date => Date.today, :end_date => Date.today)
-  #follow_redirect!
-end
+# When /^lending_manager clicks to add an additional model$/ do
+#   get_via_redirect add_line_backend_inventory_pool_acknowledge_path(@inventory_pool, start_date: Date.today, end_date: Date.today)
+#   #follow_redirect!
+# end
 
-#Then /^he sees 0 lines 'Khil Remix'$/ do
-# the check actually doesn't bother about lines at all...
+#Then /^he sees 0 reservations 'Khil Remix'$/ do
+# the check actually doesn't bother about reservations at all...
 Then /^(.*) sees (\d*) line(s?) '(.*)'$/ do |who, number, plural, text|
   expect(@response.body.scan(text).size).to eq number.to_i
 end

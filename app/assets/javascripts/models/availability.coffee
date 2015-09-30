@@ -62,7 +62,7 @@ class window.App.Availability extends Spine.Model
       if availableQuantity < quantity
         nextChange = changes[i+1]
         rangeStartDate = if moment(change[0]).diff(moment(startDate), "days") > 0 then change[0] else startDate
-        rangeEndDate = if nextChange? then moment(nextChange[0]).subtract("days", 1) else endDate
+        rangeEndDate = if nextChange? then moment(nextChange[0]).subtract(1, "days") else endDate
         unavailableRanges.push
           startDate: moment(rangeStartDate).toDate()
           endDate: moment(rangeEndDate).toDate()
@@ -81,20 +81,20 @@ class window.App.Availability extends Spine.Model
 
   ###
     solves the self-blocking problem 
-    excludes the given lines from the changes
+    excludes the given reservations from the changes
     if it is not possible to solve the self-blocking problem with just adding the line quantity again
     take care to deep clone the availability to not manipulate the original
   ###
-  withoutLines: (lines, recoverSoftOverBooking) ->
+  withoutLines: (reservations, recoverSoftOverBooking) ->
     clone = $.extend true, {}, @
     _.each clone.changes, (change)=>
       for allocation in change[2]
-        for line in lines
+        for line in reservations
           # ItemLine is the only type we have
-          if allocation.out_document_lines? and allocation.out_document_lines["ItemLine"]?
-            outDocumentLines = allocation.out_document_lines["ItemLine"]
+          if allocation.running_reservations? and allocation.running_reservations["ItemLine"]?
+            outDocumentLines = allocation.running_reservations["ItemLine"]
             if _.include(outDocumentLines, line.id)
-              allocation.out_document_lines["ItemLine"] = _.filter outDocumentLines, (l)-> l != line.id
+              allocation.running_reservations["ItemLine"] = _.filter outDocumentLines, (l)-> l != line.id
               # we recover the quantity only if is not a soft-overbooking
               # or if it is request by passing true as second argument
               if recoverSoftOverBooking or @groupIsIn line.user().groupIds, allocation.group_id

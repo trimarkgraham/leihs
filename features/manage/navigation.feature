@@ -1,41 +1,27 @@
-# language: de
 
-Funktionalität: Navigation
-
-  @personas
-  Szenario: Navigation für Gruppen-Verwalter
-    Angenommen ich bin Andi
-    Und man befindet sich im Verleih-Bereich
-    Dann seh ich die Navigation
-    Und die Navigation beinhaltet "Verleih"
-    Und die Navigation beinhaltet "Ausleihen"
-    Und die Navigation beinhaltet "Benutzer"
+Feature: Navigation
 
   @personas
-  Szenario: Navigation für Gruppen-Verwalter in Verleih-Bereich
-    Angenommen ich bin Andi
-    Und man befindet sich im Verleih-Bereich
-    Dann seh ich die Navigation
-    Und kann man auf ein der "Bestellungen" Tab klichen
-    Und kann man auf ein der "Verträge" Tab klichen
-    Und man sieht die Gerätepark-Auswahl im Verwalten-Bereich
+  Scenario: Navigation für Gruppen-Verwalter
+    Given I am Andi
+    And I visit the lending section
+    Then I can see the navigation bars
+    And the navigation contains "Lending"
+    And the navigation contains "Borrow"
+    And the navigation contains "User"
 
   @personas
-  Szenario: Aufklappen der Geraeteparkauswahl und Wechsel des Geraeteparks
-    Angenommen ich bin Mike
-    Wenn ich auf die Geraetepark-Auswahl klicke
-    Dann sehe ich alle Geraeteparks, zu denen ich Zugriff als Verwalter habe
-    Wenn ich auf einen Geraetepark klicke
-    Dann wechsle ich zu diesem Geraetepark
+  Scenario: Navigation für Gruppen-Verwalter in Verleih-Bereich
+    Given I am Andi
+    And I visit the lending section
+    Then I can see the navigation bars
+    And I open the tab "Orders"
+    And I open the tab "Contracts"
 
   @personas @javascript
-  Szenario: Zuklappen der Geraeteparkauswahl
-    Angenommen ich bin Mike
-    Wenn ich auf die Geraetepark-Auswahl klicke
-    Dann sehe ich alle Geraeteparks, zu denen ich Zugriff als Verwalter habe
-    Wenn ich ausserhalb der Geraetepark-Auswahl klicke
-    Dann schliesst sich die Geraetepark-Auswahl
-    Wenn ich auf die Geraetepark-Auswahl klicke
-    Dann sehe ich alle Geraeteparks, zu denen ich Zugriff als Verwalter habe
-    Wenn ich erneut auf die Geraetepark-Auswahl klicke
-    Dann schliesst sich die Geraetepark-Auswahl
+  Scenario: Aufklappen der Geraeteparkauswahl und Wechsel des Geraeteparks
+    Given I am Mike
+    When I hover over the navigation toggler
+    Then I see all inventory pools for which I am a manager
+    When I click on one of the inventory pools
+    Then I switch to that inventory pool

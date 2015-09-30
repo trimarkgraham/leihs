@@ -6,7 +6,10 @@
 ##### VENDOR
 #
 #= require jqBarGraph/jqBarGraph.1.2
-#= require jquery-autosize/jquery.autosize
+#
+##### RAILS ASSETS
+#
+#= require jquery-autosize
 #
 ##### APP
 #

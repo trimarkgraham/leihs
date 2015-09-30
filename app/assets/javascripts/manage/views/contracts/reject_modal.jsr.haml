@@ -15,7 +15,7 @@
           %a.modal-close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button", :title => '{{jed "close dialog"/}}', :class => "weak"}
             {{jed "Cancel"/}}
           %button.button.red{:type => :submit}
-            %i.icon-thumbs-down
+            %i.fa.fa-thumbs-down
             {{jed 'Reject'/}}
 
     .row.margin-top-m
@@ -35,12 +35,12 @@
                 {{date end_date/}}
             .col1of2.text-align-right
               %strong {{diffDatesInDays start_date end_date/}}
-          {{for lines}}
+          {{for reservations}}
           .row
             .col1of8.text-align-center
               .paragraph-s
-                {{if sublines}}
-                {{sum sublines "quantity"/}}
+                {{if subreservations}}
+                {{sum subreservations "quantity"/}}
                 {{else}}
                 {{> quantity}}
                 {{/if}}

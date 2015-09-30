@@ -30,7 +30,7 @@ module PublicAsset
   def public_filename(thumb = nil)
     thumb = nil if thumb == :original
     filename = thumbnail_name_for(thumb)
-    partitioned_path = ("%08d" % id).scan(/..../).join('/')
+    partitioned_path = ('%08d' % id).scan(/..../).join('/')
     "#{self.class::PATH_PREFIX}/#{partitioned_path}/#{filename}"
   end
 
@@ -44,11 +44,13 @@ module PublicAsset
 
   module ClassMethods
     def define_attached_file_specification **options
+      attr_accessor :file_content_type
+
       # paperclip gem
       has_attached_file \
         :file,
-        url: ":public_filename",
-        path: ":rails_root/public:url",
+        url: ':public_filename',
+        path: ':rails_root/public:url',
         **options
     end
   end

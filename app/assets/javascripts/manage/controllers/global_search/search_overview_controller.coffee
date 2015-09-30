@@ -133,7 +133,7 @@ class window.App.SearchOverviewController extends Spine.Controller
     .done (data, status, xhr)=>
       contracts = (App.Contract.find datum.id for datum in data)
       @fetchUsers(contracts, "all").done =>
-        @fetchContractLines(contracts).done =>
+        @fetchReservations(contracts).done =>
           @render @contracts, "manage/views/contracts/line", contracts, xhr
 
   fetchUsers: (records, all = false) =>
@@ -149,10 +149,10 @@ class window.App.SearchOverviewController extends Spine.Controller
       users = (App.User.find datum.id for datum in data)
       App.User.fetchDelegators users
 
-  fetchContractLines: (records)=>
+  fetchReservations: (records)=>
     ids = _.flatten _.map records, (r)-> r.id
     return {done: (c)->c()} unless ids.length
-    App.ContractLine.ajaxFetch
+    App.Reservation.ajaxFetch
       data: $.param
         contract_ids: ids
         paginate: false
@@ -166,12 +166,12 @@ class window.App.SearchOverviewController extends Spine.Controller
     .done (data, status, xhr)=>
       contracts = (App.Contract.find datum.id for datum in data)
       @fetchUsers(contracts).done =>
-        @fetchContractLines(contracts).done =>
+        @fetchReservations(contracts).done =>
           @fetchPurposes(contracts).done =>
             @render @orders, "manage/views/contracts/line", contracts, xhr
 
   fetchPurposes: (contracts)=>
-    ids = _.compact _.filter (_.map (_.flatten (_.map contracts, (o) -> o.lines().all())), (l) -> l.purpose_id), (id) -> not App.Purpose.exists(id)?
+    ids = _.compact _.filter (_.map (_.flatten (_.map contracts, (o) -> o.reservations().all())), (l) -> l.purpose_id), (id) -> not App.Purpose.exists(id)?
     return {done: (c)=>c()} unless ids.length
     App.Purpose.ajaxFetch
       data: $.param

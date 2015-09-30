@@ -1,8 +1,8 @@
-Feature: Add lines during hand over
+Feature: Add reservations during hand over
 
-  In order to hand things over and add lines to the contract
+  In order to hand things over and add reservations to the contract
   As a lending manager
-  I want to be able to have functionlities to add lines
+  I want to be able to have functionlities to add reservations
 
   Background:
     Given I am Pius
@@ -36,10 +36,10 @@ Feature: Add lines during hand over
     Then each model of the template is added to the hand over for the provided date range
 
   @javascript @personas @browser
-  Scenario: Add lines which changes other lines availability
+  Scenario: Add reservations which changes other reservations availability
     Given I open a hand over for today
-    And I add so many lines that I break the maximal quantity of a model
-    Then I see that all lines of that model have availability problems
+    And I add so many reservations that I break the maximal quantity of a model
+    Then I see that all reservations of that model have availability problems
 
   @javascript @personas @browser
   Scenario: Add an option to the hand over picking an autocomplete element
@@ -67,10 +67,10 @@ Feature: Add lines during hand over
     When I select the model from the list
     Then the model is added to the hand over
 
-  @current
+  @javascript @personas
   Scenario: Add a line to the hand over providing a model name
     Given I open a hand over
-    When I enter a model name
+    When I enter a model name which is not related to my current pool
     Then only models related to my current pool are suggested
 
     

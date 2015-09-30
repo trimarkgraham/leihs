@@ -4,14 +4,20 @@
 
 leihs is a web-based system to manage the circulation of items within an 
 organization or institution. In our case, we use it to keep track of who uses 
-our cameras, lighting equipment, speakers, microphones etc. 
+our cameras, lighting equipment, speakers, microphones etc.
+
+## Potential corruption of data in older leihs versions
+
+There is a potential corruption of pricing data in leihs between versions 
+3.13.0 and 3.29.0. If you have been running one of those versions for any 
+length of time, please [read our advisory](http://blog.zhdk.ch/leihs/2015/06/30/potential-corruption-of-some-pricing-data-in-leihs-versions-between-3-13-0-and-3-29-0/).
 
 
 ## Live demo
 
 How to access the live demo is described in our wiki:
 
-https://github.com/zhdk/leihs/wiki
+https://github.com/zhdk/leihs/wiki#live-demo
 
 
 ## Installation guide
@@ -60,8 +66,4 @@ leihs is Free Software under the GNU General Public License (GPL) v3, see the in
 Visit our main website at http://www.zhdk.ch and the IT center 
 at http://itz.zhdk.ch
 
-Some of our developers like to use Navicat to visualize and optimize our database
-stuff. We thank PremiumSoft CyberTech Ltd. for granting us a free Navicat Premium
-license to support development of our Free/Open Source Software project:
-
-[![alt text](https://github.com/zhdk/leihs/raw/master/doc/images/zhdk_logo.png "ZHdK logo")](http://www.zhdk.ch) ![alt text](https://github.com/zhdk/leihs/raw/master/doc/images/navicat_logo.png "Navicat Premium Logo")
+[![alt text](https://github.com/zhdk/leihs/raw/master/doc/images/zhdk_logo.png "ZHdK logo")](http://www.zhdk.ch)

@@ -1,14 +1,14 @@
 class Borrow::UsersController < Borrow::ApplicationController
 
   def current
-    if current_user.authentication_system.class_name == "DatabaseAuthentication"
+    if current_user.authentication_system.class_name == 'DatabaseAuthentication'
       @db_auth = DatabaseAuthentication.find_by_user_id(current_user.id)
     end
   end
 
   def documents
-    @contracts = current_user.contracts.includes(:contract_lines).where(status: [:signed, :closed])
-    @contracts.sort! {|a,b| b.time_window_min <=> a.time_window_min}
+    @contracts = current_user.reservations_bundles.signed_or_closed
+    @contracts.to_a.sort! {|a,b| b.time_window_min <=> a.time_window_min}
   end
 
   def delegations
@@ -35,15 +35,15 @@ class Borrow::UsersController < Borrow::ApplicationController
   ################################################################
 
   before_filter only: [:contract, :value_list] do
-    @contract = current_user.contracts.find(params[:id])
+    @contract = current_user.reservations_bundles.find(params[:id])
   end
 
   def contract
-    render "documents/contract", layout: "print"
+    render 'documents/contract', layout: 'print'
   end
 
   def value_list
-    render "documents/value_list", layout: "print"
+    render 'documents/value_list', layout: 'print'
   end
 
 end

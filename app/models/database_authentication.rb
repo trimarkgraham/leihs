@@ -1,16 +1,17 @@
 class DatabaseAuthentication < ActiveRecord::Base
+  audited
 
   attr_accessor :password
-  
+
   validates_presence_of     :login
   validates_presence_of     :password, :password_confirmation
-  validates_length_of       :password, :within => 4..40
+  validates_length_of       :password, within: 4..40
   validates_confirmation_of :password
-  validates_length_of       :login,    :within => 3..40
-  validates_uniqueness_of   :login, :case_sensitive => false
+  validates_length_of       :login,    within: 3..255
+  validates_uniqueness_of   :login, case_sensitive: false
 
   before_validation :encrypt_password
-  
+
   belongs_to :user
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
@@ -30,8 +31,8 @@ class DatabaseAuthentication < ActiveRecord::Base
   end
 
   def encrypt_password
-    return if password == "_password_"
-    self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
+    return if password == '_password_'
+    self.salt = Digest::SHA1.hexdigest("--#{Time.zone.now}--#{login}--") if new_record?
     self.crypted_password = encrypt(password)
   end
 

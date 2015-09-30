@@ -2,7 +2,7 @@ class window.App.ContractsEditController extends Spine.Controller
 
   elements:
     "#status": "status"
-    "#lines": "linesContainer"
+    "#lines": "reservationsContainer"
     "#purpose": "purposeContainer"
     "#reject-contract": "rejectButton"
     "#approve-contract": "approveButton"
@@ -20,20 +20,21 @@ class window.App.ContractsEditController extends Spine.Controller
     do @setupLineSelection
     do @fetchAvailability
     do @setupAddLine
+    new App.SwapModelController {el: @el}
     new App.TimeLineController {el: @el}
     new App.ContractsApproveController {el: @el, done: @contractApproved}
     new App.ContractsRejectController {el: @el, async: false}
-    new App.ContractLinesDestroyController {el: @el}
-    new App.ContractLinesEditController {el: @el, user: @contract.user(), contract: @contract}
+    new App.ReservationsDestroyController {el: @el}
+    new App.ReservationsEditController {el: @el, user: @contract.user(), contract: @contract}
 
   delegateEvents: =>
     super
     App.Purpose.on "update", @renderPurpose
-    App.ContractLine.on "change destroy", @fetchAvailability
+    App.Reservation.on "change destroy", @fetchAvailability
     App.Contract.on "refresh", @fetchAvailability
   
   setupAddLine: =>
-    new App.ContractLinesAddController
+    new App.ReservationsAddController
       el: @el.find("#add")
       user: @contract.user()
       status: @status
@@ -51,10 +52,10 @@ class window.App.ContractsEditController extends Spine.Controller
         $(e.currentTarget).data("ids")
       else
         App.LineSelectionController.selected
-    if @contract.lines().all().length <= ids.length
+    if @contract.reservations().all().length <= ids.length
       App.Flash
         type: "error"
-        message: _jed "You cannot delete all lines of an contract. Perhaps you want to reject it instead?"
+        message: _jed "You cannot delete all reservations of an contract. Perhaps you want to reject it instead?"
       e.stopImmediatePropagation()
       return false
 
@@ -63,15 +64,15 @@ class window.App.ContractsEditController extends Spine.Controller
     @status.html App.Render "manage/views/availabilities/loading"
     App.Availability.ajaxFetch
       data: $.param
-        model_ids: _.uniq(_.map(@contract.lines().all(), (l)->l.model().id))
+        model_ids: _.uniq(_.map(@contract.reservations().all(), (l)->l.model().id))
         user_id: @contract.user_id
     .done (data)=>
       @status.html App.Render "manage/views/availabilities/loaded"
       @render true
 
   render: (renderAvailability)=> 
-    @linesContainer.html App.Render "manage/views/lines/grouped_lines", @contract.groupedLinesByDateRange(true), 
-      linePartial: "manage/views/lines/order_line"
+    @reservationsContainer.html App.Render "manage/views/reservations/grouped_lines", @contract.groupedLinesByDateRange(true),
+      linePartial: "manage/views/reservations/order_line"
       renderAvailability: renderAvailability
     do @lineSelection.restore
 

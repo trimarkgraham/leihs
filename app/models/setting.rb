@@ -1,4 +1,5 @@
 class Setting < ActiveRecord::Base
+  audited
 
   validates_presence_of :local_currency_string,
                         :email_signature,
@@ -6,33 +7,22 @@ class Setting < ActiveRecord::Base
   validates_presence_of :disable_borrow_section_message, if: :disable_borrow_section?
   validates_presence_of :disable_manage_section_message, if: :disable_manage_section?
 
-  #validates_numericality_of :smtp_port, :greater_than => 0
+  #validates_numericality_of :smtp_port, greater_than: 0
+  # FIXME migration not running # validates_numericality_of :timeout_minutes, greater_than: 0
 
-  validates_format_of :default_email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+  validates_format_of :default_email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
 
-  def self.initialize_constants
-    singleton = first # fetch the singleton from the database
-    return unless singleton
-    silence_warnings do
-      (attribute_names - ["id"]).sort.each do |k|
-        Setting.const_set k.upcase, singleton.send(k.to_sym) if singleton.methods.include?(k.to_sym)
-      end
-    end
-  end
-
-  if Rails.env.development?
-    # initialize the constants at each code reload, since we are running with config.cache_classes = false
-    initialize_constants
+  def self.method_missing(name, *args, &block)
+    @@singleton ||= first # fetch the singleton from the database
+    @@singleton.try :send, name
   end
 
   before_create do
-    raise "Setting is a singleton" if Setting.count > 0
+    raise 'Setting is a singleton' if Setting.count > 0
   end
 
   after_save do
-    self.class.initialize_constants
-
-
+    @@singleton = nil
     begin
       # Only reading from the initializers is not enough, they are only read during
       # server start, making changes of the time zone during runtime impossible.
@@ -41,7 +31,7 @@ class Setting < ActiveRecord::Base
         Time.zone = self.time_zone
       end
     rescue
-      logger.info "Timezone setting could not be loaded. Did the migrations run?"
+      logger.info 'Timezone setting could not be loaded. Did the migrations run?'
     end
   end
 

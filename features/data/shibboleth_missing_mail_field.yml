@@ -1,0 +1,8 @@
+test:
+  unique_id_field: uid
+  firstname_field: givenName
+  lastname_field: sn
+  admin_uids:
+    - admin_user
+    - dewey
+    - louie

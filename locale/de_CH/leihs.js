@@ -499,10 +499,6 @@
 
   msgstr("Benutzername und/oder Passwort sind leer");
 
-  msgid("End Date");
-
-  msgstr("Enddatum");
-
   msgid("End date");
 
   msgstr("Enddatum");
@@ -602,10 +598,6 @@
   msgid("Highlight available items.");
 
   msgstr("Verfügbare hervorheben.");
-
-  msgid("History");
-
-  msgstr("Geschichte");
 
   msgid("Important notes for hand over");
 
@@ -1019,10 +1011,6 @@
 
   msgstr("Bestellung");
 
-  msgid("Order History");
-
-  msgstr("Vergangene Bestellungen");
-
   msgid("Order approved");
 
   msgstr("Bestellung genehmigt");
@@ -1335,10 +1323,6 @@
 
   msgstr("Verfügbarkeit anzeigen");
 
-  msgid("Show Full History");
-
-  msgstr("Gesamte Geschichte anzeigen");
-
   msgid("Show all %s...");
 
   msgstr("Alle %s anzeigen...");
@@ -1370,10 +1354,6 @@
   msgid("Start");
 
   msgstr("Start");
-
-  msgid("Start Date");
-
-  msgstr("Startdatum");
 
   msgid("Start Date must be before End Date");
 
@@ -1575,7 +1555,7 @@
 
   msgstr("Die Eigenschaften wurden aktualisiert.");
 
-  msgid("The selected lines have been moved");
+  msgid("The selected reservations have been moved");
 
   msgstr("Die ausgewählten Zeilen wurden verschoben");
 
@@ -1595,15 +1575,15 @@
 
   msgstr("Vom Verleiher hinzugefügte Kommentare:");
 
-  msgid("This contract is not signable because it doesn't have any contract lines.");
+  msgid("This contract is not signable because it doesn't have any contract reservations.");
 
   msgstr("Dieser Vertrag kann nicht unterschrieben werden, weil er keine Zeilen hat.");
 
-  msgid("This contract is not signable because none of the lines have a purpose.");
+  msgid("This contract is not signable because none of the reservations have a purpose.");
 
   msgstr("Der Vertrag kann nicht unterschrieben werden, weil keine seiner Zeilen einen Zweck hat.");
 
-  msgid("This contract is not signable because some lines are not assigned.");
+  msgid("This contract is not signable because some reservations are not assigned.");
 
   msgstr("Der Vertrag kann nicht unterschrieben werden, weil einige Zeilen noch nicht zugewiesen wurden.");
 
@@ -1755,10 +1735,6 @@
 
   msgstr("Werteverzeichnis zu Leihvertrag Nr. %s");
 
-  msgid("Value list");
-
-  msgstr("Werteverzeichnis");
-
   msgid("View %s");
 
   msgstr("%s ansehen");
@@ -1831,7 +1807,7 @@
 
   msgstr("Ein Paket kann nicht einem Paket hinzugefügt werden.");
 
-  msgid("You cannot delete all lines of an order. Perhaps you want to reject it instead?");
+  msgid("You cannot delete all reservations of an order. Perhaps you want to reject it instead?");
 
   msgstr("Sie können nicht alle Zeilen einer Bestellung löschen. Möchten Sie sie vielleicht lieber ablehnen?");
 
@@ -2147,7 +2123,7 @@
 
   msgstr("während die Übergabe gelöscht wurde für");
 
-  msgid("while deleting multiple order lines");
+  msgid("while deleting multiple order reservations");
 
   msgstr("während mehrere Bestellungs-Zeilen gelöscht wurden");
 

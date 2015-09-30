@@ -5,11 +5,10 @@ Feature: Send email upon confirmation
   Background:
     Given required test data for contract tests existing
 
-  @personas
+  @personas @javascript
   Scenario: A confirmation email should be sent when a contract is confirmed
-    Given a submitted contract with lines existing
-    And a borrowing user existing
-    And I log in as 'ramon' with password 'password'
+    Given I am Pius
+    And a submitted contract with reservations existing
     When I approve the contract of the borrowing user
     Then the borrowing user gets one confirmation email
     And the subject of the email is "[leihs] Reservation Confirmation"

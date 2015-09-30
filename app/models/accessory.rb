@@ -1,4 +1,5 @@
 class Accessory < ActiveRecord::Base
+  audited
   
   belongs_to :model, inverse_of: :accessories
   has_and_belongs_to_many :inventory_pools
@@ -17,10 +18,10 @@ class Accessory < ActiveRecord::Base
   validates_presence_of :name
 
   def inventory_pool_toggle=(val)
-    if val.split(",")[0] == "1"
-      self.inventory_pool_ids += [val.split(",")[1].to_i]
+    if val.split(',')[0] == '1'
+      self.inventory_pool_ids += [val.split(',')[1].to_i]
     else
-      self.inventory_pool_ids -= [val.split(",")[1].to_i]
+      self.inventory_pool_ids -= [val.split(',')[1].to_i]
     end
   end
 
@@ -30,4 +31,7 @@ class Accessory < ActiveRecord::Base
     name
   end
 
+  def active_in?(inventory_pool)
+    inventory_pools.include? inventory_pool
+  end
 end
