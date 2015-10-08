@@ -24,6 +24,7 @@ PATH
       rails-assets-bootstrap (~> 3.3)
       rails-assets-jquery (~> 1.5)
       rails-assets-jquery-ujs (~> 1.0)
+      rails-assets-riotjs (~> 2.2)
       rails-assets-select2 (~> 4.0)
 
 GEM
@@ -328,6 +329,7 @@ GEM
       rails-assets-jquery (> 1.8)
     rails-assets-jquery.inview (1.0.0)
     rails-assets-moment (2.10.6)
+    rails-assets-riotjs (2.2.4)
     rails-assets-select2 (4.0.0)
     rails-assets-timecop (0.1.1)
     rails-assets-underscore (1.8.3)

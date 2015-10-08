@@ -1,0 +1,39 @@
+%suppliers-index
+
+  %form-search
+
+  .list-of-lines
+    .row{each: '{ supplier in opts.suppliers }'}
+
+      .col-sm-6
+        %strong { supplier.name }
+
+      .col-sm-4
+        -#= _("%s items") % supplier.items.count
+        -#{ _jed("%s items", supplier.items_count) }
+        {supplier.items_count}
+
+      .col-sm-2.text-right.line-actions
+
+        .btn-group{if: '{ supplier.can_destroy }'}
+          %a.btn.btn-default{href: "/admin/suppliers/{supplier.id}/edit"}
+            -#= _("Edit")
+            Edit
+          %button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+            %i.caret
+          %ul.dropdown-menu
+            %li.bg-danger
+              -#%a.red{href: "/admin/suppliers/{supplier.id}", data: {method: :delete, confirm: _("Are you sure you want to delete '%s'?") % supplier}}
+              %a.red{href: "/admin/suppliers/{supplier.id}", data: {method: :delete, confirm: "Are you sure you want to delete '{supplier.name}'?"}}
+                %i.fa.fa-trash
+                -#= _("Delete")
+                Delete"
+
+        %a.btn.btn-default{if: '{ !supplier.can_destroy }', href: "/admin/suppliers/{supplier.id}/edit"}
+          -#= _("Edit")
+          Edit
+
+  :coffeescript
+    @setData = (data)->
+      opts.suppliers = data
+      @update()

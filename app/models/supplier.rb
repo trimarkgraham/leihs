@@ -27,5 +27,11 @@ class Supplier < ActiveRecord::Base
                  sql
                }
 
+  def as_json(options = nil)
+    h = super({ only: [:id, :name] }.merge(options || {}))
+    h[:items_count] = items.count
+    h[:can_destroy] = h[:items_count].zero? #tmp# can_destroy?
+    h
+  end
 end
 

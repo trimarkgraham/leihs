@@ -1,0 +1,24 @@
+%form-search
+  %form.row.well{data: {remote: true, type: :json}}
+    .col-sm-4
+      -#%input.form-control{type: 'text', name: 'search_term', value: params[:search_term], placeholder: _("Search..."), autocomplete: :false, autofocus: true, onfocus: "this.value = this.value;", onkeyup: '{ keyUp }'}
+      %input.form-control{type: 'text', name: 'search_term', placeholder: "Search...", autocomplete: :false, autofocus: true, onfocus: "this.value = this.value;", onkeyup: '{ keyUp }'}
+    .col-sm-8
+
+  :coffeescript
+    @on 'mount', ->
+      @submitForm()
+
+    @keyUp = (e)->
+      if e.target.value != @previous_search
+        @previous_search = e.target.value
+        clearTimeout @timer
+        @timer = setTimeout =>
+          @submitForm()
+        , 200
+
+    @submitForm = ->
+      $(@.root).find('form').submit()
+
+    $(document).on 'ajax:success', 'form-search form', (event, data, status, xhr)=>
+      @parent.setData(data)
