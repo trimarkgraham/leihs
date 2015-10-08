@@ -1,12 +1,13 @@
 require 'optparse'
 
 class Mailer < ActionMailer::Base
-  def message(recipients, subject, body)
+  # Don't call this method "message", that's a reserved word
+  def generic_message(recipients, subject, body)
       mail(to: recipients,
+           from: Setting.default_email,
            subject: subject,
            body: body)
   end
-
 end
 
 options = OpenStruct.new
@@ -28,13 +29,13 @@ OptionParser.new do |opts|
   opts.on('-b', '--body [BODY]', 'The body of the email') do |b|
     options.body = b
   end
-
 end.parse!
 
-message = Mailer.message(options.recipients, options.subject, options.body)
-# Why would this raise such an error: *** wrong number of arguments (0 for 3)
-# when clearly 3 of 3 arguments are defined?
-message.deliver_now
-
-p options
-p ARGV
+message = Mailer.generic_message(options.recipients, options.subject, options.body)
+if message.deliver_now
+  puts "Sent email to #{options.recipients.join(',')}."
+  exit 0
+else
+  $stderr.puts "Could not send email to #{options.recipients.join(',')}."
+  exit 1
+end
