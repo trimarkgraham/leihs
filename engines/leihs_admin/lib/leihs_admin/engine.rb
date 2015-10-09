@@ -1,6 +1,7 @@
 require "rails-assets-bootstrap"
 # require "font-awesome-sass"
 require "rails-assets-select2"
+require "react-rails"
 
 module LeihsAdmin
   class Engine < ::Rails::Engine

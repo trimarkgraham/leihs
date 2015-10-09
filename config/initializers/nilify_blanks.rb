@@ -1,3 +1,3 @@
 # https://github.com/rubiety/nilify_blanks#global-usage
 
-ActiveRecord::Base.nilify_blanks
+#FIXME not working with react-rails# ActiveRecord::Base.nilify_blanks
