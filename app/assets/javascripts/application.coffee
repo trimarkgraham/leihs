@@ -50,6 +50,7 @@ window.Tools ?= {}
 window.App.Modules ?= {}
 
 # from here on browserify…
+window.React = require('react')
 
 # add all 'top-level' components here (those used with the view helper):
 window.App.React = {
