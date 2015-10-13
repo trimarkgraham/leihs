@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   # s.add_dependency 'font-awesome-sass', '~>4.4'
   s.add_dependency 'rails-assets-select2', '~>4.0'
   s.add_dependency 'react-rails', '~>1.3'
+  s.add_dependency 'sprockets-coffee-react'
 end
