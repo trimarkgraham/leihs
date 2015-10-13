@@ -6,7 +6,10 @@ module LeihsAdmin
     end
 
     def index
-      @suppliers = Supplier.filter(params)
+      respond_to do |format|
+        format.html
+        format.json { render json: Supplier.filter(params)}
+      end
     end
 
     def new
