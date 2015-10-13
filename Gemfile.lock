@@ -26,6 +26,12 @@ PATH
       rails-assets-jquery-ujs (~> 1.0)
       rails-assets-select2 (~> 4.0)
 
+PATH
+  remote: engines/procurement
+  specs:
+    procurement (0.0.1)
+      rails (~> 4.2.4)
+
 GEM
   remote: http://rubygems.org/
   remote: https://rails-assets.org/
@@ -522,6 +528,7 @@ DEPENDENCIES
   open4
   paperclip (~> 4.3)
   phantomjs (~> 1.9.8)
+  procurement!
   rack_session_access (~> 0.1.1)
   rails (= 4.2.4)
   rails-assets-accounting.js (~> 0.4)

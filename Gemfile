@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'leihs_admin', path: "engines/leihs_admin"
+gem 'procurement', path: "engines/procurement"
 
 gem 'rails', '4.2.4'
 
