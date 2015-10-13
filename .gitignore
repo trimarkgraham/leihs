@@ -37,3 +37,4 @@ db/exports/
 tmp/
 features/reports/*
 .settings
+node_modules

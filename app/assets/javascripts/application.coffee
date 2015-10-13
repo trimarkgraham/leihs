@@ -48,3 +48,10 @@
 window.App ?= {}
 window.Tools ?= {}
 window.App.Modules ?= {}
+
+# from here on browserify…
+
+# add all 'top-level' components here (those used with the view helper):
+window.App.React = {
+  HelloWorld = require('./react/hello-world.cjsx')
+}

@@ -1,0 +1,43 @@
+{
+  "name": "leihs-js",
+  "version": "1.0.0",
+  "description": "## General",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://eins78@github.com/zhdk/leihs.git"
+  },
+  "author": "",
+  "license": "GNU GPLv3",
+  "bugs": {
+    "url": "https://github.com/zhdk/leihs/issues"
+  },
+  "homepage": "https://github.com/zhdk/leihs#readme",
+  "dependencies": {
+    "react": "^0.14.0",
+    "browserify": "11.2.0",
+    "browserify-incremental": "3.0.1",
+    "coffee-reactify": "4.0.0",
+    "coffee-script": "1.10.0"
+  },
+  "devDependencies": {
+    "coffee-react-transform": "3.3.0",
+    "coffeelint": "1.12.1"
+    },
+  "scripts": {
+    "browserify": "browserify",
+    "coffeelint": "coffeelint",
+    "lint": "npm run -s coffeelint -- app/assets/javascripts/**/*.{coffee,cjsx}"
+  },
+  "browserify": {
+    "transform": [
+      "coffee-reactify"
+    ]
+  }
+}
