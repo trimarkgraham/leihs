@@ -1,3 +1,17 @@
+:ruby
+  @get = @contracts.map do |contract|
+    OpenStruct.new(
+      id: contract.id,
+      time_window_min: contract.time_window_min,
+      time_window_max: contract.time_window_max,
+      inventory_pool: OpenStruct.new(
+        shortname: contract.inventory_pool.shortname
+      ),
+      purpose: contract.purpose,
+      status: contract.status
+    )
+  end
+
 - content_for :title, _("My documents")
 
 .wrapper.margin-top-m
@@ -6,7 +20,7 @@
 
   .content-wrapper.straight-top-left
 
-    - @contracts.each do |contract|
+    - @get.each do |contract|
       - start_date, end_date = [contract.time_window_min, contract.time_window_max]
       .row.line{:"data-id" => contract.id}
         .line-col.col2of10
