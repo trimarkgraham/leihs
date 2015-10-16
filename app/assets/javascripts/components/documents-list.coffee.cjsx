@@ -48,7 +48,7 @@ DocumentListRow = React.createClass
       <div className='line-col col1of10'>
         {if contract.status is 'signed'
           <span className='badge blue'>
-            {'Open'}
+            {_jed 'Open'}
           </span>
         }
       </div>
@@ -57,7 +57,7 @@ DocumentListRow = React.createClass
         <div className='multibutton'>
           <a className='button white text-ellipsis' href={contract.url} target='_blank'>
             <i className='fa fa-file-alt'/>
-            {'Contract'}
+            {_jed 'Contract'}
           </a>
 
           <div className='dropdown-holder inline-block'>
@@ -68,7 +68,7 @@ DocumentListRow = React.createClass
             <div className='dropdown right'>
               <a className='dropdown-item text-ellipsis' href={contract.value_list_url} target='_blank'>
                 <i className='fa fa-list-ol'></i>
-                {'Value List'}
+                {_jed 'Value List'}
               </a>
             </div>
           </div>
