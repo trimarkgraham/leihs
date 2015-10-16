@@ -1,0 +1,35 @@
+module Procurement
+  class BudgetPeriod < ActiveRecord::Base
+
+    validates_presence_of :name, :inspection_start_date, :end_date
+
+    def to_s
+      "%s (%s)" % [name, phase]
+    end
+
+    def phase
+      "%s phase until %s" % if Date.today < inspection_start_date
+                             [_('requesting'), I18n.l(inspection_start_date)]
+                           else
+                             [_('inspection'), I18n.l(end_date)]
+                           end
+    end
+
+    def previous
+      self.class.order(end_date: :desc).where("end_date < ?", end_date).first
+    end
+
+    def requests
+      Request.by_budget_period(self)
+    end
+
+    class << self
+
+      def current
+        order(end_date: :asc).where("end_date >= CURDATE()").first
+      end
+
+    end
+
+  end
+end

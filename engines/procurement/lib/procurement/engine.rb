@@ -1,3 +1,7 @@
+require "rails-assets-bootstrap"
+# require "font-awesome-sass"
+require "rails-assets-select2"
+
 module Procurement
   class Engine < ::Rails::Engine
     isolate_namespace Procurement
@@ -8,6 +12,11 @@ module Procurement
           app.config.paths["db/migrate"].push(path)
         end
       end
+    end
+
+    initializer "engine.assets.precompile" do |app|
+      app.config.assets.precompile += %w(procurement/application.css
+                                         procurement/application.js)
     end
 
   end

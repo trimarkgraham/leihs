@@ -1,0 +1,30 @@
+/*
+*= require jquery-ui
+*= require bootstrap
+* require fontawesome
+*= require select2
+*
+*= require procurement/simple-sidebar
+*
+*= require_self
+*/
+
+@import "font-awesome-sprockets";
+@import "font-awesome";
+
+header {
+  padding-bottom: 4em;
+}
+
+header .dropdown-menu {
+  max-height: 500px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+//footer {
+//  a {
+//    color: white;
+//    margin: 1em;
+//  }
+//}

@@ -1,0 +1,93 @@
+!!! 5
+%html{:lang => I18n.locale}
+
+  %head
+    %title= "#{yield(:title)}#{(yield :title).blank? ? "":" | "}leihs"
+
+    %meta{:charset => 'utf-8'}
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}
+
+    -# Work around a bug in Microsoft Internet Explorer that makes it render
+    -# leihs with the super-shitty MSIE 5.5 rendering engine whenever the leihs
+    -# server is located in what MSIE thinks is the "intranet zone". Microsoft
+    -# themselves say that this tag is deprecated and should not be used. MSIE 11
+    -# fixes all these bugs.
+    %meta{:"http-equiv" => 'XA-UA-Compatible', :content => 'IE=edge'}
+    = csrf_meta_tag
+
+    = favicon_link_tag "favicon.ico", :type => "image/x-icon"
+    = stylesheet_link_tag "procurement/application", :media => "all"
+
+    = javascript_include_tag "i18n/locale/#{I18n.locale}"
+    = javascript_include_tag "procurement/application"
+
+    = yield :head
+
+    - if Rails.env.test? or (Rails.env.development? and ENV['TEST_DATETIME'])
+      = javascript_include_tag "timecop/timecop-0.1.1"
+      :javascript
+        Timecop.install();
+        Timecop.travel(new Date("#{Time.now.iso8601}"));
+
+  %body
+    %header
+      %nav.navbar.navbar-inverse.navbar-fixed-top
+        .container
+          -#%a.navbar-brand{href: admin.root_path}
+                = render partial: 'layouts/leihs_admin/logo'
+          %ul.nav.navbar-nav.navbar-right
+            = render partial: 'layouts/leihs_admin/navigation'
+            = render partial: 'layouts/leihs_admin/user'
+
+    #wrapper
+      #sidebar-wrapper
+        %ul.sidebar-nav
+          %li
+            .h4{style: 'color: lightgrey'}
+              Admin user:
+          %li
+            %a{href: budget_periods_path}= _('Budget periods')
+          %li
+            %hr
+          %li
+            .h4{style: 'color: lightgrey'}
+              Requester user:
+          %li
+            %a{href: user_requests_path(current_user, budget_period: :current)}= _('My suspended requests')
+          %li
+            %a{href: user_requests_path(current_user, budget_period: :past)}= _('My processed requests')
+          %li
+            %hr
+          %li
+            .h4{style: 'color: lightgrey'}
+              Inspector user:
+          %li
+            %a{:href => "#"}= _('Suspended requests')
+          %li
+            %a{:href => "#"}= _('Processed requests')
+
+      #page-content-wrapper
+        .container
+          .row.well.h4
+            .col-sm-4
+              = _("Today's date is")
+              = l Date.today
+            .col-sm-8
+              - if current_period = Procurement::BudgetPeriod.current
+                = "%s: %s" % [_('Current budget period'), current_period]
+              - else
+                .alert.alert-danger
+                  = _('No budget period defined yet!')
+
+          = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
+          = yield
+
+          -#.row
+            .col-lg-12
+              %a#menu-toggle.btn.btn-default{:href => "#menu-toggle"} Toggle Menu
+
+    -#:javascript
+      $("#menu-toggle").click(function(e) {
+          e.preventDefault();
+          $("#wrapper").toggleClass("toggled");
+      });

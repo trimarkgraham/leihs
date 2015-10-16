@@ -1,0 +1,77 @@
+%h1= _('Requests')
+
+= form_tag requests_path, remote: true do
+  %table.table.table-striped
+    %thead
+      %tr
+        %th= _('Description')
+        %th= _('Desired quantity')
+        %th= _('Approved quantity')
+        %th= _('Price')
+        %th= _('Supplier')
+        %th= _('Status')
+    %tbody
+      - @requests.each do |request|
+        %tr
+          - if request.current?
+            %td
+              %input{type: :hidden, name: 'requests[][id]', value: request.id}
+              %input{name: 'requests[][description]', value: request.description, placeholder: _('Description'), autocomplete: :off}
+            %td
+              %input{name: 'requests[][desired_quantity]', value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off, size: 3}
+            %td
+              %input{name: 'requests[][approved_quantity]', value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off, size: 3}
+            %td
+              %input{name: 'requests[][price]', value: request.price, placeholder: _('Price'), autocomplete: :off, size: 8}
+            %td
+              %input{name: 'requests[][supplier]', value: request.supplier, placeholder: _('Supplier'), autocomplete: :off}
+          - else
+            %td= request.description
+            %td= request.desired_quantity
+            %td= request.approved_quantity
+            %td= request.price
+            %td= request.supplier
+          %td= request.status
+      %tr
+        %td
+          %input{name: 'requests[][description]', placeholder: _('Description'), autocomplete: :off}
+        %td
+          %input{name: 'requests[][desired_quantity]', placeholder: _('Desired quantity'), autocomplete: :off, size: 3}
+        %td
+          %input{name: 'requests[][approved_quantity]', placeholder: _('Approved quantity'), autocomplete: :off, size: 3}
+        %td
+          %input{name: 'requests[][price]', placeholder: _('Price'), autocomplete: :off, size: 8}
+        %td
+          %input{name: 'requests[][supplier]', placeholder: _('Supplier'), autocomplete: :off}
+        %td
+    %tfoot
+      %tr
+        %td.h1{colspan: 5}
+          %i.fa.fa-plus-circle
+        %td.text-right
+          %button.btn.btn-success{type: :submit}
+            %i.fa.fa-check
+            = _('Save')
+
+:scss
+  form .fa-plus-circle {
+    cursor: pointer;
+    color: #5cb85c;
+  }
+
+:coffeescript
+  $(document).ready ->
+    $('tfoot').on 'click', '.fa-plus-circle', ->
+      target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
+      cloned_el = target_el.clone()
+      cloned_el.find('input').val('')
+      cloned_el.insertAfter(target_el)
+      false
+
+    $("form").on("ajax:success", (e, data, status, xhr) ->
+      location.reload()
+    ).on "ajax:error", (e, xhr, status, error) ->
+      errors = ''
+      for error in xhr.responseJSON
+        errors += '<li>' + error + '</li>'
+      $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
