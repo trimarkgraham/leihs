@@ -40,6 +40,7 @@ gem 'uglifier', '~> 2.4'
 gem 'will_paginate', '~> 3.0'
 
 gem 'react-rails', '~> 1.3.0'
+gem 'sprockets-coffee-react', '~> 3.0.1'
 
 source 'https://rails-assets.org' # NOTE wrapping in a block not working on deploy
 gem 'rails-assets-accounting.js', '~> 0.4'
