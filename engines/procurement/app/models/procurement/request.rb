@@ -33,16 +33,31 @@ module Procurement
 
     def status
       if approved_quantity.nil?
-        :suspended
+        :uninspected
       elsif approved_quantity == 0
         :denied
-      elsif approved_quantity < desired_quantity
+      elsif 0 < approved_quantity and approved_quantity < desired_quantity
         :partially_approved
       elsif approved_quantity == desired_quantity
         :completely_approved
       else
         raise
       end
+    end
+
+    class << self
+
+      def status_counts(budget_period, user: nil)
+        requests = by_budget_period(budget_period)
+        requests = requests.where(user_id: user) if user
+        {
+            uninspected: requests.where(approved_quantity: nil).count,
+            denied: requests.where(approved_quantity: 0).count,
+            partially_approved: requests.where('0 < approved_quantity AND approved_quantity < desired_quantity').count,
+            completely_approved: requests.where('approved_quantity = desired_quantity').count
+        }
+      end
+
     end
 
   end

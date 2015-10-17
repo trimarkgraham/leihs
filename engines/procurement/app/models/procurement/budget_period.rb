@@ -19,10 +19,6 @@ module Procurement
       self.class.order(end_date: :desc).where("end_date < ?", end_date).first
     end
 
-    def requests
-      Request.by_budget_period(self)
-    end
-
     class << self
 
       def current

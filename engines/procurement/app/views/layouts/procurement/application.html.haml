@@ -53,18 +53,22 @@
             .h4{style: 'color: lightgrey'}
               Requester user:
           %li
-            %a{href: user_requests_path(current_user, budget_period: :current)}= _('My suspended requests')
+            %a{href: user_requests_path(current_user, budget_period: :current)}
+              = _('My current requests')
+              = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(Procurement::BudgetPeriod.current, user: current_user)}
           %li
-            %a{href: user_requests_path(current_user, budget_period: :past)}= _('My processed requests')
+            %a{href: user_requests_path(current_user, budget_period: :past)}= _('My past requests')
           %li
             %hr
           %li
             .h4{style: 'color: lightgrey'}
               Inspector user:
           %li
-            %a{:href => "#"}= _('Suspended requests')
+            %a{href: requests_path(budget_period: :current)}
+              = _('Current requests')
+              = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(Procurement::BudgetPeriod.current)}
           %li
-            %a{:href => "#"}= _('Processed requests')
+            %a{href: requests_path(budget_period: :past)}= _('Past requests')
 
       #page-content-wrapper
         .container

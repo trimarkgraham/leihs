@@ -10,4 +10,8 @@ Procurement::Engine.routes.draw do
     resources :requests, only: [:index, :create]
   end
 
+  resources :models, only: :index
+
+  resources :suppliers, only: :index
+
 end

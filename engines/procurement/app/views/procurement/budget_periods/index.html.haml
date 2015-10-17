@@ -19,7 +19,7 @@
           %td
             %input.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: "%d.%m.%Y"), placeholder: _('End date'), autocomplete: :off}
           %td
-            = budget_period.requests.count
+            = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(budget_period)}
       %tr
         %td
           %input{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :off}

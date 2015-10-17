@@ -1,0 +1,14 @@
+- counts.each_pair do |k,v|
+  - next if v.zero?
+  :ruby
+    label_class = case k
+                    when :uninspected
+                      'label-default'
+                    when :denied
+                      'label-danger'
+                    when :partially_approved
+                      'label-warning'
+                    when :completely_approved
+                      'label-success'
+                    end
+  .label{class: label_class}= v
