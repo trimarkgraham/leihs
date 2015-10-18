@@ -1,5 +1,7 @@
 module Procurement
   class BudgetPeriod < ActiveRecord::Base
+    include ActionView::Helpers::DateHelper
+
 
     validates_presence_of :name, :inspection_start_date, :end_date
 
@@ -8,10 +10,10 @@ module Procurement
     end
 
     def phase
-      "%s phase until %s" % if Date.today < inspection_start_date
-                             [_('requesting'), I18n.l(inspection_start_date)]
+      "%s phase until %s in %s" % if Date.today < inspection_start_date
+                             [_('requesting'), I18n.l(inspection_start_date), distance_of_time_in_words_to_now(inspection_start_date)]
                            else
-                             [_('inspection'), I18n.l(end_date)]
+                             [_('inspection'), I18n.l(end_date), distance_of_time_in_words_to_now(end_date)]
                            end
     end
 

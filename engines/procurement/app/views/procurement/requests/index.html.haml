@@ -4,10 +4,11 @@
   %table.table.table-striped
     %thead
       %tr
-        %th{width: '30%'}= _('Description')
+        %th{width: '25%'}= _('Description')
         %th{width: '10%'}= _('Desired quantity')
         %th{width: '10%'}= _('Approved quantity')
-        %th{width: '15%'}= _('Price')
+        %th{width: '10%'}= _('Price')
+        %th{width: '10%'}= _('Total')
         %th{width: '20%'}= _('Supplier')
         %th{width: '15%'}= _('Status')
     %tbody
@@ -19,11 +20,14 @@
               %select.form-control{name: 'requests[][description]'}
                 %option{value: request.description, selected: true}= request.description
             %td
-              %input{name: 'requests[][desired_quantity]', value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off, size: 3}
+              %input.form-control{name: 'requests[][desired_quantity]', type: :number, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
             %td
-              %input{name: 'requests[][approved_quantity]', value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off, size: 3}
+              -# TODO check role
+              %input.form-control{name: 'requests[][approved_quantity]', type: :number, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
             %td
-              %input{name: 'requests[][price]', value: request.price, placeholder: _('Price'), autocomplete: :off, size: 8}
+              %input.form-control{name: 'requests[][price]', type: :number, value: request.price, placeholder: _('Price'), autocomplete: :off}
+            %td.text-right
+              = request.total_price
             %td
               %select.form-control{name: 'requests[][supplier]'}
                 %option{value: request.supplier, selected: true}= request.supplier
@@ -32,6 +36,7 @@
             %td= request.desired_quantity
             %td= request.approved_quantity
             %td= request.price
+            %td= request.total_price
             %td= request.supplier
           %td
             :ruby
@@ -47,26 +52,30 @@
                             end
             .label{class: label_class}
               = status
-      %tr
-        %td
-          %select.form-control{name: 'requests[][description]'}
-        %td
-          %input{name: 'requests[][desired_quantity]', placeholder: _('Desired quantity'), autocomplete: :off, size: 3}
-        %td
-          %input{name: 'requests[][approved_quantity]', placeholder: _('Approved quantity'), autocomplete: :off, size: 3}
-        %td
-          %input{name: 'requests[][price]', placeholder: _('Price'), autocomplete: :off, size: 8}
-        %td
-          %select.form-control{name: 'requests[][supplier]'}
-        %td
-    %tfoot
-      %tr
-        %td.h1{colspan: 5}
-          %i.fa.fa-plus-circle
-        %td.text-right
-          %button.btn.btn-success{type: :submit}
-            %i.fa.fa-check
-            = _('Save')
+      - unless params[:budget_period] == 'past'
+        %tr
+          %td
+            %select.form-control{name: 'requests[][description]'}
+          %td
+            %input.form-control{name: 'requests[][desired_quantity]', type: :number, placeholder: _('Desired quantity'), autocomplete: :off}
+          %td
+            -# TODO check role
+            %input.form-control{name: 'requests[][approved_quantity]', type: :number, placeholder: _('Approved quantity'), autocomplete: :off}
+          %td
+            %input.form-control{name: 'requests[][price]', type: :number, placeholder: _('Price'), autocomplete: :off}
+          %td
+          %td
+            %select.form-control{name: 'requests[][supplier]'}
+          %td
+    - unless params[:budget_period] == 'past'
+      %tfoot
+        %tr
+          %td.h1{colspan: 6}
+            %i.fa.fa-plus-circle
+          %td.text-right
+            %button.btn.btn-success{type: :submit}
+              %i.fa.fa-check
+              = _('Save')
 
 :scss
   form .fa-plus-circle {

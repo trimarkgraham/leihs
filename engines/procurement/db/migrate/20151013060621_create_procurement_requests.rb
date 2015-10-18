@@ -5,7 +5,7 @@ class CreateProcurementRequests < ActiveRecord::Migration
       t.string :description,          null: false
       t.integer :desired_quantity,    null: false
       t.integer :approved_quantity,   null: true
-      t.decimal :price, precision: 10, scale: 2 # TODO money gem
+      t.money :price
       t.string :supplier
 
       t.datetime :created_at,         null: false

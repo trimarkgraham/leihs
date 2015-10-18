@@ -41,34 +41,7 @@
 
     #wrapper
       #sidebar-wrapper
-        %ul.sidebar-nav
-          %li
-            .h4{style: 'color: lightgrey'}
-              Admin user:
-          %li
-            %a{href: budget_periods_path}= _('Budget periods')
-          %li
-            %hr
-          %li
-            .h4{style: 'color: lightgrey'}
-              Requester user:
-          %li
-            %a{href: user_requests_path(current_user, budget_period: :current)}
-              = _('My current requests')
-              = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(Procurement::BudgetPeriod.current, user: current_user)}
-          %li
-            %a{href: user_requests_path(current_user, budget_period: :past)}= _('My past requests')
-          %li
-            %hr
-          %li
-            .h4{style: 'color: lightgrey'}
-              Inspector user:
-          %li
-            %a{href: requests_path(budget_period: :current)}
-              = _('Current requests')
-              = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(Procurement::BudgetPeriod.current)}
-          %li
-            %a{href: requests_path(budget_period: :past)}= _('Past requests')
+        = render partial: 'layouts/procurement/sidebar'
 
       #page-content-wrapper
         .container

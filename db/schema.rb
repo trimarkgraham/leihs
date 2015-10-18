@@ -494,7 +494,7 @@ ActiveRecord::Schema.define(version: 20151001151820) do
   add_index "users", ["language_id"], name: "fk_rails_45f4f12508", using: :btree
 
   create_table "visits", id: false, force: :cascade do |t|
-    t.string  "id",                limit: 148
+    t.string  "id",                limit: 276
     t.integer "inventory_pool_id", limit: 4
     t.integer "user_id",           limit: 4
     t.string  "status",            limit: 11,                 null: false

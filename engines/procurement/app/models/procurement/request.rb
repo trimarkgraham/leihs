@@ -1,9 +1,14 @@
 module Procurement
   class Request < ActiveRecord::Base
+
     belongs_to :user
+
+    monetize :price_cents
 
     validates_presence_of :user, :description, :desired_quantity
     validates_numericality_of :approved_quantity, less_than_or_equal_to: :desired_quantity, allow_nil: true
+
+    #################################################################
 
     scope :current, -> { by_budget_period(BudgetPeriod.current) }
 
@@ -27,6 +32,23 @@ module Procurement
       end
     }
 
+    class << self
+
+      def status_counts(budget_period, user: nil)
+        requests = by_budget_period(budget_period)
+        requests = requests.where(user_id: user) if user
+        {
+            uninspected: requests.where(approved_quantity: nil).count,
+            denied: requests.where(approved_quantity: 0).count,
+            partially_approved: requests.where('0 < approved_quantity AND approved_quantity < desired_quantity').count,
+            completely_approved: requests.where('approved_quantity = desired_quantity').count
+        }
+      end
+
+    end
+
+    #################################################################
+
     def current?
       Request.current.exists? self
     end
@@ -45,19 +67,8 @@ module Procurement
       end
     end
 
-    class << self
-
-      def status_counts(budget_period, user: nil)
-        requests = by_budget_period(budget_period)
-        requests = requests.where(user_id: user) if user
-        {
-            uninspected: requests.where(approved_quantity: nil).count,
-            denied: requests.where(approved_quantity: 0).count,
-            partially_approved: requests.where('0 < approved_quantity AND approved_quantity < desired_quantity').count,
-            completely_approved: requests.where('approved_quantity = desired_quantity').count
-        }
-      end
-
+    def total_price
+      price * (approved_quantity || desired_quantity)
     end
 
   end

@@ -13,20 +13,20 @@
         %tr
           %td
             %input{type: :hidden, name: 'budget_periods[][id]', value: budget_period.id}
-            %input{name: 'budget_periods[][name]', value: budget_period.name, placeholder: _('Name'), autocomplete: :off}
+            %input.form-control{name: 'budget_periods[][name]', value: budget_period.name, placeholder: _('Name'), autocomplete: :off}
           %td
-            %input.datepicker{name: 'budget_periods[][inspection_start_date]', value: l(budget_period.inspection_start_date, format: "%d.%m.%Y"), placeholder: _('Inspection start date'), autocomplete: :off}
+            %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', value: l(budget_period.inspection_start_date, format: I18n.translate('date.formats.default')), placeholder: _('Inspection start date'), autocomplete: :off}
           %td
-            %input.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: "%d.%m.%Y"), placeholder: _('End date'), autocomplete: :off}
+            %input.form-control.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: I18n.translate('date.formats.default')), placeholder: _('End date'), autocomplete: :off}
           %td
             = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(budget_period)}
       %tr
         %td
-          %input{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :off}
+          %input.form-control{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :off}
         %td
-          %input.datepicker{name: 'budget_periods[][inspection_start_date]', placeholder: _('Inspection start date'), autocomplete: :off}
+          %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', placeholder: _('Inspection start date'), autocomplete: :off}
         %td
-          %input.datepicker{name: 'budget_periods[][end_date]', placeholder: _('End date'), autocomplete: :off}
+          %input.form-control.datepicker{name: 'budget_periods[][end_date]', placeholder: _('End date'), autocomplete: :off}
         %td
     %tfoot
       %tr
