@@ -6,7 +6,7 @@ Procurement::Engine.routes.draw do
 
   resources :requests, only: [:index, :create]
 
-  resources :users, only: [] do
+  resources :users, only: :index do
     resources :requests, only: [:index, :create]
   end
 
@@ -14,4 +14,5 @@ Procurement::Engine.routes.draw do
 
   resources :suppliers, only: :index
 
+  resources :groups
 end

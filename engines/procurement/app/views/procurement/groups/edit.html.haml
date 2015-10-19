@@ -1,0 +1,47 @@
+= form_for @group do |f|
+  %table.table.table-striped
+    %thead
+      %tr
+        %th.col-sm-4= _('Name')
+        %th.col-sm-4= _('Responsibles')
+    %tbody
+      %tr
+        %td
+          = f.text_field :name, placeholder: _('Name'), class: 'form-control'
+        %td
+          %select.form-control{name: 'group[responsible_ids][]', multiple: true}
+
+    %tfoot
+      %tr
+        %td.text-right{colspan: 2}
+          %button.btn.btn-success{type: :submit}
+            %i.fa.fa-check
+            = _('Save')
+
+
+:coffeescript
+  $(document).ready ->
+    element = $("select[name='group[responsible_ids][]']").select2
+      minimumInputLength: 3
+      placeholder: '#{_("Name of the responsible")}'
+      ajax:
+        url: '/procurement/users.json'
+        dataType: 'json'
+        delay: 250
+        data: (params) -> search_term: params.term
+        processResults: (data) -> results: data
+        cache: true
+      escapeMarkup: (markup) -> markup
+      templateResult: (result) ->
+        if result.loading
+          return result.text
+        result.firstname + ' ' + result.lastname
+      templateSelection: (result) ->
+        if result.firstname and result.lastname
+          result.firstname + ' ' + result.lastname
+        else
+          result.text
+    #{@group.responsibles.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
+      option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
+      element.append(option)
+    element.trigger('change')

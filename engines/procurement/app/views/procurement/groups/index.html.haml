@@ -1,0 +1,28 @@
+%table.table.table-striped
+  %thead
+    %tr
+      %th.col-sm-4= _('Name')
+      %th.col-sm-4= _('Responsibles')
+      %th
+  %tbody
+    - @groups.each do |group|
+      %tr
+        %td
+          = group.name
+        %td
+          %ul
+            - group.responsibles.each do |responsible|
+              %li= responsible
+        %td
+          %a.btn.btn-default{href: edit_group_path(group)}
+            %i.fa.fa-edit
+            = _('Edit')
+
+  %tfoot
+    %tr
+      %td.text-right{colspan: 3}
+        %a.btn.btn-success{href: new_group_path}
+          %i.fa.fa-plus
+          = _('New group')
+
+

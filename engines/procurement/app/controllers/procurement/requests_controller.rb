@@ -20,7 +20,7 @@ module Procurement
 
     def create
       errors = params.require(:requests).map do |param|
-        requester_keys = [:description, :desired_quantity, :price, :supplier]
+        requester_keys = [:group_id, :description, :desired_quantity, :price, :supplier]
         inspector_keys = [:approved_quantity]
         keys = requester_keys + inspector_keys # TODO check role
         permitted = param.permit(keys)

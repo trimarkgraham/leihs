@@ -2,6 +2,7 @@ module Procurement
   class Request < ActiveRecord::Base
 
     belongs_to :user
+    belongs_to :group
 
     monetize :price_cents
 

@@ -4,7 +4,8 @@
   %table.table.table-striped
     %thead
       %tr
-        %th{width: '25%'}= _('Description')
+        %th{width: '10%'}= _('Group')
+        %th{width: '15%'}= _('Description')
         %th{width: '10%'}= _('Desired quantity')
         %th{width: '10%'}= _('Approved quantity')
         %th{width: '10%'}= _('Price')
@@ -17,13 +18,18 @@
           - if request.current?
             %td
               %input{type: :hidden, name: 'requests[][id]', value: request.id}
+              %select.form-control{name: 'requests[][group_id]'}
+                %option{value: request.group_id, selected: true}= request.group
+            %td
               %select.form-control{name: 'requests[][description]'}
                 %option{value: request.description, selected: true}= request.description
             %td
               %input.form-control{name: 'requests[][desired_quantity]', type: :number, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
             %td
-              -# TODO check role
-              %input.form-control{name: 'requests[][approved_quantity]', type: :number, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
+              - if request.group.responsibles.include? current_user
+                %input.form-control{name: 'requests[][approved_quantity]', type: :number, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
+              - else
+                = request.approved_quantity
             %td
               %input.form-control{name: 'requests[][price]', type: :number, value: request.price, placeholder: _('Price'), autocomplete: :off}
             %td.text-right
@@ -32,6 +38,7 @@
               %select.form-control{name: 'requests[][supplier]'}
                 %option{value: request.supplier, selected: true}= request.supplier
           - else
+            %td= request.group
             %td= request.description
             %td= request.desired_quantity
             %td= request.approved_quantity
@@ -55,12 +62,14 @@
       - unless params[:budget_period] == 'past'
         %tr
           %td
+            %select.form-control{name: 'requests[][group_id]'}
+          %td
             %select.form-control{name: 'requests[][description]'}
           %td
             %input.form-control{name: 'requests[][desired_quantity]', type: :number, placeholder: _('Desired quantity'), autocomplete: :off}
           %td
             -# TODO check role
-            %input.form-control{name: 'requests[][approved_quantity]', type: :number, placeholder: _('Approved quantity'), autocomplete: :off}
+            -#%input.form-control{name: 'requests[][approved_quantity]', type: :number, placeholder: _('Approved quantity'), autocomplete: :off}
           %td
             %input.form-control{name: 'requests[][price]', type: :number, placeholder: _('Price'), autocomplete: :off}
           %td
@@ -70,7 +79,7 @@
     - unless params[:budget_period] == 'past'
       %tfoot
         %tr
-          %td.h1{colspan: 6}
+          %td.h1{colspan: 7}
             %i.fa.fa-plus-circle
           %td.text-right
             %button.btn.btn-success{type: :submit}
@@ -99,6 +108,21 @@
       for error in xhr.responseJSON
         errors += '<li>' + error + '</li>'
       $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
+
+    $("select[name='requests[][group_id]']").select2
+      minimumInputLength: 1
+      allowClear: true
+      placeholder: '#{_("Group")}'
+      ajax:
+        url: '/procurement/groups.json'
+        dataType: 'json'
+        delay: 250
+        data: (params) -> search_term: params.term
+        processResults: (data) -> results: $.map data, (item) -> {id: item.id, text: item.name }
+        cache: true
+      escapeMarkup: (markup) -> markup
+      templateResult: (result) -> result.text
+      templateSelection: (result) -> result.text
 
     $("select[name='requests[][description]']").select2
       minimumInputLength: 3
