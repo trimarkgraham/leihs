@@ -17,7 +17,8 @@ module Procurement
     end
 
     def create
-      update
+      Group.create(params[:group])
+      redirect_to groups_path
     end
 
     before_action only: [:edit, :update] do
@@ -28,12 +29,7 @@ module Procurement
     end
 
     def update
-      @group ||= Group.new(params[:group])
       @group.update_attributes(params[:group])
-      # OPTIMIZE association callback
-      params[:group][:responsible_ids].each do |responsible_id|
-        @group.group_accesses.find_by(user_id: responsible_id).update_attributes(is_responsible: true)
-      end
       redirect_to groups_path
     end
 

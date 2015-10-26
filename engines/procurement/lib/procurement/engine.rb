@@ -1,6 +1,9 @@
 require "rails-assets-bootstrap"
 # require "font-awesome-sass"
 require "rails-assets-select2"
+require "acts_as_tree"
+require "paperclip"
+require "remotipart"
 
 module Procurement
   class Engine < ::Rails::Engine

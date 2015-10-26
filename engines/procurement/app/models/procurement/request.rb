@@ -4,6 +4,9 @@ module Procurement
     belongs_to :user
     belongs_to :group
 
+    has_many :attachments
+    accepts_nested_attributes_for :attachments
+
     monetize :price_cents
 
     validates_presence_of :user, :description, :desired_quantity
@@ -35,9 +38,10 @@ module Procurement
 
     class << self
 
-      def status_counts(budget_period, user: nil)
+      def status_counts(budget_period, user: nil, group: nil)
         requests = by_budget_period(budget_period)
         requests = requests.where(user_id: user) if user
+        requests = requests.where(group_id: group) if group
         {
             uninspected: requests.where(approved_quantity: nil).count,
             denied: requests.where(approved_quantity: 0).count,
@@ -51,7 +55,7 @@ module Procurement
     #################################################################
 
     def current?
-      Request.current.exists? self
+      Request.current.where(id: self).exists?
     end
 
     def status

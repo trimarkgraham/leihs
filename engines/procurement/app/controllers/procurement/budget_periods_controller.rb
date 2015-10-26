@@ -3,10 +3,12 @@ require_dependency "procurement/application_controller"
 module Procurement
   class BudgetPeriodsController < ApplicationController
 
-    skip_before_action :require_current_budget_period
-
     def index
       @budget_periods = BudgetPeriod.all
+
+      unless BudgetPeriod.current
+        flash.now[:error] = _('Current budget period not defined yet')
+      end
     end
 
     def create

@@ -1,0 +1,25 @@
+%h1= _('Requests')
+
+.well.h5
+  .row
+    .col-xs-3
+      - if @group
+        .fa.fa-sitemap
+        = _('Group')
+        %br
+        = @group
+    .col-xs-3
+      - if @user
+        .fa.fa-user
+        = _('User')
+        %br
+        = @user
+    .col-xs-6
+      - if params[:budget_period] == 'past'
+        .fa.fa-calendar
+        = _('Past budget periods')
+      - elsif current_period = Procurement::BudgetPeriod.current
+        .fa.fa-calendar
+        = _('Current budget period')
+        %br
+        = current_period

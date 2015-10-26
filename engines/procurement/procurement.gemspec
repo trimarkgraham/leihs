@@ -17,11 +17,14 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 4.2.3"
-  s.add_dependency 'rails-assets-jquery', '~>1.5'
-  s.add_dependency 'rails-assets-jquery-ujs', '~>1.0'
-  s.add_dependency 'rails-assets-bootstrap', '~>3.3'
-  # s.add_dependency 'font-awesome-sass', '~>4.4'
-  s.add_dependency 'rails-assets-select2', '~>4.0'
-  s.add_dependency 'money-rails', '~>1.4'
+  s.add_dependency "rails", "~> 4.2.4"
+  s.add_dependency 'rails-assets-jquery', '~> 1.5'
+  s.add_dependency 'rails-assets-jquery-ujs', '~> 1.0'
+  s.add_dependency 'rails-assets-bootstrap', '~> 3.3'
+  # s.add_dependency 'font-awesome-sass', '~> 4.4'
+  s.add_dependency 'rails-assets-select2', '~> 4.0'
+  s.add_dependency 'money-rails', '~> 1.4'
+  s.add_dependency 'acts_as_tree', '~> 2.2'
+  s.add_dependency 'paperclip', '~> 4.3'
+  s.add_dependency 'remotipart', '~> 1.2'
 end

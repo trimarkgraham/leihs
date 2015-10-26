@@ -1,5 +1,5 @@
 module Procurement
-  class GroupAccess < ActiveRecord::Base
+  class GroupResponsible < ActiveRecord::Base
 
     validates_presence_of :user, :group
     validates_uniqueness_of :user_id, scope: :group_id

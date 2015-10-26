@@ -1,0 +1,116 @@
+%h1= _('RequestTemplates')
+
+.well.h5
+  .row
+    .col-xs-3
+      .fa.fa-sitemap
+      = _('Group')
+      %br
+      = @group
+    .col-xs-9
+
+= form_tag nil, remote: true do
+  %table.table.table-striped
+    %thead
+      %tr
+        -#%th.col-xs-3= _('Group')
+        %th.col-xs-4= _('Description')
+        %th.col-xs-4= "%s %s" % [_('Price'), MoneyRails.default_currency]
+        %th.col-xs-4= _('Supplier')
+    %tbody
+      - @request_templates.each do |template|
+        %tr
+          %input{type: :hidden, name: 'request_templates[][id]', value: template.id}
+          -#%td
+            %select.form-control{name: 'request_templates[][group_id]'}
+              %option{value: template.group_id, selected: true}= template.group
+          %td
+            %select.form-control{name: 'request_templates[][description]'}
+              %option{value: template.description, selected: true}= template.description
+          %td
+            %input.form-control{name: 'request_templates[][price]', type: :number, value: template.price, placeholder: _('Price'), autocomplete: :off}
+          %td
+            %select.form-control{name: 'request_templates[][supplier]'}
+              %option{value: template.supplier, selected: true}= template.supplier
+
+      %tr
+        -#%td
+          %select.form-control{name: 'request_templates[][group_id]'}
+            %option
+            - Procurement::Group.all.each do |group|
+              %option{value: group.id}= group
+        %td
+          %select.form-control{name: 'request_templates[][description]'}
+        %td
+          %input.form-control{name: 'request_templates[][price]', type: :number, placeholder: _('Price'), autocomplete: :off}
+        %td
+          %select.form-control{name: 'request_templates[][supplier]'}
+        %td
+    %tfoot
+      %tr
+        %td.h1{colspan: 2}
+          %i.fa.fa-plus-circle
+        %td.text-right
+          %button.btn.btn-success{type: :submit}
+            %i.fa.fa-check
+            = _('Save')
+
+:scss
+  form .fa-plus-circle {
+    cursor: pointer;
+    color: #5cb85c;
+  }
+
+:coffeescript
+  $(document).ready ->
+    $('tfoot').on 'click', '.fa-plus-circle', ->
+      target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
+      cloned_el = target_el.clone()
+      cloned_el.find('input').val('')
+      cloned_el.insertAfter(target_el)
+      false
+
+    $("form").on("ajax:success", (e, data, status, xhr) ->
+      location.reload()
+    ).on "ajax:error", (e, xhr, status, error) ->
+      errors = ''
+      for error in xhr.responseJSON
+        errors += '<li>' + error + '</li>'
+      $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
+
+    #$("select[name='request_templates[][group_id]']").select2
+    #  minimumInputLength: 0
+    #  allowClear: true
+    #  placeholder: '#{_("Group")}'
+
+    $("select[name='request_templates[][description]']").select2
+      minimumInputLength: 3
+      allowClear: true
+      placeholder: '#{_("Description")}'
+      ajax:
+        url: '/procurement/models.json'
+        dataType: 'json'
+        delay: 250
+        data: (params) -> search_term: params.term
+        processResults: (data) -> results: $.map data, (item) -> {id: item.name, text: item.name }
+        cache: true
+      escapeMarkup: (markup) -> markup
+      templateResult: (result) -> result.text
+      templateSelection: (result) -> result.text
+      tags: true
+
+    $("select[name='request_templates[][supplier]']").select2
+      minimumInputLength: 3
+      allowClear: true
+      placeholder: '#{_("Supplier")}'
+      ajax:
+        url: '/procurement/suppliers.json'
+        dataType: 'json'
+        delay: 250
+        data: (params) -> search_term: params.term
+        processResults: (data) -> results: $.map data, (item) -> {id: item.name, text: item.name }
+        cache: true
+      escapeMarkup: (markup) -> markup
+      templateResult: (result) -> result.text
+      templateSelection: (result) -> result.text
+      tags: true

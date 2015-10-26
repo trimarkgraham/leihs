@@ -3,14 +3,11 @@ module Procurement
 
     validates_presence_of :name
 
-    has_many :group_accesses
-    has_many :users, through: :group_accesses
-    has_many :requesters, -> { where(procurement_group_accesses: {is_responsible: [nil, false]}) },
-             through: :group_accesses,
-             source: :user
-    has_many :responsibles, -> { where(procurement_group_accesses: {is_responsible: true}) },
-             through: :group_accesses,
-             source: :user
+    has_many :group_responsibles
+    has_many :responsibles, through: :group_responsibles, source: :user
+
+    has_many :requests
+    has_many :request_templates
 
     def to_s
       name

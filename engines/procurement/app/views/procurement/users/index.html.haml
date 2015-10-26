@@ -1,0 +1,71 @@
+%h1= _('Users')
+
+= form_tag users_path do
+  .row
+    .col-xs-4= _('Admins')
+    .col-xs-8
+      %select.form-control{name: 'admin_ids[]', multiple: true}
+
+  .row
+    .col-xs-4= _('Requesters')
+    .col-xs-8
+      %select.form-control{name: 'requester_ids[]', multiple: true}
+
+  .row
+    .col-xs-12.text-right
+      %button.btn.btn-success{type: :submit}
+        %i.fa.fa-check
+        = _('Save')
+
+
+:coffeescript
+  $(document).ready ->
+    element1 = $("select[name='requester_ids[]']").select2
+      minimumInputLength: 3
+      placeholder: '#{_("Name of the requesters")}'
+      ajax:
+        url: '/procurement/users.json'
+        dataType: 'json'
+        delay: 250
+        data: (params) -> search_term: params.term
+        processResults: (data) -> results: data
+        cache: true
+      escapeMarkup: (markup) -> markup
+      templateResult: (result) ->
+        if result.loading
+          return result.text
+        result.firstname + ' ' + result.lastname
+      templateSelection: (result) ->
+        if result.firstname and result.lastname
+          result.firstname + ' ' + result.lastname
+        else
+          result.text
+    #{@requesters.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
+      option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
+      element1.append(option)
+    element1.trigger('change')
+
+    element1 = $("select[name='admin_ids[]']").select2
+      minimumInputLength: 3
+      placeholder: '#{_("Name of the admins")}'
+      ajax:
+        url: '/procurement/users.json'
+        dataType: 'json'
+        delay: 250
+        data: (params) -> search_term: params.term
+        processResults: (data) -> results: data
+        cache: true
+      escapeMarkup: (markup) -> markup
+      templateResult: (result) ->
+        if result.loading
+          return result.text
+        result.firstname + ' ' + result.lastname
+      templateSelection: (result) ->
+        if result.firstname and result.lastname
+          result.firstname + ' ' + result.lastname
+        else
+          result.text
+    #{@admins.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
+      option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
+      element1.append(option)
+    element1.trigger('change')

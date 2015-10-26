@@ -3,38 +3,54 @@ require_dependency "procurement/application_controller"
 module Procurement
   class RequestsController < ApplicationController
 
-    def index
+    before_action do
+      unless BudgetPeriod.current
+        if is_procurement_admin?
+          redirect_to budget_periods_path
+        else
+          redirect_to root_path
+        end
+      end
+
+      @user = User.find(params[:user_id]) if params[:user_id]
+      @group = Procurement::Group.find(params[:group_id]) if params[:group_id]
+    end
+
+    before_action only: [:index, :resume] do
       @requests = case params[:budget_period]
                     when 'current', 'past'
                       Request.send(params[:budget_period])
                     else
                       Request.all
                   end
-
-      if params[:user_id]
-        @user = User.find(params[:user_id])
-        @requests = @requests.where(user_id: @user)
-      end
+      @requests = @requests.where(user_id: @user) if @user
+      @requests = @requests.where(group_id: @group) if @group
     end
 
+    def index
+    end
+
+    def resume
+    end
 
     def create
-      errors = params.require(:requests).map do |param|
-        requester_keys = [:group_id, :description, :desired_quantity, :price, :supplier]
+      errors = params.require(:requests).values.map do |param|
+        requester_keys = [:group_id, :user_id, :description, :desired_quantity, :price, :supplier, attachments_attributes: [:file]]
         inspector_keys = [:approved_quantity]
-        keys = requester_keys + inspector_keys # TODO check role
+        keys = requester_keys + inspector_keys # TODO check role # request_template.group.responsibles.include? current_user
         permitted = param.permit(keys)
 
         if param[:id]
           r = Request.find(param[:id])
-          if permitted.values.all? &:blank?
+          if permitted.values.all?(&:blank?) or permitted[:desired_quantity].to_i.zero?
             r.destroy
           else
             r.update_attributes(permitted)
           end
         else
-          next if permitted.values.all? &:blank?
-          permitted[:user] = current_user
+          next if permitted.values.all?(&:blank?) or permitted[:desired_quantity].to_i.zero?
+          permitted[:group_id] = params[:group_id]
+          permitted[:user_id] = params[:user_id]
           r = Request.create(permitted)
         end
         r.errors.full_messages

@@ -45,17 +45,6 @@
 
       #page-content-wrapper
         .container
-          .row.well.h4
-            .col-sm-4
-              = _("Today's date is")
-              = l Date.today
-            .col-sm-8
-              - if current_period = Procurement::BudgetPeriod.current
-                = "%s: %s" % [_('Current budget period'), current_period]
-              - else
-                .alert.alert-danger
-                  = _('No budget period defined yet!')
-
           = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
           = yield
 
