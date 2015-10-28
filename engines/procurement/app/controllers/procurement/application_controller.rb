@@ -2,17 +2,21 @@ module Procurement
   class ApplicationController < ActionController::Base
     include MainHelpers
 
-    # TODO before_action :require_login, :require_admins, except: :root
+    before_action :require_login, :require_admins, except: :root
 
     def root
-      # TODO
-      redirect_to budget_periods_path
     end
 
     protected
 
+    helper_method :is_procurement_admin?, :is_procurement_requester?
+
     def is_procurement_admin?
-      Access.admins.where(user_id: current_user).exists?
+      current_user and (Access.admins.where(user_id: current_user).exists? or (Access.admins.empty? and is_admin?))
+    end
+
+    def is_procurement_requester?
+      current_user and Access.requesters.where(user_id: current_user).exists?
     end
 
     private
@@ -27,7 +31,7 @@ module Procurement
     def require_admins
       if Access.admins.empty?
         flash[:error] = _('No admins defined yet')
-        if is_admin?
+        if is_procurement_admin?
           redirect_to users_path
         else
           redirect_to root_path

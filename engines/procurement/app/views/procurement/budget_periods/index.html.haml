@@ -19,7 +19,7 @@
           %td
             %input.form-control.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: I18n.translate('date.formats.default')), placeholder: _('End date'), autocomplete: :off}
           %td
-            = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(budget_period)}
+            = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period}
       %tr
         %td
           %input.form-control{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :off}

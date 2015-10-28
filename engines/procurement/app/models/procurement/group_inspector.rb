@@ -1,5 +1,5 @@
 module Procurement
-  class GroupResponsible < ActiveRecord::Base
+  class GroupInspector < ActiveRecord::Base
 
     validates_presence_of :user, :group
     validates_uniqueness_of :user_id, scope: :group_id

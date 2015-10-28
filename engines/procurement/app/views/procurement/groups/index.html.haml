@@ -1,8 +1,10 @@
+%h1= _('Groups')
+
 %table.table.table-striped
   %thead
     %tr
       %th.col-xs-4= _('Name')
-      %th.col-xs-4= _('Responsibles')
+      %th.col-xs-4= _('Inspectors')
       %th
   %tbody
     - @groups.each do |group|
@@ -11,8 +13,8 @@
           = group.name
         %td
           %ul
-            - group.responsibles.each do |responsible|
-              %li= responsible
+            - group.inspectors.each do |inspector|
+              %li= inspector
         %td.text-right
           %a.btn.btn-default{href: edit_group_path(group)}
             %i.fa.fa-edit

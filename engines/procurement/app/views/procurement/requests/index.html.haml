@@ -16,119 +16,66 @@
     %tbody
       - i = 0
       - @requests.each do |request|
-        %tr
-          - if request.current?
-            - i += 1
-            %input{type: :hidden, name: "requests[#{i}][id]", value: request.id}
-            -#%td
-              %select.form-control{name: "requests[#{i}][group_id]"}
-                %option{value: request.group_id, selected: true}= request.group
-            %td
-              %select.form-control{name: "requests[#{i}][description]"}
-                %option{value: request.description, selected: true}= request.description
-            %td
-              %input.form-control{name: "requests[#{i}][desired_quantity]", type: :number, min: 0, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
-            %td
-              - if request.group.responsibles.include? current_user
-                %input.form-control{name: "requests[#{i}][approved_quantity]", type: :number, min: 0, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
-              - else
-                = request.approved_quantity
-            %td
-              %input.form-control{name: "requests[#{i}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: _('Price'), autocomplete: :off}
-            %td.text-right
-              = money_without_cents_and_with_symbol request.total_price
-            %td
-              %select.form-control{name: "requests[#{i}][supplier]"}
-                %option{value: request.supplier, selected: true}= request.supplier
-            %td
-              %input{type: :file, name: "requests[#{i}][attachments_attributes][][file]", multiple: true}
-              %ul
-                - request.attachments.each do |attachment|
-                  %li
-                    %a{href: attachment.file.url, target: '_blank'}
-                      = attachment.file.original_filename
-          - else
-            -#%td= request.group
-            %td= request.description
-            %td= request.desired_quantity
-            %td= request.approved_quantity
-            %td= money_without_cents_and_with_symbol request.price
-            %td= request.total_price
-            %td= request.supplier
-            %td
-              %ul
-                - request.attachments.each do |attachment|
-                  %li
-                    %a{href: attachment.file.url, target: '_blank'}
-                      = attachment.file.original_filename
+        - if request.editable?(current_user)
+          = render partial: 'write', locals: {request: request}
+        - else
+          = render partial: 'read', locals: {request: request}
 
-          %td
-            :ruby
-              label_class = case (status = request.status)
-                              when :uninspected
-                                'label-default'
-                              when :denied
-                                'label-danger'
-                              when :partially_approved
-                                'label-warning'
-                              when :completely_approved
-                                'label-success'
-                            end
-            .label{class: label_class}
-              = status
-      - unless params[:budget_period] == 'past'
+      - if params[:budget_period] != 'past' and (Procurement::BudgetPeriod.current.in_requesting_phase? or @group.inspectors.include?(current_user))
         - already_requested_descriptions = @requests.map &:description
         - Procurement::RequestTemplate.where(group_id: @group).where.not(description: already_requested_descriptions).each do |request_template|
           %tr
             - i += 1
             -#%td
-              %select.form-control{name: "requests[#{i}][group_id]"}
+              %select.form-control{name: "requests[new_#{i}][group_id]"}
                 %option{value: request_template.group_id, selected: true}= request_template.group
             %td
-              %select.form-control{name: "requests[#{i}][description]"}
+              %input{type: 'hidden', name: "requests[new_#{i}][description]", value: request_template.description}
+              = request_template.description
+              -#%select.form-control{name: "requests[new_#{i}][description]"}
                 %option{value: request_template.description, selected: true}= request_template.description
             %td
-              %input.form-control{name: "requests[#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
+              %input.form-control{name: "requests[new_#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
             %td
-              - if request_template.group.responsibles.include? current_user
-                %input.form-control{name: "requests[#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+              - if request_template.group.inspectors.include? current_user
+                %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
             %td
-              %input.form-control{name: "requests[#{i}][price]", type: :number, min: 0, value: request_template.price.to_i, placeholder: _('Price'), autocomplete: :off}
+              %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: request_template.price.to_i, placeholder: _('Price'), autocomplete: :off}
             %td
             %td
-              %select.form-control{name: "requests[#{i}][supplier]"}
+              %select.form-control{name: "requests[new_#{i}][supplier]"}
                 %option{value: request_template.supplier, selected: true}= request_template.supplier
             %td
-              -#%input{type: :file, name: "requests[#{i}][attachments_attributes][][file]", multiple: true}
+              -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
             %td
 
         %tr
           - i += 1
           -#%td
-            %select.form-control{name: "requests[#{i}][group_id]"}
+            %select.form-control{name: "requests[new_#{i}][group_id]"}
               %option
               - Procurement::Group.all.each do |group|
                 %option{value: group.id}= group
           %td
-            %select.form-control{name: "requests[#{i}][description]"}
+            %select.form-control{name: "requests[new_#{i}][description]"}
           %td
-            %input.form-control{name: "requests[#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
+            %input.form-control{name: "requests[new_#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
           %td
             -# TODO check role
-            -#%input.form-control{name: "requests[#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+            -#%input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
           %td
-            %input.form-control{name: "requests[#{i}][price]", type: :number, min: 0, placeholder: _('Price'), autocomplete: :off}
+            %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: _('Price'), autocomplete: :off}
           %td
           %td
-            %select.form-control{name: "requests[#{i}][supplier]"}
+            %select.form-control{name: "requests[new_#{i}][supplier]"}
           %td
-            -#%input{type: :file, name: "requests[#{i}][attachments_attributes][][file]", multiple: true}
+            -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
           %td
     - unless params[:budget_period] == 'past'
       %tfoot
         %tr
           %td.h1{colspan: 7}
-            %i.fa.fa-plus-circle
+            -#%i.fa.fa-plus-circle
           %td.text-right
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check
@@ -142,12 +89,12 @@
 
 :coffeescript
   $(document).ready ->
-    $('tfoot').on 'click', '.fa-plus-circle', ->
-      target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
-      cloned_el = target_el.clone()
-      cloned_el.find('input').val('')
-      cloned_el.insertAfter(target_el)
-      false
+    #$('tfoot').on 'click', '.fa-plus-circle', ->
+    #  target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
+    #  cloned_el = target_el.clone()
+    #  cloned_el.find('input').val('')
+    #  cloned_el.insertAfter(target_el)
+    #  false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->
       location.reload()

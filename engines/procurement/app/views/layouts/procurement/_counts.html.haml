@@ -1,9 +1,26 @@
+:ruby
+  budget_period ||= Procurement::BudgetPeriod.current
+  user ||= nil
+  group ||= nil
+  counts = budget_period.status_counts(user: user, group: group)
+
+  if (group and not group.inspectors.include?(current_user))
+    counts = if budget_period.in_inspection_phase?
+               {in_inspection: counts.values.sum}
+             elsif budget_period.in_requesting_phase?
+               {new: counts.delete(:new),
+               in_inspection: counts.values.sum}
+             end
+  end
+
 - counts.each_pair do |k,v|
   - next if v.zero?
   :ruby
     label_class = case k
-                    when :uninspected
-                      'label-default'
+                    when :new
+                      'label-info'
+                    when :in_inspection
+                      'label-primary'
                     when :denied
                       'label-danger'
                     when :partially_approved

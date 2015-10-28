@@ -3,8 +3,8 @@ module Procurement
 
     validates_presence_of :name
 
-    has_many :group_responsibles
-    has_many :responsibles, through: :group_responsibles, source: :user
+    has_many :group_inspectors
+    has_many :inspectors, through: :group_inspectors, source: :user
 
     has_many :requests
     has_many :request_templates

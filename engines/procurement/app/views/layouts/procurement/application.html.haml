@@ -36,8 +36,9 @@
           -#%a.navbar-brand{href: admin.root_path}
                 = render partial: 'layouts/leihs_admin/logo'
           %ul.nav.navbar-nav.navbar-right
-            = render partial: 'layouts/leihs_admin/navigation'
-            = render partial: 'layouts/leihs_admin/user'
+            -#= render partial: 'layouts/leihs_admin/navigation'
+            - if current_user
+              = render partial: 'layouts/leihs_admin/user'
 
     #wrapper
       #sidebar-wrapper

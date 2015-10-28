@@ -1,21 +1,24 @@
 %h1= _('Users')
 
 = form_tag users_path do
-  .row
-    .col-xs-4= _('Admins')
-    .col-xs-8
+  .panel.panel-default
+    .panel-heading
+      %i.fa.fa-user-md
+      = _('Admins')
+    .panel-body
       %select.form-control{name: 'admin_ids[]', multiple: true}
 
-  .row
-    .col-xs-4= _('Requesters')
-    .col-xs-8
+  .panel.panel-default
+    .panel-heading
+      %i.fa.fa-user
+      = _('Requesters')
+    .panel-body
       %select.form-control{name: 'requester_ids[]', multiple: true}
 
-  .row
-    .col-xs-12.text-right
-      %button.btn.btn-success{type: :submit}
-        %i.fa.fa-check
-        = _('Save')
+  .text-right
+    %button.btn.btn-success{type: :submit}
+      %i.fa.fa-check
+      = _('Save')
 
 
 :coffeescript

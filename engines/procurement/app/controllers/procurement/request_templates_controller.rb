@@ -8,12 +8,7 @@ module Procurement
     end
 
     def index
-      @request_templates = case params[:budget_period]
-                             when 'current', 'past'
-                               @group.request_templates.send(params[:budget_period])
-                             else
-                               @group.request_templates
-                           end
+      @request_templates = @group.request_templates
     end
 
 

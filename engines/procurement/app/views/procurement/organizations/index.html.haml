@@ -4,3 +4,8 @@
   -#= link_to "#{'-'*level}#{organization.name}", organization_path(organization)
   %div{style: "margin-left: #{level}em"}
     = organization
+
+.text-right
+  %a.btn.btn-success{href: new_organization_path}
+    %i.fa.fa-plus
+    = _('New Organization')

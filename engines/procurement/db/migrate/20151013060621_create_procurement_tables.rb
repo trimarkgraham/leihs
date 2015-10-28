@@ -13,15 +13,15 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.string :name
     end
 
-    create_table :procurement_group_responsibles do |t|
+    create_table :procurement_group_inspectors do |t|
       t.belongs_to :user
       t.belongs_to :group
       # TODO deleted_at ??
 
       t.index [:user_id, :group_id], unique: true
     end
-    add_foreign_key(:procurement_group_responsibles, :users)
-    add_foreign_key(:procurement_group_responsibles, :procurement_groups, column: 'group_id')
+    add_foreign_key(:procurement_group_inspectors, :users)
+    add_foreign_key(:procurement_group_inspectors, :procurement_groups, column: 'group_id')
 
     create_table :procurement_accesses do |t|
       t.belongs_to :user,   index: true

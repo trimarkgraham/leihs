@@ -36,39 +36,40 @@ module Procurement
       end
     }
 
-    class << self
-
-      def status_counts(budget_period, user: nil, group: nil)
-        requests = by_budget_period(budget_period)
-        requests = requests.where(user_id: user) if user
-        requests = requests.where(group_id: group) if group
-        {
-            uninspected: requests.where(approved_quantity: nil).count,
-            denied: requests.where(approved_quantity: 0).count,
-            partially_approved: requests.where('0 < approved_quantity AND approved_quantity < desired_quantity').count,
-            completely_approved: requests.where('approved_quantity = desired_quantity').count
-        }
-      end
-
-    end
-
     #################################################################
 
-    def current?
-      Request.current.where(id: self).exists?
+    def budget_period
+      BudgetPeriod.order(end_date: :asc).where("end_date >= ?", created_at).first
     end
 
-    def status
-      if approved_quantity.nil?
-        :uninspected
-      elsif approved_quantity == 0
-        :denied
-      elsif 0 < approved_quantity and approved_quantity < desired_quantity
-        :partially_approved
-      elsif approved_quantity == desired_quantity
-        :completely_approved
+    def editable?(user)
+      Request.current.where(id: self).exists? and
+          (inspectable_by?(user) or
+              (user_id == user.id and budget_period.in_requesting_phase? ))
+    end
+
+    def inspectable_by?(user)
+      group.inspectors.include?(user)
+    end
+
+    def status(user)
+      if not inspectable_by?(user) and
+          (budget_period.in_inspection_phase? or
+              (budget_period.in_requesting_phase? and
+                  not approved_quantity.nil?))
+        :in_inspection
       else
-        raise
+        if approved_quantity.nil?
+          :new
+        elsif approved_quantity == 0
+          :denied
+        elsif 0 < approved_quantity and approved_quantity < desired_quantity
+          :partially_approved
+        elsif approved_quantity == desired_quantity
+          :completely_approved
+        else
+          raise
+        end
       end
     end
 

@@ -1,55 +1,58 @@
-%ul.sidebar-nav
-  %li
-    .h4{style: 'color: lightgrey'}
-      Admin user:
-  %li
-    %a{href: budget_periods_path}
-      = _('Budget periods')
-      - unless Procurement::BudgetPeriod.current
-        %i.fa.fa-warning.text-danger
+%ul.sidebar-nav{style: 'margin-top: 1em'}
+  - if is_procurement_admin?
+    %li
+      .h4{style: 'color: lightgrey'}
+        Admin user:
+    %li
+      %a{href: budget_periods_path}
+        = _('Budget periods')
+        - unless Procurement::BudgetPeriod.current
+          %i.fa.fa-warning.text-danger
+    %li
+      %a{href: organizations_path}
+        = _('Organizations')
+        - unless Procurement::Organization.exists?
+          %i.fa.fa-warning.text-danger
+    %li
+      %a{href: groups_path}
+        = _('Groups')
+        - unless Procurement::Group.exists?
+          %i.fa.fa-warning.text-danger
+    %li
+      %a{href: users_path}
+        = _('Users')
+        - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
+          %i.fa.fa-warning.text-danger
 
-  %li
-    %a{href: organizations_path}
-      = _('Organizations')
-      - unless Procurement::Organization.exists?
-        %i.fa.fa-warning.text-danger
+  - if is_procurement_requester?
+    %li
+      %hr
+    %li
+      .h4{style: 'color: lightgrey'}
+        Requester user:
+    %li
+      %a{href: resume_user_requests_path(current_user, budget_period: :current)}
+        = _('My current requests')
+        =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
+    %li
+      %a{href: resume_user_requests_path(current_user, budget_period: :past)}= _('My past requests')
 
-  %li
-    %a{href: groups_path}
-      = _('Groups')
-      - unless Procurement::Group.exists?
-        %i.fa.fa-warning.text-danger
-  %li
-    %a{href: users_path}
-      = _('Users')
-      - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
-        %i.fa.fa-warning.text-danger
-
-  %li
-    %hr
-  %li
-    .h4{style: 'color: lightgrey'}
-      Requester user:
-  %li
-    %a{href: resume_user_requests_path(current_user, budget_period: :current)}
-      = _('My current requests')
-      = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(Procurement::BudgetPeriod.current, user: current_user)}
-  %li
-    %a{href: resume_user_requests_path(current_user, budget_period: :past)}= _('My past requests')
-  %li
-    %hr
-  - Procurement::Group.joins(:group_responsibles).where(procurement_group_responsibles: {user_id: current_user}).each do |group|
+  - Procurement::Group.joins(:group_inspectors).where(procurement_group_inspectors: {user_id: current_user}).each do |group|
+    %li
+      %hr
     %li
       .h4{style: 'color: lightgrey'}
         = group
     %li
       %a{href: resume_group_requests_path(group, budget_period: :current)}
         = _('Current requests')
-        = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(Procurement::BudgetPeriod.current, group: group)}
+        = render partial: 'layouts/procurement/counts', locals: {group: group}
     %li
       %a{href: resume_group_requests_path(group, budget_period: :past)}= _('Past requests')
     %li
-      %a{href: group_request_templates_path(group)}= _('RequestTemplates')
+      %a{href: group_request_templates_path(group)}
+        = _('RequestTemplates')
+        .label.label-default= group.request_templates.count
 
   .text-center
     %hr

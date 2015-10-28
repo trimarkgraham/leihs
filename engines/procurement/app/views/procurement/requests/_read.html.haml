@@ -1,0 +1,15 @@
+%tr
+  -#%td= request.group
+  %td= request.description
+  %td= request.desired_quantity
+  %td= request.approved_quantity
+  %td= money_without_cents_and_with_symbol request.price
+  %td= request.total_price
+  %td= request.supplier
+  %td
+    %ul
+      - request.attachments.each do |attachment|
+        %li
+          %a{href: attachment.file.url, target: '_blank'}
+            = attachment.file.original_filename
+  %td= render partial: 'status', locals: {request: request}

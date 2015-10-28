@@ -1,0 +1,16 @@
+:ruby
+  label_class = case (status = request.status(current_user))
+                  when :new
+                    'label-info'
+                  when :in_inspection
+                    'label-primary'
+                  when :denied
+                    'label-danger'
+                  when :partially_approved
+                    'label-warning'
+                  when :completely_approved
+                    'label-success'
+                end
+
+.label{class: label_class}
+  = status.to_s.humanize

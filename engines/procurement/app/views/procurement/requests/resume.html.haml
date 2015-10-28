@@ -9,7 +9,7 @@
             = user
           .col-xs-4
             - unless params[:budget_period] == 'past'
-              = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(Procurement::BudgetPeriod.current, group: @group, user: user)}
+              = render partial: 'layouts/procurement/counts', locals: {group: @group, user: user}
           .col-xs-4
             = money_without_cents_and_with_symbol requests.map(&:total_price).sum
 
@@ -21,7 +21,7 @@
             = group
           .col-xs-4
             - unless params[:budget_period] == 'past'
-              = render partial: 'layouts/procurement/counts', locals: {counts: Procurement::Request.status_counts(Procurement::BudgetPeriod.current, group: group, user: current_user)}
+              = render partial: 'layouts/procurement/counts', locals: {group: group, user: current_user}
           .col-xs-4
             - requests = @requests.where(group_id: group)
             - unless requests.blank?
