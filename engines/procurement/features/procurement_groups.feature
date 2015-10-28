@@ -10,6 +10,7 @@ Feature: Procurement Groups
     |responsible|leihs user|
     And more than one responsible is possible
 
+  # not yet implemented: not sure if already implemented this way
   @personas
   Scenario: Editing a procurement group
     Given I am Dani
@@ -19,6 +20,7 @@ Feature: Procurement Groups
     When the procurement group does not yet have any requests
     Then I can change the name of the procurement group
 
+  # not yet implemented
   @personas
   Scenario: Deleting a procurement group
     Given I am Dani

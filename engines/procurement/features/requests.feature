@@ -1,9 +1,33 @@
-Feature: requests
+Feature: requests (state-behaviour described in seperate feature-file)
 
+  # not yet implemented: some fields missing
   @personas
   Scenario: Create a request
     Given I am Roger
-    Then I can create a request and give the following information
+    When I create a request
+    Then I can see the following fields
+    |Procurement Group|
+    |item description|
+    |Quantity|
+    |Approved Quantity|
+    |Order Size|
+    |Price|
+    |Total|
+    |Priority|
+    |Priority of Inspection|
+    |Supplier|
+    |Motivation|
+    |Inspection Comment|
+    |Receiver|
+    |Organisation Unit of Receiver|
+    |Attachment|
+
+  # not yet implemented: some fields missing
+  @personas
+  Scenario: Editable Fields
+    Given I am Roger
+    When I create a Request
+    Then I can modify the following fields
     |Procurement Group|
     |item description|
     |Quantity|
@@ -15,6 +39,7 @@ Feature: requests
     |Organisation Unit of Receiver|
     |Attachment|
 
+  # not yet implemented
   @personas
   Scenario: Mandatory fields
     Given I am Roger
@@ -29,19 +54,46 @@ Feature: requests
     |Organisation Unit of Receiver|
 
   @personas
-  Scenario: delete a request
+  Scenario: Choosing an existing or non existing Model
+    Given I am Roger
+    When I create a request
+    Then I can choose a model by typing the model name
+    When the model name does not exist
+    Then the entered model name is saved
+
+  # not yet implemented: some fields missing
+  @personas
+  Scenario: Show values set by inspector
+    Given I am Barbara
+    Given a request has been created by @Roger
+    When I modify the folling fields
+    |Approved Quantity|
+    |Order Size|
+    |Price|
+    |Priority of Inspection|
+    |Supplier|
+    |Inspection Comment|
+    |Receiver|
+    |Organisation Unit of Receiver|
+    |Attachment|
+    Then @Roger sees the entered values
+
+  # not yet implemented
+  @personas
+  Scenario: Delete a Request
     Given I am Roger
     When the inspection date for the current budget period has not yet been reached
     Then I can delete only my own requests
 
   @personas
-  Scenario: edit a request
+  Scenario: Modify a Request
     Given I am Roger
     When the inspection date for the current budget period has not yet been reached
-    Then I can edit only my own requests
+    Then I can modify only my own requests
 
+  # not yet implemented: waiting for Nadja to find out more about API
   @personas
-  Scenario: Create a request
+  Scenario: Pick Receiver and Organisation
     Given I am Roger
     When I create a request
     And I pick a receiver
@@ -55,6 +107,7 @@ Feature: requests
     And I enter a price
     Then the amount and the price are multiplied and the result is shown
 
+  # not yet implemented
   @personas
   Scenario: Priority values
     Given I am Roger
@@ -62,18 +115,3 @@ Feature: requests
     Then I can choose the following priority-values
     |High|
     |Medium|
-
-  @personas
-  Scenario: Change procurement group
-    Given I am Roger
-    When I create a request
-    And I add item lines
-    Then I can change the selected procurement group of these item lines
-
-  @personas
-  Scenario: choosing an existing or non existing model
-    Given I am Roger
-    When I create a request
-    Then I can choose a model by typing the model name
-    When the model name does not exist
-    Then the entered model name is saved
