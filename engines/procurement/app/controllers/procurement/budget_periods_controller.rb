@@ -4,7 +4,7 @@ module Procurement
   class BudgetPeriodsController < ApplicationController
 
     def index
-      @budget_periods = BudgetPeriod.all
+      @budget_periods = BudgetPeriod.order(end_date: :asc)
 
       unless BudgetPeriod.current
         flash.now[:error] = _('Current budget period not defined yet')

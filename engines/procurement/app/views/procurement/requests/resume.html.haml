@@ -1,28 +1,37 @@
-= render partial: 'header'
+%h1= _('Requests')
 
-.list-group
-  - if @group
-    - @requests.group_by(&:user).each_pair do |user, requests|
-      %a.list-group-item{href: group_user_requests_path(@group, user, budget_period: params[:budget_period])}
-        .row
-          .col-xs-4
-            = user
-          .col-xs-4
-            - unless params[:budget_period] == 'past'
-              = render partial: 'layouts/procurement/counts', locals: {group: @group, user: user}
-          .col-xs-4
-            = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+- @budget_periods.each do |budget_period|
+  - next if budget_period.end_date > Date.today and not budget_period.current?
 
-  - else
-    - Procurement::Group.all.each do |group|
-      %a.list-group-item{href: group_user_requests_path(group, current_user, budget_period: params[:budget_period])}
-        .row
-          .col-xs-4
-            = group
-          .col-xs-4
-            - unless params[:budget_period] == 'past'
-              = render partial: 'layouts/procurement/counts', locals: {group: group, user: current_user}
-          .col-xs-4
-            - requests = @requests.where(group_id: group)
-            - unless requests.blank?
-              = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+  .panel{class: budget_period.current? ? 'panel-success' : 'panel-default'}
+    .panel-heading
+      = render partial: 'header', locals: {budget_period: budget_period}
+
+    .list-group
+      - if @group
+        - @requests.group_by(&:user).each_pair do |user, requests|
+          %a.list-group-item{href: group_user_budget_period_requests_path(@group, user, budget_period)}
+            .row
+              .col-xs-4
+                .fa.fa-user
+                = user
+              .col-xs-4
+                - if budget_period.current?
+                  = render partial: 'layouts/procurement/counts', locals: {group: @group, user: user}
+              .col-xs-4
+                = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+
+      - else
+        - Procurement::Group.all.each do |group|
+          %a.list-group-item{href: group_user_budget_period_requests_path(group, current_user, budget_period)}
+            .row
+              .col-xs-4
+                .fa.fa-sitemap
+                = group
+              .col-xs-4
+                - if budget_period.current?
+                  = render partial: 'layouts/procurement/counts', locals: {group: group, user: current_user}
+              .col-xs-4
+                - requests = @requests.where(group_id: group)
+                - unless requests.blank?
+                  = money_without_cents_and_with_symbol requests.map(&:total_price).sum

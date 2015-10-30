@@ -12,25 +12,23 @@ module Procurement
         end
       end
 
-      @user = User.find(params[:user_id]) if params[:user_id]
+      @user = User.not_as_delegations.find(params[:user_id]) if params[:user_id]
       @group = Procurement::Group.find(params[:group_id]) if params[:group_id]
     end
 
     before_action only: [:index, :resume] do
-      @requests = case params[:budget_period]
-                    when 'current', 'past'
-                      Request.send(params[:budget_period])
-                    else
-                      Request.all
-                  end
+      @requests = Request.all
       @requests = @requests.where(user_id: @user) if @user
       @requests = @requests.where(group_id: @group) if @group
     end
 
     def index
+      @budget_period = BudgetPeriod.find(params[:budget_period_id])
+      @requests = @requests.by_budget_period(@budget_period)
     end
 
     def resume
+      @budget_periods = BudgetPeriod.order(end_date: :desc)
     end
 
     def create

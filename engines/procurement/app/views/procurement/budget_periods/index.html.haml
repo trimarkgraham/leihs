@@ -10,7 +10,7 @@
         %th= _('Total requests')
     %tbody
       - @budget_periods.each do |budget_period|
-        %tr
+        %tr{class: budget_period.current? ? 'success' : nil}
           %td
             %input{type: :hidden, name: 'budget_periods[][id]', value: budget_period.id}
             %input.form-control{name: 'budget_periods[][name]', value: budget_period.name, placeholder: _('Name'), autocomplete: :off}

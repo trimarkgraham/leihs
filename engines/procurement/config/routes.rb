@@ -25,7 +25,9 @@ Procurement::Engine.routes.draw do
       end
     end
     resources :users, only: [] do
-      resources :requests, only: [:index, :create]
+      resources :budget_periods, only: [] do
+        resources :requests, only: [:index, :create]
+      end
     end
     resources :request_templates, only: [:index, :create]
   end

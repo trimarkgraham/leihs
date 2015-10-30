@@ -4,7 +4,7 @@ module Procurement
     belongs_to :user
     belongs_to :group
 
-    has_many :attachments
+    has_many :attachments, dependent: :destroy
     accepts_nested_attributes_for :attachments
 
     monetize :price_cents
@@ -14,15 +14,15 @@ module Procurement
 
     #################################################################
 
-    scope :current, -> { by_budget_period(BudgetPeriod.current) }
+    # scope :current, -> { by_budget_period(BudgetPeriod.current) }
 
-    scope :past, -> {
-      if previous = BudgetPeriod.current.previous
-        where("created_at <= ?", previous.end_date.at_end_of_day)
-      else
-        none
-      end
-    }
+    # scope :past, -> {
+    #   if previous = BudgetPeriod.current.previous
+    #     where("created_at <= ?", previous.end_date.at_end_of_day)
+    #   else
+    #     none
+    #   end
+    # }
 
     scope :by_budget_period, ->(budget_period) {
       if budget_period
@@ -42,10 +42,15 @@ module Procurement
       BudgetPeriod.order(end_date: :asc).where("end_date >= ?", created_at).first
     end
 
+    def current?
+      # Request.current.where(id: self).exists?
+      budget_period.current?
+    end
+
     def editable?(user)
-      Request.current.where(id: self).exists? and
+      current? and
           (inspectable_by?(user) or
-              (user_id == user.id and budget_period.in_requesting_phase? ))
+              (user_id == user.id and budget_period.in_requesting_phase?))
     end
 
     def inspectable_by?(user)
@@ -73,7 +78,7 @@ module Procurement
       end
     end
 
-    def total_price
+    def total_price # TODO optimize for the phases
       price * (approved_quantity || desired_quantity)
     end
 

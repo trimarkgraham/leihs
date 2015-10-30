@@ -1,20 +1,10 @@
 module Procurement
   class BudgetPeriod < ActiveRecord::Base
-    include ActionView::Helpers::DateHelper
-
 
     validates_presence_of :name, :inspection_start_date, :end_date
 
     def to_s
-      "%s (%s)" % [name, phase]
-    end
-
-    def phase
-      "%s phase until %s in %s" % if in_requesting_phase?
-                             [_('requesting'), I18n.l(inspection_start_date), distance_of_time_in_words_to_now(inspection_start_date)]
-                           else
-                             [_('inspection'), I18n.l(end_date), distance_of_time_in_words_to_now(end_date)]
-                           end
+      name
     end
 
     def in_requesting_phase?
@@ -39,6 +29,10 @@ module Procurement
 
     def previous
       self.class.order(end_date: :desc).where("end_date < ?", end_date).first
+    end
+
+    def current?
+      Date.today <= end_date and (previous.nil? or Date.today > previous.end_date)
     end
 
     class << self

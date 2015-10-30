@@ -2,7 +2,7 @@
   - if is_procurement_admin?
     %li
       .h4{style: 'color: lightgrey'}
-        Admin user:
+        Admin
     %li
       %a{href: budget_periods_path}
         = _('Budget periods')
@@ -29,13 +29,11 @@
       %hr
     %li
       .h4{style: 'color: lightgrey'}
-        Requester user:
+        Request
     %li
-      %a{href: resume_user_requests_path(current_user, budget_period: :current)}
-        = _('My current requests')
+      %a{href: resume_user_requests_path(current_user)}
+        = _('My requests')
         =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
-    %li
-      %a{href: resume_user_requests_path(current_user, budget_period: :past)}= _('My past requests')
 
   - Procurement::Group.joins(:group_inspectors).where(procurement_group_inspectors: {user_id: current_user}).each do |group|
     %li
@@ -44,11 +42,9 @@
       .h4{style: 'color: lightgrey'}
         = group
     %li
-      %a{href: resume_group_requests_path(group, budget_period: :current)}
-        = _('Current requests')
+      %a{href: resume_group_requests_path(group)}
+        = _('Requests')
         = render partial: 'layouts/procurement/counts', locals: {group: group}
-    %li
-      %a{href: resume_group_requests_path(group, budget_period: :past)}= _('Past requests')
     %li
       %a{href: group_request_templates_path(group)}
         = _('RequestTemplates')

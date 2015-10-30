@@ -8,12 +8,12 @@ module Procurement
     def index
       respond_to do |format|
         format.html {
-          @requesters = User.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id').
+          @requesters = User.not_as_delegations.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id').
               where(procurement_accesses: {is_admin: [nil, false]})
-          @admins = User.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id').
+          @admins = User.not_as_delegations.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id').
               where(procurement_accesses: {is_admin: true})
         }
-        format.json { render json: User.filter(params).to_json(only: [:id, :firstname, :lastname]) }
+        format.json { render json: User.not_as_delegations.filter(params).to_json(only: [:id, :firstname, :lastname]) }
       end
     end
 
