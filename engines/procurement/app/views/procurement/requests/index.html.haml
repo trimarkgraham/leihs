@@ -1,6 +1,6 @@
 :ruby
   is_editable = @budget_period.current? and
-                  (@group.inspectors.include?(current_user) or
+                  (@group.inspectable_by?(current_user) or
                     (@user == current_user and @budget_period.in_requesting_phase?))
 
 %h1= _('Requests')
@@ -50,7 +50,7 @@
                   %option{value: request_template.description, selected: true}= request_template.description
               %td
                 %input.form-control{name: "requests[new_#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
-                - if @group.inspectors.include? current_user
+                - if @group.inspectable_by? current_user
                   %br
                   %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
               %td
@@ -122,7 +122,7 @@
 
     $("select[name*='[description]']").select2
       minimumInputLength: 3
-      allowClear: true
+      #allowClear: true
       placeholder: '#{_("Description")}'
       ajax:
         url: '/procurement/models.json'
@@ -138,7 +138,7 @@
 
     $("select[name*='[supplier]']").select2
       minimumInputLength: 3
-      allowClear: true
+      #allowClear: true
       placeholder: '#{_("Supplier")}'
       ajax:
         url: '/procurement/suppliers.json'

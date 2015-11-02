@@ -4,7 +4,7 @@
   group ||= nil
   counts = budget_period.status_counts(user: user, group: group)
 
-  if (group and not group.inspectors.include?(current_user))
+  if (group and not group.inspectable_by?(current_user))
     counts = if budget_period.in_inspection_phase?
                {in_inspection: counts.values.sum}
              elsif budget_period.in_requesting_phase?

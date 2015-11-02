@@ -58,9 +58,10 @@ class CreateProcurementTables < ActiveRecord::Migration
     add_foreign_key(:procurement_request_templates, :procurement_groups, column: 'group_id')
 
     create_table :procurement_attachments do |t|
-      t.belongs_to :procurement_request, foreign_key: true
+      t.belongs_to :request
       t.attachment :file
     end
+    add_foreign_key(:procurement_attachments, :procurement_requests, column: 'request_id')
 
   end
 end

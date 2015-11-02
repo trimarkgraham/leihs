@@ -83,7 +83,7 @@
 
     $("select[name='request_templates[][description]']").select2
       minimumInputLength: 3
-      allowClear: true
+      #allowClear: true
       placeholder: '#{_("Description")}'
       ajax:
         url: '/procurement/models.json'
@@ -99,7 +99,7 @@
 
     $("select[name='request_templates[][supplier]']").select2
       minimumInputLength: 3
-      allowClear: true
+      #allowClear: true
       placeholder: '#{_("Supplier")}'
       ajax:
         url: '/procurement/suppliers.json'

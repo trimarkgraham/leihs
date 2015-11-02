@@ -32,10 +32,10 @@ module Procurement
     end
 
     def create
+      keys = [:group_id, :user_id, :description, :desired_quantity, :price, :supplier, attachments_attributes: [:file]]
+      keys += [:approved_quantity] if @group.inspectable_by?(current_user)
+
       errors = params.require(:requests).values.map do |param|
-        requester_keys = [:group_id, :user_id, :description, :desired_quantity, :price, :supplier, attachments_attributes: [:file]]
-        inspector_keys = [:approved_quantity]
-        keys = requester_keys + inspector_keys # TODO check role # request_template.inspectable_by?(current_user)
         permitted = param.permit(keys)
 
         if param[:id]

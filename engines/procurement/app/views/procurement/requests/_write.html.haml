@@ -12,7 +12,7 @@
   %td
     %input.form-control{name: "requests[#{request.id}][desired_quantity]", type: :number, min: 0, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
     %br
-    - if request.inspectable_by? current_user
+    - if request.group.inspectable_by? current_user
       %input.form-control{name: "requests[#{request.id}][approved_quantity]", type: :number, min: 0, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
     - else
       = request.approved_quantity

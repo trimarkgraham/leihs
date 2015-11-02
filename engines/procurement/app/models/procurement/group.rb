@@ -13,5 +13,9 @@ module Procurement
       name
     end
 
+    def inspectable_by?(user)
+      inspectors.include?(user)
+    end
+
   end
 end
