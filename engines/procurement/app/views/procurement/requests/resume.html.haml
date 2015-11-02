@@ -9,15 +9,14 @@
 
     .list-group
       - if @group
-        - @requests.group_by(&:user).each_pair do |user, requests|
+        - @requests.by_budget_period(budget_period).group_by(&:user).each_pair do |user, requests|
           %a.list-group-item{href: group_user_budget_period_requests_path(@group, user, budget_period)}
             .row
               .col-xs-4
                 .fa.fa-user
                 = user
               .col-xs-4
-                - if budget_period.current?
-                  = render partial: 'layouts/procurement/counts', locals: {group: @group, user: user}
+                = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: @group, user: user}
               .col-xs-4
                 = money_without_cents_and_with_symbol requests.map(&:total_price).sum
 
@@ -29,9 +28,8 @@
                 .fa.fa-sitemap
                 = group
               .col-xs-4
-                - if budget_period.current?
-                  = render partial: 'layouts/procurement/counts', locals: {group: group, user: current_user}
+                = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: group, user: current_user}
               .col-xs-4
-                - requests = @requests.where(group_id: group)
+                - requests = @requests.by_budget_period(budget_period).where(group_id: group)
                 - unless requests.blank?
                   = money_without_cents_and_with_symbol requests.map(&:total_price).sum
