@@ -36,5 +36,10 @@ module Procurement
       end
     end
 
+    def destroy
+      BudgetPeriod.find(params[:id]).destroy
+      redirect_to budget_periods_path
+    end
+
   end
 end

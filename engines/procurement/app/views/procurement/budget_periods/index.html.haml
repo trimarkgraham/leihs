@@ -19,7 +19,13 @@
           %td
             %input.form-control.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: I18n.translate('date.formats.default')), placeholder: _('End date'), autocomplete: :off}
           %td
-            = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period}
+            - if Procurement::Request.by_budget_period(budget_period).empty?
+              %a.btn.btn-danger{href: budget_period_path(budget_period), data: {method: :delete, confirm: _("Are you sure you want to delete '%s'?") % budget_period}}
+                %i.fa.fa-trash-o
+                = _('Delete')
+            - else
+              = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period}
+
       %tr
         %td
           %input.form-control{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :off}

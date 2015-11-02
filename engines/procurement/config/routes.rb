@@ -2,7 +2,7 @@ Procurement::Engine.routes.draw do
 
   root to: 'application#root'
 
-  resources :budget_periods, only: [:index, :create]
+  resources :budget_periods, only: [:index, :create, :destroy]
 
   # resources :requests, only: [:index, :create]
 
