@@ -14,6 +14,7 @@ gem 'coffee-rails', '~> 4.0'
 gem 'coffee-script', '~> 2.2'
 gem 'compass-rails', '~> 2.0'
 gem 'execjs', '~> 2.6'
+gem 'font-awesome-sass', '~> 4.4' # NOTE font not found using gem 'rails-assets-font-awesome'
 gem 'geocoder', '~> 1.1'
 gem 'gettext_i18n_rails', '~> 1.0'
 gem 'haml', '~> 4.0'
@@ -40,20 +41,19 @@ gem 'therubyrhino', platform: :jruby
 gem 'uglifier', '~> 2.4'
 gem 'will_paginate', '~> 3.0'
 
-source 'https://rails-assets.org' # NOTE wrapping in a block not working on deploy
-gem 'rails-assets-accounting.js', '~> 0.4'
-gem 'rails-assets-fullcalendar', '~> 1.5'
-gem 'rails-assets-jquery', '~> 1.5'
-gem 'rails-assets-jquery-autosize', '~> 1.18'
-gem 'rails-assets-jquery.inview', '~> 1.0'
-gem 'rails-assets-jquery-ui', '~> 1.1'
-gem 'rails-assets-jquery-ujs', '~> 1.0'
-gem 'rails-assets-moment', '~> 2.10'
-gem 'rails-assets-timecop', '~> 0.1'
-gem 'rails-assets-underscore', '~> 1.8'
-gem 'rails-assets-uri.js', '~> 1.16'
-
-gem 'font-awesome-sass', '~> 4.4' # NOTE font not found using gem 'rails-assets-font-awesome'
+source 'https://rails-assets.org' do
+  gem 'rails-assets-accounting.js', '~> 0.4'
+  gem 'rails-assets-fullcalendar', '~> 1.5'
+  gem 'rails-assets-jquery', '~> 1.5'
+  gem 'rails-assets-jquery-autosize', '~> 1.18'
+  gem 'rails-assets-jquery.inview', '~> 1.0'
+  gem 'rails-assets-jquery-ui', '~> 1.1'
+  gem 'rails-assets-jquery-ujs', '~> 1.0'
+  gem 'rails-assets-moment', '~> 2.10'
+  gem 'rails-assets-timecop', '~> 0.1'
+  gem 'rails-assets-underscore', '~> 1.8'
+  gem 'rails-assets-uri.js', '~> 1.16'
+end
 
 group :development do
   gem 'capistrano', '2.15.5'
