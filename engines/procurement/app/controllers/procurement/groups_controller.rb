@@ -21,7 +21,7 @@ module Procurement
       redirect_to groups_path
     end
 
-    before_action only: [:edit, :update] do
+    before_action only: [:edit, :update, :destroy] do
       @group = Group.find(params[:id])
     end
 
@@ -30,6 +30,11 @@ module Procurement
 
     def update
       @group.update_attributes(params[:group])
+      redirect_to groups_path
+    end
+
+    def destroy
+      @group.destroy
       redirect_to groups_path
     end
 

@@ -14,19 +14,28 @@
       %thead
         %tr
           -#%th{width: '10%'}= _('Group')
-          %th.col-sm-3= _('Description')
+          %th.col-sm-3
+            = _('Description')
+            %br
+            = _('Status')
           %th.col-sm-2
             = _('Desired quantity')
             %br
             = _('Approved quantity')
-            %br
-            = _('Status')
           %th.col-sm-2
             = "%s %s" % [_('Price'), MoneyRails.default_currency]
             %br
             = "%s %s" % [_('Total'), MoneyRails.default_currency]
-          %th.col-sm-3= _('Supplier')
-          %th.col-sm-2= _('Attachment')
+          %th.col-sm-3
+            = _('Supplier')
+            %br
+            = _('Priority')
+          %th.col-sm-2
+            = _('Motivation')
+            %br
+            = _('Receiver')
+            %br
+            = _('Attachment')
       %tbody
         - i = 0
         - @requests.each do |request|
@@ -58,7 +67,15 @@
               %td
                 %select.form-control{name: "requests[new_#{i}][supplier]"}
                   %option{value: request_template.supplier, selected: true}= request_template.supplier
+                %br
+                %select.form-control{name: "requests[new_#{i}][priority]"}
+                  %option{value: 1}= _('High')
+                  %option{value: 2, selected: true}= _('Medium')
               %td
+                %input{name: "requests[new_#{i}][motivation]"}
+                %br
+                %input{name: "requests[new_#{i}][receiver]"}
+                -#%br
                 -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
           %tr
@@ -79,7 +96,15 @@
               %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: _('Price'), autocomplete: :off}
             %td
               %select.form-control{name: "requests[new_#{i}][supplier]"}
+              %br
+              %select.form-control{name: "requests[new_#{i}][priority]"}
+                %option{value: 1}= _('High')
+                %option{value: 2, selected: true}= _('Medium')
             %td
+              %input{name: "requests[new_#{i}][motivation]"}
+              %br
+              %input{name: "requests[new_#{i}][receiver]"}
+              -#%br
               -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
       - if is_editable

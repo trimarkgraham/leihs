@@ -42,6 +42,9 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.integer :approved_quantity,    null: true
       t.money :price
       t.string :supplier
+      t.integer :priority,             null: false, default: 2  # 1 = high, 2 = medium
+      t.string :motivation,            null: true
+      t.string :receiver,              null: true
 
       t.datetime :created_at,       null: false, index: true
 

@@ -16,9 +16,18 @@
             - group.inspectors.each do |inspector|
               %li= inspector
         %td.text-right
-          %a.btn.btn-default{href: edit_group_path(group)}
-            %i.fa.fa-edit
-            = _('Edit')
+          .btn-group
+            %a.btn.btn-default{href: edit_group_path(group)}
+              %i.fa.fa-edit
+              = _('Edit')
+            - if group.can_destroy?
+              %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown"}
+                %span.caret
+                %span.sr-only Toggle Dropdown
+              %ul.dropdown-menu
+                %li
+                  %a{href: group_path(group), data: {method: :delete, confirm: _("Are you sure you want to delete '%s'?") % group}}
+                    = _('Delete')
 
   %tfoot
     %tr

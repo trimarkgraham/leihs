@@ -2,6 +2,7 @@ module Procurement
   class BudgetPeriod < ActiveRecord::Base
 
     validates_presence_of :name, :inspection_start_date, :end_date
+    validates_uniqueness_of :name, :inspection_start_date, :end_date
 
     def to_s
       name

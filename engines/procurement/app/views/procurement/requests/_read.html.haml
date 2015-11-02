@@ -1,18 +1,27 @@
 %tr
   -#%td= request.group
-  %td= request.description
+  %td
+    = request.description
+    %br
+    %br
+    = render partial: 'status', locals: {request: request}
   %td
     = request.desired_quantity
     %br
     = request.approved_quantity
-    %br
-    = render partial: 'status', locals: {request: request}
   %td
     = money_without_cents_and_with_symbol request.price
     %br
     = request.total_price
-  %td= request.supplier
   %td
+    = request.supplier
+    %br
+    = case request.priority when 1 then _('High') when 2 then _('Medium') end
+  %td
+    = request.motivation
+    %br
+    = request.receiver
+    %br
     %ul
       - request.attachments.each do |attachment|
         %li

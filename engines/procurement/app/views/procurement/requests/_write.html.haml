@@ -9,6 +9,9 @@
     - else
       %select.form-control{name: "requests[#{request.id}][description]"}
         %option{value: request.description, selected: true}= request.description
+    %br
+    %br
+    = render partial: 'status', locals: {request: request}
   %td
     %input.form-control{name: "requests[#{request.id}][desired_quantity]", type: :number, min: 0, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
     %br
@@ -16,8 +19,6 @@
       %input.form-control{name: "requests[#{request.id}][approved_quantity]", type: :number, min: 0, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
     - else
       = request.approved_quantity
-    %br
-    = render partial: 'status', locals: {request: request}
   %td
     %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: _('Price'), autocomplete: :off}
     %br
@@ -25,7 +26,15 @@
   %td
     %select.form-control{name: "requests[#{request.id}][supplier]"}
       %option{value: request.supplier, selected: true}= request.supplier
+    %br
+    %select.form-control{name: "requests[#{request.id}][priority]"}
+      %option{value: 1, selected: request.priority == 1}= _('High')
+      %option{value: 2, selected: request.priority == 2}= _('Medium')
   %td
+    %input{name: "requests[#{request.id}][motivation]", value: request.motivation}
+    %br
+    %input{name: "requests[#{request.id}][receiver]", value: request.receiver}
+    %br
     %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true}
     %ul
       - request.attachments.each do |attachment|
