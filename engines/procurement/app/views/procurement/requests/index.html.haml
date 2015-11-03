@@ -22,6 +22,8 @@
             = _('Desired quantity')
             %br
             = _('Approved quantity')
+            %br
+            = _('Order quantity')
           %th.col-sm-2
             = "%s %s" % [_('Price'), MoneyRails.default_currency]
             %br
@@ -62,6 +64,8 @@
                 - if @group.inspectable_by? current_user
                   %br
                   %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+                  %br
+                  %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
               %td
                 %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: request_template.price.to_i, placeholder: _('Price'), autocomplete: :off}
               %td
@@ -72,9 +76,9 @@
                   %option{value: 1}= _('High')
                   %option{value: 2, selected: true}= _('Medium')
               %td
-                %input{name: "requests[new_#{i}][motivation]"}
+                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
                 %br
-                %input{name: "requests[new_#{i}][receiver]"}
+                %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
                 -#%br
                 -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
@@ -89,9 +93,11 @@
               %select.form-control{name: "requests[new_#{i}][description]"}
             %td
               %input.form-control{name: "requests[new_#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
-              -# TODO check role
-              -#%br
-              -#%input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+              - if @group.inspectable_by?(current_user)
+                %br
+                %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+                %br
+                %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
             %td
               %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: _('Price'), autocomplete: :off}
             %td
@@ -101,9 +107,9 @@
                 %option{value: 1}= _('High')
                 %option{value: 2, selected: true}= _('Medium')
             %td
-              %input{name: "requests[new_#{i}][motivation]"}
+              %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
               %br
-              %input{name: "requests[new_#{i}][receiver]"}
+              %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
               -#%br
               -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
