@@ -33,6 +33,7 @@ Scenario: Mandatory Fields
   |Motivation|
   |Receiver|
   |Organisation Unit of Receiver|
+  And I see which fields are mandatory
 
 @personas
 Scenario: Choosing an existing or non existing Model
@@ -70,6 +71,7 @@ Scenario: Fill Order Size with Approved Quantity
   Given I am Barbara
   When I fill in the approved quantity
   Then the order size is automatically filled with the value of the approved quantity
+  And the total is calculated according by multiplying the price and the order size
 
 # not yet implemented: But wait for Nadja to verify this with stakeholders
 @personas

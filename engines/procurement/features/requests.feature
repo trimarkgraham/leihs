@@ -52,6 +52,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     |Motivation|
     |Receiver|
     |Organisation Unit of Receiver|
+    And I see which fields are mandatory
 
   @personas
   Scenario: Choosing an existing or non existing Model
@@ -80,10 +81,26 @@ Feature: requests (state-behaviour described in seperate feature-file)
 
   # not yet implemented
   @personas
-  Scenario: Delete a Request
+  Scenario: Delete whole Request
     Given I am Roger
+    Given a request exists
     When the inspection date for the current budget period has not yet been reached
     Then I can delete only my own requests
+
+  # not yet implemented
+  @personas
+  Scenario: Delete a Request Line
+    Given I am Roger
+    Given a request exists
+    When the inspection date for the current budget period has not yet been reached
+    Then I can delete a request line of an existing request
+
+  # not yet implemented
+  @personas
+  Scenario: Delete a Request Line when Creating a Request
+    Given I am Roger
+    When I create a new request
+    Then I can delete an already added request line
 
   @personas
   Scenario: Modify a Request
@@ -115,3 +132,4 @@ Feature: requests (state-behaviour described in seperate feature-file)
     Then I can choose the following priority-values
     |High|
     |Medium|
+    And the value "Medium" is set by default
