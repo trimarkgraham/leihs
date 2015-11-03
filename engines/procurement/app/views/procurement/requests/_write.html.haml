@@ -31,9 +31,10 @@
     %select.form-control{name: "requests[#{request.id}][supplier]"}
       %option{value: request.supplier, selected: true}= request.supplier
     %br
-    %select.form-control{name: "requests[#{request.id}][priority]"}
-      %option{value: 1, selected: request.priority == 1}= _('High')
-      %option{value: 2, selected: request.priority == 2}= _('Medium')
+    %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'high', checked: request.priority == 'high'}
+    .label.label-danger= _('high')
+    %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'medium', checked: request.priority == 'medium'}
+    .label.label-warning= _('medium')
   %td
     %input.form-control{name: "requests[#{request.id}][motivation]", value: request.motivation, placeholder: _('Motivation')}
     %br

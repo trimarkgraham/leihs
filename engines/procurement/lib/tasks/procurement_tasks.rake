@@ -39,7 +39,7 @@ namespace :procurement do
                                     desired_quantity: rand(1..50),
                                     price: rand(10..1000),
                                     supplier: Faker::Lorem.sentence,
-                                    priority: rand(0..1),
+                                    priority: rand(0..1) == 1 ? 'high' : 'medium',
                                     motivation: Faker::Lorem.sentence,
                                     receiver: Faker::Lorem.sentence,
                                     created_at: rand((Time.now - 2.years)..Time.now)

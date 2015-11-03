@@ -40,10 +40,10 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.string :description,           null: false
       t.integer :desired_quantity,     null: false
       t.integer :approved_quantity,    null: true
-      t.integer :order_quantity,    null: true
+      t.integer :order_quantity,       null: true
       t.money :price
       t.string :supplier
-      t.integer :priority,             null: false, default: 2  # 1 = high, 2 = medium
+      t.column :priority,              "ENUM('medium', 'high')"
       t.string :motivation,            null: true
       t.string :receiver,              null: true
 

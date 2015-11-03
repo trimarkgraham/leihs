@@ -14,11 +14,15 @@
   %td
     = money_without_cents_and_with_symbol request.price
     %br
-    = request.total_price
+    = money_without_cents_and_with_symbol request.total_price
   %td
     = request.supplier
     %br
-    = case request.priority when 1 then _('High') when 2 then _('Medium') end
+    - case request.priority
+      - when 'high'
+        .label.label-danger= _(request.priority)
+      - when 'medium'
+        .label.label-warning= _(request.priority)
   %td
     = request.motivation
     %br

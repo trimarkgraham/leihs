@@ -20,19 +20,20 @@
             = _('Status')
           %th.col-sm-2
             = _('Desired quantity')
-            %br
-            = _('Approved quantity')
-            %br
-            = _('Order quantity')
+            - if @group.inspectable_by? current_user
+              %br
+              = _('Approved quantity')
+              %br
+              = _('Order quantity')
           %th.col-sm-2
             = "%s %s" % [_('Price'), MoneyRails.default_currency]
             %br
             = "%s %s" % [_('Total'), MoneyRails.default_currency]
-          %th.col-sm-3
+          %th.col-sm-2
             = _('Supplier')
             %br
             = _('Priority')
-          %th.col-sm-2
+          %th.col-sm-3
             = _('Motivation')
             %br
             = _('Receiver')
@@ -72,9 +73,10 @@
                 %select.form-control{name: "requests[new_#{i}][supplier]"}
                   %option{value: request_template.supplier, selected: true}= request_template.supplier
                 %br
-                %select.form-control{name: "requests[new_#{i}][priority]"}
-                  %option{value: 1}= _('High')
-                  %option{value: 2, selected: true}= _('Medium')
+                %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
+                .label.label-danger= _('high')
+                %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
+                .label.label-warning= _('medium')
               %td
                 %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
                 %br
@@ -103,9 +105,10 @@
             %td
               %select.form-control{name: "requests[new_#{i}][supplier]"}
               %br
-              %select.form-control{name: "requests[new_#{i}][priority]"}
-                %option{value: 1}= _('High')
-                %option{value: 2, selected: true}= _('Medium')
+              %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
+              .label.label-danger= _('high')
+              %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
+              .label.label-warning= _('medium')
             %td
               %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
               %br
