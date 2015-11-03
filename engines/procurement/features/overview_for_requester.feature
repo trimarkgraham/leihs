@@ -1,5 +1,6 @@
 Feature: Overview for requester
 
+  # not yet implemented
   @personas
   Scenario: View requests of current budget phase
     Given I am Roger
@@ -8,6 +9,7 @@ Feature: Overview for requester
     Then I see my requests for the current budget phase
     And I see my requests for a past budget phase
 
+  # not yet implemented
   Scenario: Structure of overview
     Given a request exists
     Then the overview shows the request in the following structure
@@ -15,6 +17,7 @@ Feature: Overview for requester
     |Second Hierarchie|Organisation Unit|ITZ|
     |Third Hierarchie|request line|Laptop|
 
+  # not yet implemented
   Scenario: Visible Information of current requests
     Given a request exists
     Then the overview shows at least the following information of a request
@@ -29,6 +32,7 @@ Feature: Overview for requester
     |Total CHF|on request line
     |Total CHF|overall on page
 
+  # not yet implemented
   Scenario: Showing Total on Overview
     Given the overview shows more than one request line
     When the approved quantity of a request line is not set
@@ -37,12 +41,13 @@ Feature: Overview for requester
     Then the total is calculated by "order quantity x price"
     And the totals of all shown request lines are summed up
 
+  # not yet implemented
   @personas
   Scenario: Filtering possibilities
     Given I am Roger
     Then I can filter according to following attributes
-    |Budget Phase|
-    |Requester Priority|
+    |Budget Period|
+    |Requested Priority|
     |Procurement Group|
     |State|
     And I search items by typing the item name
@@ -51,6 +56,7 @@ Feature: Overview for requester
     And by default all procurement groups are selected
     And by default all states are selected
 
+  # not yet implemented
   @personas
   Scenario: Editable Information in Overview
     Given I am Roger

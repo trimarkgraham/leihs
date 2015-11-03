@@ -7,7 +7,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     When I create a request
     Then I can see the following fields
     |Procurement Group|
-    |item description|
+    |item name|
     |Quantity|
     |Approved Quantity|
     |Order Size|
@@ -29,7 +29,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     When I create a Request
     Then I can modify the following fields
     |Procurement Group|
-    |item description|
+    |item name|
     |Quantity|
     |Price|
     |Priority|
@@ -46,7 +46,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     When I create a request
     Then the following fields are mandatory
     |Procurement Group|
-    |item description|
+    |item name|
     |Quantity|
     |Priority|
     |Motivation|
@@ -66,7 +66,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
   @personas
   Scenario: Show values set by inspector
     Given I am Barbara
-    Given a request has been created by @Roger
+    Given a request has been created by Roger
     When I modify the folling fields
     |Approved Quantity|
     |Order Size|
@@ -77,7 +77,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     |Receiver|
     |Organisation Unit of Receiver|
     |Attachment|
-    Then @Roger sees the entered values
+    Then Roger sees the entered values
 
   # not yet implemented
   @personas
@@ -116,6 +116,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     And I pick a receiver
     Then the organisation unit of the receiver is assigned
 
+  # not yet implemented
   @personas
   Scenario: Count the Total on the line
     Given I am Roger
