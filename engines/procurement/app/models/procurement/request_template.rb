@@ -6,7 +6,7 @@ module Procurement
 
     monetize :price_cents
 
-    validates_presence_of :description
+    validates_presence_of :model_description
 
   end
 end

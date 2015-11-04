@@ -9,7 +9,7 @@ module Procurement
 
     monetize :price_cents
 
-    validates_presence_of :user, :description, :desired_quantity
+    validates_presence_of :user, :model_description, :desired_quantity
     validates_numericality_of :approved_quantity, less_than_or_equal_to: :desired_quantity, allow_nil: true
     validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 

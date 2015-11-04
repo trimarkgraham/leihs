@@ -1,51 +1,59 @@
-%tr
-  %input{type: :hidden, name: "requests[#{request.id}][id]", value: request.id}
-  -#%td
-              %select.form-control{name: "requests[#{request.id}][group_id]"}
-                %option{value: request.group_id, selected: true}= request.group
-  %td
-    - if Procurement::RequestTemplate.where(group_id: @group).where(description: request.description).exists?
-      = request.description
-    - else
-      %select.form-control{name: "requests[#{request.id}][description]"}
-        %option{value: request.description, selected: true}= request.description
-    %br
-    %br
-    = render partial: 'status', locals: {request: request}
-  %td
-    %input.form-control{name: "requests[#{request.id}][desired_quantity]", type: :number, min: 0, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
-    %br
-    - if request.group.inspectable_by? current_user
-      %input.form-control{name: "requests[#{request.id}][approved_quantity]", type: :number, min: 0, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
-      %br
-      %input.form-control{name: "requests[#{request.id}][order_quantity]", type: :number, min: 0, value: request.order_quantity, placeholder: _('Order quantity'), autocomplete: :off}
-    - else
-      = request.approved_quantity
-      %br
-      = request.order_quantity
-  %td
-    %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: _('Price'), autocomplete: :off}
-    %br
-    = money_without_cents_and_with_symbol request.total_price
-  %td
-    %select.form-control{name: "requests[#{request.id}][supplier]"}
-      %option{value: request.supplier, selected: true}= request.supplier
-    %br
-    %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'high', checked: request.priority == 'high'}
-    .label.label-danger= _('high')
-    %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'medium', checked: request.priority == 'medium'}
-    .label.label-warning= _('medium')
-  %td
-    %input.form-control{name: "requests[#{request.id}][receiver]", value: request.receiver, placeholder: _('Receiver')}
-    %br
-    %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true}
-    %ul
-      - request.attachments.each do |attachment|
-        %li
-          %a{href: attachment.file.url, target: '_blank'}
-            = attachment.file.original_filename
-  %td
-    %input.form-control{name: "requests[#{request.id}][motivation]", value: request.motivation, placeholder: _('Motivation')}
-    - if request.group.inspectable_by? current_user
-      %br
-      %input.form-control{name: "requests[#{request.id}][inspection_comment]", value: request.inspection_comment, placeholder: _('Inspection comment')}
+.row
+  .col-sm-12
+    %input{type: :hidden, name: "requests[#{request.id}][id]", value: request.id}
+    .row
+      .col-sm-2
+        - if Procurement::RequestTemplate.where(group_id: @group).where(model_description: request.model_description).exists?
+          = request.model_description
+        - else
+          %select.form-control{name: "requests[#{request.id}][model_description]"}
+            %option{value: request.model_description, selected: true}= request.model_description
+      .col-sm-2
+        %input.form-control{name: "requests[#{request.id}][desired_quantity]", type: :number, min: 0, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
+      .col-sm-2
+        %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: _('Price'), autocomplete: :off}
+      .col-sm-2
+        = render partial: 'status', locals: {request: request}
+      .col-sm-2
+        %input.form-control{name: "requests[#{request.id}][receiver]", value: request.receiver, placeholder: _('Receiver')}
+      .col-sm-2
+        %input.form-control{name: "requests[#{request.id}][motivation]", value: request.motivation, placeholder: _('Motivation')}
+
+    .row
+      .col-sm-2
+      .col-sm-2
+        - if request.group.inspectable_by? current_user
+          %input.form-control{name: "requests[#{request.id}][approved_quantity]", type: :number, min: 0, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
+        - else
+          = request.approved_quantity
+      .col-sm-2
+      .col-sm-2
+      .col-sm-2
+      .col-sm-2
+
+    .row
+      .col-sm-2
+        %select.form-control{name: "requests[#{request.id}][supplier]"}
+          %option{value: request.supplier, selected: true}= request.supplier
+      .col-sm-2
+        - if request.group.inspectable_by? current_user
+          %input.form-control{name: "requests[#{request.id}][order_quantity]", type: :number, min: 0, value: request.order_quantity, placeholder: _('Order quantity'), autocomplete: :off}
+        - else
+          = request.order_quantity
+      .col-sm-2
+        = money_without_cents_and_with_symbol request.total_price
+      .col-sm-2
+        %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'high', checked: request.priority == 'high'}
+        .label.label-danger= _('high')
+        %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'medium', checked: request.priority == 'medium'}
+        .label.label-warning= _('medium')
+      .col-sm-2
+        %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true}
+        %ul
+          - request.attachments.each do |attachment|
+            %li
+              %a{href: attachment.file.url, target: '_blank'}
+                = attachment.file.original_filename
+      .col-sm-2
+        - if request.group.inspectable_by? current_user
+          %input.form-control{name: "requests[#{request.id}][inspection_comment]", value: request.inspection_comment, placeholder: _('Inspection comment')}

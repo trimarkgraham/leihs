@@ -14,7 +14,7 @@ module Procurement
 
     def create
       errors = params.require(:request_templates).map do |param|
-        permitted = param.permit([:description, :price, :supplier])
+        permitted = param.permit([:model_description, :price, :supplier])
 
         if param[:id]
           r = RequestTemplate.find(param[:id])

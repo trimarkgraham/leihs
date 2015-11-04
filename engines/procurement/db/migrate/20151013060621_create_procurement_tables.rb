@@ -37,7 +37,7 @@ class CreateProcurementTables < ActiveRecord::Migration
     create_table :procurement_requests do |t|
       t.belongs_to :group
       t.belongs_to :user,              foreign_key: true
-      t.string :description,           null: false
+      t.string :model_description,           null: false
       t.integer :desired_quantity,     null: false
       t.integer :approved_quantity,    null: true
       t.integer :order_quantity,       null: true
@@ -56,7 +56,7 @@ class CreateProcurementTables < ActiveRecord::Migration
 
     create_table :procurement_request_templates do |t|
       t.belongs_to :group
-      t.string :description, null: false
+      t.string :model_description, null: false
       t.money :price
       t.string :supplier
     end

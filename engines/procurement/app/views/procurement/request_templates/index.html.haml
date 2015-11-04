@@ -23,8 +23,8 @@
               %select.form-control{name: 'request_templates[][group_id]'}
                 %option{value: template.group_id, selected: true}= template.group
             %td
-              %select.form-control{name: 'request_templates[][description]'}
-                %option{value: template.description, selected: true}= template.description
+              %select.form-control{name: 'request_templates[][model_description]'}
+                %option{value: template.model_description, selected: true}= template.model_description
             %td
               %input.form-control{name: 'request_templates[][price]', type: :number, value: template.price, placeholder: _('Price'), autocomplete: :off}
             %td
@@ -38,7 +38,7 @@
               - Procurement::Group.all.each do |group|
                 %option{value: group.id}= group
           %td
-            %select.form-control{name: 'request_templates[][description]'}
+            %select.form-control{name: 'request_templates[][model_description]'}
           %td
             %input.form-control{name: 'request_templates[][price]', type: :number, placeholder: _('Price'), autocomplete: :off}
           %td
@@ -81,7 +81,7 @@
     #  allowClear: true
     #  placeholder: '#{_("Group")}'
 
-    $("select[name='request_templates[][description]']").select2
+    $("select[name='request_templates[][model_description]']").select2
       minimumInputLength: 3
       #allowClear: true
       placeholder: '#{_("Description")}'

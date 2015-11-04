@@ -1,37 +1,46 @@
-%tr
-  -#%td= request.group
-  %td
-    = request.description
-    %br
-    %br
-    = render partial: 'status', locals: {request: request}
-  %td
-    = request.desired_quantity
-    %br
-    = request.approved_quantity
-    %br
-    = request.order_quantity
-  %td
-    = money_without_cents_and_with_symbol request.price
-    %br
-    = money_without_cents_and_with_symbol request.total_price
-  %td
-    = request.supplier
-    %br
-    - case request.priority
-      - when 'high'
-        .label.label-danger= _(request.priority)
-      - when 'medium'
-        .label.label-warning= _(request.priority)
-  %td
-    = request.receiver
-    %br
-    %ul
-      - request.attachments.each do |attachment|
-        %li
-          %a{href: attachment.file.url, target: '_blank'}
-            = attachment.file.original_filename
-  %td
-    = request.motivation
-    %br
-    = request.inspection_comment
+.row
+  .col-sm-12
+    .row
+      .col-sm-2
+        = request.model_description
+      .col-sm-2
+        = request.desired_quantity
+      .col-sm-2
+        = money_without_cents_and_with_symbol request.price
+      .col-sm-2
+        = render partial: 'status', locals: {request: request}
+      .col-sm-2
+        = request.receiver
+      .col-sm-2
+        = request.motivation
+
+    .row
+      .col-sm-2
+      .col-sm-2
+        = request.approved_quantity
+      .col-sm-2
+      .col-sm-2
+      .col-sm-2
+      .col-sm-2
+
+    .row
+      .col-sm-2
+        = request.supplier
+      .col-sm-2
+        = request.order_quantity
+      .col-sm-2
+        = money_without_cents_and_with_symbol request.total_price
+      .col-sm-2
+        - case request.priority
+          - when 'high'
+            .label.label-danger= _(request.priority)
+          - when 'medium'
+            .label.label-warning= _(request.priority)
+      .col-sm-2
+        %ul
+          - request.attachments.each do |attachment|
+            %li
+              %a{href: attachment.file.url, target: '_blank'}
+                = attachment.file.original_filename
+      .col-sm-2
+        = request.inspection_comment
