@@ -46,6 +46,7 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.column :priority,              "ENUM('medium', 'high')"
       t.string :motivation,            null: true
       t.string :receiver,              null: true
+      t.string :inspection_comment,    null: true
 
       t.datetime :created_at,       null: false, index: true
 

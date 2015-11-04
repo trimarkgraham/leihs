@@ -1,7 +1,7 @@
 :ruby
-  is_editable = @budget_period.current? and
+  is_editable = (@budget_period.current? and
                   (@group.inspectable_by?(current_user) or
-                    (@user == current_user and @budget_period.in_requesting_phase?))
+                    (@user == current_user and @budget_period.in_requesting_phase?)))
 
 %h1= _('Requests')
 
@@ -14,17 +14,16 @@
       %thead
         %tr
           -#%th{width: '10%'}= _('Group')
-          %th.col-sm-3
+          %th.col-sm-2
             = _('Description')
             %br
             = _('Status')
           %th.col-sm-2
             = _('Desired quantity')
-            - if @group.inspectable_by? current_user
-              %br
-              = _('Approved quantity')
-              %br
-              = _('Order quantity')
+            %br
+            = _('Approved quantity')
+            %br
+            = _('Order quantity')
           %th.col-sm-2
             = "%s %s" % [_('Price'), MoneyRails.default_currency]
             %br
@@ -33,12 +32,14 @@
             = _('Supplier')
             %br
             = _('Priority')
-          %th.col-sm-3
-            = _('Motivation')
-            %br
+          %th.col-sm-2
             = _('Receiver')
             %br
             = _('Attachment')
+          %th.col-sm-2
+            = _('Motivation')
+            %br
+            = _('Inspection comment')
       %tbody
         - i = 0
         - @requests.each do |request|
@@ -62,7 +63,7 @@
                   %option{value: request_template.description, selected: true}= request_template.description
               %td
                 %input.form-control{name: "requests[new_#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
-                - if @group.inspectable_by? current_user
+                - if @group.inspectable_by?(current_user)
                   %br
                   %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
                   %br
@@ -78,11 +79,14 @@
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
                 .label.label-warning= _('medium')
               %td
-                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
-                %br
                 %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
                 -#%br
                 -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+              %td
+                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
+                - if @group.inspectable_by?(current_user)
+                  %br
+                  %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
 
           %tr
             - i += 1
@@ -110,11 +114,14 @@
               %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
               .label.label-warning= _('medium')
             %td
-              %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
-              %br
               %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
               -#%br
               -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+            %td
+              %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
+              - if @group.inspectable_by?(current_user)
+                %br
+                %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
 
       - if is_editable
         %tfoot
@@ -185,3 +192,8 @@
       templateResult: (result) -> result.text
       templateSelection: (result) -> result.text
       tags: true
+
+    $("input[name*='[approved_quantity]']").on 'change', ->
+      target_el = $(this).closest('tr').find("input[name*='[order_quantity]']")
+      if (not target_el.val()) or target_el.val() > $(this).val()
+        target_el.val($(this).val())

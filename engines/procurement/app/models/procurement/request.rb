@@ -11,6 +11,7 @@ module Procurement
 
     validates_presence_of :user, :description, :desired_quantity
     validates_numericality_of :approved_quantity, less_than_or_equal_to: :desired_quantity, allow_nil: true
+    validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 
     #################################################################
 
@@ -75,7 +76,7 @@ module Procurement
     end
 
     def total_price # TODO optimize for the phases
-      price * (approved_quantity || desired_quantity)
+      price * (order_quantity || approved_quantity || desired_quantity)
     end
 
   end

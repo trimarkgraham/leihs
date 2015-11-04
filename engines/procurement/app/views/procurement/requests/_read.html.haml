@@ -24,8 +24,6 @@
       - when 'medium'
         .label.label-warning= _(request.priority)
   %td
-    = request.motivation
-    %br
     = request.receiver
     %br
     %ul
@@ -33,3 +31,7 @@
         %li
           %a{href: attachment.file.url, target: '_blank'}
             = attachment.file.original_filename
+  %td
+    = request.motivation
+    %br
+    = request.inspection_comment

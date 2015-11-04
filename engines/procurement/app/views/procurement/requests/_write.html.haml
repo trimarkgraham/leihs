@@ -36,8 +36,6 @@
     %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'medium', checked: request.priority == 'medium'}
     .label.label-warning= _('medium')
   %td
-    %input.form-control{name: "requests[#{request.id}][motivation]", value: request.motivation, placeholder: _('Motivation')}
-    %br
     %input.form-control{name: "requests[#{request.id}][receiver]", value: request.receiver, placeholder: _('Receiver')}
     %br
     %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true}
@@ -46,3 +44,8 @@
         %li
           %a{href: attachment.file.url, target: '_blank'}
             = attachment.file.original_filename
+  %td
+    %input.form-control{name: "requests[#{request.id}][motivation]", value: request.motivation, placeholder: _('Motivation')}
+    - if request.group.inspectable_by? current_user
+      %br
+      %input.form-control{name: "requests[#{request.id}][inspection_comment]", value: request.inspection_comment, placeholder: _('Inspection comment')}
