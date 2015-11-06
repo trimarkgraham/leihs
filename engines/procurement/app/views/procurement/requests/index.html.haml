@@ -11,7 +11,7 @@
 
   .panel-body
     = form_tag nil, remote: true, multipart: true do
-      .row
+      .row.h5
         .col-sm-2
           = _('Model name')
           %br
@@ -83,7 +83,7 @@
                 .col-sm-2
                   - if @group.inspectable_by?(current_user)
                     %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
-                .col-sm-2
+                .col-sm-2.total_price
                 .col-sm-2
                   %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
                   .label.label-danger= _('high')
@@ -125,7 +125,7 @@
               .col-sm-2
                 - if @group.inspectable_by?(current_user)
                   %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
-              .col-sm-2
+              .col-sm-2.total_price
               .col-sm-2
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
                 .label.label-danger= _('high')
@@ -216,6 +216,16 @@
       tags: true
 
     $("input[name*='[approved_quantity]']").on 'change', ->
-      target_el = $(this).closest('tr').find("input[name*='[order_quantity]']")
+      target_el = $(this).closest('.col-sm-12').find("input[name*='[order_quantity]']")
       if (not target_el.val()) or target_el.val() > $(this).val()
         target_el.val($(this).val())
+
+    $("input[name*='_quantity]'], input[name*='[price]']").on 'change', ->
+      order_quantity = $(this).closest('.col-sm-12').find("input[name*='[order_quantity]']").val()
+      approved_quantity = $(this).closest('.col-sm-12').find("input[name*='[approved_quantity]']").val()
+      desired_quantity = $(this).closest('.col-sm-12').find("input[name*='[desired_quantity]']").val()
+      quantity = order_quantity or approved_quantity or desired_quantity
+      price_el = $(this).closest('.col-sm-12').find("input[name*='[price]']")
+      if price_el.val()
+        total = accounting.formatMoney(quantity * price_el.val(), {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
+        $(this).closest('.col-sm-12').find(".total_price").html(total)
