@@ -42,6 +42,7 @@ namespace :procurement do
                                     priority: rand(0..1) == 1 ? 'high' : 'medium',
                                     motivation: Faker::Lorem.sentence,
                                     receiver: Faker::Lorem.sentence,
+                                    organization_unit: Faker::Lorem.sentence,
                                     created_at: rand((Time.now - 2.years)..Time.now)
       end
     end

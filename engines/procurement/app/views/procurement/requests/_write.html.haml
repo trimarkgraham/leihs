@@ -30,6 +30,8 @@
       .col-sm-2
       .col-sm-2
       .col-sm-2
+        - if request.group.inspectable_by? current_user
+          %input.form-control{name: "requests[#{request.id}][inspection_comment]", value: request.inspection_comment, placeholder: _('Inspection comment')}
 
     .row
       .col-sm-2
@@ -48,12 +50,11 @@
         %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'medium', checked: request.priority == 'medium'}
         .label.label-warning= _('medium')
       .col-sm-2
+        %input.form-control{name: "requests[#{request.id}][organization_unit]", value: request.organization_unit, placeholder: _('Organization unit'), autocomplete: :off}
+      .col-sm-2
         %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true}
         %ul
           - request.attachments.each do |attachment|
             %li
               %a{href: attachment.file.url, target: '_blank'}
                 = attachment.file.original_filename
-      .col-sm-2
-        - if request.group.inspectable_by? current_user
-          %input.form-control{name: "requests[#{request.id}][inspection_comment]", value: request.inspection_comment, placeholder: _('Inspection comment')}

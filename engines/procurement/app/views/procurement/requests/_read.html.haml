@@ -21,6 +21,7 @@
       .col-sm-2
       .col-sm-2
       .col-sm-2
+        = request.inspection_comment
       .col-sm-2
 
     .row
@@ -37,10 +38,10 @@
           - when 'medium'
             .label.label-warning= _(request.priority)
       .col-sm-2
+        = request.organization_unit
+      .col-sm-2
         %ul
           - request.attachments.each do |attachment|
             %li
               %a{href: attachment.file.url, target: '_blank'}
                 = attachment.file.original_filename
-      .col-sm-2
-        = request.inspection_comment

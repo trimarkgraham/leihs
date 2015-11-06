@@ -33,11 +33,14 @@
         .col-sm-2
           = _('Receiver')
           %br
-          = _('Attachment')
+          = _('Organization unit')
         .col-sm-2
           = _('Motivation')
+          - if @group.inspectable_by?(current_user)
+            %br
+            = _('Inspection comment')
           %br
-          = _('Inspection comment')
+          = _('Attachment')
 
       - i = 0
       - @requests.each do |request|
@@ -76,6 +79,8 @@
                 .col-sm-2
                 .col-sm-2
                 .col-sm-2
+                  - if @group.inspectable_by?(current_user)
+                    %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
               .row
                 .col-sm-2
                   %select.form-control{name: "requests[new_#{i}][supplier]"}
@@ -90,10 +95,9 @@
                   %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
                   .label.label-warning= _('medium')
                 .col-sm-2
-                  -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+                  %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
                 .col-sm-2
-                  - if @group.inspectable_by?(current_user)
-                    %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
+                  -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
         .row
           .col-sm-12
@@ -119,6 +123,8 @@
               .col-sm-2
               .col-sm-2
               .col-sm-2
+                - if @group.inspectable_by?(current_user)
+                  %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
             .row
               .col-sm-2
                 %select.form-control{name: "requests[new_#{i}][supplier]"}
@@ -132,10 +138,9 @@
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
                 .label.label-warning= _('medium')
               .col-sm-2
-                -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+                %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
               .col-sm-2
-                - if @group.inspectable_by?(current_user)
-                  %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
+                -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
         - if is_editable
           .row
