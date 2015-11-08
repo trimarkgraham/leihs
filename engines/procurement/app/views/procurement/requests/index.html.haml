@@ -5,12 +5,12 @@
 
 %h1= _('Requests')
 
-.panel{class: @budget_period.current? ? 'panel-success' : 'panel-default'}
-  .panel-heading
-    = render partial: 'header', locals: {budget_period: @budget_period}
+= form_tag nil, remote: true, multipart: true do
+  .panel{class: @budget_period.current? ? 'panel-success' : 'panel-default'}
+    .panel-heading
+      = render partial: 'header', locals: {budget_period: @budget_period}
 
-  .panel-body
-    = form_tag nil, remote: true, multipart: true do
+    .panel-body
       .row.h5
         .col-sm-2
           = _('Model name')
@@ -88,7 +88,8 @@
                 .col-sm-2
                   - if @group.inspectable_by?(current_user)
                     %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
-                .col-sm-2.total_price
+                .col-sm-2
+                  .label.label-primary.total_price
                 .col-sm-2
                   %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
                   .label.label-danger= _('high')
@@ -131,7 +132,8 @@
               .col-sm-2
                 - if @group.inspectable_by?(current_user)
                   %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
-              .col-sm-2.total_price
+              .col-sm-2
+                .label.label-primary.total_price
               .col-sm-2
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
                 .label.label-danger= _('high')
@@ -142,28 +144,35 @@
               .col-sm-2
                 -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
-        - if is_editable
-          .row
-            .col-sm-6.h1
-              -#%i.fa.fa-plus-circle
-            .col-sm-6.text-right
-              %button.btn.btn-success{type: :submit}
-                %i.fa.fa-check
-                = _('Save')
+    .panel-footer
+      - if is_editable
+        .row
+          .col-sm-4.h1
+            -#%i.fa.fa-plus-circle
+          .col-sm-2
+            .label.label-primary.big_total_price
+              = money_without_cents_and_with_symbol @requests.map(&:total_price).sum
+          .col-sm-6.text-right
+            %button.btn.btn-success{type: :submit}
+              %i.fa.fa-check
+              = _('Save')
 
 :scss
-  form .fa-plus-circle {
+  .panel-footer .fa-plus-circle {
     cursor: pointer;
     color: #5cb85c;
   }
 
-  .panel-body form > .row:nth-of-type(even) > .col-sm-12 {
+  .panel-body > .row:nth-of-type(even) > .col-sm-12 {
     background: #f9f9f9;
   }
-  .panel-body form > .row > .col-sm-12 {
+  .panel-body > .row > .col-sm-12 {
     border-top: 1px solid #cccccc;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
+    &.delete {
+      background: #f2dede;
+    }
   }
 
 :coffeescript
@@ -231,6 +240,18 @@
       desired_quantity = $(this).closest('.col-sm-12').find("input[name*='[desired_quantity]']").val()
       quantity = order_quantity or approved_quantity or desired_quantity
       price_el = $(this).closest('.col-sm-12').find("input[name*='[price]']")
-      if price_el.val()
-        total = accounting.formatMoney(quantity * price_el.val(), {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
-        $(this).closest('.col-sm-12').find(".total_price").html(total)
+      total = quantity * price_el.val()
+      formatted_total = accounting.formatMoney(total, {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
+      $(this).closest('.col-sm-12').find(".total_price").data('total', total).html(formatted_total)
+      big_total = 0
+      $(".total_price").each ->
+        if Number($(this).data('total'))
+          big_total += Number($(this).data('total'))
+      formatted_big_total = accounting.formatMoney(big_total, {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
+      $(".big_total_price").html(formatted_big_total)
+
+    $("input[name*='desired_quantity]']").on 'change', ->
+      if $(this).val() == "0"
+        $(this).closest('.col-sm-12').addClass('delete')
+      else
+        $(this).closest('.col-sm-12').removeClass('delete')

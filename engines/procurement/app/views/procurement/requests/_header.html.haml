@@ -1,11 +1,11 @@
 .row
-  .col-xs-3
+  .col-xs-2
     - if @group
       .fa.fa-sitemap
       = _('Group')
       %br
       %h4= @group
-  .col-xs-3
+  .col-xs-2
     - if @user
       .fa.fa-user
       = _('User')
@@ -16,3 +16,8 @@
     = _('Budget period')
     %br
     = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
+  .col-xs-2
+    - requests = @requests.by_budget_period(budget_period)
+    - unless requests.blank?
+      .label.label-primary.big_total_price
+        = money_without_cents_and_with_symbol requests.map(&:total_price).sum

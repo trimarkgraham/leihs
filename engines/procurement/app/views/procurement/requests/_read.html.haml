@@ -30,7 +30,8 @@
       .col-sm-2
         = request.order_quantity
       .col-sm-2
-        = money_without_cents_and_with_symbol request.total_price
+        .label.label-primary.total_price{data: {total: request.total_price}}
+          = money_without_cents_and_with_symbol request.total_price
       .col-sm-2
         - case request.priority
           - when 'high'
