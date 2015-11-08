@@ -25,6 +25,15 @@ module Procurement
     def index
       @budget_period = BudgetPeriod.find(params[:budget_period_id])
       @requests = @requests.by_budget_period(@budget_period)
+
+      respond_to do |format|
+        format.html
+        format.csv {
+          send_data Request.csv_export(@requests, current_user),
+                    type: 'text/csv; charset=utf-8; header=present',
+                    disposition: "attachment; filename=requests.csv"
+        }
+      end
     end
 
     def resume

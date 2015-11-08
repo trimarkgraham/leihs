@@ -79,5 +79,42 @@ module Procurement
       price * (order_quantity || approved_quantity || desired_quantity)
     end
 
+    #####################################################
+
+    def self.csv_export(requests, current_user)
+      require 'csv'
+
+      objects = []
+      requests.each do |request|
+        objects << {
+            _('Budget period') => request.budget_period,
+            _('Procurement group') => request.group,
+            _('Requester') => request.user,
+            _('Model name') => request.model_description,
+            _('Supplier') => request.supplier,
+            _('Desired quantity') => request.desired_quantity,
+            _('Approved quantity') => request.approved_quantity, # FIXME depending of inspection phase
+            _('Order quantity') => request.order_quantity, # FIXME depending of inspection phase
+            _('Price') => request.price,
+            _('Total') => request.total_price,
+            _('Status') => request.status(current_user),
+            _('Priority') => request.priority,
+            _('Receiver') => request.receiver,
+            _('Organization unit') => request.organization_unit,
+            _('Motivation') => request.motivation,
+            _('Inspection comment') => request.inspection_comment # FIXME depending of inspection phase
+        }
+      end
+
+      csv_header = objects.flat_map(&:keys).uniq
+
+      CSV.generate({col_sep: ';', quote_char: "\"", force_quotes: true, headers: :first_row}) do |csv|
+        csv << csv_header
+        objects.each do |object|
+          csv << csv_header.map {|h| object[h] }
+        end
+      end
+    end
+
   end
 end

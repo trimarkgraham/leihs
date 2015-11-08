@@ -21,3 +21,18 @@
     - unless requests.blank?
       .label.label-primary.big_total_price
         = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+
+      :ruby
+        csv_path = if @user and @group.nil?
+            user_budget_period_requests_path(@user, budget_period, format: 'csv')
+          elsif @group and @user.nil?
+            group_budget_period_requests_path(@group, budget_period, format: 'csv')
+          else
+            nil
+          end
+      - if csv_path
+        %br
+        %br
+        %a.btn.btn-default.btn-sm{href: csv_path}
+          %i.fa.fa-table
+          CSV Export
