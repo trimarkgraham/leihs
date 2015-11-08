@@ -150,8 +150,9 @@
           .col-sm-4.h1
             -#%i.fa.fa-plus-circle
           .col-sm-2
-            .label.label-primary.big_total_price
-              = money_without_cents_and_with_symbol @requests.map(&:total_price).sum
+            - unless @requests.blank?
+              .label.label-primary.big_total_price
+                = money_without_cents_and_with_symbol @requests.map(&:total_price).sum
           .col-sm-6.text-right
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check
