@@ -47,7 +47,7 @@
       %tfoot
         %tr
           %td.h1{colspan: 2}
-            %i.fa.fa-plus-circle
+            -#%i.fa.fa-plus-circle
           %td.text-right
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check
@@ -61,12 +61,12 @@
 
 :coffeescript
   $(document).ready ->
-    $('tfoot').on 'click', '.fa-plus-circle', ->
-      target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
-      cloned_el = target_el.clone()
-      cloned_el.find('input').val('')
-      cloned_el.insertAfter(target_el)
-      false
+    #$('tfoot').on 'click', '.fa-plus-circle', ->
+    #  target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
+    #  cloned_el = target_el.clone()
+    #  cloned_el.find('input').val('')
+    #  cloned_el.insertAfter(target_el)
+    #  false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->
       location.reload()
