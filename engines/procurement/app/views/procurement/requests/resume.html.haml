@@ -5,24 +5,29 @@
 
   .panel{class: budget_period.current? ? 'panel-success' : 'panel-default'}
     .panel-heading
-      = render partial: 'header', locals: {budget_period: budget_period}
+      = render partial: 'header', locals: {budget_period: budget_period, requests: @requests.by_budget_period(budget_period)}
 
     .list-group
       - if @group
-        - @requests.by_budget_period(budget_period).group_by(&:user).each_pair do |user, requests|
-          %a.list-group-item{href: group_user_budget_period_requests_path(@group, user, budget_period)}
+        - Procurement::Access.requesters.each do |access|
+          - requests = @requests.by_budget_period(budget_period).where(user_id: access.user)
+          - next if not budget_period.current? and requests.empty?
+          %a.list-group-item{href: group_user_budget_period_requests_path(@group, access.user, budget_period)}
             .row
               .col-xs-5
                 .fa.fa-user
-                = user
+                = access.user
               .col-xs-5
-                = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: @group, user: user}
+                = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: @group, user: access.user}
               .col-xs-2
-                .label.label-primary.big_total_price
-                  = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+                - unless requests.blank?
+                  .label.label-primary.big_total_price
+                    = money_without_cents_and_with_symbol requests.map(&:total_price).sum
 
       - else
         - Procurement::Group.all.each do |group|
+          - requests = @requests.by_budget_period(budget_period).where(group_id: group)
+          - next if not budget_period.current? and requests.empty?
           %a.list-group-item{href: group_user_budget_period_requests_path(group, current_user, budget_period)}
             .row
               .col-xs-5
@@ -31,7 +36,6 @@
               .col-xs-5
                 = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: group, user: current_user}
               .col-xs-2
-                - requests = @requests.by_budget_period(budget_period).where(group_id: group)
                 - unless requests.blank?
                   .label.label-primary.big_total_price
                     = money_without_cents_and_with_symbol requests.map(&:total_price).sum

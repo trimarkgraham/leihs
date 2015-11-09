@@ -34,7 +34,7 @@ namespace :procurement do
 
       20.times do
         Procurement::Request.create group: Procurement::Group.order('RAND()').first,
-                                    user_id: rand(0..1) == 0 ? 1973 : User.not_as_delegations.order('RAND()').first.id,
+                                    user_id: rand(0..1) == 0 ? 1973 : Procurement::Access.requesters.order('RAND()').first.user_id,
                                     model_description: Faker::Lorem.sentence,
                                     desired_quantity: rand(1..50),
                                     price: rand(10..1000),

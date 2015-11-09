@@ -8,7 +8,7 @@
 = form_tag nil, remote: true, multipart: true do
   .panel{class: @budget_period.current? ? 'panel-success' : 'panel-default'}
     .panel-heading
-      = render partial: 'header', locals: {budget_period: @budget_period}
+      = render partial: 'header', locals: {budget_period: @budget_period, requests: @requests}
 
     .panel-body
       .row.h5
