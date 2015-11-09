@@ -26,3 +26,10 @@ Feature: Procurement Groups
     Given I am Dani
     When a procurement group does not yet have any requests
     Then I can delete the procurement group
+
+  # not yet implemented
+  @personas
+  Scenario: Enter Limit Expenses
+  Given I am Barbara
+  When I enter the procurement group
+  I can enter the limit of expenses

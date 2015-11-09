@@ -37,7 +37,7 @@ Feature: Periods and states
     Given the current date is before the inspection date
     When the approved quantity has not yet ben changed
     Then I see the state "New"
-    When the approved quantity has been changed by @Barbara
+    When the approved quantity has been changed by Barbara
     Then I see the state "inspection"
 
   @personas

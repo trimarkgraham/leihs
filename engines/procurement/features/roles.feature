@@ -21,5 +21,11 @@ Feature: Describing the roles
     Given I am Dani
     Then I can manage budget periods
     And I can manage procurement groups
-    And I can manage requestors
+    And I can manage requesters
+    And I can manage Admins
     And I can manage organisations
+
+  @personas
+  Scenario: Role leihs Admin
+    Given I am Gino
+    Then I can assign the first Admin of the procurement

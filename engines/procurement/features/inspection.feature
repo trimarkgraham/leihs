@@ -6,7 +6,7 @@ Scenario: Create a Request
   Given I am Barbara
   Then I can create a request and give the following information
   |Procurement Group|
-  |item description|
+  |item name|
   |Requested Quantity|
   |Approved Quantity|
   |Order Size|
@@ -22,11 +22,11 @@ Scenario: Create a Request
 # not yet implemented: some fields missing
 @personas
 Scenario: Mandatory Fields
-  Given I am Roger
+  Given I am Barbara
   When I create a request
   Then the following fields are mandatory
   |Procurement Group|
-  |item description|
+  |item name|
   |Approved quantity|
   |Price|
   |Priority of Inspection|
@@ -82,3 +82,10 @@ Scenario: Give Reason when Partially Excepting or Denying
   Then I need to give a reason
   When I set the approved quantity smaller than the requested quantity
   Then I need to give a reason
+
+# not yet implemented
+@personas
+Scenario: View the Limit of Expenses
+  Given I am Barbara
+  When I view the requests of my group
+  I see the limit of expenses
