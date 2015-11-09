@@ -18,10 +18,11 @@
           = _('Supplier')
         .col-sm-2
           = _('Desired quantity')
-          %br
-          = _('Approved quantity')
-          %br
-          = _('Order quantity')
+          - if not @budget_period.in_requesting_phase? or @group.inspectable_by?(current_user)
+            %br
+            = _('Approved quantity')
+            %br
+            = _('Order quantity')
         .col-sm-2
           = "%s %s" % [_('Price'), MoneyRails.default_currency]
           %br
@@ -36,7 +37,7 @@
           = _('Organization unit')
         .col-sm-2
           = _('Motivation')
-          - if @group.inspectable_by?(current_user)
+          - if not @budget_period.in_requesting_phase? or @group.inspectable_by?(current_user)
             %br
             = _('Inspection comment')
           %br
@@ -150,7 +151,7 @@
           .col-sm-4.h1
             -#%i.fa.fa-plus-circle
           .col-sm-2
-            - unless @requests.blank?
+            -#- unless @requests.blank?
               .label.label-primary.big_total_price
                 = money_without_cents_and_with_symbol @requests.map(&:total_price).sum
           .col-sm-6.text-right

@@ -32,7 +32,7 @@ module Procurement
       end.flatten.compact
 
       if errors.empty?
-        flash[:success] = _("Saved")
+        flash[:success] = _('Saved')
         head status: :ok
       else
         render json: errors, status: :internal_server_error

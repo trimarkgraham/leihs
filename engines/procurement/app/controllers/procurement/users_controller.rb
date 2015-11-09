@@ -36,7 +36,7 @@ module Procurement
         Access.admins.create(user_id: user_id)
       end
 
-      flash[:success] = _("Saved")
+      flash[:success] = _('Saved')
       redirect_to users_path
     end
 

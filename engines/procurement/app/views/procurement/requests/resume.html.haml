@@ -1,4 +1,7 @@
-%h1= _('Requests')
+- if @group
+  %h1= _('Inspect requests')
+- else
+  %h1= _('Submit requests')
 
 - @budget_periods.each do |budget_period|
   - next if budget_period.end_date > Date.today and not budget_period.current?

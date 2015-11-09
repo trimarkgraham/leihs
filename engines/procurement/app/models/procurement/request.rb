@@ -9,7 +9,12 @@ module Procurement
 
     monetize :price_cents
 
+    before_validation do
+      self.order_quantity ||= approved_quantity
+    end
+
     validates_presence_of :user, :model_description, :desired_quantity
+    validates_presence_of :inspection_comment, if: Proc.new {|r| r.approved_quantity and r.approved_quantity < r.desired_quantity }
     validates_numericality_of :approved_quantity, less_than_or_equal_to: :desired_quantity, allow_nil: true
     validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 
