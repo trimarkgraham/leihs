@@ -39,5 +39,9 @@ module Procurement
       end
     end
 
+    def require_admin_role
+      redirect_to root_path unless Access.admins.where(user_id: current_user).exists?
+    end
+
   end
 end

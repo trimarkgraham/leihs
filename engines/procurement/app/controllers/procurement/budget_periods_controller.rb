@@ -3,6 +3,8 @@ require_dependency "procurement/application_controller"
 module Procurement
   class BudgetPeriodsController < ApplicationController
 
+    before_action :require_admin_role
+
     def index
       @budget_periods = BudgetPeriod.order(end_date: :asc)
 

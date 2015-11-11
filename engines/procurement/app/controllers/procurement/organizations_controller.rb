@@ -3,6 +3,8 @@ require_dependency "procurement/application_controller"
 module Procurement
   class OrganizationsController < ApplicationController
 
+    before_action :require_admin_role
+
     def index
       @organizations = Organization.roots
     end

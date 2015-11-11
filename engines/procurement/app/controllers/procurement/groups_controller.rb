@@ -3,6 +3,8 @@ require_dependency "procurement/application_controller"
 module Procurement
   class GroupsController < ApplicationController
 
+    before_action :require_admin_role
+
     def index
       @groups = Group.all
       respond_to do |format|
