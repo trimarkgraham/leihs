@@ -16,7 +16,7 @@ module Procurement
       @group = Procurement::Group.find(params[:group_id]) if params[:group_id]
     end
 
-    before_action only: [:index, :resume] do
+    before_action only: [:index, :overview] do
       @requests = Request.all
       @requests = @requests.where(user_id: @user) if @user
       @requests = @requests.where(group_id: @group) if @group
@@ -36,7 +36,7 @@ module Procurement
       end
     end
 
-    def resume
+    def overview
       @budget_periods = BudgetPeriod.order(end_date: :desc)
     end
 

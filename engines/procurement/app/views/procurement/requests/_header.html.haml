@@ -5,6 +5,11 @@
       = _('Group')
       %br
       %h4= @group
+      = succeed ':' do
+        = _('Inspectors')
+      %ul
+        - @group.inspectors.each do |inspector|
+          %li= inspector
   .col-xs-2
     - if @user
       .fa.fa-user
@@ -17,10 +22,22 @@
     %br
     = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
   .col-xs-2
-    - unless requests.blank?
-      .label.label-primary.big_total_price
-        = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+    - if @user.nil? and @group and @group.inspectable_by?(current_user)
+      .label.label-success.budget_limit
+        - budget_limit_amount = @group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)
+        = money_without_cents_and_with_symbol budget_limit_amount
+      %br
 
+    .label.label-primary.big_total_price
+      - total_price = requests.map(&:total_price).sum
+      = money_without_cents_and_with_symbol total_price
+
+    - if budget_limit_amount.to_i > 0
+      .label.label-default
+        = succeed '%' do
+          = total_price.to_i * 100 / budget_limit_amount.to_i
+
+    - unless requests.blank?
       :ruby
         csv_path = if @user and @group.nil?
             user_budget_period_requests_path(@user, budget_period, format: 'csv')

@@ -1,14 +1,14 @@
 %h4= budget_period.name
 %ul
-  %li
+  %li{style: budget_period.inspection_start_date >= Date.today ? 'font-weight: bold' : nil}
     = _('requesting phase until %s') % l(budget_period.inspection_start_date)
-    - if budget_period.inspection_start_date < Date.today
+    -#- if budget_period.inspection_start_date < Date.today
       %s= _('(%s ago)') % distance_of_time_in_words_to_now(budget_period.inspection_start_date)
-    - else
+    -#- else
       %b= _('(in %s)') % distance_of_time_in_words_to_now(budget_period.inspection_start_date)
-  %li
+  %li{style: budget_period.end_date >= Date.today ? 'font-weight: bold' : nil}
     = _('inspection phase until %s') % l(budget_period.end_date)
-    - if budget_period.end_date < Date.today
+    -#- if budget_period.end_date < Date.today
       %s= _('(%s ago)') % distance_of_time_in_words_to_now(budget_period.end_date)
-    - else
+    -#- else
       %b= _('(in %s)') % distance_of_time_in_words_to_now(budget_period.end_date)

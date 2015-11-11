@@ -79,6 +79,7 @@
                 .col-sm-2
                 .col-sm-2
                 .col-sm-2
+                  %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
                 .col-sm-2
                   - if @group.inspectable_by?(current_user)
                     %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
@@ -93,15 +94,14 @@
                   .label.label-primary.total_price
                 .col-sm-2
                   %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
-                  .label.label-danger= _('high')
+                  .label.label-default= _('high')
                   %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
-                  .label.label-warning= _('medium')
+                  .label.label-default= _('medium')
                 .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
                 .col-sm-2
                   -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
-        .row
+        .row#new_request
           .col-sm-12
             - i += 1
             .row
@@ -124,6 +124,7 @@
               .col-sm-2
               .col-sm-2
               .col-sm-2
+                %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
               .col-sm-2
                 - if @group.inspectable_by?(current_user)
                   %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
@@ -137,19 +138,18 @@
                 .label.label-primary.total_price
               .col-sm-2
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
-                .label.label-danger= _('high')
+                .label.label-default= _('high')
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
-                .label.label-warning= _('medium')
+                .label.label-default= _('medium')
               .col-sm-2
-                %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
               .col-sm-2
                 -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
     .panel-footer
       - if is_editable
         .row
-          .col-sm-4.h1
-            -#%i.fa.fa-plus-circle
+          .col-sm-4{style: 'font-size: 2em'}
+            %i.fa.fa-plus-circle
           .col-sm-2
             -#- unless @requests.blank?
               .label.label-primary.big_total_price
@@ -177,14 +177,19 @@
     }
   }
 
+  #new_request {
+    display: none;
+  }
+
 :coffeescript
   $(document).ready ->
-    #$('tfoot').on 'click', '.fa-plus-circle', ->
-    #  target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
-    #  cloned_el = target_el.clone()
-    #  cloned_el.find('input').val('')
-    #  cloned_el.insertAfter(target_el)
-    #  false
+    $('.panel-footer').on 'click', '.fa-plus-circle', ->
+      #target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
+      #cloned_el = target_el.clone()
+      #cloned_el.find('input').val('')
+      #cloned_el.insertAfter(target_el)
+      $('#new_request').show()
+      false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->
       location.reload()

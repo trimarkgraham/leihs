@@ -10,6 +10,9 @@ module Procurement
     has_many :requests, dependent: :restrict_with_exception
     has_many :request_templates, dependent: :delete_all
 
+    has_many :budget_limits, dependent: :delete_all
+    accepts_nested_attributes_for :budget_limits, allow_destroy: true
+
     def to_s
       name
     end

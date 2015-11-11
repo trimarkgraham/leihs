@@ -1,23 +1,45 @@
 = form_for @group do |f|
-  %table.table.table-striped
-    %thead
-      %tr
-        %th.col-xs-4= _('Name')
-        %th.col-xs-4= _('Inspectors')
-    %tbody
-      %tr
-        %td
+  .panel.panel-default
+    .panel-heading
+      .h3= _('Group')
+
+    .panel-body
+      .row
+        .col-sm-4
+          = _('Name')
+        .col-sm-4
           = f.text_field :name, placeholder: _('Name'), class: 'form-control'
-        %td
+        .col-sm-4
+      .row
+        .col-sm-4
+          = _('Inspectors')
+        .col-sm-8
           %select.form-control{name: 'group[inspector_ids][]', multiple: true}
 
-    %tfoot
-      %tr
-        %td.text-right{colspan: 2}
-          %button.btn.btn-success{type: :submit}
-            %i.fa.fa-check
-            = _('Save')
+      %h4= _('Budget limits')
 
+      - Procurement::BudgetPeriod.order(end_date: :desc).each do |budget_period|
+        - budget_limit = @group.budget_limits.find_or_initialize_by(budget_period_id: budget_period.id)
+        = f.fields_for :budget_limits, budget_limit do |ff|
+          .row
+            .col-sm-4
+              = ff.hidden_field :budget_period_id
+              = budget_period
+            .col-sm-4
+              = ff.number_field :amount, min: 0, placeholder: _('Budget'), autocomplete: :off, class: 'form-control'
+            .col-sm-4
+
+    .panel-footer
+      .text-right
+        %button.btn.btn-success{type: :submit}
+          %i.fa.fa-check
+          = _('Save')
+
+
+:scss
+  .panel-body > .row:nth-of-type(even) {
+    background: #f9f9f9;
+  }
 
 :coffeescript
   $(document).ready ->

@@ -15,7 +15,6 @@ module Procurement
 
     validates_presence_of :user, :model_description, :desired_quantity
     validates_presence_of :inspection_comment, if: Proc.new {|r| r.approved_quantity and r.approved_quantity < r.desired_quantity }
-    validates_numericality_of :approved_quantity, less_than_or_equal_to: :desired_quantity, allow_nil: true
     validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 
     #################################################################
@@ -72,8 +71,8 @@ module Procurement
           :denied
         elsif 0 < approved_quantity and approved_quantity < desired_quantity
           :partially_approved
-        elsif approved_quantity == desired_quantity
-          :completely_approved
+        elsif approved_quantity >= desired_quantity
+          :approved
         else
           raise
         end

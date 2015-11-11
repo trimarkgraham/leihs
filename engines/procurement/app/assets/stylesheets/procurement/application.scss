@@ -13,14 +13,19 @@
 @import "font-awesome";
 
 header {
-  padding-bottom: 3em;
+  padding-bottom: 4em;
+
+  .navbar {
+    height: 4em;
+
+    .dropdown-menu {
+      max-height: 500px;
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  }
 }
 
-header .dropdown-menu {
-  max-height: 500px;
-  overflow: hidden;
-  overflow-y: auto;
-}
 
 //footer {
 //  a {
@@ -29,7 +34,7 @@ header .dropdown-menu {
 //  }
 //}
 
-.total_price, .big_total_price {
+.total_price, .big_total_price, .budget_limit {
   font-size: 0.9em;
   line-height: 2em;
 }

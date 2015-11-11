@@ -8,9 +8,9 @@
                     'label-danger'
                   when :partially_approved
                     'label-warning'
-                  when :completely_approved
+                  when :approved
                     'label-success'
                 end
 
 .label{class: label_class}
-  = status.to_s.humanize
+  = _(status.to_s.humanize)

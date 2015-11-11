@@ -9,7 +9,7 @@ Procurement::Engine.routes.draw do
   resources :users, only: [:index, :create] do
     resources :requests, only: [] do
       collection do
-        get :resume
+        get :overview
       end
     end
     scope format: true, constraints: {format: 'csv'} do
@@ -26,7 +26,7 @@ Procurement::Engine.routes.draw do
   resources :groups do
     resources :requests, only: [] do
       collection do
-        get :resume
+        get :overview
       end
     end
     resources :users, only: [] do

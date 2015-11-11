@@ -29,9 +29,9 @@
       %hr
     %li
       .h4{style: 'color: lightgrey'}
-        Request
+        = _('Requests')
     %li
-      %a{href: resume_user_requests_path(current_user)}
+      %a{href: overview_user_requests_path(current_user)}
         = _('My requests')
         =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
 
@@ -42,12 +42,12 @@
       .h4{style: 'color: lightgrey'}
         = group
     %li
-      %a{href: resume_group_requests_path(group)}
+      %a{href: overview_group_requests_path(group)}
         = _('Requests')
         = render partial: 'layouts/procurement/counts', locals: {group: group}
     %li
       %a{href: group_request_templates_path(group)}
-        = _('RequestTemplates')
+        = _('Request Templates')
         .label.label-default= group.request_templates.count
 
   .text-center

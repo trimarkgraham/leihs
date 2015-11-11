@@ -21,8 +21,9 @@
       .col-sm-2
       .col-sm-2
       .col-sm-2
-        = request.inspection_comment
+        = request.organization_unit
       .col-sm-2
+        = request.inspection_comment
 
     .row
       .col-sm-2
@@ -33,13 +34,8 @@
         .label.label-primary.total_price{data: {total: request.total_price}}
           = money_without_cents_and_with_symbol request.total_price
       .col-sm-2
-        - case request.priority
-          - when 'high'
-            .label.label-danger= _(request.priority)
-          - when 'medium'
-            .label.label-warning= _(request.priority)
+        .label.label-default= _(request.priority)
       .col-sm-2
-        = request.organization_unit
       .col-sm-2
         %ul
           - request.attachments.each do |attachment|
