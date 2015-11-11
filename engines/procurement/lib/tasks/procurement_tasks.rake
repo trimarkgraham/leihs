@@ -28,6 +28,44 @@ namespace :procurement do
     o1 = Procurement::Organization.create name: 'Services', shortname: nil, parent_id: nil
     Procurement::Organization.create name: 'ITZ', shortname: nil, parent: o1
 
+    Procurement::Request.create group: Procurement::Group.find_by(name: 'IT'),
+                                user_id: 5824,
+                                model_description: 'MacBook 13"',
+                                desired_quantity: 10,
+                                price: 1200,
+                                supplier: 'Macshop',
+                                priority: 'medium',
+                                receiver: 'Becchio Silvan',
+                                organization_unit: 'Finanzen',
+                                motivation: 'meine Motivation',
+                                created_at: '2015-11-09 12:23:21'
+
+    Procurement::Request.create group: Procurement::Group.find_by(name: 'IT'),
+                                user_id: 5824,
+                                model_description: 'Eizo 19 Zoll LCD Monitor M190020589 SCH',
+                                desired_quantity: 1,
+                                price: 550,
+                                priority: 'medium',
+                                receiver: 'Becchio Silvan',
+                                organization_unit: 'Finanzen',
+                                motivation: 'gleiche motivaton',
+                                created_at: '2015-11-09 12:26:37'
+
+    Procurement::Request.create group: Procurement::Group.find_by(name: 'IT'),
+                                user_id: 1973,
+                                model_description: 'MacBook 12" 2015',
+                                desired_quantity: 5,
+                                approved_quantity: 5,
+                                order_quantity: 5,
+                                price: 1000,
+                                priority: 'medium',
+                                inspection_comment: 'my motivation',
+                                created_at: '2015-11-09 13:13:23'
+
+    Procurement::RequestTemplate.create group: Procurement::Group.find_by(name: 'IT'),
+                                        model_description: "Netzteil Apple Macbook MagSafe 2",
+                                        price: 200
+
     if Rails.env.development?
       Procurement::BudgetPeriod.create name: '2015', inspection_start_date: '2014-10-01', end_date: '2014-11-30'
       Procurement::BudgetPeriod.create name: '2016', inspection_start_date: '2015-10-01', end_date: '2015-11-30'
