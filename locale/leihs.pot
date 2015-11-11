@@ -2895,3 +2895,76 @@ msgstr ""
 
 msgid "Swap Model"
 msgstr ""
+
+msgid "Budget period"
+msgstr ""
+
+msgid "Budget periods"
+msgstr ""
+
+msgid "requesting phase until %s"
+msgstr ""
+
+msgid "inspection phase until %s"
+msgstr ""
+
+msgid "Model name"
+msgstr ""
+
+msgid "Desired quantity"
+msgstr ""
+
+msgid "Approved quantity"
+msgstr ""
+
+msgid "Order quantity"
+msgstr ""
+
+msgid "Requests"
+msgstr ""
+
+msgid "Request Templates"
+msgstr ""
+
+msgid "Requesters"
+msgstr ""
+
+msgid "My requests"
+msgstr ""
+
+msgid "Motivation"
+msgstr ""
+
+msgid "Inspectors"
+msgstr ""
+
+msgid "Inspection comment"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "Receiver"
+msgstr ""
+
+msgid "Organizations"
+msgstr ""
+
+msgid "Organization unit"
+msgstr ""
+
+msgid "Attachment"
+msgstr ""
+
+msgid "In inspection"
+msgstr ""
+
+msgid "Denied"
+msgstr ""
+
+msgid "Approved"
+msgstr ""
+
+msgid "Partially approved"
+msgstr ""
+

@@ -2986,3 +2986,75 @@ msgstr "höchstmöglich"
 
 msgid "Swap Model"
 msgstr "Modell tauschen"
+
+msgid "Budget period"
+msgstr "Budget Periode"
+
+msgid "Budget periods"
+msgstr "Budget Perioden"
+
+msgid "requesting phase until %s"
+msgstr "Antragsphase bis %s"
+
+msgid "inspection phase until %s"
+msgstr "Prüfphase bis %s"
+
+msgid "Model name"
+msgstr "Modellname"
+
+msgid "Desired quantity"
+msgstr "Menge beantragt"
+
+msgid "Approved quantity"
+msgstr "Menge bewilligt"
+
+msgid "Order quantity"
+msgstr "Bestellmenge"
+
+msgid "Requests"
+msgstr "Anträge"
+
+msgid "Request Templates"
+msgstr "Vorlagen"
+
+msgid "Requesters"
+msgstr "Antragsteller"
+
+msgid "My requests"
+msgstr "Meine Anträge"
+
+msgid "Motivation"
+msgstr "Begründung"
+
+msgid "Inspectors"
+msgstr "Prüfer"
+
+msgid "Inspection comment"
+msgstr "Kommentar des Prüfers"
+
+msgid "Priority"
+msgstr "Priorität"
+
+msgid "Receiver"
+msgstr "Empfänger"
+
+msgid "Organizations"
+msgstr "Organisationen"
+
+msgid "Organization unit"
+msgstr "Organisationseinheit"
+
+msgid "Attachment"
+msgstr "Anhang"
+
+msgid "In inspection"
+msgstr "In Prüfung"
+
+msgid "Denied"
+msgstr "Abgelehnt"
+
+msgid "approved"
+msgstr "Bewilligt"
+
+msgid "Partially approved"
+msgstr "Teilweise bewilligt"
