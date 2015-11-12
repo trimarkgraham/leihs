@@ -10,11 +10,11 @@
             %option{value: request.model_description, selected: true}= request.model_description
       .col-sm-2
         - if request.user_id == current_user.id
-          %input.form-control{name: "requests[#{request.id}][desired_quantity]", type: :number, min: 0, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
+          %input.form-control{name: "requests[#{request.id}][requested_quantity]", type: :number, min: 0, value: request.requested_quantity, placeholder: _('Requested quantity'), autocomplete: :off}
         - else
-          = request.desired_quantity
+          = request.requested_quantity
       .col-sm-2
-        %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: _('Price'), autocomplete: :off}
+        %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
       .col-sm-2
         = render partial: 'status', locals: {request: request}
       .col-sm-2

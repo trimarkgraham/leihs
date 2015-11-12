@@ -14,17 +14,15 @@ module Procurement
       self.order_quantity ||= approved_quantity
     end
 
-    validates_presence_of :user, :model_description, :desired_quantity
-    validates_presence_of :inspection_comment, if: Proc.new {|r| r.approved_quantity and r.approved_quantity < r.desired_quantity }
+    validates_presence_of :user, :model_description, :requested_quantity
+    validates_presence_of :inspection_comment, if: Proc.new {|r| r.approved_quantity and r.approved_quantity < r.requested_quantity }
     validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 
     #################################################################
 
     def editable?(user)
-      # (budget_period.in_requesting_phase? and (user_id == user.id or group.inspectable_by?(user))) or
-      #   (budget_period.in_inspection_phase? and group.inspectable_by?(user))
-      group.inspectable_by?(user) or
-          (budget_period.in_requesting_phase? and user_id == user.id)
+      (budget_period.in_requesting_phase? and (user_id == user.id or group.inspectable_by?(user))) or
+        (budget_period.in_inspection_phase? and group.inspectable_by?(user))
     end
 
     def status(user)
@@ -38,9 +36,9 @@ module Procurement
           :new
         elsif approved_quantity == 0
           :denied
-        elsif 0 < approved_quantity and approved_quantity < desired_quantity
+        elsif 0 < approved_quantity and approved_quantity < requested_quantity
           :partially_approved
-        elsif approved_quantity >= desired_quantity
+        elsif approved_quantity >= requested_quantity
           :approved
         else
           raise
@@ -49,7 +47,7 @@ module Procurement
     end
 
     def total_price # TODO optimize for the phases
-      price * (order_quantity || approved_quantity || desired_quantity)
+      price * (order_quantity || approved_quantity || requested_quantity)
     end
 
     #####################################################
@@ -65,11 +63,11 @@ module Procurement
             _('Requester') => request.user,
             _('Model name') => request.model_description,
             _('Supplier') => request.supplier,
-            _('Desired quantity') => request.desired_quantity,
+            _('Requested quantity') => request.requested_quantity,
             _('Approved quantity') => request.approved_quantity, # FIXME depending of inspection phase
             _('Order quantity') => request.order_quantity, # FIXME depending of inspection phase
-            _('Price') => request.price,
-            _('Total') => request.total_price,
+            ("%s %s" % [_('Price'), _('incl. VAT')]) => request.price,
+            ("%s %s" % [_('Total'), _('incl. VAT')]) => request.total_price,
             _('Status') => request.status(current_user),
             _('Priority') => request.priority,
             _('Receiver') => request.receiver,

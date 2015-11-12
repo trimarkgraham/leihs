@@ -13,7 +13,7 @@
         %tr
           -#%th.col-xs-3= _('Group')
           %th.col-xs-4= _('Description')
-          %th.col-xs-4= "%s %s" % [_('Price'), MoneyRails.default_currency]
+          %th.col-xs-4= "%s %s %s" % [_('Price'), MoneyRails.default_currency, _('incl. VAT')]
           %th.col-xs-4= _('Supplier')
       %tbody
         - @request_templates.each do |template|
@@ -26,7 +26,7 @@
               %select.form-control{name: 'request_templates[][model_description]'}
                 %option{value: template.model_description, selected: true}= template.model_description
             %td
-              %input.form-control{name: 'request_templates[][price]', type: :number, value: template.price, placeholder: _('Price'), autocomplete: :off}
+              %input.form-control{name: 'request_templates[][price]', type: :number, value: template.price, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
             %td
               %select.form-control{name: 'request_templates[][supplier]'}
                 %option{value: template.supplier, selected: true}= template.supplier
@@ -40,7 +40,7 @@
           %td
             %select.form-control{name: 'request_templates[][model_description]'}
           %td
-            %input.form-control{name: 'request_templates[][price]', type: :number, placeholder: _('Price'), autocomplete: :off}
+            %input.form-control{name: 'request_templates[][price]', type: :number, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
           %td
             %select.form-control{name: 'request_templates[][supplier]'}
           %td

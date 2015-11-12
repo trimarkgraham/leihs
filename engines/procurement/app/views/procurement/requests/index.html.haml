@@ -1,5 +1,6 @@
 :ruby
-  is_editable = (@group.inspectable_by?(current_user) or (@budget_period.in_requesting_phase? and @user == current_user))
+  is_editable = ((@budget_period.in_requesting_phase? and (@user == current_user or @group.inspectable_by?(current_user))) or
+                 (@budget_period.in_inspection_phase? and @group.inspectable_by?(current_user)))
 
 %h1= _('Requests')
 
@@ -15,16 +16,16 @@
           %br
           = _('Supplier')
         .col-sm-2
-          = _('Desired quantity')
+          = _('Requested quantity')
           - if not @budget_period.in_requesting_phase? or @group.inspectable_by?(current_user)
             %br
             = _('Approved quantity')
             %br
             = _('Order quantity')
         .col-sm-2
-          = "%s %s" % [_('Price'), MoneyRails.default_currency]
+          = "%s %s %s" % [_('Price'), MoneyRails.default_currency, _('incl. VAT')]
           %br
-          = "%s %s" % [_('Total'), MoneyRails.default_currency]
+          = "%s %s %s" % [_('Total'), MoneyRails.default_currency, _('incl. VAT')]
         .col-sm-2
           = _('Status')
           %br
@@ -61,9 +62,9 @@
                   -#%select.form-control{name: "requests[new_#{i}][model_description]"}
                     %option{value: request_template.model_description, selected: true}= request_template.model_description
                 .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
+                  %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
                 .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: request_template.price.to_i, placeholder: _('Price'), autocomplete: :off}
+                  %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: request_template.price.to_i, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
                 .col-sm-2
                 .col-sm-2
                   %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
@@ -106,9 +107,9 @@
               .col-sm-2
                 %select.form-control{name: "requests[new_#{i}][model_description]"}
               .col-sm-2
-                %input.form-control{name: "requests[new_#{i}][desired_quantity]", type: :number, min: 0, placeholder: _('Desired quantity'), autocomplete: :off}
+                %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
               .col-sm-2
-                %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: _('Price'), autocomplete: :off}
+                %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
               .col-sm-2
               .col-sm-2
                 %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
@@ -242,8 +243,8 @@
     $("input[name*='_quantity]'], input[name*='[price]']").on 'change', ->
       order_quantity = $(this).closest('.col-sm-12').find("input[name*='[order_quantity]']").val()
       approved_quantity = $(this).closest('.col-sm-12').find("input[name*='[approved_quantity]']").val()
-      desired_quantity = $(this).closest('.col-sm-12').find("input[name*='[desired_quantity]']").val()
-      quantity = order_quantity or approved_quantity or desired_quantity
+      requested_quantity = $(this).closest('.col-sm-12').find("input[name*='[requested_quantity]']").val()
+      quantity = order_quantity or approved_quantity or requested_quantity
       price_el = $(this).closest('.col-sm-12').find("input[name*='[price]']")
       total = quantity * price_el.val()
       formatted_total = accounting.formatMoney(total, {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
@@ -255,7 +256,7 @@
       formatted_big_total = accounting.formatMoney(big_total, {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
       $(".big_total_price").html(formatted_big_total)
 
-    $("input[name*='desired_quantity]']").on 'change', ->
+    $("input[name*='requested_quantity]']").on 'change', ->
       if $(this).val() == "0"
         $(this).closest('.col-sm-12').addClass('delete')
       else

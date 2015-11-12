@@ -3002,7 +3002,7 @@ msgstr "Prüfphase bis %s"
 msgid "Model name"
 msgstr "Modellname"
 
-msgid "Desired quantity"
+msgid "Requested quantity"
 msgstr "Menge beantragt"
 
 msgid "Approved quantity"
@@ -3058,3 +3058,6 @@ msgstr "Bewilligt"
 
 msgid "Partially approved"
 msgstr "Teilweise bewilligt"
+
+msgid "incl. VAT"
+msgstr "inkl. MWsT"

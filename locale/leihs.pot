@@ -2911,7 +2911,7 @@ msgstr ""
 msgid "Model name"
 msgstr ""
 
-msgid "Desired quantity"
+msgid "Requested quantity"
 msgstr ""
 
 msgid "Approved quantity"
@@ -2968,3 +2968,5 @@ msgstr ""
 msgid "Partially approved"
 msgstr ""
 
+msgid "incl. VAT"
+msgstr ""

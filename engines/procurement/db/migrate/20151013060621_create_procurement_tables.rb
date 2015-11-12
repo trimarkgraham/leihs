@@ -50,7 +50,7 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.belongs_to :group
       t.belongs_to :user,              foreign_key: true
       t.string :model_description,     null: false
-      t.integer :desired_quantity,     null: false
+      t.integer :requested_quantity,     null: false
       t.integer :approved_quantity,    null: true
       t.integer :order_quantity,       null: true
       t.money :price

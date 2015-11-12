@@ -30,8 +30,8 @@ module Procurement
       {
           new: requests.where(approved_quantity: nil).count,
           denied: requests.where(approved_quantity: 0).count,
-          partially_approved: requests.where('0 < approved_quantity AND approved_quantity < desired_quantity').count,
-          approved: requests.where('approved_quantity >= desired_quantity').count
+          partially_approved: requests.where('0 < approved_quantity AND approved_quantity < requested_quantity').count,
+          approved: requests.where('approved_quantity >= requested_quantity').count
       }
     end
 
