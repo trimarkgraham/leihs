@@ -5,7 +5,8 @@
     %tr
       %th.col-xs-4= _('Name')
       %th.col-xs-4= _('Inspectors')
-      %th
+      %th.col-xs-3= _('Email')
+      %th.col-xs-1
   %tbody
     - @groups.each do |group|
       %tr
@@ -15,6 +16,8 @@
           %ul
             - group.inspectors.each do |inspector|
               %li= inspector
+        %td
+          = group.email
         %td.text-right
           .btn-group
             %a.btn.btn-default{href: edit_group_path(group)}
@@ -32,7 +35,7 @@
 
   %tfoot
     %tr
-      %td.text-right{colspan: 3}
+      %td.text-right{colspan: 4}
         %a.btn.btn-success{href: new_group_path}
           %i.fa.fa-plus
           = _('Add')

@@ -11,6 +11,7 @@ class CreateProcurementTables < ActiveRecord::Migration
 
     create_table :procurement_groups do |t|
       t.string :name
+      t.string :email
     end
 
     create_table :procurement_budget_limits do |t|

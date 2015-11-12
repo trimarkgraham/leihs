@@ -15,6 +15,12 @@
           = _('Inspectors')
         .col-sm-8
           %select.form-control{name: 'group[inspector_ids][]', multiple: true}
+      .row
+        .col-sm-4
+          = _('Email')
+        .col-sm-4
+          = f.email_field :email, placeholder: _('Email'), class: 'form-control'
+        .col-sm-4
 
       %h4= _('Budget limits')
 

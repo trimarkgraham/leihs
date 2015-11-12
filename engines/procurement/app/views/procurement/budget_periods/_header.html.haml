@@ -5,11 +5,25 @@
       = _('Group')
       %br
       %h4= @group
-      = succeed ':' do
-        = _('Inspectors')
-      %ul
+      - if @group.email
+        %a{href: "mailto:#{@group.email}"}
+        %b
+          = succeed ':' do
+            %i.fa.fa-envelope
+            = _('Inspectors')
         - @group.inspectors.each do |inspector|
-          %li= inspector
+          %div{style: 'padding-left: 1em'}
+            %i.fa.fa-user-md
+            = inspector
+      - else
+        %b
+          = succeed ':' do
+            = _('Inspectors')
+        - @group.inspectors.each do |inspector|
+          %div{style: 'padding-left: 1em'}
+            %i.fa.fa-user-md
+            = inspector
+
   .col-xs-2
     - if @user
       .fa.fa-user

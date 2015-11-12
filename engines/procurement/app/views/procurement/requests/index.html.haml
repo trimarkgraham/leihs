@@ -68,7 +68,7 @@
                 .col-sm-2
                   %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
                 .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
+                  %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255}
               .row
                 .col-sm-2
                 .col-sm-2
@@ -80,7 +80,7 @@
                   %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
                 .col-sm-2
                   - if @group.inspectable_by?(current_user)
-                    %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
+                    %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255}
               .row
                 .col-sm-2
                   %select.form-control{name: "requests[new_#{i}][supplier]"}
@@ -113,7 +113,7 @@
               .col-sm-2
                 %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
               .col-sm-2
-                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation')}
+                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255}
             .row
               .col-sm-2
               .col-sm-2
@@ -125,7 +125,7 @@
                 %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
               .col-sm-2
                 - if @group.inspectable_by?(current_user)
-                  %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment')}
+                  %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255}
             .row
               .col-sm-2
                 %select.form-control{name: "requests[new_#{i}][supplier]"}
