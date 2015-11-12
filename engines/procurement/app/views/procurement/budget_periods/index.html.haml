@@ -8,6 +8,7 @@
         %th= _('Inspection start date')
         %th= _('Budget period end date')
         %th= _('Total requests')
+        %th
     %tbody
       - @budget_periods.each do |budget_period|
         %tr{class: budget_period.current? ? 'success' : nil}
@@ -25,6 +26,11 @@
                 = _('Delete')
             - else
               = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period}
+          %td
+            - if budget_period.requests.exists?
+              %a.btn.btn-default.btn-sm{href: budget_period_requests_path(budget_period, format: 'csv')}
+                %i.fa.fa-table
+                CSV Export
 
       %tr
         %td
@@ -34,9 +40,10 @@
         %td
           %input.form-control.datepicker{name: 'budget_periods[][end_date]', placeholder: _('End date'), autocomplete: :off}
         %td
+        %td
     %tfoot
       %tr
-        %td.h1{colspan: 3}
+        %td.h1{colspan: 4}
           %i.fa.fa-plus-circle
         %td.text-right
           %button.btn.btn-success{type: :submit}
