@@ -21,8 +21,10 @@ module Procurement
     #################################################################
 
     def editable?(user)
-      (budget_period.in_requesting_phase? and (user_id == user.id or group.inspectable_by?(user))) or
-      (budget_period.in_inspection_phase? and group.inspectable_by?(user))
+      # (budget_period.in_requesting_phase? and (user_id == user.id or group.inspectable_by?(user))) or
+      #   (budget_period.in_inspection_phase? and group.inspectable_by?(user))
+      group.inspectable_by?(user) or
+          (budget_period.in_requesting_phase? and user_id == user.id)
     end
 
     def status(user)

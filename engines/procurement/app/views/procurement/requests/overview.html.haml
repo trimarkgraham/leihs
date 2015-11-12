@@ -9,7 +9,7 @@
       - if @group
         - Procurement::Access.requesters.each do |access|
           - requests = @requests.where(budget_period_id: budget_period, user_id: access.user)
-          - next if not budget_period.current? and requests.empty?
+          -# next if not budget_period.current? and requests.empty?
           %a.list-group-item{href: group_user_budget_period_requests_path(@group, access.user, budget_period)}
             .row
               .col-xs-5
@@ -25,7 +25,7 @@
       - else
         - Procurement::Group.all.each do |group|
           - requests = @requests.where(budget_period_id: budget_period, group_id: group)
-          - next if not budget_period.current? and requests.empty?
+          -# next if not budget_period.current? and requests.empty?
           %a.list-group-item{href: group_user_budget_period_requests_path(group, current_user, budget_period)}
             .row
               .col-xs-5

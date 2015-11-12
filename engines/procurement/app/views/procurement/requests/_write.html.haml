@@ -9,7 +9,10 @@
           %select.form-control{name: "requests[#{request.id}][model_description]"}
             %option{value: request.model_description, selected: true}= request.model_description
       .col-sm-2
-        %input.form-control{name: "requests[#{request.id}][desired_quantity]", type: :number, min: 0, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
+        - if request.user_id == current_user.id
+          %input.form-control{name: "requests[#{request.id}][desired_quantity]", type: :number, min: 0, value: request.desired_quantity, placeholder: _('Desired quantity'), autocomplete: :off}
+        - else
+          = request.desired_quantity
       .col-sm-2
         %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: _('Price'), autocomplete: :off}
       .col-sm-2
@@ -47,10 +50,12 @@
         .label.label-primary.total_price{data: {total: request.total_price}}
           = money_without_cents_and_with_symbol request.total_price
       .col-sm-2
-        %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'high', checked: request.priority == 'high'}
-        .label.label-default= _('high')
-        %input{type: 'radio', name: "requests[#{request.id}][priority]", value: 'medium', checked: request.priority == 'medium'}
-        .label.label-default= _('medium')
+        - if request.user_id == current_user.id
+          - ['high', 'medium'].each do |priority|
+            %input{type: 'radio', name: "requests[#{request.id}][priority]", value: priority, checked: request.priority == priority}
+            .label.label-default= _(priority)
+        - else
+          .label.label-default= _(request.priority)
       .col-sm-2
       .col-sm-2
         %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true}

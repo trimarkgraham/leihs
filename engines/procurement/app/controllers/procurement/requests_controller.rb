@@ -41,7 +41,8 @@ module Procurement
     end
 
     def create
-      keys = [:group_id, :user_id, :model_description, :desired_quantity, :price, :supplier, :priority, :motivation, :receiver, :organization_unit, attachments_attributes: [:file]]
+      keys = [:group_id, :user_id, :model_description, :price, :supplier, :motivation, :receiver, :organization_unit, attachments_attributes: [:file]]
+      keys += [:desired_quantity, :priority] if @user == current_user
       keys += [:approved_quantity, :order_quantity, :inspection_comment] if @group.inspectable_by?(current_user)
 
       errors = params.require(:requests).values.map do |param|

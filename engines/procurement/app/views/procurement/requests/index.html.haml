@@ -1,6 +1,5 @@
 :ruby
-  is_editable = ((@budget_period.in_requesting_phase? and (@user == current_user or @group.inspectable_by?(current_user))) or
-                 (@budget_period.in_inspection_phase? and @group.inspectable_by?(current_user)))
+  is_editable = (@group.inspectable_by?(current_user) or (@budget_period.in_requesting_phase? and @user == current_user))
 
 %h1= _('Requests')
 
