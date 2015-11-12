@@ -24,7 +24,7 @@ module Procurement
 
     def index
       @budget_period = BudgetPeriod.find(params[:budget_period_id])
-      @requests = @requests.by_budget_period(@budget_period)
+      @requests = @requests.where(budget_period_id: @budget_period)
 
       respond_to do |format|
         format.html

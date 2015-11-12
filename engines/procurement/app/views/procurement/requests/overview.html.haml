@@ -3,12 +3,12 @@
 
   .panel{class: budget_period.current? ? 'panel-success' : 'panel-default'}
     .panel-heading
-      = render partial: 'header', locals: {budget_period: budget_period, requests: @requests.by_budget_period(budget_period)}
+      = render partial: 'procurement/budget_periods/header', locals: {budget_period: budget_period, requests: @requests.where(budget_period_id: budget_period)}
 
     .list-group
       - if @group
         - Procurement::Access.requesters.each do |access|
-          - requests = @requests.by_budget_period(budget_period).where(user_id: access.user)
+          - requests = @requests.where(budget_period_id: budget_period, user_id: access.user)
           - next if not budget_period.current? and requests.empty?
           %a.list-group-item{href: group_user_budget_period_requests_path(@group, access.user, budget_period)}
             .row
@@ -17,14 +17,14 @@
                 = access.user
               .col-xs-5
                 = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: @group, user: access.user}
-              .col-xs-2
+              .col-xs-2.text-right
                 - unless requests.blank?
                   .label.label-primary.big_total_price
                     = money_without_cents_and_with_symbol requests.map(&:total_price).sum
 
       - else
         - Procurement::Group.all.each do |group|
-          - requests = @requests.by_budget_period(budget_period).where(group_id: group)
+          - requests = @requests.where(budget_period_id: budget_period, group_id: group)
           - next if not budget_period.current? and requests.empty?
           %a.list-group-item{href: group_user_budget_period_requests_path(group, current_user, budget_period)}
             .row
@@ -33,7 +33,7 @@
                 = group
               .col-xs-5
                 = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: group, user: current_user}
-              .col-xs-2
+              .col-xs-2.text-right
                 - unless requests.blank?
                   .label.label-primary.big_total_price
                     = money_without_cents_and_with_symbol requests.map(&:total_price).sum

@@ -1,6 +1,7 @@
 module Procurement
   class Request < ActiveRecord::Base
 
+    belongs_to :budget_period
     belongs_to :user
     belongs_to :group
 
@@ -19,43 +20,9 @@ module Procurement
 
     #################################################################
 
-    # scope :current, -> { by_budget_period(BudgetPeriod.current) }
-
-    # scope :past, -> {
-    #   if previous = BudgetPeriod.current.previous
-    #     where("created_at <= ?", previous.end_date.at_end_of_day)
-    #   else
-    #     none
-    #   end
-    # }
-
-    scope :by_budget_period, ->(budget_period) {
-      if budget_period
-        r = where("created_at <= ?", budget_period.end_date.at_end_of_day)
-        if previous = budget_period.previous
-          r = r.where("created_at > ?", previous.end_date.at_end_of_day)
-        end
-        r
-      else
-        none
-      end
-    }
-
-    #################################################################
-
-    def budget_period
-      BudgetPeriod.order(end_date: :asc).where("end_date >= ?", created_at).first
-    end
-
-    def current?
-      # Request.current.where(id: self).exists?
-      budget_period.current?
-    end
-
     def editable?(user)
-      current? and
-          (group.inspectable_by?(user) or
-              (user_id == user.id and budget_period.in_requesting_phase?))
+      (budget_period.in_requesting_phase? and (user_id == user.id or group.inspectable_by?(user))) or
+      (budget_period.in_inspection_phase? and group.inspectable_by?(user))
     end
 
     def status(user)

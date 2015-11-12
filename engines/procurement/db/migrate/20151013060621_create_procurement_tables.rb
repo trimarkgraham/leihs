@@ -13,6 +13,16 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.string :name
     end
 
+    create_table :procurement_budget_limits do |t|
+      t.belongs_to :budget_period
+      t.belongs_to :group
+      t.money :amount
+
+      t.index [:budget_period_id, :group_id], unique: true
+    end
+    add_foreign_key(:procurement_budget_limits, :procurement_budget_periods, column: 'budget_period_id')
+    add_foreign_key(:procurement_budget_limits, :procurement_groups, column: 'group_id')
+
     create_table :procurement_group_inspectors do |t|
       t.belongs_to :user, foreign_key: true
       t.belongs_to :group
@@ -35,9 +45,10 @@ class CreateProcurementTables < ActiveRecord::Migration
     add_foreign_key(:procurement_organizations, :procurement_organizations, column: 'parent_id')
 
     create_table :procurement_requests do |t|
+      t.belongs_to :budget_period
       t.belongs_to :group
       t.belongs_to :user,              foreign_key: true
-      t.string :model_description,           null: false
+      t.string :model_description,     null: false
       t.integer :desired_quantity,     null: false
       t.integer :approved_quantity,    null: true
       t.integer :order_quantity,       null: true
@@ -49,10 +60,9 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.string :motivation,            null: true
       t.string :inspection_comment,    null: true
 
-      t.datetime :created_at,       null: false, index: true
-
-      t.index [:user_id, :created_at]
+      t.datetime :created_at,       null: false
     end
+    add_foreign_key(:procurement_requests, :procurement_budget_periods, column: 'budget_period_id')
     add_foreign_key(:procurement_requests, :procurement_groups, column: 'group_id')
 
     create_table :procurement_request_templates do |t|

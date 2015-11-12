@@ -1,14 +1,13 @@
 :ruby
-  is_editable = (@budget_period.current? and
-                  (@group.inspectable_by?(current_user) or
-                    (@user == current_user and @budget_period.in_requesting_phase?)))
+  is_editable = ((@budget_period.in_requesting_phase? and (@user == current_user or @group.inspectable_by?(current_user))) or
+                 (@budget_period.in_inspection_phase? and @group.inspectable_by?(current_user)))
 
 %h1= _('Requests')
 
 = form_tag nil, remote: true, multipart: true do
   .panel{class: @budget_period.current? ? 'panel-success' : 'panel-default'}
     .panel-heading
-      = render partial: 'header', locals: {budget_period: @budget_period, requests: @requests}
+      = render partial: 'procurement/budget_periods/header', locals: {budget_period: @budget_period, requests: @requests}
 
     .panel-body
       .row.h5

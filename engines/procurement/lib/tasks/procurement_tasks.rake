@@ -28,7 +28,8 @@ namespace :procurement do
     o1 = Procurement::Organization.create name: 'Services', shortname: nil, parent_id: nil
     Procurement::Organization.create name: 'ITZ', shortname: nil, parent: o1
 
-    Procurement::Request.create group: Procurement::Group.find_by(name: 'IT'),
+    Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
+                                group: Procurement::Group.find_by(name: 'IT'),
                                 user_id: 5824,
                                 model_description: 'MacBook 13"',
                                 desired_quantity: 10,
@@ -37,10 +38,10 @@ namespace :procurement do
                                 priority: 'medium',
                                 receiver: 'Becchio Silvan',
                                 organization_unit: 'Finanzen',
-                                motivation: 'meine Motivation',
-                                created_at: '2015-11-09 12:23:21'
+                                motivation: 'meine Motivation'
 
-    Procurement::Request.create group: Procurement::Group.find_by(name: 'IT'),
+    Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
+                                group: Procurement::Group.find_by(name: 'IT'),
                                 user_id: 5824,
                                 model_description: 'Eizo 19 Zoll LCD Monitor M190020589 SCH',
                                 desired_quantity: 1,
@@ -48,10 +49,10 @@ namespace :procurement do
                                 priority: 'medium',
                                 receiver: 'Becchio Silvan',
                                 organization_unit: 'Finanzen',
-                                motivation: 'gleiche motivaton',
-                                created_at: '2015-11-09 12:26:37'
+                                motivation: 'gleiche motivaton'
 
-    Procurement::Request.create group: Procurement::Group.find_by(name: 'IT'),
+    Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
+                                group: Procurement::Group.find_by(name: 'IT'),
                                 user_id: 1973,
                                 model_description: 'MacBook 12" 2015',
                                 desired_quantity: 5,
@@ -59,8 +60,7 @@ namespace :procurement do
                                 order_quantity: 5,
                                 price: 1000,
                                 priority: 'medium',
-                                inspection_comment: 'my motivation',
-                                created_at: '2015-11-09 13:13:23'
+                                inspection_comment: 'my motivation'
 
     Procurement::RequestTemplate.create group: Procurement::Group.find_by(name: 'IT'),
                                         model_description: "Netzteil Apple Macbook MagSafe 2",
@@ -73,20 +73,19 @@ namespace :procurement do
       user_id = 1973
 
       50.times do
-        created_at = rand((Time.now - 2.years)..Time.now)
-        Procurement::Request.create group: Procurement::Group.order('RAND()').first,
+        Procurement::Request.create budget_period: Procurement::BudgetPeriod.order('RAND()').first,
+                                    group: Procurement::Group.order('RAND()').first,
                                     user_id: rand(0..1) == 0 ? user_id : Procurement::Access.requesters.order('RAND()').first.user_id,
                                     model_description: Faker::Lorem.sentence,
-                                    desired_quantity: (desired_quantity = rand(1..50)),
-                                    approved_quantity: (approved_quantity = created_at < (Time.now - 2.weeks) ? rand(1..desired_quantity) : nil),
-                                    price: rand(10..1000),
+                                    desired_quantity: (desired_quantity = rand(1..120)),
+                                    approved_quantity: (approved_quantity = rand(0..1) == 0 ? rand(1..desired_quantity) : nil),
+                                    price: rand(10..5000),
                                     supplier: Faker::Lorem.sentence,
                                     priority: rand(0..1) == 1 ? 'high' : 'medium',
                                     motivation: Faker::Lorem.sentence,
                                     inspection_comment: approved_quantity ? Faker::Lorem.sentence : nil,
                                     receiver: Faker::Lorem.sentence,
-                                    organization_unit: Faker::Lorem.sentence,
-                                    created_at: created_at
+                                    organization_unit: Faker::Lorem.sentence
       end
 
       {'Facility Management' => [user_id],
@@ -95,6 +94,13 @@ namespace :procurement do
         group.inspectors << User.find(ids)
         group.save
       end
+
+      Procurement::Group.all.each do |group|
+        attrs = {}
+        Procurement::BudgetPeriod.all.each {|bp| attrs[bp.id] = {budget_period_id: bp.id, amount: rand(200000..1200000)} }
+        group.update_attributes(budget_limits_attributes: attrs)
+      end
+
     end
 
   end
