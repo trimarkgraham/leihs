@@ -35,7 +35,7 @@ namespace :procurement do
                                 requested_quantity: 10,
                                 price: 1200,
                                 supplier: 'Macshop',
-                                priority: 'medium',
+                                priority: 'normal',
                                 receiver: 'Becchio Silvan',
                                 organization_unit: 'Finanzen',
                                 motivation: 'meine Motivation'
@@ -46,7 +46,7 @@ namespace :procurement do
                                 model_description: 'Eizo 19 Zoll LCD Monitor M190020589 SCH',
                                 requested_quantity: 1,
                                 price: 550,
-                                priority: 'medium',
+                                priority: 'normal',
                                 receiver: 'Becchio Silvan',
                                 organization_unit: 'Finanzen',
                                 motivation: 'gleiche motivaton'
@@ -59,12 +59,19 @@ namespace :procurement do
                                 approved_quantity: 5,
                                 order_quantity: 5,
                                 price: 1000,
-                                priority: 'medium',
+                                priority: 'normal',
                                 inspection_comment: 'my motivation'
 
-    Procurement::RequestTemplate.create group: Procurement::Group.find_by(name: 'IT'),
-                                        model_description: "Netzteil Apple Macbook MagSafe 2",
-                                        price: 200
+    c1 = Procurement::TemplateCategory.create group: Procurement::Group.find_by(name: 'IT'),
+                                              name: 'Laptops'
+
+    Procurement::Template.create template_category: c1,
+                                 model_description: "Netzteil Apple Macbook MagSafe 2",
+                                 price: 200
+
+    Procurement::Template.create template_category: c1,
+                                 model_description: 'MacBook 15"',
+                                 price: 2000
 
     if Rails.env.development?
       Procurement::BudgetPeriod.create name: '2015', inspection_start_date: '2014-10-01', end_date: '2014-11-30'
@@ -81,7 +88,7 @@ namespace :procurement do
                                     approved_quantity: (approved_quantity = rand(0..1) == 0 ? rand(1..requested_quantity) : nil),
                                     price: rand(10..5000),
                                     supplier: Faker::Lorem.sentence,
-                                    priority: rand(0..1) == 1 ? 'high' : 'medium',
+                                    priority: rand(0..1) == 1 ? 'high' : 'normal',
                                     motivation: Faker::Lorem.sentence,
                                     inspection_comment: approved_quantity ? Faker::Lorem.sentence : nil,
                                     receiver: Faker::Lorem.sentence,

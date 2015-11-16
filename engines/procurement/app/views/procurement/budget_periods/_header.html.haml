@@ -5,24 +5,12 @@
       = _('Group')
       %br
       %h4= @group
-      - if @group.email
-        %a{href: "mailto:#{@group.email}"}
-        %b
-          = succeed ':' do
-            %i.fa.fa-envelope
-            = _('Inspectors')
-        - @group.inspectors.each do |inspector|
-          %div{style: 'padding-left: 1em'}
-            %i.fa.fa-user-md
-            = inspector
-      - else
-        %b
-          = succeed ':' do
-            = _('Inspectors')
-        - @group.inspectors.each do |inspector|
-          %div{style: 'padding-left: 1em'}
-            %i.fa.fa-user-md
-            = inspector
+      - if @user
+        - if @group.email
+          %a{href: "mailto:#{@group.email}"}
+            = render partial: 'procurement/groups/inspectors', locals: {group: @group}
+        - else
+          = render partial: 'procurement/groups/inspectors', locals: {group: @group}
 
   .col-xs-2
     - if @user

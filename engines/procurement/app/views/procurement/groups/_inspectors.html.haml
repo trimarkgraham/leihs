@@ -1,0 +1,9 @@
+%b
+  = succeed ':' do
+    - if group.email
+      %i.fa.fa-envelope
+    = _('Inspectors')
+  - group.inspectors.each do |inspector|
+    %div{style: 'padding-left: 1em'}
+      %i.fa.fa-user-md
+      = inspector

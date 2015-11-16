@@ -27,7 +27,7 @@
             - else
               = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period}
           %td
-            - if budget_period.requests.exists?
+            - unless budget_period.requests.empty?
               %a.btn.btn-default.btn-sm{href: budget_period_requests_path(budget_period, format: 'csv')}
                 %i.fa.fa-table
                 CSV Export

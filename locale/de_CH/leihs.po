@@ -3014,8 +3014,8 @@ msgstr "Bestellmenge"
 msgid "Requests"
 msgstr "Anträge"
 
-msgid "Request Templates"
-msgstr "Vorlagen"
+msgid "Template Categories"
+msgstr "Vorlag Kategorien"
 
 msgid "Requesters"
 msgstr "Antragsteller"

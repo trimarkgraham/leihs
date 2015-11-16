@@ -36,9 +36,9 @@
       .col-sm-2
         .label.label-default= _(request.priority)
       .col-sm-2
-      .col-sm-2
         %ul
           - request.attachments.each do |attachment|
             %li
               %a{href: attachment.file.url, target: '_blank'}
                 = attachment.file.original_filename
+      .col-sm-2

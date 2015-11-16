@@ -46,9 +46,9 @@
         = _('Requests')
         = render partial: 'layouts/procurement/counts', locals: {group: group}
     %li
-      %a{href: group_request_templates_path(group)}
-        = _('Request Templates')
-        .label.label-default= group.request_templates.count
+      %a{href: group_templates_path(group)}
+        = _('Templates')
+        .label.label-default= group.templates.count
 
   .text-center
     %hr

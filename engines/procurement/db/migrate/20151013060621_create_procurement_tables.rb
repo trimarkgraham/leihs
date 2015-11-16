@@ -55,7 +55,7 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.integer :order_quantity,       null: true
       t.money :price
       t.string :supplier
-      t.column :priority,              "ENUM('medium', 'high')"
+      t.column :priority,              "ENUM('normal', 'high')"
       t.string :receiver,              null: true
       t.string :organization_unit,     null: true
       t.string :motivation,            null: true
@@ -66,13 +66,21 @@ class CreateProcurementTables < ActiveRecord::Migration
     add_foreign_key(:procurement_requests, :procurement_budget_periods, column: 'budget_period_id')
     add_foreign_key(:procurement_requests, :procurement_groups, column: 'group_id')
 
-    create_table :procurement_request_templates do |t|
+    create_table :procurement_template_categories do |t|
       t.belongs_to :group
+      t.string :name
+
+      t.index [:group_id, :name], unique: true
+    end
+    add_foreign_key(:procurement_template_categories, :procurement_groups, column: 'group_id')
+
+    create_table :procurement_templates do |t|
+      t.belongs_to :template_category
       t.string :model_description, null: false
       t.money :price
       t.string :supplier
     end
-    add_foreign_key(:procurement_request_templates, :procurement_groups, column: 'group_id')
+    add_foreign_key(:procurement_templates, :procurement_template_categories, column: 'template_category_id')
 
     create_table :procurement_attachments do |t|
       t.belongs_to :request

@@ -5,7 +5,7 @@ module Procurement
     belongs_to :user
     belongs_to :group
 
-    has_many :attachments, dependent: :destroy
+    has_many :attachments, dependent: :destroy, inverse_of: :request
     accepts_nested_attributes_for :attachments
 
     monetize :price_cents

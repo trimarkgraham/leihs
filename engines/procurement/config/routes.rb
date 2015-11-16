@@ -8,8 +8,6 @@ Procurement::Engine.routes.draw do
     end
   end
 
-  # resources :requests, only: [:index, :create]
-
   resources :users, only: [:index, :create] do
     resources :requests, only: [] do
       collection do
@@ -35,7 +33,11 @@ Procurement::Engine.routes.draw do
     end
     resources :users, only: [] do
       resources :budget_periods, only: [] do
-        resources :requests, only: [:index, :create]
+        resources :requests, only: [:index, :create, :destroy] do
+          member do
+            put :move
+          end
+        end
       end
     end
     scope format: true, constraints: {format: 'csv'} do
@@ -43,7 +45,7 @@ Procurement::Engine.routes.draw do
         resources :requests, only: [:index]
       end
     end
-    resources :request_templates, only: [:index, :create]
+    resources :templates, only: [:index, :create]
   end
 
   resources :organizations

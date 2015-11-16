@@ -2923,7 +2923,7 @@ msgstr ""
 msgid "Requests"
 msgstr ""
 
-msgid "Request Templates"
+msgid "Template Categories"
 msgstr ""
 
 msgid "Requesters"

@@ -34,13 +34,13 @@
           = _('Receiver')
           %br
           = _('Organization unit')
+          %br
+          = _('Attachment')
         .col-sm-2
           = _('Motivation')
           - if not @budget_period.in_requesting_phase? or @group.inspectable_by?(current_user)
             %br
             = _('Inspection comment')
-          %br
-          = _('Attachment')
 
       - i = 0
       - @requests.each do |request|
@@ -51,54 +51,59 @@
 
       - if is_editable
         - already_requested_model_descriptions = @requests.map &:model_description
-        - Procurement::RequestTemplate.where(group_id: @group).where.not(model_description: already_requested_model_descriptions).each do |request_template|
-          .row
-            .col-sm-12
-              - i += 1
-              .row
-                .col-sm-2
-                  %input{type: 'hidden', name: "requests[new_#{i}][model_description]", value: request_template.model_description}
-                  = request_template.model_description
-                  -#%select.form-control{name: "requests[new_#{i}][model_description]"}
-                    %option{value: request_template.model_description, selected: true}= request_template.model_description
-                .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
-                .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: request_template.price.to_i, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
-                .col-sm-2
-                .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
-                .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255}
-              .row
-                .col-sm-2
-                .col-sm-2
-                  - if @group.inspectable_by?(current_user)
-                    %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
-                .col-sm-2
-                .col-sm-2
-                .col-sm-2
-                  %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
-                .col-sm-2
-                  - if @group.inspectable_by?(current_user)
-                    %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255}
-              .row
-                .col-sm-2
-                  %select.form-control{name: "requests[new_#{i}][supplier]"}
-                    %option{value: request_template.supplier, selected: true}= request_template.supplier
-                .col-sm-2
-                  - if @group.inspectable_by?(current_user)
-                    %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
-                .col-sm-2
-                  .label.label-primary.total_price
-                .col-sm-2
-                  %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
-                  .label.label-default= _('high')
-                  %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
-                  .label.label-default= _('medium')
-                .col-sm-2
-                .col-sm-2
-                  -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+        - @group.template_categories.each do |template_category|
+          - template_category.templates.where.not(model_description: already_requested_model_descriptions).each do |template|
+            .row{data: {template_id: template.id}}
+              .col-sm-12
+                - i += 1
+                .row
+                  .col-sm-2
+                    %input{type: 'hidden', name: "requests[new_#{i}][model_description]", value: template.model_description}
+                    = template.model_description
+                    -#%select.form-control{name: "requests[new_#{i}][model_description]"}
+                      %option{value: template.model_description, selected: true}= template.model_description
+                  .col-sm-2
+                    %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
+                  .col-sm-2
+                    %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
+                    = template.price
+                    -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
+                  .col-sm-2
+                  .col-sm-2
+                    %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
+                  .col-sm-2
+                    %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+                .row
+                  .col-sm-2
+                  .col-sm-2
+                    - if @group.inspectable_by?(current_user)
+                      %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+                  .col-sm-2
+                  .col-sm-2
+                  .col-sm-2
+                    %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
+                  .col-sm-2
+                    - if @group.inspectable_by?(current_user)
+                      %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+                .row
+                  .col-sm-2
+                    %input{type: 'hidden', name: "requests[new_#{i}][supplier]", value: template.supplier}
+                    = template.supplier
+                    -#%select.form-control{name: "requests[new_#{i}][supplier]"}
+                      %option{value: template.supplier, selected: true}= template.supplier
+                  .col-sm-2
+                    - if @group.inspectable_by?(current_user)
+                      %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+                  .col-sm-2
+                    .label.label-primary.total_price
+                  .col-sm-2
+                    %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
+                    .label.label-default= _('high')
+                    %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
+                    .label.label-default= _('normal')
+                  .col-sm-2
+                    %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+                  .col-sm-2
 
         .row#new_request
           .col-sm-12
@@ -114,7 +119,7 @@
               .col-sm-2
                 %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
               .col-sm-2
-                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255}
+                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
             .row
               .col-sm-2
               .col-sm-2
@@ -126,7 +131,7 @@
                 %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
               .col-sm-2
                 - if @group.inspectable_by?(current_user)
-                  %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255}
+                  %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
             .row
               .col-sm-2
                 %select.form-control{name: "requests[new_#{i}][supplier]"}
@@ -138,22 +143,32 @@
               .col-sm-2
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
                 .label.label-default= _('high')
-                %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'medium', checked: true}
-                .label.label-default= _('medium')
+                %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
+                .label.label-default= _('normal')
               .col-sm-2
+                %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
               .col-sm-2
-                -#%input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
 
     .panel-footer
       - if is_editable
         .row
-          .col-sm-4{style: 'font-size: 2em'}
+          .col-sm-1{style: 'font-size: 2em'}
             %i.fa.fa-plus-circle
-          .col-sm-2
+          .col-sm-9
+            - @group.template_categories.each do |template_category|
+              .btn-group.dropup
+                %button.btn.btn-default.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: true, expanded: false}}
+                  = template_category
+                  %span.caret
+                %ul.dropdown-menu
+                  %li
+                    - template_category.templates.where.not(model_description: already_requested_model_descriptions).each do |template|
+                      %a.show_template{href: '#', data: {template_id: template.id}}= template
+
             -#- unless @requests.blank?
               .label.label-primary.big_total_price
                 = money_without_cents_and_with_symbol @requests.map(&:total_price).sum
-          .col-sm-6.text-right
+          .col-sm-2.text-right
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check
               = _('Save')
@@ -180,6 +195,10 @@
     display: none;
   }
 
+  .row[data-template_id] {
+    display: none;
+  }
+
 :coffeescript
   $(document).ready ->
     $('.panel-footer').on 'click', '.fa-plus-circle', ->
@@ -187,6 +206,7 @@
       #cloned_el = target_el.clone()
       #cloned_el.find('input').val('')
       #cloned_el.insertAfter(target_el)
+      $(this).hide()
       $('#new_request').show()
       false
 
@@ -261,3 +281,11 @@
         $(this).closest('.col-sm-12').addClass('delete')
       else
         $(this).closest('.col-sm-12').removeClass('delete')
+
+    $("a.show_template").on 'click', ->
+      $(this).hide()
+      $(this).closest('.dropdown-menu').dropdown('toggle')
+      $(".row[data-template_id='" + $(this).data('template_id') + "']").show()
+      false
+
+    $('input[data-toggle="tooltip"]').on 'focus', -> $(this).tooltip('toggle')

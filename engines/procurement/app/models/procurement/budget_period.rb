@@ -11,6 +11,10 @@ module Procurement
 
     ####################################################
 
+    scope :future, -> { where('end_date > ?', Date.today) }
+
+    ####################################################
+
     def to_s
       name
     end
