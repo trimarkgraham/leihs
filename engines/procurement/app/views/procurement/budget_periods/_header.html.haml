@@ -22,7 +22,9 @@
     .fa.fa-calendar
     = _('Budget period')
     %br
-    = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
+    %h4= budget_period.name
+    - if @user and @group
+      = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
   .col-xs-2.text-right
     - total_price = requests.map(&:total_price).sum
     - if @user.nil? and @group and @group.inspectable_by?(current_user)
@@ -41,19 +43,3 @@
 
     .label.label-primary.big_total_price
       = money_without_cents_and_with_symbol total_price
-
-    - unless requests.blank?
-      :ruby
-        csv_path = if @user and @group.nil?
-            user_budget_period_requests_path(@user, budget_period, format: 'csv')
-          elsif @group and @user.nil?
-            group_budget_period_requests_path(@group, budget_period, format: 'csv')
-          else
-            nil
-          end
-      - if csv_path
-        %br
-        %br
-        %a.btn.btn-default.btn-sm{href: csv_path}
-          %i.fa.fa-table
-          CSV Export

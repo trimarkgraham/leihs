@@ -1,39 +1,74 @@
-- @budget_periods.each do |budget_period|
-  -#- next if budget_period.end_date > Date.today and not budget_period.current?
+.panel-group#accordion{role: "tablist"}
 
-  .panel{class: budget_period.current? ? 'panel-success' : 'panel-default'}
-    .panel-heading
-      = render partial: 'procurement/budget_periods/header', locals: {budget_period: budget_period, requests: @requests.where(budget_period_id: budget_period)}
+  - @budget_periods.each do |budget_period|
+    -#- next if budget_period.end_date > Date.today and not budget_period.current?
+    - requests = @requests.where(budget_period_id: budget_period)
 
-    .list-group
-      - if @group
-        - Procurement::Access.requesters.each do |access|
-          - requests = @requests.where(budget_period_id: budget_period, user_id: access.user)
-          -# next if not budget_period.current? and requests.empty?
-          %a.list-group-item{href: group_user_budget_period_requests_path(@group, access.user, budget_period)}
-            .row
-              .col-xs-5
-                .fa.fa-user
-                = access.user
-              .col-xs-5
-                = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: @group, user: access.user}
-              .col-xs-2.text-right
-                - unless requests.blank?
-                  .label.label-primary.big_total_price
-                    = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+    .panel{class: budget_period.current? ? 'panel-success' : 'panel-default'}
+      .panel-heading{role: "tab"}
+        %a(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{budget_period.id}")
+          = render partial: 'procurement/budget_periods/header', locals: {budget_period: budget_period, requests: requests}
 
-      - else
-        - Procurement::Group.all.each do |group|
-          - requests = @requests.where(budget_period_id: budget_period, group_id: group)
-          -# next if not budget_period.current? and requests.empty?
-          %a.list-group-item{href: group_user_budget_period_requests_path(group, current_user, budget_period)}
-            .row
-              .col-xs-5
-                .fa.fa-sitemap
-                = group
-              .col-xs-5
-                = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: group, user: current_user}
-              .col-xs-2.text-right
-                - unless requests.blank?
-                  .label.label-primary.big_total_price
-                    = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+      .list-group(id="collapse_#{budget_period.id}" class="panel-collapse collapse #{budget_period.current? ? 'in' : nil}" role="tabpanel")
+        - unless requests.blank?
+          :ruby
+            csv_path = if @user and @group.nil?
+                user_budget_period_requests_path(@user, budget_period, format: 'csv')
+              elsif @group and @user.nil?
+                group_budget_period_requests_path(@group, budget_period, format: 'csv')
+              else
+                nil
+              end
+          - if csv_path
+            .list-group-item.heading
+              .row
+                .col-xs-2
+                .col-xs-2
+                .col-xs-6
+                  = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
+                .col-xs-2.text-right
+                  %a.btn.btn-default.btn-sm{href: csv_path}
+                    %i.fa.fa-table
+                    = _('CSV Export')
+
+        - if @group
+          - Procurement::Access.requesters.each do |access|
+            - requests = @requests.where(budget_period_id: budget_period, user_id: access.user)
+            -# next if not budget_period.current? and requests.empty?
+            %a.list-group-item{href: group_user_budget_period_requests_path(@group, access.user, budget_period)}
+              .row
+                .col-xs-5
+                  .fa.fa-user
+                  = access.user
+                .col-xs-5
+                  = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: @group, user: access.user}
+                .col-xs-2.text-right
+                  - unless requests.blank?
+                    .label.label-primary.big_total_price
+                      = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+
+        - else
+          - Procurement::Group.all.each do |group|
+            - requests = @requests.where(budget_period_id: budget_period, group_id: group)
+            -# next if not budget_period.current? and requests.empty?
+            %a.list-group-item{href: group_user_budget_period_requests_path(group, current_user, budget_period)}
+              .row
+                .col-xs-5
+                  .fa.fa-sitemap
+                  = group
+                .col-xs-5
+                  = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: group, user: current_user}
+                .col-xs-2.text-right
+                  - unless requests.blank?
+                    .label.label-primary.big_total_price
+                      = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+
+:scss
+  .panel-heading > a, .heading {
+    color: black;
+  }
+
+:coffeescript
+  $(document).ready ->
+    $('.list-group-item.heading').each ->
+      $(this).css('background-color', $(this).closest('.panel').find('.panel-heading').css('background-color'))

@@ -30,7 +30,7 @@
             - unless budget_period.requests.empty?
               %a.btn.btn-default.btn-sm{href: budget_period_requests_path(budget_period, format: 'csv')}
                 %i.fa.fa-table
-                CSV Export
+                = _('CSV Export')
 
       %tr
         %td

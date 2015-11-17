@@ -1,4 +1,3 @@
-%h4= budget_period.name
 %ul
   %li{style: budget_period.inspection_start_date >= Date.today ? 'font-weight: bold' : nil}
     = _('requesting phase until %s') % l(budget_period.inspection_start_date)
