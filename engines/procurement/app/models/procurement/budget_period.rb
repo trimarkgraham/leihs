@@ -27,16 +27,25 @@ module Procurement
       inspection_start_date <= Date.today and Date.today <= end_date
     end
 
-    def status_counts(user: nil, group: nil)
+    def status_counts(args)
       requests = self.requests
-      requests = requests.where(user_id: user) if user
-      requests = requests.where(group_id: group) if group
-      {
-          new: requests.where(approved_quantity: nil).count,
-          denied: requests.where(approved_quantity: 0).count,
-          partially_approved: requests.where('0 < approved_quantity AND approved_quantity < requested_quantity').count,
-          approved: requests.where('approved_quantity >= requested_quantity').count
-      }
+      requests = requests.where(user_id: args[:user]) if args[:user]
+      requests = requests.where(group_id: args[:group]) if args[:group]
+
+      if past? or (args[:group] and args[:group].inspectable_by?(args[:current_user]))
+        {
+            new: requests.where(approved_quantity: nil).count,
+            denied: requests.where(approved_quantity: 0).count,
+            partially_approved: requests.where('0 < approved_quantity AND approved_quantity < requested_quantity').count,
+            approved: requests.where('approved_quantity >= requested_quantity').count
+        }
+      else
+        if in_inspection_phase?
+          {in_inspection: requests.count}
+        else
+          {new: requests.count}
+        end
+      end
     end
 
     def previous
@@ -45,6 +54,10 @@ module Procurement
 
     def current?
       Date.today <= end_date and (previous.nil? or Date.today > previous.end_date)
+    end
+
+    def past?
+      end_date < Date.today
     end
 
     class << self

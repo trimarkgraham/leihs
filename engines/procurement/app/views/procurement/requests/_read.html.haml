@@ -31,8 +31,8 @@
       .col-sm-2
         = request.order_quantity
       .col-sm-2
-        .label.label-primary.total_price{data: {total: request.total_price}}
-          = money_without_cents_and_with_symbol request.total_price
+        .label.label-primary.total_price{data: {total: request.total_price(current_user)}}
+          = money_without_cents_and_with_symbol request.total_price(current_user)
       .col-sm-2
         .label.label-default= _(request.priority)
       .col-sm-2

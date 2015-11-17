@@ -26,12 +26,7 @@ module Procurement
     end
 
     def status(user)
-      if not group.inspectable_by?(user) and
-          (budget_period.in_inspection_phase? or
-              (budget_period.in_requesting_phase? and
-                  not approved_quantity.nil?))
-        :in_inspection
-      else
+      if budget_period.past? or group.inspectable_by?(user)
         if approved_quantity.nil?
           :new
         elsif approved_quantity == 0
@@ -43,11 +38,22 @@ module Procurement
         else
           raise
         end
+      else
+        if budget_period.in_inspection_phase?
+          :in_inspection
+        else
+          :new
+        end
       end
     end
 
-    def total_price # TODO optimize for the phases
-      price * (order_quantity || approved_quantity || requested_quantity)
+    def total_price(current_user)
+      quantity = if (not budget_period.in_requesting_phase?) or group.inspectable_by?(current_user)
+                   order_quantity || approved_quantity || requested_quantity
+                 else
+                   requested_quantity
+                 end
+      price * quantity
     end
 
     #####################################################
@@ -57,6 +63,7 @@ module Procurement
 
       objects = []
       requests.each do |request|
+        show_all = (not request.budget_period.in_requesting_phase?) or request.group.inspectable_by?(current_user)
         objects << {
             _('Budget period') => request.budget_period,
             _('Procurement group') => request.group,
@@ -64,16 +71,16 @@ module Procurement
             _('Model name') => request.model_description,
             _('Supplier') => request.supplier,
             _('Requested quantity') => request.requested_quantity,
-            _('Approved quantity') => request.approved_quantity, # FIXME depending of inspection phase
-            _('Order quantity') => request.order_quantity, # FIXME depending of inspection phase
+            _('Approved quantity') => (show_all ? request.approved_quantity : nil),
+            _('Order quantity') => (show_all ? request.order_quantity : nil),
             ("%s %s" % [_('Price'), _('incl. VAT')]) => request.price,
-            ("%s %s" % [_('Total'), _('incl. VAT')]) => request.total_price,
+            ("%s %s" % [_('Total'), _('incl. VAT')]) => request.total_price(current_user),
             _('Status') => request.status(current_user),
             _('Priority') => request.priority,
             _('Receiver') => request.receiver,
             _('Organization unit') => request.organization_unit,
             _('Motivation') => request.motivation,
-            _('Inspection comment') => request.inspection_comment # FIXME depending of inspection phase
+            _('Inspection comment') => (show_all ? request.inspection_comment : nil)
         }
       end
 

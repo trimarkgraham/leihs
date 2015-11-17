@@ -167,7 +167,7 @@
 
             -#- unless @requests.blank?
               .label.label-primary.big_total_price
-                = money_without_cents_and_with_symbol @requests.map(&:total_price).sum
+                = money_without_cents_and_with_symbol @requests.sum {|r| r.total_price(current_user) }.sum
           .col-sm-2.text-right
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check

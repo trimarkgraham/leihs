@@ -45,7 +45,7 @@
                 .col-xs-2.text-right
                   - unless requests.blank?
                     .label.label-primary.big_total_price
-                      = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+                      = money_without_cents_and_with_symbol requests.map {|r| r.total_price(current_user) }.sum
 
         - else
           - Procurement::Group.all.each do |group|
@@ -61,7 +61,7 @@
                 .col-xs-2.text-right
                   - unless requests.blank?
                     .label.label-primary.big_total_price
-                      = money_without_cents_and_with_symbol requests.map(&:total_price).sum
+                      = money_without_cents_and_with_symbol requests.map {|r| r.total_price(current_user) }.sum
 
 :scss
   .panel-heading > a, .heading {

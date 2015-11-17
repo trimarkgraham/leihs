@@ -2,16 +2,7 @@
   budget_period ||= Procurement::BudgetPeriod.current
   user ||= nil
   group ||= nil
-  counts = budget_period.status_counts(user: user, group: group)
-
-  if group and not group.inspectable_by?(current_user) and budget_period.current?
-    counts = if budget_period.in_inspection_phase?
-               {in_inspection: counts.values.sum}
-             elsif budget_period.in_requesting_phase?
-               {new: counts.delete(:new),
-               in_inspection: counts.values.sum}
-             end
-  end
+  counts = budget_period.status_counts(user: user, group: group, current_user: current_user)
 
 - counts.each_pair do |k,v|
   - next if v.zero?

@@ -18,7 +18,7 @@ module Procurement
     end
 
     before_action except: :overview do
-      unless @user == current_user or @group.inspectable_by?(current_user)
+      unless @user.nil? or @user == current_user or @group.nil? or @group.inspectable_by?(current_user)
         redirect_to root_path
       end
     end
