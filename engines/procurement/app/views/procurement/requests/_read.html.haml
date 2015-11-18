@@ -2,43 +2,113 @@
   .col-sm-12
     .row
       .col-sm-2
-        = request.model_description
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Model name')
+          %br
+          = request.model_description
       .col-sm-2
-        = request.requested_quantity
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Requested quantity')
+          %br
+          = request.requested_quantity
       .col-sm-2
-        = money_without_cents_and_with_symbol request.price
+        .form-group
+          %label
+            = succeed ':' do
+              = "%s %s %s" % [_('Price'), MoneyRails.default_currency, _('incl. VAT')]
+          %br
+          = money_without_cents_and_with_symbol request.price
       .col-sm-2
-        = render partial: 'status', locals: {request: request}
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Status')
+          %br
+          = render partial: 'status', locals: {request: request}
       .col-sm-2
-        = request.receiver
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Receiver')
+          %br
+          = request.receiver
       .col-sm-2
-        = request.motivation
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Motivation')
+          %br
+          = request.motivation
 
     .row
       .col-sm-2
       .col-sm-2
-        = request.approved_quantity
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Approved quantity')
+          %br
+          = request.approved_quantity
       .col-sm-2
       .col-sm-2
       .col-sm-2
-        = request.organization_unit
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Organization unit')
+          %br
+          = request.organization_unit
       .col-sm-2
-        = request.inspection_comment
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Inspection comment')
+          %br
+          = request.inspection_comment
 
     .row
       .col-sm-2
-        = request.supplier
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Supplier')
+          %br
+          = request.supplier
       .col-sm-2
-        = request.order_quantity
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Order quantity')
+          %br
+          = request.order_quantity
       .col-sm-2
-        .label.label-primary.total_price{data: {total: request.total_price(current_user)}}
-          = money_without_cents_and_with_symbol request.total_price(current_user)
+        .form-group
+          %label
+            = succeed ':' do
+              = "%s %s %s" % [_('Total'), MoneyRails.default_currency, _('incl. VAT')]
+          %br
+          .label.label-primary.total_price{data: {total: request.total_price(current_user)}}
+            = money_without_cents_and_with_symbol request.total_price(current_user)
       .col-sm-2
-        .label.label-default= _(request.priority)
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Priority')
+          %br
+          .label.label-default= _(request.priority)
       .col-sm-2
-        %ul
-          - request.attachments.each do |attachment|
-            %li
-              %a{href: attachment.file.url, target: '_blank'}
-                = attachment.file.original_filename
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Attachments')
+          %br
+          %ul
+            - request.attachments.each do |attachment|
+              %li
+                %a{href: attachment.file.url, target: '_blank'}
+                  = attachment.file.original_filename
       .col-sm-2
