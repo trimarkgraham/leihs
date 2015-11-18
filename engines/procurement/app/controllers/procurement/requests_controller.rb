@@ -18,13 +18,13 @@ module Procurement
     end
 
     before_action except: :overview do
-      unless @user.nil? or @user == current_user or @group.nil? or @group.inspectable_by?(current_user)
+      unless @user.nil? or @user == current_user or @group.nil? or @group.inspectable_or_readable_by?(current_user)
         redirect_to root_path
       end
     end
 
     before_action only: :overview do
-      if (@group and not @group.inspectable_by?(current_user)) or (@user and not @user == current_user)
+      if (@group and not @group.inspectable_or_readable_by?(current_user)) or (@user and not @user == current_user)
         redirect_to root_path
       end
     end

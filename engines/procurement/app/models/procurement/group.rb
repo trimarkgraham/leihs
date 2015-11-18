@@ -22,5 +22,9 @@ module Procurement
       inspectors.include?(user)
     end
 
+    def inspectable_or_readable_by?(user)
+      Procurement::GroupInspector.where(user_id: user).exists? or inspectable_by?(user)
+    end
+
   end
 end

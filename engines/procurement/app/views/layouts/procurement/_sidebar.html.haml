@@ -1,54 +1,73 @@
-%ul.sidebar-nav{style: 'margin-top: 1em'}
+:ruby
+  opened_menu = if controller.controller_name == "requests"
+      if @user and @user == current_user
+        :request
+      else
+        :inspect
+      end
+    else
+    :admin
+  end
+
+%ul.sidebar-nav#leftMenu{style: 'margin-top: 1em'}
   - if is_procurement_admin?
     %li
-      .h4{style: 'color: lightgrey'}
-        Admin
-    %li
-      %a{href: budget_periods_path}
-        = _('Budget periods')
-        - unless Procurement::BudgetPeriod.current
-          %i.fa.fa-warning.text-danger
-    %li
-      %a{href: organizations_path}
-        = _('Organizations')
-        - unless Procurement::Organization.exists?
-          %i.fa.fa-warning.text-danger
-    %li
-      %a{href: groups_path}
-        = _('Groups')
-        - unless Procurement::Group.exists?
-          %i.fa.fa-warning.text-danger
-    %li
-      %a{href: users_path}
-        = _('Users')
-        - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
-          %i.fa.fa-warning.text-danger
+      %a{"data-parent" => "#leftMenu", "data-toggle" => "collapse", :href => "#collapse_admin"}
+        %i.fa.fa-gear
+        = _('Admin')
+      %ul#collapse_admin.collapse{class: opened_menu == :admin ? 'in' : nil}
+        %li
+          %a{href: budget_periods_path}
+            = _('Budget periods')
+            - unless Procurement::BudgetPeriod.current
+              %i.fa.fa-warning.text-danger
+        %li
+          %a{href: organizations_path}
+            = _('Organizations')
+            - unless Procurement::Organization.exists?
+              %i.fa.fa-warning.text-danger
+        %li
+          %a{href: groups_path}
+            = _('Groups')
+            - unless Procurement::Group.exists?
+              %i.fa.fa-warning.text-danger
+        %li
+          %a{href: users_path}
+            = _('Users')
+            - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
+              %i.fa.fa-warning.text-danger
 
   - if is_procurement_requester?
     %li
-      %hr
-    %li
-      .h4{style: 'color: lightgrey'}
+      %a{"data-parent" => "#leftMenu", "data-toggle" => "collapse", :href => "#collapse_request"}
+        %i.fa.fa-gear
         = _('Requests')
-    %li
-      %a{href: overview_user_requests_path(current_user)}
-        = _('My requests')
-        =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
+      %ul#collapse_request.collapse{class: opened_menu == :request ? 'in' : nil}
+        %li
+          %a{href: overview_user_requests_path(current_user)}
+            = _('My requests')
+            =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
 
-  - Procurement::Group.joins(:group_inspectors).where(procurement_group_inspectors: {user_id: current_user}).each do |group|
+  - if Procurement::GroupInspector.where(user_id: current_user).exists?
     %li
-      %hr
-    %li
-      .h4{style: 'color: lightgrey'}
-        = group
-    %li
-      %a{href: overview_group_requests_path(group)}
-        = _('Requests')
-        = render partial: 'layouts/procurement/counts', locals: {group: group}
-    %li
-      %a{href: group_templates_path(group)}
-        = _('Templates')
-        .label.label-default= group.templates.count
+      %a{"data-parent" => "#leftMenu", "data-toggle" => "collapse", :href => "#collapse_inspect"}
+        %i.fa.fa-gear
+        = _('Inspect')
+      %ul#collapse_inspect.collapse{class: opened_menu == :inspect ? 'in' : nil}
+        - Procurement::Group.all.each do |group|
+          %li
+            %div{style: 'color: lightgrey'}
+              = group
+            %ul{style: 'padding-left: 0.5em'}
+              %li
+                %a{href: overview_group_requests_path(group)}
+                  = _('Requests')
+                  = render partial: 'layouts/procurement/counts', locals: {group: group}
+              - if group.inspectable_by?(current_user)
+                %li
+                  %a{href: group_templates_path(group)}
+                    = _('Templates')
+                    .label.label-default= group.templates.count
 
   .text-center
     %hr

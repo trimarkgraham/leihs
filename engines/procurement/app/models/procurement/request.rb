@@ -26,7 +26,7 @@ module Procurement
     end
 
     def status(user)
-      if budget_period.past? or group.inspectable_by?(user)
+      if budget_period.past? or group.inspectable_or_readable_by?(user)
         if approved_quantity.nil?
           :new
         elsif approved_quantity == 0
@@ -48,7 +48,7 @@ module Procurement
     end
 
     def total_price(current_user)
-      quantity = if (not budget_period.in_requesting_phase?) or group.inspectable_by?(current_user)
+      quantity = if (not budget_period.in_requesting_phase?) or group.inspectable_or_readable_by?(current_user)
                    order_quantity || approved_quantity || requested_quantity
                  else
                    requested_quantity
@@ -63,7 +63,7 @@ module Procurement
 
       objects = []
       requests.each do |request|
-        show_all = (not request.budget_period.in_requesting_phase?) or request.group.inspectable_by?(current_user)
+        show_all = (not request.budget_period.in_requesting_phase?) or request.group.inspectable_or_readable_by?(current_user)
         objects << {
             _('Budget period') => request.budget_period,
             _('Procurement group') => request.group,
