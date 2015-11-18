@@ -70,6 +70,11 @@
     color: #999999;
 }
 
+.sidebar-nav > li > a {
+    font-size: 1.2em;
+    line-height: 2.5em;
+}
+
 .sidebar-nav li a:hover {
     text-decoration: none;
     color: #fff;
