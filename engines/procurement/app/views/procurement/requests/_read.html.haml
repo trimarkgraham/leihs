@@ -1,7 +1,7 @@
 .row
   .col-sm-12
     .row
-      .col-sm-2
+      .col-sm-3
         .form-group
           %label
             = succeed ':' do
@@ -26,17 +26,10 @@
         .form-group
           %label
             = succeed ':' do
-              = _('Status')
-          %br
-          = render partial: 'status', locals: {request: request}
-      .col-sm-2
-        .form-group
-          %label
-            = succeed ':' do
               = _('Receiver')
           %br
           = request.receiver
-      .col-sm-2
+      .col-sm-3
         .form-group
           %label
             = succeed ':' do
@@ -45,33 +38,7 @@
           = request.motivation
 
     .row
-      .col-sm-2
-      .col-sm-2
-        .form-group
-          %label
-            = succeed ':' do
-              = _('Approved quantity')
-          %br
-          = request.approved_quantity
-      .col-sm-2
-      .col-sm-2
-      .col-sm-2
-        .form-group
-          %label
-            = succeed ':' do
-              = _('Organization unit')
-          %br
-          = request.organization_unit
-      .col-sm-2
-        .form-group
-          %label
-            = succeed ':' do
-              = _('Inspection comment')
-          %br
-          = request.inspection_comment
-
-    .row
-      .col-sm-2
+      .col-sm-3
         .form-group
           %label
             = succeed ':' do
@@ -82,9 +49,9 @@
         .form-group
           %label
             = succeed ':' do
-              = _('Order quantity')
+              = _('Approved quantity')
           %br
-          = request.order_quantity
+          = request.approved_quantity
       .col-sm-2
         .form-group
           %label
@@ -97,9 +64,39 @@
         .form-group
           %label
             = succeed ':' do
+              = _('Organization unit')
+          %br
+          = request.organization_unit
+      .col-sm-3
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Inspection comment')
+          %br
+          = request.inspection_comment
+
+    .row
+      .col-sm-3
+        .form-group
+          %label
+            = succeed ':' do
               = _('Priority')
           %br
           .label.label-default= _(request.priority)
+      .col-sm-2
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Order quantity')
+          %br
+          = request.order_quantity
+      .col-sm-2
+        .form-group
+          %label
+            = succeed ':' do
+              = _('Status')
+          %br
+          = render partial: 'status', locals: {request: request}
       .col-sm-2
         .form-group
           %label
@@ -111,4 +108,4 @@
               %li
                 %a{href: attachment.file.url, target: '_blank'}
                   = attachment.file.original_filename
-      .col-sm-2
+      .col-sm-3

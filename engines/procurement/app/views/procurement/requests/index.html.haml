@@ -25,7 +25,7 @@
               .col-sm-12
                 - i += 1
                 .row
-                  .col-sm-2
+                  .col-sm-3
                     .form-group
                       %label
                         = succeed ':' do
@@ -52,14 +52,13 @@
                       = template.price
                       -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
                   .col-sm-2
-                  .col-sm-2
                     .form-group
                       %label
                         = succeed ':' do
                           = _('Receiver')
                       %br
                       %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
-                  .col-sm-2
+                  .col-sm-3
                     .form-group
                       %label
                         = succeed ':' do
@@ -67,7 +66,16 @@
                       %br
                       %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
                 .row
-                  .col-sm-2
+                  .col-sm-3
+                    .form-group
+                      %label
+                        = succeed ':' do
+                          = _('Supplier')
+                      %br
+                      %input{type: 'hidden', name: "requests[new_#{i}][supplier]", value: template.supplier}
+                      = template.supplier
+                  -#%select.form-control{name: "requests[new_#{i}][supplier]"}
+                        %option{value: template.supplier, selected: true}= template.supplier
                   .col-sm-2
                     - if @group.inspectable_by?(current_user)
                       .form-group
@@ -76,42 +84,6 @@
                             = _('Approved quantity')
                         %br
                         %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
-                  .col-sm-2
-                  .col-sm-2
-                  .col-sm-2
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Organization unit')
-                      %br
-                      %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
-                  .col-sm-2
-                    - if @group.inspectable_by?(current_user)
-                      .form-group
-                        %label
-                          = succeed ':' do
-                            = _('Inspection comment')
-                        %br
-                        %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
-                .row
-                  .col-sm-2
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Supplier')
-                      %br
-                      %input{type: 'hidden', name: "requests[new_#{i}][supplier]", value: template.supplier}
-                      = template.supplier
-                      -#%select.form-control{name: "requests[new_#{i}][supplier]"}
-                        %option{value: template.supplier, selected: true}= template.supplier
-                  .col-sm-2
-                    - if @group.inspectable_by?(current_user)
-                      .form-group
-                        %label
-                          = succeed ':' do
-                            = _('Order quantity')
-                        %br
-                        %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
                   .col-sm-2
                     .form-group
                       %label
@@ -123,6 +95,22 @@
                     .form-group
                       %label
                         = succeed ':' do
+                          = _('Organization unit')
+                      %br
+                      %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
+                  .col-sm-3
+                    - if @group.inspectable_by?(current_user)
+                      .form-group
+                        %label
+                          = succeed ':' do
+                            = _('Inspection comment')
+                        %br
+                        %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+                .row
+                  .col-sm-3
+                    .form-group
+                      %label
+                        = succeed ':' do
                           = _('Priority')
                       %br
                       %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
@@ -130,19 +118,28 @@
                       %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
                       .label.label-default= _('normal')
                   .col-sm-2
+                    - if @group.inspectable_by?(current_user)
+                      .form-group
+                        %label
+                          = succeed ':' do
+                            = _('Order quantity')
+                        %br
+                        %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+                  .col-sm-2
+                  .col-sm-2
                     .form-group
                       %label
                         = succeed ':' do
                           = _('Attachments')
                       %br
                       %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
-                  .col-sm-2
+                  .col-sm-3
 
         .row#new_request
           .col-sm-12
             - i += 1
             .row
-              .col-sm-2
+              .col-sm-3
                 .form-group
                   %label
                     = succeed ':' do
@@ -164,14 +161,13 @@
                   %br
                   %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
               .col-sm-2
-              .col-sm-2
                 .form-group
                   %label
                     = succeed ':' do
                       = _('Receiver')
                   %br
                   %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Receiver')}
-              .col-sm-2
+              .col-sm-3
                 .form-group
                   %label
                     = succeed ':' do
@@ -179,34 +175,7 @@
                   %br
                   %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
             .row
-              .col-sm-2
-              .col-sm-2
-                - if @group.inspectable_by?(current_user)
-                  .form-group
-                    %label
-                      = succeed ':' do
-                        = _('Approved quantity')
-                    %br
-                    %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
-              .col-sm-2
-              .col-sm-2
-              .col-sm-2
-                .form-group
-                  %label
-                    = succeed ':' do
-                      = _('Organization unit')
-                  %br
-                  %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
-              .col-sm-2
-                - if @group.inspectable_by?(current_user)
-                  .form-group
-                    %label
-                      = succeed ':' do
-                        = _('Inspection comment')
-                    %br
-                    %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
-            .row
-              .col-sm-2
+              .col-sm-3
                 .form-group
                   %label
                     = succeed ':' do
@@ -218,9 +187,9 @@
                   .form-group
                     %label
                       = succeed ':' do
-                        = _('Order quantity')
+                        = _('Approved quantity')
                     %br
-                    %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+                    %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
               .col-sm-2
                 .form-group
                   %label
@@ -232,6 +201,22 @@
                 .form-group
                   %label
                     = succeed ':' do
+                      = _('Organization unit')
+                  %br
+                  %input.form-control{name: "requests[new_#{i}][organization_unit]", placeholder: _('Organization unit')}
+              .col-sm-3
+                - if @group.inspectable_by?(current_user)
+                  .form-group
+                    %label
+                      = succeed ':' do
+                        = _('Inspection comment')
+                    %br
+                    %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+            .row
+              .col-sm-3
+                .form-group
+                  %label
+                    = succeed ':' do
                       = _('Priority')
                   %br
                   %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
@@ -239,13 +224,22 @@
                   %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
                   .label.label-default= _('normal')
               .col-sm-2
+                - if @group.inspectable_by?(current_user)
+                  .form-group
+                    %label
+                      = succeed ':' do
+                        = _('Order quantity')
+                    %br
+                    %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+              .col-sm-2
+              .col-sm-2
                 .form-group
                   %label
                     = succeed ':' do
                       = _('Attachments')
                   %br
                   %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
-              .col-sm-2
+              .col-sm-3
 
     .panel-footer
       - if is_editable
