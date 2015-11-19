@@ -77,8 +77,8 @@ module Procurement
             ("%s %s" % [_('Total'), _('incl. VAT')]) => request.total_price(current_user),
             _('Status') => request.status(current_user),
             _('Priority') => request.priority,
-            _('Receiver') => request.receiver,
-            _('Organization unit') => request.organization_unit,
+            _('Name of receiver') => request.receiver,
+            _('Department') => request.department,
             _('Motivation') => request.motivation,
             _('Inspection comment') => (show_all ? request.inspection_comment : nil)
         }

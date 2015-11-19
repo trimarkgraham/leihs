@@ -8,9 +8,18 @@
       - if @user
         - if @group.email
           %a{href: "mailto:#{@group.email}"}
-            = render partial: 'procurement/groups/inspectors', locals: {group: @group}
+            %b
+              = succeed ':' do
+                %i.fa.fa-envelope
+                = _('Inspectors')
         - else
-          = render partial: 'procurement/groups/inspectors', locals: {group: @group}
+          %b
+            = succeed ':' do
+              = _('Inspectors')
+        - @group.inspectors.each do |inspector|
+          %div{style: 'padding-left: 1em'}
+            %i.fa.fa-user-md
+            = inspector
 
   .col-xs-2
     - if @user
@@ -37,7 +46,7 @@
             = succeed '%' do
               = percentage
 
-      .label.label-success.budget_limit
+      .label.label-info.budget_limit
         = money_without_cents_and_with_symbol budget_limit_amount
       %br
 

@@ -9,12 +9,12 @@ namespace :procurement do
     [1973, 5824, 601].each do |id|
       Procurement::Access.admins.create user_id: id
     end
-    [1973, 5824].each do |id|
+    [1973, 5824, 12, 350].each do |id|
       Procurement::Access.requesters.create user_id: id
     end
 
-    {'Werkstatt-Technik' => [12],
-     'Produktionstechnik' => [3881],
+    {'Werkstatt-Technik' => [12, 5824],
+     'Produktionstechnik' => [3881, 5824],
      'AV' => [350, 5824],
      'Musikinstrumente' => [3848],
      'Facility Management' => [114],
@@ -22,8 +22,22 @@ namespace :procurement do
       Procurement::Group.create name: name, inspector_ids: ids
     end
 
+    {'Werkstatt-Technik' => 'adrian.brazerol@zhdk.ch',
+     'AV' => 'mike.honegger@zhdk.ch'}.each_pair do |name, email|
+      Procurement::Group.find_by(name: name).update_attributes email: email
+    end
+
     Procurement::BudgetPeriod.create name: '2017', inspection_start_date: '2016-10-01', end_date: '2016-11-01'
     Procurement::BudgetPeriod.create name: '2018', inspection_start_date: '2017-10-01', end_date: '2017-11-01'
+
+    {'Werkstatt-Technik' => {'2017' => 500000},
+     'AV' => {'2017' => 600000}}.each_pair do |name, budgets|
+      group = Procurement::Group.find_by name: name
+      budgets.each_pair do |budget_name, amount|
+        budget_period = Procurement::BudgetPeriod.find_by name: budget_name
+        group.budget_limits.create budget_period: budget_period, amount: amount
+      end
+    end
 
     o1 = Procurement::Organization.create name: 'Services', shortname: nil, parent_id: nil
     Procurement::Organization.create name: 'ITZ', shortname: nil, parent: o1
@@ -37,7 +51,7 @@ namespace :procurement do
                                 supplier: 'Macshop',
                                 priority: 'normal',
                                 receiver: 'Becchio Silvan',
-                                organization_unit: 'Finanzen',
+                                department: 'Finanzen',
                                 motivation: 'meine Motivation'
 
     Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
@@ -48,7 +62,7 @@ namespace :procurement do
                                 price: 550,
                                 priority: 'normal',
                                 receiver: 'Becchio Silvan',
-                                organization_unit: 'Finanzen',
+                                department: 'Finanzen',
                                 motivation: 'gleiche motivaton'
 
     Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
@@ -92,7 +106,7 @@ namespace :procurement do
                                     motivation: Faker::Lorem.sentence,
                                     inspection_comment: approved_quantity ? Faker::Lorem.sentence : nil,
                                     receiver: Faker::Lorem.sentence,
-                                    organization_unit: Faker::Lorem.sentence
+                                    department: Faker::Lorem.sentence
       end
 
       {'Facility Management' => [user_id],

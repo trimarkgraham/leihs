@@ -14,19 +14,20 @@
             = succeed ':' do
               = _('Requested quantity')
           %br
-          = request.requested_quantity
+          .label.label-primary
+            = request.requested_quantity
       .col-sm-2
         .form-group
           %label
             = succeed ':' do
-              = "%s %s %s" % [_('Price'), MoneyRails.default_currency, _('incl. VAT')]
+              = "%s %s %s" % [_('Item price'), MoneyRails.default_currency, _('incl. VAT')]
           %br
           = money_without_cents_and_with_symbol request.price
       .col-sm-2
         .form-group
           %label
             = succeed ':' do
-              = _('Receiver')
+              = _('Name of receiver')
           %br
           = request.receiver
       .col-sm-3
@@ -51,7 +52,11 @@
             = succeed ':' do
               = _('Approved quantity')
           %br
-          = request.approved_quantity
+          - if request.approved_quantity
+            :ruby
+              status, label_class = status_label(request)
+            .label{class: label_class}
+              = request.approved_quantity
       .col-sm-2
         .form-group
           %label
@@ -64,9 +69,9 @@
         .form-group
           %label
             = succeed ':' do
-              = _('Organization unit')
+              = _('Department')
           %br
-          = request.organization_unit
+          = request.department
       .col-sm-3
         .form-group
           %label
@@ -89,7 +94,9 @@
             = succeed ':' do
               = _('Order quantity')
           %br
-          = request.order_quantity
+          - if request.approved_quantity and request.order_quantity
+            .label{class: label_class}
+              = request.order_quantity
       .col-sm-2
         .form-group
           %label

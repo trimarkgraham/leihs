@@ -7,5 +7,27 @@ module Procurement
       number_to_currency(value.to_i, unit: "#{value.currency} ", separator: ".", delimiter: "'", precision: 0)
     end
 
+    def label_class(key)
+      case key
+        when :new
+          'label-info'
+        when :in_inspection
+          'label-primary'
+        when :denied
+          'label-danger'
+        when :partially_approved
+          'label-warning'
+        when :approved
+          'label-success'
+        else
+          raise
+      end
+    end
+
+    def status_label(request)
+      status = request.status(current_user)
+      [status, label_class(status)]
+    end
+
   end
 end

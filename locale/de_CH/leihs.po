@@ -3035,14 +3035,14 @@ msgstr "Kommentar des Prüfers"
 msgid "Priority"
 msgstr "Priorität"
 
-msgid "Receiver"
-msgstr "Empfänger"
+msgid "Name of receiver"
+msgstr "Name des Empfängers"
 
 msgid "Organizations"
 msgstr "Organisationen"
 
-msgid "Organization unit"
-msgstr "Organisationseinheit"
+msgid "Department"
+msgstr "Abteilung"
 
 msgid "Attachment"
 msgstr "Anhang"
@@ -3061,3 +3061,6 @@ msgstr "Teilweise bewilligt"
 
 msgid "incl. VAT"
 msgstr "inkl. MWsT"
+
+msgid "Item price"
+msgstr "Stückpreis"

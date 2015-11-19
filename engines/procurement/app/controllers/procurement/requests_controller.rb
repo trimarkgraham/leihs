@@ -57,7 +57,7 @@ module Procurement
     end
 
     def create
-      keys = [:model_description, :price, :supplier, :motivation, :receiver, :organization_unit, attachments_attributes: [:file]]
+      keys = [:model_description, :price, :supplier, :motivation, :receiver, :department, attachments_attributes: [:file]]
       keys += [:requested_quantity, :priority] if @user == current_user
       keys += [:approved_quantity, :order_quantity, :inspection_comment] if @group.inspectable_by?(current_user)
 
@@ -66,13 +66,13 @@ module Procurement
 
         if param[:id]
           r = Request.find(param[:id])
-          if permitted.values.all?(&:blank?) or (permitted[:requested_quantity] and permitted[:requested_quantity].to_i.zero?)
+          if permitted.values.all?(&:blank?) or (param[:requested_quantity] and param[:requested_quantity].to_i.zero?)
             r.destroy
           else
             r.update_attributes(permitted)
           end
         else
-          next if permitted.values.all?(&:blank?) or (permitted[:requested_quantity] and permitted[:requested_quantity].to_i.zero?)
+          next if permitted.values.all?(&:blank?) or (param[:requested_quantity] and param[:requested_quantity].to_i.zero?)
           r = @group.requests.create(permitted) do |x|
             x.user = @user
             x.budget_period = @budget_period

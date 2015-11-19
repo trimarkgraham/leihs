@@ -6,17 +6,4 @@
 
 - counts.each_pair do |k,v|
   - next if v.zero?
-  :ruby
-    label_class = case k
-                    when :new
-                      'label-info'
-                    when :in_inspection
-                      'label-primary'
-                    when :denied
-                      'label-danger'
-                    when :partially_approved
-                      'label-warning'
-                    when :approved
-                      'label-success'
-                    end
-  .label{class: label_class}= v
+  .label{class: label_class(k)}= v

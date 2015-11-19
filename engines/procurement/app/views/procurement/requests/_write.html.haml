@@ -22,21 +22,22 @@
           - if request.user_id == current_user.id
             %input.form-control{name: "requests[#{request.id}][requested_quantity]", type: :number, min: 0, value: request.requested_quantity, placeholder: _('Requested quantity'), autocomplete: :off}
           - else
-            = request.requested_quantity
+            .label.label-primary
+              = request.requested_quantity
       .col-sm-2
         .form-group
           %label
             = succeed ':' do
-              = "%s %s %s" % [_('Price'), MoneyRails.default_currency, _('incl. VAT')]
+              = "%s %s %s" % [_('Item price'), MoneyRails.default_currency, _('incl. VAT')]
           %br
-          %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
+          %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
       .col-sm-2
         .form-group
           %label
             = succeed ':' do
-              = _('Receiver')
+              = _('Name of receiver')
           %br
-          %input.form-control{name: "requests[#{request.id}][receiver]", value: request.receiver, placeholder: _('Receiver')}
+          %input.form-control{name: "requests[#{request.id}][receiver]", value: request.receiver, placeholder: _('Name of receiver')}
       .col-sm-3
         .form-group
           %label
@@ -74,9 +75,9 @@
         .form-group
           %label
             = succeed ':' do
-              = _('Organization unit')
+              = _('Department')
           %br
-          %input.form-control{name: "requests[#{request.id}][organization_unit]", value: request.organization_unit, placeholder: _('Organization unit'), autocomplete: :off}
+          %input.form-control{name: "requests[#{request.id}][department]", value: request.department, placeholder: _('Department'), autocomplete: :off}
       .col-sm-3
         - if request.group.inspectable_by? current_user
           .form-group

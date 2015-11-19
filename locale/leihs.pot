@@ -2944,13 +2944,13 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-msgid "Receiver"
+msgid "Name of receiver"
 msgstr ""
 
 msgid "Organizations"
 msgstr ""
 
-msgid "Organization unit"
+msgid "Department"
 msgstr ""
 
 msgid "Attachment"
@@ -2969,4 +2969,7 @@ msgid "Partially approved"
 msgstr ""
 
 msgid "incl. VAT"
+msgstr ""
+
+msgid "Item price"
 msgstr ""
