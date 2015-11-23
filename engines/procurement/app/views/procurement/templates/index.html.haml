@@ -32,13 +32,11 @@
                 %select.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][group_id]"}
                   %option{value: template.group_id, selected: true}= template.group
               %td
-                %select.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]"}
-                  %option{value: template.model_description, selected: true}= template.model_description
+                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]", placeholder: _('Model name'), value: template.model_description}
               %td
-                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, value: template.price, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
+                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, value: template.price, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
               %td
-                %select.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier]"}
-                  %option{value: template.supplier, selected: true}= template.supplier
+                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier]", placeholder: _('Supplier'), value: template.supplier}
 
           %tr
             -#%td
@@ -47,11 +45,11 @@
                 - Procurement::Group.all.each do |group|
                   %option{value: group.id}= group
             %td
-              %select.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]"}
+              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]", placeholder: _('Model name')}
             %td
-              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
+              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :off}
             %td
-              %select.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier]"}
+              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier]", placeholder: _('Supplier')}
             %td
         %tfoot
           %tr
@@ -86,39 +84,34 @@
         errors += '<li>' + error + '</li>'
       $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
 
-    #$("select[name*='[templates_attributes][][group_id]']").select2
-    #  minimumInputLength: 0
-    #  allowClear: true
-    #  placeholder: '#{_("Group")}'
+    $("input[name*='[templates_attributes][][model_description]']").autocomplete
+      source: ( request, response )->
+        $.ajax
+          url: "/procurement/models.json"
+          dataType: "json"
+          data:
+            search_term: request.term
+          success: ( data )->
+            response( data )
+      select: ( event, ui )->
+        $(this).val( ui.item.name )
+        false
+    .each ->
+      $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
+        $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )
 
-    $("select[name*='[templates_attributes][][model_description]']").select2
-      minimumInputLength: 3
-      #allowClear: true
-      placeholder: '#{_("Description")}'
-      ajax:
-        url: '/procurement/models.json'
-        dataType: 'json'
-        delay: 250
-        data: (params) -> search_term: params.term
-        processResults: (data) -> results: $.map data, (item) -> {id: item.name, text: item.name }
-        cache: true
-      escapeMarkup: (markup) -> markup
-      templateResult: (result) -> result.text
-      templateSelection: (result) -> result.text
-      tags: true
-
-    $("select[name*='[templates_attributes][][supplier]']").select2
-      minimumInputLength: 3
-      #allowClear: true
-      placeholder: '#{_("Supplier")}'
-      ajax:
-        url: '/procurement/suppliers.json'
-        dataType: 'json'
-        delay: 250
-        data: (params) -> search_term: params.term
-        processResults: (data) -> results: $.map data, (item) -> {id: item.name, text: item.name }
-        cache: true
-      escapeMarkup: (markup) -> markup
-      templateResult: (result) -> result.text
-      templateSelection: (result) -> result.text
-      tags: true
+    $("input[name*='[templates_attributes][][supplier]']").autocomplete
+      source: ( request, response )->
+        $.ajax
+          url: '/procurement/suppliers.json'
+          dataType: "json"
+          data:
+            search_term: request.term
+          success: ( data )->
+            response( data )
+      select: ( event, ui )->
+        $(this).val( ui.item.name )
+        false
+    .each ->
+      $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
+        $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )

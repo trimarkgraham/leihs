@@ -11,8 +11,7 @@
           - if @group.template_categories.joins(:templates).where(procurement_templates: {model_description: request.model_description}).exists?
             = request.model_description
           - else
-            %select.form-control{name: "requests[#{request.id}][model_description]"}
-              %option{value: request.model_description, selected: true}= request.model_description
+            %input.form-control{name: "requests[#{request.id}][model_description]", placeholder: _('Model name'), value: request.model_description}
       .col-sm-2
         .form-group
           %label
@@ -53,8 +52,7 @@
             = succeed ':' do
               = _('Supplier')
           %br
-          %select.form-control{name: "requests[#{request.id}][supplier]"}
-            %option{value: request.supplier, selected: true}= request.supplier
+          %input.form-control{name: "requests[#{request.id}][supplier]", placeholder: _('Supplier'), value: request.supplier}
       .col-sm-2
         - if request.group.inspectable_by? current_user
           .form-group

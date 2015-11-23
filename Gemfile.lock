@@ -37,7 +37,6 @@ PATH
       rails-assets-bootstrap (~> 3.3)
       rails-assets-jquery (~> 1.5)
       rails-assets-jquery-ujs (~> 1.0)
-      rails-assets-select2 (~> 4.0)
       remotipart (~> 1.2)
 
 GEM
@@ -83,7 +82,7 @@ GEM
     acts-as-dag (4.0.0)
       activemodel
       activerecord (~> 4.0, >= 4.0.0)
-    acts_as_tree (2.2.0)
+    acts_as_tree (2.3.0)
       activerecord (>= 3.0.0)
     adamantium (0.2.0)
       ice_nine (~> 0.11.0)

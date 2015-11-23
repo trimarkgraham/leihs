@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-assets-jquery-ujs', '~> 1.0'
   s.add_dependency 'rails-assets-bootstrap', '~> 3.3'
   # s.add_dependency 'font-awesome-sass', '~> 4.4'
-  s.add_dependency 'rails-assets-select2', '~> 4.0'
   s.add_dependency 'money-rails', '~> 1.4'
   s.add_dependency 'acts_as_tree', '~> 2.2'
   s.add_dependency 'paperclip', '~> 4.3'
