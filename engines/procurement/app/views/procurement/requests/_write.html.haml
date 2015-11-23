@@ -110,9 +110,9 @@
         .form-group
           %label
             = succeed ':' do
-              = _('Status')
+              = _('State')
           %br
-          = render partial: 'status', locals: {request: request}
+          = render partial: 'state', locals: {request: request}
       .col-sm-2
         .form-group
           %label

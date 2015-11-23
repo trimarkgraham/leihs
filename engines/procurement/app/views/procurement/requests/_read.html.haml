@@ -54,7 +54,7 @@
           %br
           - if request.approved_quantity
             :ruby
-              status, label_class = status_label(request)
+              state, label_class = state_label(request)
             .label{class: label_class}
               = request.approved_quantity
       .col-sm-2
@@ -101,9 +101,9 @@
         .form-group
           %label
             = succeed ':' do
-              = _('Status')
+              = _('State')
           %br
-          = render partial: 'status', locals: {request: request}
+          = render partial: 'state', locals: {request: request}
       .col-sm-2
         .form-group
           %label

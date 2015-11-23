@@ -24,9 +24,9 @@ module Procurement
       end
     end
 
-    def status_label(request)
-      status = request.status(current_user)
-      [status, label_class(status)]
+    def state_label(request)
+      state = request.state(current_user)
+      [state, label_class(state)]
     end
 
   end

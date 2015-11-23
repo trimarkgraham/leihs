@@ -27,7 +27,7 @@ module Procurement
       inspection_start_date <= Date.today and Date.today <= end_date
     end
 
-    def status_counts(args)
+    def state_counts(args)
       requests = self.requests
       requests = requests.where(user_id: args[:user]) if args[:user]
       requests = requests.where(group_id: args[:group]) if args[:group]

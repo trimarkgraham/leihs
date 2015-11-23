@@ -2,7 +2,7 @@
   budget_period ||= Procurement::BudgetPeriod.current
   user ||= nil
   group ||= nil
-  counts = budget_period.status_counts(user: user, group: group, current_user: current_user)
+  counts = budget_period.state_counts(user: user, group: group, current_user: current_user)
 
 - counts.each_pair do |k,v|
   - next if v.zero?

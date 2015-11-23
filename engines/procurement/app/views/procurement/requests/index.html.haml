@@ -346,6 +346,7 @@
     $('input[data-toggle="tooltip"]').on 'focus', -> $(this).tooltip('toggle')
 
     $("input[name*='[model_description]']").autocomplete
+      minLength: 3
       source: ( request, response )->
         $.ajax
           url: "/procurement/models.json"

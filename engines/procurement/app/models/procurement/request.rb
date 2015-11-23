@@ -25,7 +25,7 @@ module Procurement
         (budget_period.in_inspection_phase? and group.inspectable_by?(user))
     end
 
-    def status(user)
+    def state(user)
       if budget_period.past? or group.inspectable_or_readable_by?(user)
         if approved_quantity.nil?
           :new
@@ -75,7 +75,7 @@ module Procurement
             _('Order quantity') => (show_all ? request.order_quantity : nil),
             ("%s %s" % [_('Price'), _('incl. VAT')]) => request.price,
             ("%s %s" % [_('Total'), _('incl. VAT')]) => request.total_price(current_user),
-            _('Status') => request.status(current_user),
+            _('State') => request.state(current_user),
             _('Priority') => request.priority,
             _('Name of receiver') => request.receiver,
             _('Department') => request.department,
