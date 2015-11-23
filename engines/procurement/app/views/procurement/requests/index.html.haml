@@ -312,8 +312,9 @@
 
     $("input[name*='[approved_quantity]']").on 'change', ->
       target_el = $(this).closest('.col-sm-12').find("input[name*='[order_quantity]']")
-      if (not target_el.val()) or target_el.val() > $(this).val()
-        target_el.val($(this).val())
+      if (not target_el.val()) or Number(target_el.val()) > Number($(this).val())
+        new_val = $(this).val()
+        target_el.attr('max', new_val).val(new_val)
 
     $("input[name*='_quantity]'], input[name*='[price]']").on 'change', ->
       order_quantity = $(this).closest('.col-sm-12').find("input[name*='[order_quantity]']").val()

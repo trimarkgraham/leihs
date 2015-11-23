@@ -105,7 +105,7 @@
               = succeed ':' do
                 = _('Order quantity')
             %br
-            %input.form-control{name: "requests[#{request.id}][order_quantity]", type: :number, min: 0, value: request.order_quantity, placeholder: _('Order quantity'), autocomplete: :off}
+            %input.form-control{name: "requests[#{request.id}][order_quantity]", type: :number, min: 0, max: (request.approved_quantity || 0), value: request.order_quantity, placeholder: _('Order quantity'), autocomplete: :off}
       .col-sm-2
         .form-group
           %label

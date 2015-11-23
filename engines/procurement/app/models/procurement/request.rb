@@ -12,6 +12,7 @@ module Procurement
 
     before_validation do
       self.order_quantity ||= approved_quantity
+      self.approved_quantity ||= order_quantity
     end
 
     validates_presence_of :user, :model_description, :requested_quantity
