@@ -1,19 +1,21 @@
 %h1= _('Users')
 
 = form_tag users_path do
-  .panel.panel-default
-    .panel-heading
-      %i.fa.fa-user-md
-      = _('Admins')
-    .panel-body
-      %select.form-control{name: 'admin_ids[]', multiple: true}
-
-  .panel.panel-default
-    .panel-heading
-      %i.fa.fa-user
-      = _('Requesters')
-    .panel-body
-      %select.form-control{name: 'requester_ids[]', multiple: true}
+  .row
+    .col-xs-6
+      .panel.panel-default
+        .panel-heading
+          %i.fa.fa-user-md
+          = _('Admins')
+        .panel-body
+          %input{name: 'admin_ids', multiple: true, placeholder: _("Name of the admins")}
+    .col-xs-6
+      .panel.panel-default
+        .panel-heading
+          %i.fa.fa-user
+          = _('Requesters')
+        .panel-body
+          %input{name: 'requester_ids', multiple: true, placeholder: _("Name of the requesters"), autocomplete: :off}
 
   .text-right
     %button.btn.btn-success{type: :submit}
@@ -23,34 +25,63 @@
 
 :coffeescript
   $(document).ready ->
-    element1 = $("select[name='requester_ids[]']").select2
-      minimumInputLength: 3
-      placeholder: '#{_("Name of the requesters")}'
-      ajax:
-        url: '/procurement/users.json'
-        dataType: 'json'
-        delay: 250
-        data: (params) -> search_term: params.term
-        processResults: (data) -> results: data
-        cache: true
-      escapeMarkup: (markup) -> markup
-      templateResult: (result) ->
-        if result.loading
-          return result.text
-        result.firstname + ' ' + result.lastname
-      templateSelection: (result) ->
-        if result.firstname and result.lastname
-          result.firstname + ' ' + result.lastname
-        else
-          result.text
+    $("input[name='admin_ids']").tokenInput '/procurement/users.json',
+      minChars: 3
+      queryParam: 'search_term'
+      propertyToSearch: "lastname"
+      resultsFormatter: (item)->
+        "<li>" + item.firstname + " " + item.lastname + "</li>"
+      tokenFormatter: (item)->
+        "<li>" + item.firstname + " " + item.lastname + "</li>"
+      prePopulate: #{@admins.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}
+      preventDuplicates: true
+
+    $("input[name='requester_ids']").tokenInput '/procurement/users.json',
+      minChars: 3
+      queryParam: 'search_term'
+      propertyToSearch: "lastname"
+      resultsFormatter: (item)->
+        "<li>" + item.firstname + " " + item.lastname + "</li>"
+      tokenFormatter: (item)->
+        "<li>" + item.firstname + " " + item.lastname + "</li>"
+      prePopulate: #{@requesters.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}
+      preventDuplicates: true
+
+
+-#:coffeescript
+  $(document).ready ->
+    $("input[name='requester_ids[]']").autocomplete
+      minLength: 3
+      source: ( request, response )->
+        $.ajax
+          url: '/procurement/users.json'
+          dataType: 'json'
+          data:
+            search_term: request.term
+          success: ( data )->
+            #response( data )
+            response($.map data, (item)->
+              {label: item.firstname + ' ' + item.lastname, value: item.id})
+      select: ( event, ui )->
+        terms = this.value.split( /,\s*/ );
+        terms.pop();
+        #terms.push( ui.item.firstname + ' ' + ui.item.lastname );
+        terms.push( ui.item.label );
+        terms.push( "" );
+        this.value = terms.join( ", " );
+        false
+    .each ->
+      $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
+        $( "<li>" ).append( "<a>" + item.firstname + ' ' + item.lastname + "</a>" ).appendTo( ul )
+
+-#:coffeescript
     #{@requesters.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
       option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
       element1.append(option)
     element1.trigger('change')
 
-    element1 = $("select[name='admin_ids[]']").select2
-      minimumInputLength: 3
-      placeholder: '#{_("Name of the admins")}'
+    element1 = $("input[name='admin_ids[]']").autocomplete
+      minLength: 3
       ajax:
         url: '/procurement/users.json'
         dataType: 'json'

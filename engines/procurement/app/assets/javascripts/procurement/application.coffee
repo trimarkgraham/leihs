@@ -4,6 +4,7 @@
 #= require jquery.remotipart
 #= require bootstrap
 #= require accounting.js
+#= require jquery-tokeninput
 #
 #= require_self
 

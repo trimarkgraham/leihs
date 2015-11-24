@@ -36,6 +36,7 @@ PATH
       rails (~> 4.2.4)
       rails-assets-bootstrap (~> 3.3)
       rails-assets-jquery (~> 1.5)
+      rails-assets-jquery-tokeninput (~> 1.7)
       rails-assets-jquery-ujs (~> 1.0)
       remotipart (~> 1.2)
 
@@ -344,6 +345,8 @@ GEM
     rails-assets-jquery (1.10.2)
     rails-assets-jquery-autosize (1.18.18)
       rails-assets-jquery (>= 1.7)
+    rails-assets-jquery-tokeninput (1.7.0)
+      rails-assets-jquery (>= 1.5)
     rails-assets-jquery-ui (1.11.4)
       rails-assets-jquery (>= 1.6)
     rails-assets-jquery-ujs (1.1.0)

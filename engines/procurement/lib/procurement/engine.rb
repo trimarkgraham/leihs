@@ -1,4 +1,5 @@
 require "rails-assets-bootstrap"
+require "rails-assets-jquery-tokeninput"
 # require "font-awesome-sass"
 require "acts_as_tree"
 require "paperclip"

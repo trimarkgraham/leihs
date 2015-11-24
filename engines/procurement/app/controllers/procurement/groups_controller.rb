@@ -5,6 +5,14 @@ module Procurement
 
     before_action :require_admin_role
 
+    before_action only: [:create, :update] do
+      params[:group][:inspector_ids] = params[:group][:inspector_ids].split(',').map &:to_i
+    end
+
+    before_action only: [:edit, :update, :destroy] do
+      @group = Group.find(params[:id])
+    end
+
     def index
       @groups = Group.all
       respond_to do |format|
@@ -21,10 +29,6 @@ module Procurement
     def create
       Group.create(params[:group])
       redirect_to groups_path
-    end
-
-    before_action only: [:edit, :update, :destroy] do
-      @group = Group.find(params[:id])
     end
 
     def edit

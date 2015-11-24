@@ -14,7 +14,7 @@
         .col-sm-4
           = _('Inspectors')
         .col-sm-8
-          %select.form-control{name: 'group[inspector_ids][]', multiple: true}
+          %input{name: 'group[inspector_ids]', multiple: true, placeholder: _("Name of the inspector"), autocomplete: :off}
       .row
         .col-sm-4
           = _('Email')
@@ -49,27 +49,13 @@
 
 :coffeescript
   $(document).ready ->
-    element = $("select[name='group[inspector_ids][]']").select2
-      minimumInputLength: 3
-      placeholder: '#{_("Name of the inspector")}'
-      ajax:
-        url: '/procurement/users.json'
-        dataType: 'json'
-        delay: 250
-        data: (params) -> search_term: params.term
-        processResults: (data) -> results: data
-        cache: true
-      escapeMarkup: (markup) -> markup
-      templateResult: (result) ->
-        if result.loading
-          return result.text
-        result.firstname + ' ' + result.lastname
-      templateSelection: (result) ->
-        if result.firstname and result.lastname
-          result.firstname + ' ' + result.lastname
-        else
-          result.text
-    #{@group.inspectors.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
-      option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
-      element.append(option)
-    element.trigger('change')
+    $("input[name='group[inspector_ids]']").tokenInput '/procurement/users.json',
+      minChars: 3
+      queryParam: 'search_term'
+      propertyToSearch: "lastname"
+      resultsFormatter: (item)->
+        "<li>" + item.firstname + " " + item.lastname + "</li>"
+      tokenFormatter: (item)->
+        "<li>" + item.firstname + " " + item.lastname + "</li>"
+      prePopulate: #{@group.inspectors.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}
+      preventDuplicates: true
