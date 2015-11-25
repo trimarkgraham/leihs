@@ -39,3 +39,9 @@ header {
   font-size: 0.9em;
   line-height: 2em;
 }
+
+.ui-autocomplete {
+  max-height: 20em;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

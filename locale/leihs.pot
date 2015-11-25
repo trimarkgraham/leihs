@@ -1967,6 +1967,9 @@ msgstr ""
 msgid "Inventory manager"
 msgstr ""
 
+msgid "New"
+msgstr ""
+
 msgid "New Delegation"
 msgstr ""
 

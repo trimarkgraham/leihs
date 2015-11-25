@@ -76,7 +76,7 @@ module Procurement
             _('Order quantity') => (show_all ? request.order_quantity : nil),
             ("%s %s" % [_('Price'), _('incl. VAT')]) => request.price,
             ("%s %s" % [_('Total'), _('incl. VAT')]) => request.total_price(current_user),
-            _('State') => request.state(current_user),
+            _('State') => _(request.state(current_user).to_s.humanize),
             _('Priority') => request.priority,
             _('Name of receiver') => request.receiver,
             _('Department') => request.department,

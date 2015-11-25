@@ -2034,6 +2034,9 @@ msgstr "Ausleihe-Verwalter"
 msgid "Inventory manager"
 msgstr "Inventar-Verwalter"
 
+msgid "New"
+msgstr "Neu"
+
 msgid "New Delegation"
 msgstr "Neue Delegation"
 

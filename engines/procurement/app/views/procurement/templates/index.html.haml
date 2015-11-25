@@ -69,11 +69,49 @@
 
 :coffeescript
   $(document).ready ->
+    initAutocompletes = ->
+      $("input[name*='[templates_attributes][][model_description]']").autocomplete
+        minLength: 3
+        source: ( request, response )->
+          $.ajax
+            url: "/procurement/models.json"
+            dataType: "json"
+            data:
+              search_term: request.term
+            success: ( data )->
+              response( data )
+        select: ( event, ui )->
+          $(this).val( ui.item.name )
+          false
+      .each ->
+        $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
+          $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )
+
+      $("input[name*='[templates_attributes][][supplier]']").autocomplete
+        minLength: 3
+        source: ( request, response )->
+          $.ajax
+            url: '/procurement/suppliers.json'
+            dataType: "json"
+            data:
+              search_term: request.term
+            success: ( data )->
+              response( data )
+        select: ( event, ui )->
+          $(this).val( ui.item.name )
+          false
+      .each ->
+        $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
+          $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )
+
+    do initAutocompletes
+
     $('tfoot').on 'click', '.fa-plus-circle', ->
       target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
       cloned_el = target_el.clone()
       cloned_el.find('input').val('')
       cloned_el.insertAfter(target_el)
+      do initAutocompletes
       false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->
@@ -83,35 +121,3 @@
       for error in xhr.responseJSON
         errors += '<li>' + error + '</li>'
       $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
-
-    $("input[name*='[templates_attributes][][model_description]']").autocomplete
-      source: ( request, response )->
-        $.ajax
-          url: "/procurement/models.json"
-          dataType: "json"
-          data:
-            search_term: request.term
-          success: ( data )->
-            response( data )
-      select: ( event, ui )->
-        $(this).val( ui.item.name )
-        false
-    .each ->
-      $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
-        $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )
-
-    $("input[name*='[templates_attributes][][supplier]']").autocomplete
-      source: ( request, response )->
-        $.ajax
-          url: '/procurement/suppliers.json'
-          dataType: "json"
-          data:
-            search_term: request.term
-          success: ( data )->
-            response( data )
-      select: ( event, ui )->
-        $(this).val( ui.item.name )
-        false
-    .each ->
-      $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
-        $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )

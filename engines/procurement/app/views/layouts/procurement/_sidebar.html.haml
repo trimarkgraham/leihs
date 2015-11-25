@@ -1,5 +1,5 @@
 :ruby
-  opened_menu = if controller.controller_name == "requests"
+  opened_menu = if %w{requests templates}.include? controller.controller_name
       if @user and @user == current_user
         :request
       else

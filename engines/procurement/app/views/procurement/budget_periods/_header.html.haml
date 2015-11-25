@@ -1,10 +1,9 @@
 .row
-  .col-xs-2
+  .col-xs-3
     - if @group
-      .fa.fa-sitemap
-      = _('Group')
-      %br
-      %h4= @group
+      %h4
+        .fa.fa-sitemap
+        = @group
       - if @user
         - if @group.email
           %a{href: "mailto:#{@group.email}"}
@@ -21,17 +20,15 @@
             %i.fa.fa-user-md
             = inspector
 
-  .col-xs-2
+  .col-xs-3
     - if @user
-      .fa.fa-user
-      = _('User')
-      %br
-      %h4= @user
-  .col-xs-6
-    .fa.fa-calendar
-    = _('Budget period')
-    %br
-    %h4= budget_period.name
+      %h4
+        .fa.fa-user
+        = @user
+  .col-xs-4
+    %h4
+      .fa.fa-calendar
+      = budget_period.name
     - if @user and @group
       = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
   .col-xs-2.text-right

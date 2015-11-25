@@ -4,7 +4,7 @@
 
 %h1= _('Requests')
 
-= form_tag nil, remote: true, multipart: true do
+= form_tag nil, remote: true, multipart: true, class: 'form-horizontal' do
   .panel{class: @budget_period.current? ? 'panel-success' : 'panel-default'}
     .panel-heading
       = render partial: 'procurement/budget_periods/header', locals: {budget_period: @budget_period, requests: @requests}
@@ -12,237 +12,203 @@
     .panel-body
       - i = 0
       - @requests.each do |request|
-        - if request.editable?(current_user)
-          = render partial: 'write', locals: {request: request}
-        - else
-          = render partial: 'read', locals: {request: request}
+        = render partial: 'request', locals: {request: request}
 
       - if is_editable
         - already_requested_model_descriptions = @requests.map &:model_description
         - @group.template_categories.each do |template_category|
           - template_category.templates.where.not(model_description: already_requested_model_descriptions).each do |template|
-            .row{data: {template_id: template.id}}
-              .col-sm-12
-                - i += 1
-                .row
-                  .col-sm-3
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Model name')
-                      %br
-                      %input{type: 'hidden', name: "requests[new_#{i}][model_description]", value: template.model_description}
-                      = template.model_description
-                  .col-sm-2
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Requested quantity')
-                      %br
-                      %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
-                  .col-sm-2
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = "%s %s %s" % [_('Item price'), MoneyRails.default_currency, _('incl. VAT')]
-                      %br
-                      %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
-                      = template.price
-                      -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
-                  .col-sm-2
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Name of receiver')
-                      %br
-                      %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver')}
-                  .col-sm-3
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Motivation')
-                      %br
-                      %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
-                .row
-                  .col-sm-3
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Supplier')
-                      %br
-                      %input{type: 'hidden', name: "requests[new_#{i}][supplier]", value: template.supplier}
-                      = template.supplier
-                  .col-sm-2
-                    - if @group.inspectable_by?(current_user)
-                      .form-group
-                        %label
-                          = succeed ':' do
-                            = _('Approved quantity')
-                        %br
-                        %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
-                  .col-sm-2
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = "%s %s %s" % [_('Total'), MoneyRails.default_currency, _('incl. VAT')]
-                      %br
-                      .label.label-primary.total_price
-                  .col-sm-2
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Department')
-                      %br
-                      %input.form-control{name: "requests[new_#{i}][department]", placeholder: _('Department')}
-                  .col-sm-3
-                    - if @group.inspectable_by?(current_user)
-                      .form-group
-                        %label
-                          = succeed ':' do
-                            = _('Inspection comment')
-                        %br
-                        %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
-                .row
-                  .col-sm-3
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Priority')
-                      %br
-                      %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
-                      .label.label-default= _('high')
-                      %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
-                      .label.label-default= _('normal')
-                  .col-sm-2
-                    - if @group.inspectable_by?(current_user)
-                      .form-group
-                        %label
-                          = succeed ':' do
-                            = _('Order quantity')
-                        %br
-                        %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
-                  .col-sm-2
-                  .col-sm-2
-                    .form-group
-                      %label
-                        = succeed ':' do
-                          = _('Attachments')
-                      %br
-                      %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
-                  .col-sm-3
-
-        .row#new_request
-          .col-sm-12
-            - i += 1
-            .row
-              .col-sm-3
+            .row.request{data: {template_id: template.id}}
+              - i += 1
+              .col-xs-6
                 .form-group
-                  %label
+                  %label.col-xs-5.control-label
                     = succeed ':' do
                       = _('Model name')
-                  %br
-                  %input.form-control{name: "requests[new_#{i}][model_description]", placeholder: _('Model name')}
-              .col-sm-2
+                  .col-xs-7
+                    %input{type: 'hidden', name: "requests[new_#{i}][model_description]", value: template.model_description}
+                    = template.model_description
                 .form-group
-                  %label
-                    = succeed ':' do
-                      = _('Requested quantity')
-                  %br
-                  %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
-              .col-sm-2
-                .form-group
-                  %label
-                    = succeed ':' do
-                      = "%s %s %s" % [_('Item price'), MoneyRails.default_currency, _('incl. VAT')]
-                  %br
-                  %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
-              .col-sm-2
-                .form-group
-                  %label
-                    = succeed ':' do
-                      = _('Name of receiver')
-                  %br
-                  %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver')}
-              .col-sm-3
-                .form-group
-                  %label
-                    = succeed ':' do
-                      = _('Motivation')
-                  %br
-                  %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
-            .row
-              .col-sm-3
-                .form-group
-                  %label
+                  %label.col-xs-5.control-label
                     = succeed ':' do
                       = _('Supplier')
-                  %br
-                  %input.form-control{name: "requests[new_#{i}][supplier]", placeholder: _('Supplier')}
-              .col-sm-2
-                - if @group.inspectable_by?(current_user)
-                  .form-group
-                    %label
-                      = succeed ':' do
-                        = _('Approved quantity')
-                    %br
-                    %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
-              .col-sm-2
+                  .col-xs-7
+                    %input{type: 'hidden', name: "requests[new_#{i}][supplier]", value: template.supplier}
+                    = template.supplier
                 .form-group
-                  %label
+                  %label.col-xs-5.control-label
                     = succeed ':' do
-                      = "%s %s %s" % [_('Total'), MoneyRails.default_currency, _('incl. VAT')]
-                  %br
-                  .label.label-primary.total_price
-              .col-sm-2
+                      = _('Name of receiver')
+                  .col-xs-7
+                    %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver')}
                 .form-group
-                  %label
+                  %label.col-xs-5.control-label
                     = succeed ':' do
                       = _('Department')
-                  %br
-                  %input.form-control{name: "requests[new_#{i}][department]", placeholder: _('Department')}
-              .col-sm-3
-                - if @group.inspectable_by?(current_user)
-                  .form-group
-                    %label
-                      = succeed ':' do
-                        = _('Inspection comment')
-                    %br
-                    %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
-            .row
-              .col-sm-3
+                  .col-xs-7
+                    %input.form-control{name: "requests[new_#{i}][department]", placeholder: _('Department')}
                 .form-group
-                  %label
+                  %label.col-xs-5.control-label
+                    = succeed ':' do
+                      = _('Motivation')
+                  .col-xs-7
+                    %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+                .form-group
+                  %label.col-xs-5.control-label
                     = succeed ':' do
                       = _('Priority')
-                  %br
-                  %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
-                  .label.label-default= _('high')
-                  %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
-                  .label.label-default= _('normal')
-              .col-sm-2
-                - if @group.inspectable_by?(current_user)
-                  .form-group
-                    %label
-                      = succeed ':' do
-                        = _('Order quantity')
-                    %br
-                    %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
-              .col-sm-2
-              .col-sm-2
+                  .col-xs-7
+                    %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
+                    .label.label-default= _('high')
+                    %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
+                    .label.label-default= _('normal')
                 .form-group
-                  %label
+                  %label.col-xs-5.control-label
                     = succeed ':' do
                       = _('Attachments')
-                  %br
-                  %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
-              .col-sm-3
+                  .col-xs-7
+                    %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+              .col-xs-6
+                .form-group
+                  %label.col-xs-5.control-label
+                    = "%s %s" % [_('Item price'), MoneyRails.default_currency]
+                    .small=_('incl. VAT')
+                  .col-xs-7
+                    %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
+                    = template.price
+                    -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
+                .form-group
+                  %label.col-xs-5.control-label
+                    = succeed ':' do
+                      = _('Requested quantity')
+                  .col-xs-7
+                    %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
+                - if @group.inspectable_by? current_user
+                  .form-group
+                    %label.col-xs-5.control-label
+                      = succeed ':' do
+                        = _('Approved quantity')
+                    .col-xs-7
+                      %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+                - if @group.inspectable_by? current_user
+                  .form-group
+                    %label.col-xs-5.control-label
+                      = succeed ':' do
+                        = _('Order quantity')
+                    .col-xs-7
+                      %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+                .form-group
+                  %label.col-xs-5.control-label
+                    = "%s %s" % [_('Total'), MoneyRails.default_currency]
+                    .small= _('incl. VAT')
+                  .col-xs-7
+                    .label.label-primary.total_price
+                - if @group.inspectable_by? current_user
+                  .form-group
+                    %label.col-xs-5.control-label
+                      = succeed ':' do
+                        = _('Inspection comment')
+                    .col-xs-7
+                      %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+
+        .row.request#new_request
+          - i += 1
+          .col-xs-6
+            .form-group
+              %label.col-xs-5.control-label
+                = succeed ':' do
+                  = _('Model name')
+              .col-xs-7
+                %input.form-control{name: "requests[new_#{i}][model_description]", placeholder: _('Model name')}
+            .form-group
+              %label.col-xs-5.control-label
+                = succeed ':' do
+                  = _('Supplier')
+              .col-xs-7
+                %input.form-control{name: "requests[new_#{i}][supplier]", placeholder: _('Supplier')}
+            .form-group
+              %label.col-xs-5.control-label
+                = succeed ':' do
+                  = _('Name of receiver')
+              .col-xs-7
+                %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver')}
+            .form-group
+              %label.col-xs-5.control-label
+                = succeed ':' do
+                  = _('Department')
+              .col-xs-7
+                %input.form-control{name: "requests[new_#{i}][department]", placeholder: _('Department')}
+            .form-group
+              %label.col-xs-5.control-label
+                = succeed ':' do
+                  = _('Motivation')
+              .col-xs-7
+                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+            .form-group
+              %label.col-xs-5.control-label
+                = succeed ':' do
+                  = _('Priority')
+              .col-xs-7
+                %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
+                .label.label-default= _('high')
+                %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
+                .label.label-default= _('normal')
+            .form-group
+              %label.col-xs-5.control-label
+                = succeed ':' do
+                  = _('Attachments')
+              .col-xs-7
+                %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+          .col-xs-6
+            .form-group
+              %label.col-xs-5.control-label
+                = "%s %s" % [_('Item price'), MoneyRails.default_currency]
+                .small=_('incl. VAT')
+              .col-xs-7
+                %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
+            .form-group
+              %label.col-xs-5.control-label
+                = succeed ':' do
+                  = _('Requested quantity')
+              .col-xs-7
+                %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
+            - if @group.inspectable_by? current_user
+              .form-group
+                %label.col-xs-5.control-label
+                  = succeed ':' do
+                    = _('Approved quantity')
+                .col-xs-7
+                  %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+            - if @group.inspectable_by? current_user
+              .form-group
+                %label.col-xs-5.control-label
+                  = succeed ':' do
+                    = _('Order quantity')
+                .col-xs-7
+                  %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+            .form-group
+              %label.col-xs-5.control-label
+                = "%s %s" % [_('Total'), MoneyRails.default_currency]
+                .small= _('incl. VAT')
+              .col-xs-7
+                .label.label-primary.total_price
+            - if @group.inspectable_by? current_user
+              .form-group
+                %label.col-xs-5.control-label
+                  = succeed ':' do
+                    = _('Inspection comment')
+                .col-xs-7
+                  %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
 
     .panel-footer
       - if is_editable
         .row
-          .col-sm-1{style: 'font-size: 2em'}
+          .col-xs-12
+            = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
+        .row
+          .col-xs-1{style: 'font-size: 2em'}
             %i.fa.fa-plus-circle
-          .col-sm-9
+          .col-xs-9
             - @group.template_categories.each do |template_category|
               .btn-group.dropup
                 %button.btn.btn-default.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: true, expanded: false}}
@@ -256,7 +222,7 @@
             -#- unless @requests.blank?
               .label.label-primary.big_total_price
                 = money_without_cents_and_with_symbol @requests.sum {|r| r.total_price(current_user) }.sum
-          .col-sm-2.text-right
+          .col-xs-2.text-right
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check
               = _('Save')
@@ -270,10 +236,10 @@
   .panel-body {
     padding-top: 0;
 
-    & > .row:nth-of-type(even) > .col-sm-12 {
+    & > .row.request:nth-of-type(even) {
       background: #f9f9f9;
     }
-    & > .row > .col-sm-12 {
+    & > .row.request {
       border-top: 1px solid #cccccc;
       padding-top: 0.5em;
       padding-bottom: 0.5em;
@@ -311,20 +277,21 @@
       $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
 
     $("input[name*='[approved_quantity]']").on 'change', ->
-      target_el = $(this).closest('.col-sm-12').find("input[name*='[order_quantity]']")
-      if (not target_el.val()) or Number(target_el.val()) > Number($(this).val())
-        new_val = $(this).val()
-        target_el.attr('max', new_val).val(new_val)
+      target_el = $(this).closest('.request').find("input[name*='[order_quantity]']")
+      new_val = $(this).val()
+      target_el.attr('max', new_val)
+      if (not target_el.val()) or Number(target_el.val()) > Number(new_val)
+        target_el.val(new_val)
 
     $("input[name*='_quantity]'], input[name*='[price]']").on 'change', ->
-      order_quantity = $(this).closest('.col-sm-12').find("input[name*='[order_quantity]']").val()
-      approved_quantity = $(this).closest('.col-sm-12').find("input[name*='[approved_quantity]']").val()
-      requested_quantity = $(this).closest('.col-sm-12').find("input[name*='[requested_quantity]']").val()
+      order_quantity = $(this).closest('.request').find("input[name*='[order_quantity]']").val()
+      approved_quantity = $(this).closest('.request').find("input[name*='[approved_quantity]']").val()
+      requested_quantity = $(this).closest('.request').find("input[name*='[requested_quantity]']").val()
       quantity = order_quantity or approved_quantity or requested_quantity
-      price_el = $(this).closest('.col-sm-12').find("input[name*='[price]']")
+      price_el = $(this).closest('.request').find("input[name*='[price]']")
       total = quantity * price_el.val()
       formatted_total = accounting.formatMoney(total, {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
-      $(this).closest('.col-sm-12').find(".total_price").data('total', total).html(formatted_total)
+      $(this).closest('.request').find(".total_price").data('total', total).html(formatted_total)
       big_total = 0
       $(".total_price").each ->
         if Number($(this).data('total'))
@@ -334,9 +301,9 @@
 
     $("input[name*='requested_quantity]']").on 'change', ->
       if $(this).val() == "0"
-        $(this).closest('.col-sm-12').addClass('delete')
+        $(this).closest('.request').addClass('delete')
       else
-        $(this).closest('.col-sm-12').removeClass('delete')
+        $(this).closest('.request').removeClass('delete')
 
     $("a.show_template").on 'click', ->
       $(this).hide()
@@ -364,6 +331,7 @@
         $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )
 
     $("input[name*='[supplier]']").autocomplete
+      minLength: 3
       source: ( request, response )->
         $.ajax
           url: '/procurement/suppliers.json'

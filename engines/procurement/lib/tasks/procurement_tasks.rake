@@ -9,7 +9,7 @@ namespace :procurement do
     [1973, 5824, 601].each do |id|
       Procurement::Access.admins.create user_id: id
     end
-    [1973, 5824, 12, 350].each do |id|
+    [1973, 5824, 12, 350, 3848].each do |id|
       Procurement::Access.requesters.create user_id: id
     end
 
