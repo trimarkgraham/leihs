@@ -57,5 +57,5 @@
         "<li>" + item.firstname + " " + item.lastname + "</li>"
       tokenFormatter: (item)->
         "<li>" + item.firstname + " " + item.lastname + "</li>"
-      prePopulate: #{@group.inspectors.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}
+      prePopulate: #{@group.inspectors.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}
       preventDuplicates: true

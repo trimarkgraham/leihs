@@ -14,7 +14,7 @@
           = group.name
         %td
           %ul
-            - group.inspectors.each do |inspector|
+            - group.inspectors.sort{|a,b| a.firstname <=> b.firstname}.each do |inspector|
               %li= inspector
         %td
           = group.email

@@ -29,5 +29,16 @@ module Procurement
       [state, label_class(state)]
     end
 
+    def header_color(budget_period)
+      if budget_period.current?
+        if budget_period.in_inspection_phase?
+          'warning'
+        else
+          'success'
+        end
+      else
+        'default'
+      end
+    end
   end
 end

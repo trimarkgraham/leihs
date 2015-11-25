@@ -33,7 +33,7 @@
         "<li>" + item.firstname + " " + item.lastname + "</li>"
       tokenFormatter: (item)->
         "<li>" + item.firstname + " " + item.lastname + "</li>"
-      prePopulate: #{@admins.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}
+      prePopulate: #{@admins.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}
       preventDuplicates: true
 
     $("input[name='requester_ids']").tokenInput '/procurement/users.json',
@@ -44,7 +44,7 @@
         "<li>" + item.firstname + " " + item.lastname + "</li>"
       tokenFormatter: (item)->
         "<li>" + item.firstname + " " + item.lastname + "</li>"
-      prePopulate: #{@requesters.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}
+      prePopulate: #{@requesters.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}
       preventDuplicates: true
 
 
@@ -75,7 +75,7 @@
         $( "<li>" ).append( "<a>" + item.firstname + ' ' + item.lastname + "</a>" ).appendTo( ul )
 
 -#:coffeescript
-    #{@requesters.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
+    #{@requesters.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
       option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
       element1.append(option)
     element1.trigger('change')
@@ -99,7 +99,7 @@
           result.firstname + ' ' + result.lastname
         else
           result.text
-    #{@admins.sort{|a,b| a.lastname <=> b.lastname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
+    #{@admins.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
       option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
       element1.append(option)
     element1.trigger('change')

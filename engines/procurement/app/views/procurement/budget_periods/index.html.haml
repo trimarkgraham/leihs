@@ -11,7 +11,7 @@
         %th
     %tbody
       - @budget_periods.each do |budget_period|
-        %tr{class: budget_period.current? ? 'success' : nil}
+        %tr{class: header_color(budget_period)}
           %td
             %input{type: :hidden, name: 'budget_periods[][id]', value: budget_period.id}
             %input.form-control{name: 'budget_periods[][name]', value: budget_period.name, placeholder: _('Name'), autocomplete: :off}

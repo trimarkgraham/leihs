@@ -4,7 +4,7 @@
     -#- next if budget_period.end_date > Date.today and not budget_period.current?
     - requests = @requests.where(budget_period_id: budget_period)
 
-    .panel{class: budget_period.current? ? 'panel-success' : 'panel-default'}
+    .panel{class: "panel-#{header_color(budget_period)}"}
       .panel-heading{role: "tab"}
         %a(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{budget_period.id}")
           = render partial: 'procurement/budget_periods/header', locals: {budget_period: budget_period, requests: requests}
