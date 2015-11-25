@@ -23,7 +23,10 @@ namespace :procurement do
     end
 
     {'Werkstatt-Technik' => 'adrian.brazerol@zhdk.ch',
-     'AV' => 'mike.honegger@zhdk.ch'}.each_pair do |name, email|
+     'AV' => 'mike.honegger@zhdk.ch',
+     'Musikinstrumente' => 'dmu@zhdk.ch',
+     'Facility Management' => 'fm@zhdk.ch',
+     'IT' => 'it@zhdk.ch'}.each_pair do |name, email|
       Procurement::Group.find_by(name: name).update_attributes email: email
     end
 
@@ -31,7 +34,10 @@ namespace :procurement do
     Procurement::BudgetPeriod.create name: '2018', inspection_start_date: '2017-10-01', end_date: '2017-11-01'
 
     {'Werkstatt-Technik' => {'2017' => 500000},
-     'AV' => {'2017' => 600000}}.each_pair do |name, budgets|
+     'AV' => {'2017' => 600000},
+     'Musikinstrumente' => {'2017' => 350000},
+     'Facility Management' => {'2017' => 350000},
+     'IT' => {'2017' => 500000}}.each_pair do |name, budgets|
       group = Procurement::Group.find_by name: name
       budgets.each_pair do |budget_name, amount|
         budget_period = Procurement::BudgetPeriod.find_by name: budget_name
@@ -51,7 +57,7 @@ namespace :procurement do
                                 supplier: 'Macshop',
                                 priority: 'normal',
                                 receiver: 'Becchio Silvan',
-                                department: 'Finanzen',
+                                location: 'Toni-Areal',
                                 motivation: 'meine Motivation'
 
     Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
@@ -62,7 +68,7 @@ namespace :procurement do
                                 price: 550,
                                 priority: 'normal',
                                 receiver: 'Becchio Silvan',
-                                department: 'Finanzen',
+                                location: 'Toni-Areal',
                                 motivation: 'gleiche motivaton'
 
     Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
@@ -106,7 +112,7 @@ namespace :procurement do
                                     motivation: Faker::Lorem.sentence,
                                     inspection_comment: approved_quantity ? Faker::Lorem.sentence : nil,
                                     receiver: Faker::Lorem.sentence,
-                                    department: Faker::Lorem.sentence
+                                    location: Faker::Lorem.sentence
       end
 
       {'Facility Management' => [user_id],

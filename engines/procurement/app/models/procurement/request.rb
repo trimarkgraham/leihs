@@ -79,7 +79,7 @@ module Procurement
             _('State') => _(request.state(current_user).to_s.humanize),
             _('Priority') => request.priority,
             _('Name of receiver') => request.receiver,
-            _('Department') => request.department,
+            _('Location') => request.location,
             _('Motivation') => request.motivation,
             _('Inspection comment') => (show_all ? request.inspection_comment : nil)
         }

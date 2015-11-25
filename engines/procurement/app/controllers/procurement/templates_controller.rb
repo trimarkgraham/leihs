@@ -18,13 +18,13 @@ module Procurement
 
         if param[:id]
           r = @group.template_categories.find(param[:id])
-          # if param.values.all? &:blank?
-          #   r.destroy
-          # else
+          if param[:name].blank? and param[:templates_attributes].flat_map(&:values).all?(&:blank?)
+            r.destroy
+          else
             r.update_attributes(param)
-          # end
+          end
         else
-          next if param[:name].blank?
+          next if param[:name].blank? and param[:templates_attributes].flat_map(&:values).all?(&:blank?)
           # param[:group_id] = params[:group_id]
           r = @group.template_categories.create(param)
         end

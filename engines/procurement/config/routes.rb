@@ -21,10 +21,6 @@ Procurement::Engine.routes.draw do
     end
   end
 
-  resources :models, only: :index
-
-  resources :suppliers, only: :index
-
   resources :groups do
     resources :requests, only: [] do
       collection do
@@ -47,6 +43,10 @@ Procurement::Engine.routes.draw do
     end
     resources :templates, only: [:index, :create]
   end
+
+  resources :models, only: :index
+  resources :suppliers, only: :index
+  resources :locations, only: :index
 
   resources :organizations
 

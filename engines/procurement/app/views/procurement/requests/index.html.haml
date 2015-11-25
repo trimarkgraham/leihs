@@ -44,9 +44,9 @@
                 .form-group
                   %label.col-xs-5.control-label
                     = succeed ':' do
-                      = _('Department')
+                      = _('Location')
                   .col-xs-7
-                    %input.form-control{name: "requests[new_#{i}][department]", placeholder: _('Department')}
+                    %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Location')}
                 .form-group
                   %label.col-xs-5.control-label
                     = succeed ':' do
@@ -73,30 +73,34 @@
                   %label.col-xs-5.control-label
                     = "%s %s" % [_('Item price'), MoneyRails.default_currency]
                     .small=_('incl. VAT')
-                  .col-xs-7
+                  .col-xs-4
                     %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
                     = template.price
                     -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
+                  .col-xs-3
                 .form-group
                   %label.col-xs-5.control-label
                     = succeed ':' do
                       = _('Requested quantity')
-                  .col-xs-7
+                  .col-xs-4
                     %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
+                  .col-xs-3
                 - if @group.inspectable_by? current_user
                   .form-group
                     %label.col-xs-5.control-label
                       = succeed ':' do
                         = _('Approved quantity')
-                    .col-xs-7
+                    .col-xs-4
                       %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+                    .col-xs-3
                 - if @group.inspectable_by? current_user
                   .form-group
                     %label.col-xs-5.control-label
                       = succeed ':' do
                         = _('Order quantity')
-                    .col-xs-7
+                    .col-xs-4
                       %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+                    .col-xs-3
                 .form-group
                   %label.col-xs-5.control-label
                     = "%s %s" % [_('Total'), MoneyRails.default_currency]
@@ -135,9 +139,9 @@
             .form-group
               %label.col-xs-5.control-label
                 = succeed ':' do
-                  = _('Department')
+                  = _('Location')
               .col-xs-7
-                %input.form-control{name: "requests[new_#{i}][department]", placeholder: _('Department')}
+                %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Location')}
             .form-group
               %label.col-xs-5.control-label
                 = succeed ':' do
@@ -164,28 +168,32 @@
               %label.col-xs-5.control-label
                 = "%s %s" % [_('Item price'), MoneyRails.default_currency]
                 .small=_('incl. VAT')
-              .col-xs-7
+              .col-xs-4
                 %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
+              .col-xs-3
             .form-group
               %label.col-xs-5.control-label
                 = succeed ':' do
                   = _('Requested quantity')
-              .col-xs-7
+              .col-xs-4
                 %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
+              .col-xs-3
             - if @group.inspectable_by? current_user
               .form-group
                 %label.col-xs-5.control-label
                   = succeed ':' do
                     = _('Approved quantity')
-                .col-xs-7
+                .col-xs-4
                   %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+                .col-xs-3
             - if @group.inspectable_by? current_user
               .form-group
                 %label.col-xs-5.control-label
                   = succeed ':' do
                     = _('Order quantity')
-                .col-xs-7
+                .col-xs-4
                   %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+                .col-xs-3
             .form-group
               %label.col-xs-5.control-label
                 = "%s %s" % [_('Total'), MoneyRails.default_currency]
@@ -346,3 +354,39 @@
     .each ->
       $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
         $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )
+
+    $("input[name*='[receiver]']").autocomplete
+      minLength: 3
+      source: ( request, response )->
+        $.ajax
+          url: '/procurement/users.json'
+          dataType: "json"
+          data:
+            search_term: request.term
+          success: ( data )->
+            response( data )
+            #response($.map data, (item)->
+            #  {label: item.firstname + ' ' + item.lastname, value: item.id})
+      select: ( event, ui )->
+        $(this).val( ui.item.firstname + " " + ui.item.lastname )
+        false
+    .each ->
+      $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
+        $( "<li>" ).append( "<a>" + item.firstname + " " + item.lastname + "</a>" ).appendTo( ul )
+
+    $("input[name*='[location]']").autocomplete
+      minLength: 3
+      source: ( request, response )->
+        $.ajax
+          url: "/procurement/locations.json"
+          dataType: "json"
+          data:
+            search_term: request.term
+          success: ( data )->
+            response( data )
+      select: ( event, ui )->
+        $(this).val( ui.item.to_s )
+        false
+    .each ->
+      $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
+        $( "<li>" ).append( "<a>" + item.to_s + "</a>" ).appendTo( ul )
