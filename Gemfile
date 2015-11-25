@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'leihs_admin', path: "engines/leihs_admin"
 gem 'procurement', path: "engines/procurement"
 
-gem 'rails', '4.2.4'
+gem 'rails', '4.2.5'
 
 gem 'activerecord-jdbcmysql-adapter', platform: :jruby
 gem 'acts-as-dag', '~> 4.0' # alternative: 'dagnabit'
@@ -26,7 +26,7 @@ gem 'jsrender-rails', '~> 1.2', git: 'https://github.com/spape/jsrender-rails.gi
 gem 'liquid', '~> 3.0'
 gem 'mini_magick', '~> 3.4'
 gem 'money-rails', '~>1.4'
-gem 'mysql2', '~> 0.3.11', platform: :mri
+gem 'mysql2', '~> 0.4', platform: :mri
 gem 'net-ldap', require: 'net/ldap'
 gem 'nilify_blanks', '~> 1.1'
 gem 'paperclip', '~> 4.3'
