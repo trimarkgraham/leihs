@@ -1,0 +1,44 @@
+%form#filter_panel.well.well-sm
+  %b= _('Budget periods')
+  %ul
+    - Procurement::BudgetPeriod.order(end_date: :desc).each do |budget_period|
+      %li
+        %input{type: :checkbox, name: 'filter[budget_period_ids][]', value: budget_period.id, checked: params[:filter][:budget_period_ids].map(&:to_i).include?(budget_period.id)}
+        = budget_period
+
+  %b= _('Groups')
+  %ul
+    - Procurement::Group.all.each do |group|
+      %li
+        %input{type: :checkbox, name: 'filter[group_ids][]', value: group.id, checked: params[:filter][:group_ids].map(&:to_i).include?(group.id)}
+        = group
+
+  %b= _('Departments')
+  %ul
+    - Procurement::Organization.departments.each do |department|
+      %li
+        %input{type: :checkbox, name: 'filter[department_ids][]', value: department.id, checked: params[:filter][:department_ids].map(&:to_i).include?(department.id)}
+        = department
+
+  %b= _('Priority')
+  %ul
+    - ['high', 'normal'].each do |priority|
+      %input{type: :checkbox, name: "filter[priorities][]", value: priority, checked: params[:filter][:priorities].include?(priority)}
+      .label.label-default= _(priority)
+
+  %b= _('State')
+  %ul
+    - Procurement::Request::STATES.each do |state|
+      %li
+        %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
+        .label{class: label_class(state)}= _(state.to_s.humanize)
+
+  .row
+    .col-xs-6
+      %button.btn.btn-default{type: :submit}
+        %i.fa.fa-filter
+        = _('Filter')
+    .col-xs-6.text-right
+      %button.btn.btn-default{type: :submit, name: 'format', value: 'csv'}
+        %i.fa.fa-table
+        = _('CSV Export')

@@ -37,12 +37,12 @@
                   %label.col-xs-5.control-label
                     = _('Name of receiver')
                   .col-xs-7
-                    %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :off}
+                    %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :false}
                 .form-group
                   %label.col-xs-5.control-label
                     = _('Location')
                   .col-xs-7
-                    %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Location'), autocomplete: :off}
+                    %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Location'), autocomplete: :false}
                 .form-group
                   %label.col-xs-5.control-label
                     = _('Motivation')
@@ -69,27 +69,27 @@
                   .col-xs-4
                     %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
                     = template.price
-                    -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
+                    -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
                   .col-xs-3
                 .form-group
                   %label.col-xs-5.control-label
                     = _('Requested quantity')
                   .col-xs-4
-                    %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
+                    %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :false}
                   .col-xs-3
                 - if @group.inspectable_by? current_user
                   .form-group
                     %label.col-xs-5.control-label
                       = _('Approved quantity')
                     .col-xs-4
-                      %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+                      %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :false}
                     .col-xs-3
                 - if @group.inspectable_by? current_user
                   .form-group
                     %label.col-xs-5.control-label
                       = _('Order quantity')
                     .col-xs-4
-                      %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+                      %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :false}
                     .col-xs-3
                 .form-group
                   %label.col-xs-5.control-label
@@ -121,12 +121,12 @@
               %label.col-xs-5.control-label
                 = _('Name of receiver')
               .col-xs-7
-                %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :off}
+                %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :false}
             .form-group
               %label.col-xs-5.control-label
                 = _('Location')
               .col-xs-7
-                %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Location'), autocomplete: :off}
+                %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Location'), autocomplete: :false}
             .form-group
               %label.col-xs-5.control-label
                 = _('Motivation')
@@ -151,27 +151,27 @@
                 = "%s %s" % [_('Item price'), MoneyRails.default_currency]
                 %span.small=_('incl. VAT')
               .col-xs-4
-                %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
+                %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
               .col-xs-3
             .form-group
               %label.col-xs-5.control-label
                 = _('Requested quantity')
               .col-xs-4
-                %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :off}
+                %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :false}
               .col-xs-3
             - if @group.inspectable_by? current_user
               .form-group
                 %label.col-xs-5.control-label
                   = _('Approved quantity')
                 .col-xs-4
-                  %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
+                  %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :false}
                 .col-xs-3
             - if @group.inspectable_by? current_user
               .form-group
                 %label.col-xs-5.control-label
                   = _('Order quantity')
                 .col-xs-4
-                  %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
+                  %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :false}
                 .col-xs-3
             .form-group
               %label.col-xs-5.control-label
@@ -214,11 +214,6 @@
               = _('Save')
 
 :scss
-  .panel-footer .fa-plus-circle {
-    cursor: pointer;
-    color: #5cb85c;
-  }
-
   .panel-body {
     padding-top: 0;
 

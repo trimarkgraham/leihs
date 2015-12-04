@@ -29,6 +29,12 @@ module Procurement
       end
     end
 
+    before_action only: :filter_overview do
+      unless Procurement::Group.inspector_of_any_group?(current_user)
+        redirect_to root_path
+      end
+    end
+
     before_action only: [:index, :overview] do
       @requests = Request.all
       @requests = @requests.where(user_id: @user) if @user
@@ -54,6 +60,48 @@ module Procurement
 
     def overview
       @budget_periods = BudgetPeriod.order(end_date: :desc)
+    end
+
+    def filter_overview
+      params[:filter] ||= {}
+      params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
+      params[:filter][:group_ids] ||= Procurement::Group.pluck(:id)
+      params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
+      params[:filter][:priorities] ||=['high', 'normal']
+      params[:filter][:states] ||= Procurement::Request::STATES
+
+      @h = {}
+      Procurement::BudgetPeriod.order(end_date: :desc).find(params[:filter][:budget_period_ids]).each do |budget_period|
+        @h[budget_period] = {}
+        Procurement::Group.find(params[:filter][:group_ids]).each do |group|
+          @h[budget_period][group] = {}
+          @h[budget_period][group][:budget_limit_amount] = group.budget_limits.find_by(budget_period_id: budget_period).try(:amount)
+
+          @h[budget_period][group][:departments] = {}
+          Procurement::Organization.departments.find(params[:filter][:department_ids]).each do |parent_organization|
+            @h[budget_period][group][:departments][parent_organization] = {}
+            parent_organization.children.each do |organization_unit|
+              requests = organization_unit.requests.where(budget_period_id: budget_period, group_id: group, priority: params[:filter][:priorities]).
+                          select {|r| params[:filter][:states].map(&:to_sym).include? r.state(current_user)}
+              @h[budget_period][group][:departments][parent_organization][organization_unit] = {
+                  requests: requests,
+                  total_price: requests.map{|r| r.total_price(current_user)}.sum
+              }
+            end
+          end
+
+        end
+      end
+
+      respond_to do |format|
+        format.html
+        format.csv {
+          requests = @h.values.flat_map(&:values).flat_map{|x| x[:departments].values.flat_map(&:values)}.flat_map{|x| x[:requests]}
+          send_data Request.csv_export(requests, current_user),
+                    type: 'text/csv; charset=utf-8; header=present',
+                    disposition: "attachment; filename=requests.csv"
+        }
+      end
     end
 
     def create

@@ -59,6 +59,10 @@
     list-style: none;
 }
 
+.sidebar-nav ul {
+    padding-left: 20px;
+}
+
 .sidebar-nav li {
     text-indent: 0.8em;
     line-height: 2.4em;
@@ -67,7 +71,11 @@
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #999999;
+    color: lightgrey;
+}
+
+.sidebar-nav li a.active {
+    background-color: #426BAB;
 }
 
 .sidebar-nav > li > a {

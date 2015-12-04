@@ -33,17 +33,19 @@ class CreateProcurementTables < ActiveRecord::Migration
     end
     add_foreign_key(:procurement_group_inspectors, :procurement_groups, column: 'group_id')
 
-    create_table :procurement_accesses do |t|
-      t.belongs_to :user,   foreign_key: true
-      t.boolean :is_admin,  index: true
-    end
-
     create_table :procurement_organizations do |t|
       t.string :name
       t.string :shortname
       t.belongs_to :parent
     end
     add_foreign_key(:procurement_organizations, :procurement_organizations, column: 'parent_id')
+
+    create_table :procurement_accesses do |t|
+      t.belongs_to :user,           foreign_key: true
+      t.belongs_to :organization,   null: true
+      t.boolean :is_admin,          index: true
+    end
+    add_foreign_key(:procurement_accesses, :procurement_organizations, column: 'organization_id')
 
     create_table :procurement_requests do |t|
       t.belongs_to :budget_period

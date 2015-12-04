@@ -1,21 +1,38 @@
 %h1= _('Users')
 
 = form_tag users_path do
-  .row
-    .col-xs-6
-      .panel.panel-default
-        .panel-heading
-          %i.fa.fa-user-md
-          = _('Admins')
-        .panel-body
-          %input{name: 'admin_ids', multiple: true, placeholder: _("Name of the admins")}
-    .col-xs-6
-      .panel.panel-default
-        .panel-heading
-          %i.fa.fa-user
-          = _('Requesters')
-        .panel-body
-          %input{name: 'requester_ids', multiple: true, placeholder: _("Name of the requesters"), autocomplete: :off}
+  .panel.panel-default
+    .panel-heading
+      %i.fa.fa-user-md
+      = _('Admins')
+    .panel-body
+      %input{name: 'admin_ids', multiple: true, placeholder: _('Name of the admins')}
+
+  .panel.panel-default
+    .panel-heading
+      %i.fa.fa-user
+      = _('Requesters')
+    .panel-body
+      - @requester_accesses.each do |requester_access|
+        .row
+          .col-xs-4
+            %input{type: :hidden, name: 'requesters[][id]', value: requester_access.user_id}
+            %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false, value: requester_access.user}
+          .col-xs-4
+            %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false, value: requester_access.organization.parent}
+          .col-xs-4
+            %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false, value: requester_access.organization}
+      .row
+        .col-xs-4
+          %input{type: :hidden, name: 'requesters[][id]'}
+          %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false}
+        .col-xs-4
+          %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false}
+        .col-xs-4
+          %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false}
+    .panel-footer
+      %div{style: 'font-size: 2em'}
+        %i.fa.fa-plus-circle
 
   .text-right
     %button.btn.btn-success{type: :submit}
@@ -36,16 +53,36 @@
       prePopulate: #{@admins.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}
       preventDuplicates: true
 
-    $("input[name='requester_ids']").tokenInput '/procurement/users.json',
-      minChars: 3
-      queryParam: 'search_term'
-      propertyToSearch: "lastname"
-      resultsFormatter: (item)->
-        "<li>" + item.firstname + " " + item.lastname + "</li>"
-      tokenFormatter: (item)->
-        "<li>" + item.firstname + " " + item.lastname + "</li>"
-      prePopulate: #{@requesters.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}
-      preventDuplicates: true
+    initAutocompletes = ->
+      $("input[name='requesters[][name]']").autocomplete
+        minLength: 3
+        source: ( request, response )->
+          $.ajax
+            url: '/procurement/users.json'
+            dataType: "json"
+            data:
+              search_term: request.term
+            success: ( data )->
+              response( data )
+              #response($.map data, (item)->
+              #  {label: item.firstname + ' ' + item.lastname, value: item.id})
+        select: ( event, ui )->
+          $(this).closest('.row').find("input[name='requesters[][id]']").val( ui.item.id )
+          $(this).val( ui.item.firstname + " " + ui.item.lastname )
+          false
+      .each ->
+        $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
+          $( "<li>" ).append( "<a>" + item.firstname + " " + item.lastname + "</a>" ).appendTo( ul )
+
+    do initAutocompletes
+
+    $('.panel-footer').on 'click', '.fa-plus-circle', ->
+      target_el = $(this).closest('.panel').find('.panel-body > .row:last-child')
+      cloned_el = target_el.clone()
+      cloned_el.find('input').val('')
+      cloned_el.insertAfter(target_el)
+      do initAutocompletes
+      false
 
 
 -#:coffeescript

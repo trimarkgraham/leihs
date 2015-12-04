@@ -6,11 +6,20 @@
 namespace :procurement do
   desc 'Procurement data seed'
   task seed: :environment do
+
+    {'Services' => ['ITZ'],
+     'DKM' => ['Vertiefung Fotografie']}.each_pair do |k,v|
+      parent = Procurement::Organization.create name: k, shortname: nil, parent_id: nil
+      v.each do |w|
+        parent.children.create name: w, shortname: nil
+      end
+    end
+
     [1973, 5824, 601].each do |id|
       Procurement::Access.admins.create user_id: id
     end
     [1973, 5824, 12, 350, 3848].each do |id|
-      Procurement::Access.requesters.create user_id: id
+      Procurement::Access.requesters.create user_id: id, organization: Procurement::Organization.where.not(parent_id: nil).order('RAND()').first
     end
 
     {'Werkstatt-Technik' => [12, 5824],
@@ -44,9 +53,6 @@ namespace :procurement do
         group.budget_limits.create budget_period: budget_period, amount: amount
       end
     end
-
-    o1 = Procurement::Organization.create name: 'Services', shortname: nil, parent_id: nil
-    Procurement::Organization.create name: 'ITZ', shortname: nil, parent: o1
 
     Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
                                 group: Procurement::Group.find_by(name: 'IT'),

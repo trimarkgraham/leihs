@@ -14,7 +14,7 @@
         .col-sm-4
           = _('Inspectors')
         .col-sm-8
-          %input{name: 'group[inspector_ids]', multiple: true, placeholder: _("Name of the inspector"), autocomplete: :off}
+          %input{name: 'group[inspector_ids]', multiple: true, placeholder: _("Name of the inspector"), autocomplete: :false}
       .row
         .col-sm-4
           = _('Email')
@@ -32,7 +32,7 @@
               = ff.hidden_field :budget_period_id
               = budget_period
             .col-sm-4
-              = ff.number_field :amount, min: 0, placeholder: _('Budget'), autocomplete: :off, class: 'form-control'
+              = ff.number_field :amount, min: 0, placeholder: _('Budget'), autocomplete: :false, class: 'form-control'
             .col-sm-4
 
     .panel-footer

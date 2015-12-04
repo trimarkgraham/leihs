@@ -3063,7 +3063,7 @@ msgid "Partially approved"
 msgstr "Teilweise bewilligt"
 
 msgid "incl. VAT"
-msgstr "inkl. MWsT"
+msgstr "inkl. MwSt"
 
 msgid "Item price"
 msgstr "Stückpreis"

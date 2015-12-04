@@ -45,3 +45,18 @@ header {
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+form .fa-plus-circle {
+  cursor: pointer;
+  color: #5cb85c;
+}
+
+div[data-toggle] {
+  cursor: pointer;
+}
+
+#filter_panel {
+  ul {
+    list-style-type: none;
+  }
+}

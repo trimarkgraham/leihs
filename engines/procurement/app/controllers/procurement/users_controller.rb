@@ -9,24 +9,32 @@ module Procurement
     def index
       respond_to do |format|
         format.html {
-          @requesters = User.not_as_delegations.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id').
-              where(procurement_accesses: {is_admin: [nil, false]})
+          @requester_accesses = Access.requesters.joins(:user).order('users.firstname')
           @admins = User.not_as_delegations.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id').
-              where(procurement_accesses: {is_admin: true})
+              where(procurement_accesses: {is_admin: true}).order(:firstname)
         }
         format.json { render json: User.not_as_delegations.filter(params).to_json(only: [:id, :firstname, :lastname]) }
       end
     end
 
     def create
-      existing_requester_ids = Access.requesters.pluck(:user_id)
-      requester_ids = (params[:requester_ids] || '').split(',').map &:to_i
-      (existing_requester_ids - requester_ids).each do |user_id|
-        Access.requesters.find_by(user_id: user_id).destroy
+      Access.requesters.delete_all
+      params[:requesters].each do |param|
+        next if param[:name].blank?
+        access = Access.requesters.find_or_initialize_by(user_id: param[:id])
+        parent = Organization.find_or_create_by(name: param[:department])
+        organization = parent.children.find_or_create_by(name: param[:organization])
+        access.update_attributes(organization: organization)
       end
-      (requester_ids - existing_requester_ids).each do |user_id|
-        Access.requesters.create(user_id: user_id)
-      end
+
+      # existing_requester_ids = Access.requesters.pluck(:user_id)
+      # requester_ids = (params[:requester_ids] || '').split(',').map &:to_i
+      # (existing_requester_ids - requester_ids).each do |user_id|
+      #   Access.requesters.find_by(user_id: user_id).destroy
+      # end
+      # (requester_ids - existing_requester_ids).each do |user_id|
+      #   Access.requesters.create(user_id: user_id)
+      # end
 
       existing_admin_ids = Access.admins.pluck(:user_id)
       admin_ids = (params[:admin_ids] || '').split(',').map &:to_i

@@ -26,6 +26,8 @@ module Procurement
         (budget_period.in_inspection_phase? and group.inspectable_by?(user))
     end
 
+    STATES = [:new, :in_inspection, :denied, :partially_approved, :approved]
+
     def state(user)
       if budget_period.past? or group.inspectable_or_readable_by?(user)
         if approved_quantity.nil?

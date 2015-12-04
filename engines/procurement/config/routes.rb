@@ -2,9 +2,11 @@ Procurement::Engine.routes.draw do
 
   root to: 'application#root'
 
-  resources :budget_periods, only: [:index, :create, :destroy] do
-    scope format: true, constraints: {format: 'csv'} do
-      resources :requests, only: [:index]
+  resources :budget_periods, only: [:index, :create, :destroy]
+
+  resources :requests, only: [] do
+    collection do
+      get :filter_overview
     end
   end
 

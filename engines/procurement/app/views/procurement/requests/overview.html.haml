@@ -1,3 +1,10 @@
+- if @group and @group.inspectable_by?(current_user)
+  %a.btn.btn-primary{href: group_templates_path(@group)}
+    = _('Templates')
+    .label.label-default= @group.templates.count
+  %br
+  %br
+
 .panel-group#accordion{role: "tablist"}
 
   - @budget_periods.each do |budget_period|
@@ -6,7 +13,7 @@
 
     .panel{class: "panel-#{header_color(budget_period)}"}
       .panel-heading{role: "tab"}
-        %a(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{budget_period.id}")
+        %div(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{budget_period.id}")
           = render partial: 'procurement/budget_periods/header', locals: {budget_period: budget_period, requests: requests}
 
       .list-group(id="collapse_#{budget_period.id}" class="panel-collapse collapse #{budget_period.current? ? 'in' : nil}" role="tabpanel")

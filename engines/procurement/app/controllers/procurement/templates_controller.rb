@@ -5,12 +5,15 @@ module Procurement
 
     before_action do
       @group = Procurement::Group.find(params[:group_id])
+
+      unless @group.inspectable_by?(current_user)
+        redirect_to root_path
+      end
     end
 
     def index
       @template_categories = @group.template_categories
     end
-
 
     def create
       errors = params.require(:template_categories).values.map do |param|
