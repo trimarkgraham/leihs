@@ -71,7 +71,7 @@ module Procurement
             _('Budget period') => request.budget_period,
             _('Procurement group') => request.group,
             _('Requester') => request.user,
-            _('Model name') => request.model_description,
+            _('Article') => request.model_description,
             _('Supplier') => request.supplier,
             _('Requested quantity') => request.requested_quantity,
             _('Approved quantity') => (show_all ? request.approved_quantity : nil),
@@ -81,7 +81,7 @@ module Procurement
             _('State') => _(request.state(current_user).to_s.humanize),
             _('Priority') => request.priority,
             _('Name of receiver') => request.receiver,
-            _('Location') => request.location,
+            _('Point of Delivery') => request.location,
             _('Motivation') => request.motivation,
             _('Inspection comment') => (show_all ? request.inspection_comment : nil)
         }

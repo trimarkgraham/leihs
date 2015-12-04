@@ -8,6 +8,22 @@
   .panel{class: "panel-#{header_color(@budget_period)}"}
     .panel-heading
       = render partial: 'procurement/budget_periods/header', locals: {budget_period: @budget_period, requests: @requests}
+      - if is_editable and @group.template_categories.exists?
+        - already_requested_model_descriptions = @requests.map &:model_description
+        .row
+          .col-xs-2.text-right
+            = succeed ':' do
+              = _('Templates')
+          .col-xs-10
+            - @group.template_categories.each do |template_category|
+              .btn-group
+                %button.btn.btn-default.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: true, expanded: false}}
+                  = template_category
+                  %span.caret
+                %ul.dropdown-menu
+                  %li
+                    - template_category.templates.where.not(model_description: already_requested_model_descriptions).each do |template|
+                      %a.show_template{href: '#', data: {template_id: template.id}}= template
 
     .panel-body
       - i = 0
@@ -15,15 +31,14 @@
         = render partial: 'request', locals: {request: request}
 
       - if is_editable
-        - already_requested_model_descriptions = @requests.map &:model_description
         - @group.template_categories.each do |template_category|
           - template_category.templates.where.not(model_description: already_requested_model_descriptions).each do |template|
-            .row.request{data: {template_id: template.id}}
+            .row.request.hidden{data: {template_id: template.id}}
               - i += 1
               .col-xs-6
                 .form-group
                   %label.col-xs-5.control-label
-                    = _('Model name')
+                    = _('Article')
                   .col-xs-7
                     %input{type: 'hidden', name: "requests[new_#{i}][model_description]", value: template.model_description}
                     = template.model_description
@@ -40,9 +55,9 @@
                     %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :false}
                 .form-group
                   %label.col-xs-5.control-label
-                    = _('Location')
+                    = _('Point of Delivery')
                   .col-xs-7
-                    %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Location'), autocomplete: :false}
+                    %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Point of Delivery'), autocomplete: :false}
                 .form-group
                   %label.col-xs-5.control-label
                     = _('Motivation')
@@ -104,14 +119,14 @@
                     .col-xs-7
                       %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
 
-        .row.request#new_request
+        .row.request#new_request.hidden
           - i += 1
           .col-xs-6
             .form-group
               %label.col-xs-5.control-label
-                = _('Model name')
+                = _('Article')
               .col-xs-7
-                %input.form-control{name: "requests[new_#{i}][model_description]", placeholder: _('Model name')}
+                %input.form-control{name: "requests[new_#{i}][model_description]", placeholder: _('Article')}
             .form-group
               %label.col-xs-5.control-label
                 = _('Supplier')
@@ -124,9 +139,9 @@
                 %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :false}
             .form-group
               %label.col-xs-5.control-label
-                = _('Location')
+                = _('Point of Delivery')
               .col-xs-7
-                %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Location'), autocomplete: :false}
+                %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Point of Delivery'), autocomplete: :false}
             .form-group
               %label.col-xs-5.control-label
                 = _('Motivation')
@@ -192,23 +207,9 @@
           .col-xs-12
             = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
         .row
-          .col-xs-1{style: 'font-size: 2em'}
+          .col-xs-6{style: 'font-size: 2em'}
             %i.fa.fa-plus-circle
-          .col-xs-9
-            - @group.template_categories.each do |template_category|
-              .btn-group.dropup
-                %button.btn.btn-default.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: true, expanded: false}}
-                  = template_category
-                  %span.caret
-                %ul.dropdown-menu
-                  %li
-                    - template_category.templates.where.not(model_description: already_requested_model_descriptions).each do |template|
-                      %a.show_template{href: '#', data: {template_id: template.id}}= template
-
-            -#- unless @requests.blank?
-              .label.label-primary.big_total_price
-                = money_without_cents_and_with_symbol @requests.sum {|r| r.total_price(current_user) }.sum
-          .col-xs-2.text-right
+          .col-xs-6.text-right
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check
               = _('Save')
@@ -217,8 +218,8 @@
   .panel-body {
     padding-top: 0;
 
-    & > .row.request:nth-of-type(even) {
-      background: #f9f9f9;
+    & > .row.request:not(.hidden):nth-of-type(even) {
+      background: #e2e2e2;
     }
     & > .row.request {
       border-top: 1px solid #cccccc;
@@ -228,14 +229,6 @@
         background: #f2dede;
       }
     }
-  }
-
-  #new_request {
-    display: none;
-  }
-
-  .row[data-template_id] {
-    display: none;
   }
 
   .form-horizontal .control-label {
@@ -255,7 +248,7 @@
       #cloned_el.find('input').val('')
       #cloned_el.insertAfter(target_el)
       $(this).hide()
-      $('#new_request').show()
+      $('#new_request').removeClass('hidden')
       false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->
@@ -298,7 +291,10 @@
     $("a.show_template").on 'click', ->
       $(this).hide()
       $(this).closest('.dropdown-menu').dropdown('toggle')
-      $(".row[data-template_id='" + $(this).data('template_id') + "']").show()
+      el = $(".row[data-template_id='" + $(this).data('template_id') + "']").removeClass('hidden')
+      $('html, body').animate({
+        scrollTop: el.offset().top - 100;
+      }, 200)
       false
 
     $('input[data-toggle="tooltip"]').on 'focus', -> $(this).tooltip('toggle')

@@ -5,10 +5,10 @@
 
     .form-group
       %label.col-xs-5.control-label
-        = _('Model name')
+        = _('Article')
       .col-xs-7
         - if request.editable?(current_user) and not @group.template_categories.joins(:templates).where(procurement_templates: {model_description: request.model_description}).exists?
-          %input.form-control{name: "requests[#{request.id}][model_description]", placeholder: _('Model name'), value: request.model_description}
+          %input.form-control{name: "requests[#{request.id}][model_description]", placeholder: _('Article'), value: request.model_description}
         - else
           = request.model_description
 
@@ -32,10 +32,10 @@
 
     .form-group
       %label.col-xs-5.control-label
-        = _('Location')
+        = _('Point of Delivery')
       .col-xs-7
         - if request.editable?(current_user)
-          %input.form-control{name: "requests[#{request.id}][location]", value: request.location, placeholder: _('Location'), autocomplete: :false}
+          %input.form-control{name: "requests[#{request.id}][location]", value: request.location, placeholder: _('Point of Delivery'), autocomplete: :false}
         - else
           = request.location
 

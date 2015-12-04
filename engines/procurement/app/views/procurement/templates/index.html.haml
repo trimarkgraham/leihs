@@ -5,19 +5,19 @@
 %br
 %h4= @group
 
-= form_tag nil, remote: true do
+= form_tag nil, remote: true, id: "accordion" do
 
   - @group.template_categories.build
   - @template_categories.each do |template_category|
     .panel.panel-default
-      .panel-heading
+      .panel-heading(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{template_category.id}")
         %i.fa.fa-cube
         - if template_category.id
           %input{type: :hidden, name: "template_categories[#{template_category.object_id}][id]", value: template_category.id}
         = succeed ':' do
           = _('Category')
         %input{name: "template_categories[#{template_category.object_id}][name]", value: template_category.name}
-      %table.table.table-striped
+      %table.table.table-striped(id="collapse_#{template_category.id}" class="panel-collapse collapse" role="tabpanel")
         %thead
           %tr
             -#%th.col-xs-3= _('Group')
@@ -32,7 +32,7 @@
                 %select.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][group_id]"}
                   %option{value: template.group_id, selected: true}= template.group
               %td
-                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]", placeholder: _('Model name'), value: template.model_description}
+                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]", placeholder: _('Article'), value: template.model_description}
               %td
                 %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, value: template.price, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :false}
               %td
@@ -45,7 +45,7 @@
                 - Procurement::Group.all.each do |group|
                   %option{value: group.id}= group
             %td
-              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]", placeholder: _('Model name')}
+              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]", placeholder: _('Article')}
             %td
               %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :false}
             %td

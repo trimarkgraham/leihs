@@ -3070,3 +3070,18 @@ msgstr "Stückpreis"
 
 msgid "State"
 msgstr "Status"
+
+msgid "Move to another group"
+msgstr "Gruppe ändern"
+
+msgid "Move to another budget period"
+msgstr "Budget Periode ändern"
+
+msgid "Point of Delivery"
+msgstr "Lieferort"
+
+msgid "max 255 characters"
+msgstr "Max. 255 Zeichen"
+
+msgid "Article"
+msgstr "Artikel"

@@ -2979,3 +2979,18 @@ msgstr ""
 
 msgid "State"
 msgstr ""
+
+msgid "Move to another group"
+msgstr ""
+
+msgid "Move to another budget period"
+msgstr ""
+
+msgid "Point of Delivery"
+msgstr ""
+
+msgid "max 255 characters"
+msgstr ""
+
+msgid "Article"
+msgstr ""
