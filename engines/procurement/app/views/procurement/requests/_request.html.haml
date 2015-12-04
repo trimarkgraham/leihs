@@ -8,7 +8,7 @@
         = _('Article')
       .col-xs-7
         - if request.editable?(current_user) and not @group.template_categories.joins(:templates).where(procurement_templates: {model_description: request.model_description}).exists?
-          %input.form-control{name: "requests[#{request.id}][model_description]", placeholder: _('Article'), value: request.model_description}
+          %input.form-control{name: "requests[#{request.id}][model_description]", placeholder: _('Article'), value: request.model_description, data: {toggle: 'tooltip'}, title: request.model_description}
         - else
           = request.model_description
 

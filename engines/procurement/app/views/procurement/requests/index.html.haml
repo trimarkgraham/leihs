@@ -292,12 +292,13 @@
       $(this).hide()
       $(this).closest('.dropdown-menu').dropdown('toggle')
       el = $(".row[data-template_id='" + $(this).data('template_id') + "']").removeClass('hidden')
+      el.find("input[name*='requested_quantity]']").val(1).trigger('change')
       $('html, body').animate({
         scrollTop: el.offset().top - 100;
       }, 200)
       false
 
-    $('input[data-toggle="tooltip"]').on 'focus', -> $(this).tooltip('toggle')
+    $('input[data-toggle="tooltip"]').on 'focus mouseover', -> $(this).tooltip('toggle')
 
     $("input[name*='[model_description]']").autocomplete
       minLength: 3

@@ -1,9 +1,8 @@
 %h1= _('Templates')
 
-.fa.fa-sitemap
-= _('Group')
-%br
-%h4= @group
+%h4
+  .fa.fa-sitemap
+  = @group
 
 = form_tag nil, remote: true, id: "accordion" do
 
@@ -56,6 +55,9 @@
             %td.h3{colspan: 4}
               %i.fa.fa-plus-circle
 
+  .row
+    .col-xs-12
+      = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
   .text-right
     %button.btn.btn-success{type: :submit}
       %i.fa.fa-check

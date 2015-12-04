@@ -8,7 +8,7 @@
       %th.col-xs-3= _('Email')
       %th.col-xs-2
   %tbody
-    - @groups.each do |group|
+    - @groups.order(:name).each do |group|
       %tr
         %td
           = group.name
