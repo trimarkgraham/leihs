@@ -21,7 +21,7 @@ module Procurement
 
         if param[:id]
           r = @group.template_categories.find(param[:id])
-          if param[:name].blank? and param[:templates_attributes].flat_map(&:values).all?(&:blank?)
+          if param.delete(:_destroy) == '1' or (param[:name].blank? and param[:templates_attributes].flat_map(&:values).all?(&:blank?))
             r.destroy
           else
             r.update_attributes(param)

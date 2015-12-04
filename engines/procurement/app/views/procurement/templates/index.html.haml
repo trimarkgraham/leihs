@@ -13,9 +13,11 @@
         %i.fa.fa-cube
         - if template_category.id
           %input{type: :hidden, name: "template_categories[#{template_category.object_id}][id]", value: template_category.id}
+          %input{type: :hidden, name: "template_categories[#{template_category.object_id}][_destroy]"}
         = succeed ':' do
           = _('Category')
         %input{name: "template_categories[#{template_category.object_id}][name]", value: template_category.name}
+
       %table.table.table-striped(id="collapse_#{template_category.id}" class="panel-collapse collapse" role="tabpanel")
         %thead
           %tr
@@ -52,8 +54,10 @@
             %td
         %tfoot
           %tr
-            %td.h3{colspan: 4}
+            %td.h3{colspan: 2}
               %i.fa.fa-plus-circle
+            %td.h3.text-right{colspan: 2}
+              %i.fa.fa-minus-circle
 
   .row
     .col-xs-12
@@ -110,10 +114,20 @@
       do initAutocompletes
       false
 
-    $("form").on("ajax:success", (e, data, status, xhr) ->
+    $('tfoot').on 'click', '.fa-minus-circle', ->
+      panel_el = $(this).closest('.panel')
+      panel_el.removeClass('panel-default').addClass('panel-danger')
+      target_el = panel_el.find(".panel-heading input[name*='[_destroy]']")
+      target_el.val('1').change()
+      false
+
+    $('form').on('ajax:success', (e, data, status, xhr) ->
       location.reload()
-    ).on "ajax:error", (e, xhr, status, error) ->
+    ).on 'ajax:error', (e, xhr, status, error) ->
       errors = ''
       for error in xhr.responseJSON
         errors += '<li>' + error + '</li>'
-      $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
+      $('.flash').html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
+
+    $('form').on 'change', ->
+      $('.flash').hide()

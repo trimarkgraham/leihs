@@ -51,6 +51,11 @@ form .fa-plus-circle {
   color: #5cb85c;
 }
 
+form .fa-minus-circle {
+  cursor: pointer;
+  color: #cc0000;
+}
+
 div[data-toggle] {
   cursor: pointer;
 }

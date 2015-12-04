@@ -58,10 +58,13 @@
       cloned_el.insertAfter(target_el)
       false
 
-    $("form").on("ajax:success", (e, data, status, xhr) ->
+    $('form').on('ajax:success', (e, data, status, xhr) ->
       location.reload()
-    ).on "ajax:error", (e, xhr, status, error) ->
+    ).on 'ajax:error', (e, xhr, status, error) ->
       errors = ''
       for error in xhr.responseJSON
         errors += '<li>' + error + '</li>'
-      $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
+      $('.flash').html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
+
+    $('form').on 'change', ->
+      $('.flash').hide()

@@ -248,7 +248,7 @@
       #cloned_el.find('input').val('')
       #cloned_el.insertAfter(target_el)
       $(this).hide()
-      $('#new_request').removeClass('hidden')
+      $('#new_request').removeClass('hidden').closest('form').change()
       false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->
@@ -257,7 +257,7 @@
       errors = ''
       for error in xhr.responseJSON
         errors += '<li>' + error + '</li>'
-      $("#flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
+      $(".flash").html '<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>'
 
     $("input[name*='[approved_quantity]']").on 'change', ->
       target_el = $(this).closest('.request').find("input[name*='[order_quantity]']")
@@ -292,9 +292,9 @@
       $(this).hide()
       $(this).closest('.dropdown-menu').dropdown('toggle')
       el = $(".row[data-template_id='" + $(this).data('template_id') + "']").removeClass('hidden')
-      el.find("input[name*='requested_quantity]']").val(1).trigger('change')
+      el.find("input[name*='requested_quantity]']").val(1).change()
       $('html, body').animate({
-        scrollTop: el.offset().top - 100;
+        scrollTop: el.offset().top - 100
       }, 200)
       false
 
@@ -311,7 +311,7 @@
           success: ( data )->
             response( data )
       select: ( event, ui )->
-        $(this).val( ui.item.name )
+        $(this).val( ui.item.name ).change()
         false
     .each ->
       $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
@@ -328,7 +328,7 @@
           success: ( data )->
             response( data )
       select: ( event, ui )->
-        $(this).val( ui.item.name )
+        $(this).val( ui.item.name ).change()
         false
     .each ->
       $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
@@ -347,7 +347,7 @@
             #response($.map data, (item)->
             #  {label: item.firstname + ' ' + item.lastname, value: item.id})
       select: ( event, ui )->
-        $(this).val( ui.item.firstname + " " + ui.item.lastname )
+        $(this).val( ui.item.firstname + " " + ui.item.lastname ).change()
         false
     .each ->
       $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
@@ -364,8 +364,11 @@
           success: ( data )->
             response( data )
       select: ( event, ui )->
-        $(this).val( ui.item.to_s )
+        $(this).val( ui.item.to_s ).change()
         false
     .each ->
       $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
         $( "<li>" ).append( "<a>" + item.to_s + "</a>" ).appendTo( ul )
+
+    $('form').on 'change', ->
+      $('.flash').hide()
