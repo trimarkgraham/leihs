@@ -106,11 +106,15 @@ module Procurement
 
     def create
       keys = [:model_description, :price, :supplier, :motivation, :receiver, :location, attachments_attributes: [:file]]
-      keys += [:requested_quantity, :priority] if @user == current_user
       keys += [:approved_quantity, :order_quantity, :inspection_comment] if @group.inspectable_by?(current_user)
 
       errors = params.require(:requests).values.map do |param|
-        permitted = param.permit(keys)
+        to_permit_keys = if param[:id].blank? or @user == current_user
+                           keys + [:requested_quantity, :priority]
+                         else
+                           keys
+                         end
+        permitted = param.permit(to_permit_keys)
 
         if param[:id]
           r = Request.find(param[:id])
