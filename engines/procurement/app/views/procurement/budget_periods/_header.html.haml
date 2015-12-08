@@ -2,11 +2,11 @@
   .col-xs-3
     - if @group
       %h4
-        .fa.fa-sitemap
+        %i.fa.fa-object-group
         = @group
       - if @user
         - if @group.email
-          %a{href: "mailto:#{@group.email}"}
+          %a{href: "mailto:#{@group.email}?subject=leihs #{_('Procurement')}"}
             %b
               = succeed ':' do
                 %i.fa.fa-envelope
@@ -23,11 +23,11 @@
   .col-xs-3
     - if @user
       %h4
-        .fa.fa-user
+        %i.fa.fa-user
         = @user
   .col-xs-4
     %h4
-      .fa.fa-calendar
+      %i.fa.fa-calendar
       = budget_period.name
     - if @user and @group
       = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}

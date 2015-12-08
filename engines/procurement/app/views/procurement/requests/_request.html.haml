@@ -4,54 +4,54 @@
       %input{type: :hidden, name: "requests[#{request.id}][id]", value: request.id}
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('Article')
-      .col-xs-7
+      .col-xs-8
         - if request.editable?(current_user) and not @group.template_categories.joins(:templates).where(procurement_templates: {model_description: request.model_description}).exists?
           %input.form-control{name: "requests[#{request.id}][model_description]", placeholder: _('Article'), value: request.model_description, data: {toggle: 'tooltip'}, title: request.model_description}
         - else
           = request.model_description
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('Supplier')
-      .col-xs-7
+      .col-xs-8
         - if request.editable?(current_user)
           %input.form-control{name: "requests[#{request.id}][supplier]", placeholder: _('Supplier'), value: request.supplier}
         - else
           = request.supplier
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('Name of receiver')
-      .col-xs-7
+      .col-xs-8
         - if request.editable?(current_user)
           %input.form-control{name: "requests[#{request.id}][receiver]", value: request.receiver, placeholder: _('Name of receiver'), autocomplete: :false}
         - else
           = request.receiver
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('Point of Delivery')
-      .col-xs-7
+      .col-xs-8
         - if request.editable?(current_user)
           %input.form-control{name: "requests[#{request.id}][location]", value: request.location, placeholder: _('Point of Delivery'), autocomplete: :false}
         - else
           = request.location
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('Motivation')
-      .col-xs-7
+      .col-xs-8
         - if request.editable?(current_user)
           %input.form-control{name: "requests[#{request.id}][motivation]", value: request.motivation, placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
         - else
           = request.motivation
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('Priority')
-      .col-xs-7
+      .col-xs-8
         - if request.editable?(current_user) and request.user_id == current_user.id
           - ['high', 'normal'].each do |priority|
             %input{type: 'radio', name: "requests[#{request.id}][priority]", value: priority, checked: request.priority == priority}
@@ -60,11 +60,11 @@
           .label.label-default= _(request.priority)
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('Attachments')
-      .col-xs-7
+      .col-xs-8
         - if request.editable?(current_user)
-          %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true}
+          %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
         %ul
           - request.attachments.each do |attachment|
             %li
@@ -73,7 +73,7 @@
 
   .col-xs-6
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = "%s %s" % [_('Item price'), MoneyRails.default_currency]
         %span.small=_('incl. VAT')
       .col-xs-4
@@ -81,10 +81,10 @@
           %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
         - else
           = money_without_cents_and_with_symbol request.price
-      .col-xs-3
+      .col-xs-4
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('Requested quantity')
       .col-xs-4
         - if request.editable?(current_user) and request.user_id == current_user.id
@@ -92,11 +92,11 @@
         - else
           .label.label-primary
             = request.requested_quantity
-      .col-xs-3
+      .col-xs-4
 
     - if request.group.inspectable_by?(current_user) or request.user_id == current_user.id
       .form-group
-        %label.col-xs-5.control-label
+        %label.col-xs-4.control-label
           = _('Approved quantity')
         .col-xs-4
           - if request.editable?(current_user)
@@ -107,11 +107,11 @@
                 state, label_class = state_label(request)
               .label{class: label_class}
                 = request.approved_quantity
-        .col-xs-3
+        .col-xs-4
 
     - if request.group.inspectable_by?(current_user) or request.user_id == current_user.id
       .form-group
-        %label.col-xs-5.control-label
+        %label.col-xs-4.control-label
           = _('Order quantity')
         .col-xs-4
           - if request.editable?(current_user)
@@ -119,30 +119,30 @@
           - elsif request.approved_quantity and request.order_quantity
             .label{class: label_class}
               = request.order_quantity
-        .col-xs-3
+        .col-xs-4
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = "%s %s" % [_('Total'), MoneyRails.default_currency]
         %span.small= _('incl. VAT')
-      .col-xs-7
+      .col-xs-8
         .label.label-primary.total_price{data: {total: request.total_price(current_user)}}
           = money_without_cents_and_with_symbol request.total_price(current_user)
 
     - if request.group.inspectable_by? current_user
       .form-group
-        %label.col-xs-5.control-label
+        %label.col-xs-4.control-label
           = _('Inspection comment')
-        .col-xs-7
+        .col-xs-8
           - if request.editable?(current_user)
             %input.form-control{name: "requests[#{request.id}][inspection_comment]", value: request.inspection_comment, placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
           - else
             = request.inspection_comment
 
     .form-group
-      %label.col-xs-5.control-label
+      %label.col-xs-4.control-label
         = _('State')
-      .col-xs-5
+      .col-xs-6
         = render partial: 'state', locals: {request: request}
 
       .col-xs-2.text-right

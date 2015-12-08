@@ -1,7 +1,7 @@
 .row
-  .col-sm-3
+  .col-sm-2
     = render partial: 'filter_panel'
-  .col-sm-9
+  .col-sm-10
     - @h.each_pair do |budget_period, groups|
 
       .panel.panel-info
@@ -72,17 +72,19 @@
                                   .label{class: label_class}
                                     = request.order_quantity
 
-                            .col-xs-5
+                            .col-xs-3
                               = request.model_description
+                            .col-xs-2
+                              = request.user
                             .col-xs-1.small
                               .label.label-primary.total_price
                                 = money_without_cents_and_with_symbol request.price
                             .col-xs-2.small
                               .label.label-primary.total_price
                                 = money_without_cents_and_with_symbol request.total_price(current_user)
-                            .col-xs-2.small
+                            .col-xs-1.small
                               .label.label-default= _(request.priority)
-                              %br
+                            .col-xs-1.small
                               :ruby
                                 state, label_class = state_label(request)
                               .label{class: label_class}

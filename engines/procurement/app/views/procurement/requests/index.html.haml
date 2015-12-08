@@ -8,12 +8,15 @@
   .panel{class: "panel-#{header_color(@budget_period)}"}
     .panel-heading
       = render partial: 'procurement/budget_periods/header', locals: {budget_period: @budget_period, requests: @requests}
+
+    .panel-body
       - if is_editable and @group.template_categories.exists?
         - already_requested_model_descriptions = @requests.map &:model_description
-        .row
-          .col-xs-2.text-right
-            = succeed ':' do
-              = _('Templates')
+        .row{style: 'margin-top: 0.5em; margin-bottom: 0.5em;'}
+          .col-xs-2
+            %b
+              = succeed ':' do
+                = _('Templates')
           .col-xs-10
             - @group.template_categories.each do |template_category|
               .btn-group
@@ -25,7 +28,7 @@
                     - template_category.templates.where.not(model_description: already_requested_model_descriptions).each do |template|
                       %a.show_template{href: '#', data: {template_id: template.id}}= template
 
-    .panel-body
+
       - i = 0
       - @requests.each do |request|
         = render partial: 'request', locals: {request: request}
@@ -37,168 +40,168 @@
               - i += 1
               .col-xs-6
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = _('Article')
-                  .col-xs-7
+                  .col-xs-8
                     %input{type: 'hidden', name: "requests[new_#{i}][model_description]", value: template.model_description}
                     = template.model_description
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = _('Supplier')
-                  .col-xs-7
+                  .col-xs-8
                     %input{type: 'hidden', name: "requests[new_#{i}][supplier]", value: template.supplier}
                     = template.supplier
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = _('Name of receiver')
-                  .col-xs-7
+                  .col-xs-8
                     %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :false}
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = _('Point of Delivery')
-                  .col-xs-7
+                  .col-xs-8
                     %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Point of Delivery'), autocomplete: :false}
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = _('Motivation')
-                  .col-xs-7
+                  .col-xs-8
                     %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = _('Priority')
-                  .col-xs-7
+                  .col-xs-8
                     %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
                     .label.label-default= _('high')
                     %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
                     .label.label-default= _('normal')
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = _('Attachments')
-                  .col-xs-7
-                    %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+                  .col-xs-8
+                    %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
               .col-xs-6
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = "%s %s" % [_('Item price'), MoneyRails.default_currency]
                     %span.small=_('incl. VAT')
                   .col-xs-4
                     %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
                     = template.price
                     -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
-                  .col-xs-3
+                  .col-xs-4
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = _('Requested quantity')
                   .col-xs-4
                     %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :false}
-                  .col-xs-3
+                  .col-xs-4
                 - if @group.inspectable_by? current_user
                   .form-group
-                    %label.col-xs-5.control-label
+                    %label.col-xs-4.control-label
                       = _('Approved quantity')
                     .col-xs-4
                       %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :false}
-                    .col-xs-3
+                    .col-xs-4
                 - if @group.inspectable_by? current_user
                   .form-group
-                    %label.col-xs-5.control-label
+                    %label.col-xs-4.control-label
                       = _('Order quantity')
                     .col-xs-4
                       %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :false}
-                    .col-xs-3
+                    .col-xs-4
                 .form-group
-                  %label.col-xs-5.control-label
+                  %label.col-xs-4.control-label
                     = "%s %s" % [_('Total'), MoneyRails.default_currency]
                     %span.small= _('incl. VAT')
-                  .col-xs-7
+                  .col-xs-8
                     .label.label-primary.total_price
                 - if @group.inspectable_by? current_user
                   .form-group
-                    %label.col-xs-5.control-label
+                    %label.col-xs-4.control-label
                       = _('Inspection comment')
-                    .col-xs-7
+                    .col-xs-8
                       %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
 
         .row.request#new_request.hidden
           - i += 1
           .col-xs-6
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = _('Article')
-              .col-xs-7
+              .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][model_description]", placeholder: _('Article')}
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = _('Supplier')
-              .col-xs-7
+              .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][supplier]", placeholder: _('Supplier')}
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = _('Name of receiver')
-              .col-xs-7
+              .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :false}
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = _('Point of Delivery')
-              .col-xs-7
+              .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][location]", placeholder: _('Point of Delivery'), autocomplete: :false}
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = _('Motivation')
-              .col-xs-7
+              .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = _('Priority')
-              .col-xs-7
+              .col-xs-8
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
                 .label.label-default= _('high')
                 %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
                 .label.label-default= _('normal')
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = _('Attachments')
-              .col-xs-7
-                %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true}
+              .col-xs-8
+                %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
           .col-xs-6
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = "%s %s" % [_('Item price'), MoneyRails.default_currency]
                 %span.small=_('incl. VAT')
               .col-xs-4
                 %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
-              .col-xs-3
+              .col-xs-4
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = _('Requested quantity')
               .col-xs-4
                 %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :false}
-              .col-xs-3
+              .col-xs-4
             - if @group.inspectable_by? current_user
               .form-group
-                %label.col-xs-5.control-label
+                %label.col-xs-4.control-label
                   = _('Approved quantity')
                 .col-xs-4
                   %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :false}
-                .col-xs-3
+                .col-xs-4
             - if @group.inspectable_by? current_user
               .form-group
-                %label.col-xs-5.control-label
+                %label.col-xs-4.control-label
                   = _('Order quantity')
                 .col-xs-4
                   %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :false}
-                .col-xs-3
+                .col-xs-4
             .form-group
-              %label.col-xs-5.control-label
+              %label.col-xs-4.control-label
                 = "%s %s" % [_('Total'), MoneyRails.default_currency]
                 %span.small= _('incl. VAT')
-              .col-xs-7
+              .col-xs-8
                 .label.label-primary.total_price
             - if @group.inspectable_by? current_user
               .form-group
-                %label.col-xs-5.control-label
+                %label.col-xs-4.control-label
                   = _('Inspection comment')
-                .col-xs-7
+                .col-xs-8
                   %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
 
     .panel-footer
@@ -235,7 +238,7 @@
     text-align: left;
   }
 
-  label.col-xs-5.control-label:after {
+  label.col-xs-4.control-label:after {
     content: ':';
     margin-left: -0.2em;
   }

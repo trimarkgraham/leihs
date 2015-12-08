@@ -17,22 +17,26 @@
         = _('Admin')
       %ul#collapse_admin.collapse{class: opened_menu == :admin ? 'in' : nil}
         %li
-          %a{href: budget_periods_path}
+          %a{href: budget_periods_path, class: request.path == budget_periods_path ? "active" : nil}
+            %i.fa.fa-calendar
             = _('Budget periods')
             - unless Procurement::BudgetPeriod.current
               %i.fa.fa-warning.text-danger
         %li
-          %a{href: organizations_path}
+          %a{href: organizations_path, class: request.path == organizations_path ? "active" : nil}
+            %i.fa.fa-sitemap
             = _('Organizations')
             - unless Procurement::Organization.exists?
               %i.fa.fa-warning.text-danger
         %li
-          %a{href: groups_path}
+          %a{href: groups_path, class: request.path == groups_path ? "active" : nil}
+            %i.fa.fa-object-group
             = _('Groups')
             - unless Procurement::Group.exists?
               %i.fa.fa-warning.text-danger
         %li
-          %a{href: users_path}
+          %a{href: users_path, class: request.path == users_path ? "active" : nil}
+            %i.fa.fa-user
             = _('Users')
             - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
               %i.fa.fa-warning.text-danger
@@ -44,7 +48,8 @@
         = _('Requests')
       %ul#collapse_request.collapse{class: opened_menu == :request ? 'in' : nil}
         %li
-          %a{href: overview_user_requests_path(current_user)}
+          %a{href: overview_user_requests_path(current_user), class: opened_menu == :request ? "active" : nil}
+            %i.fa.fa-tasks
             = _('My requests')
             =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
 
@@ -55,12 +60,12 @@
         = _('Inspect')
       %ul#collapse_inspect.collapse{class: opened_menu == :inspect ? 'in' : nil}
         %li
-          %a{href: filter_overview_requests_path, class: "#{controller.action_name == 'filter_overview' ? "active" : nil}"}
+          %a{href: filter_overview_requests_path, class: controller.action_name == 'filter_overview' ? "active" : nil}
             %i.fa.fa-eye
             = _('Overview')
         - Procurement::Group.all.partition{|group| group.inspectable_by?(current_user)}.flatten.each do |group|
           %li
             %a{href: overview_group_requests_path(group), class: "#{@group == group ? "active" : nil}"}
-              .fa.fa-sitemap
+              %i.fa.fa-object-group
               = group
               = render partial: 'layouts/procurement/counts', locals: {group: group}

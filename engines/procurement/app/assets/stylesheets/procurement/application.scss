@@ -2,6 +2,7 @@
 *= require jquery-ui
 *= require bootstrap
 *= require jquery-tokeninput
+*= require datatables
 * require fontawesome
 *
 *= require procurement/simple-sidebar
@@ -63,5 +64,6 @@ div[data-toggle] {
 #filter_panel {
   ul {
     list-style-type: none;
+    padding-left: 1em;
   }
 }

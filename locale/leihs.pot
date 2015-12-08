@@ -2994,3 +2994,6 @@ msgstr ""
 
 msgid "Article"
 msgstr ""
+
+msgid "Procurement"
+msgstr ""

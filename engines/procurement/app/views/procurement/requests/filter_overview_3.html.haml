@@ -1,0 +1,108 @@
+.row
+  .col-sm-2
+    = render partial: 'filter_panel'
+  .col-sm-10
+    - @h.each_pair do |budget_period, requests|
+
+      .panel.panel-info
+        .panel-heading
+          %h4= budget_period
+
+        %table.datatable
+          %thead
+            %tr
+              %th= _('Group')
+              %th= _('Quantities')
+              %th= _('Article')
+              %th= _('Requester')
+              %th= _('Price')
+              %th= _('Total price')
+              %th= _('Priority')
+              %th= _('State')
+              %th
+
+          - requests.each do |request|
+            %tr
+              %td= request.group
+              %td
+                .label.label-primary
+                  = request.requested_quantity
+
+                - if request.approved_quantity
+                  &nbsp;
+                  :ruby
+                    state, label_class = state_label(request)
+                  .label{class: label_class}
+                    = request.approved_quantity
+
+                  - if request.order_quantity
+                    &nbsp;
+                    .label{class: label_class}
+                      = request.order_quantity
+
+              %td
+                = request.model_description
+              %td
+                = request.user
+              %td.small
+                .label.label-primary.total_price
+                  = money_without_cents_and_with_symbol request.price
+              %td.small
+                .label.label-primary.total_price
+                  = money_without_cents_and_with_symbol request.total_price(current_user)
+              %td.small
+                .label.label-default= _(request.priority)
+              %td.small
+                :ruby
+                  state, label_class = state_label(request)
+                .label{class: label_class}
+                  = _(state.to_s.humanize)
+              %td
+                %a.btn.btn-default.btn-sm{href: group_user_budget_period_requests_path(request.group, request.user, request.budget_period)}
+                  %i.fa.fa-edit
+
+
+:scss
+  tr.group, tr.group:hover {
+    background-color: #ddd !important;
+  }
+
+:coffeescript
+  $(document).ready ->
+    grouping_column = 0
+    $('table.datatable').each ->
+      table = $(this).DataTable(
+        'columnDefs': [ {
+          'visible': false
+          'targets': grouping_column
+        } ]
+        'order': [ [
+          grouping_column
+          'asc'
+        ] ]
+        'displayLength': 100
+        'drawCallback': (settings) ->
+          api = @api()
+          rows = api.rows(page: 'current').nodes()
+          last = null
+          api.column(grouping_column, page: 'current').data().each (group, i) ->
+            if last != group
+              $(rows).eq(i).before '<tr class="group"><td colspan="8">' + group + '</td></tr>'
+              last = group
+            return
+          return
+      )
+      # Order by the grouping
+      $(this).on 'click', 'tbody tr.group', ->
+        currentOrder = table.order()[0]
+        if currentOrder[0] == grouping_column and currentOrder[1] == 'asc'
+          table.order([
+            grouping_column
+            'desc'
+          ]).draw()
+        else
+          table.order([
+            grouping_column
+            'asc'
+          ]).draw()
+        return

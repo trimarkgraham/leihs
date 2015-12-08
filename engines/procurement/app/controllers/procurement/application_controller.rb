@@ -5,6 +5,13 @@ module Procurement
     before_action :require_login, :require_admins, except: :root
 
     def root
+      if current_user and Procurement::Group.inspector_of_any_group?(current_user)
+        redirect_to filter_overview_requests_path
+      elsif is_procurement_requester?
+        redirect_to overview_user_requests_path(current_user)
+      elsif is_procurement_admin?
+        redirect_to budget_periods_path
+      end
     end
 
     protected

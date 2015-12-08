@@ -3085,3 +3085,6 @@ msgstr "Max. 255 Zeichen"
 
 msgid "Article"
 msgstr "Artikel"
+
+msgid "Procurement"
+msgstr "Bedarfsermittlung"
