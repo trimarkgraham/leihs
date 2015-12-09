@@ -4,6 +4,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
 Scenario: Create a Request
   Given I am Barbara
   Then I can create a request and give the following information
+  |Budget Period|
   |Procurement Group|
   |Article|
   |Article nr./Manufacturer nr.|
@@ -25,6 +26,7 @@ Scenario: Mandatory Fields
   Given I am Barbara
   When I create a request
   Then the following fields are mandatory
+  |Budget Period|
   |Procurement Group|
   |Article|
   |Replacement/New|
@@ -54,6 +56,7 @@ Scenario: modify a request
   Given I am Barbara
   Given a request created by Roger exists
   Then I can modify the following fields of requests of my procurement groups
+  |Budget Period|
   |Procurement Group|
   |Article|
   |Article nr./Manufacturer nr.|
