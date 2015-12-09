@@ -1,4 +1,4 @@
-Feature: User and Organisations
+Feature: Requesters and Organisations
 
   @personas
   Scenario: Assign a Departement and Organisation Unit
