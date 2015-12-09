@@ -1,34 +1,20 @@
 Feature: Templates
 
-  # not yet implemented
   @personas
   Scenario: Creating a Template Group for a Procurement Group
     Given I am Barbara
-    Then I can create a template group for a procurement group I am responsible for
-
-  # not yet implemented
-  Scenario: Creating a template for my template group
-    Given I am Barbara
-    Then I can create a template for a procurement group I am responsible for
-
-  # not yet implemented
-  @personas
-  Scenario: Content of template
-    Given I am Barbara
-    When I create a template
-    Then I set the following information
-    |Template Group|
-    |Budget Period|
-    |Procurement Group|
-    |Template Group|
-    |Item Name|
+    Then I can create a template category for a procurement group I am responsible for
+    And within the template category I can set the following information
+    |Article|
     |Price|
-    And choosing the template group is not mandatory
+    |Supplier|
 
-  # not yet implemented
   @personas
-  Scenario: Defining the model
-    Given I am Barbara
-    When I create a template
-    Then I can select the model name from a list of existing models
-    Or I can type a new model name
+  Scenario: Deleting an Article
+  Given I am Barbara
+  Then I can delete a whole line in a category
+
+  @personas
+  Scenario: Deleting a Category
+  Given I am Barbara
+  Then I can delete the whole Category
