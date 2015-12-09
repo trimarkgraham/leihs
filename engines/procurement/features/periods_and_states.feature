@@ -11,6 +11,9 @@ Feature: Periods and states
     |budget period|end date|
     And the start date of the inspection period should not be after the end date of the budget period
 
+  Scenario: Sorting of budget periods
+  The budget periods are sorted alphabetically (a-z and 0-10)
+
   @personas
   Scenario: Deleting a Period
     Given I am Hans Ueli

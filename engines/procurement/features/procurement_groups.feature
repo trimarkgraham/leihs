@@ -11,6 +11,9 @@ Feature: Procurement Groups
     |Email|text|
     |Budget limits|number|
 
+  Scenario: Sorting of Procurement Groups
+    The procurement groups are sorted alphabetically (a-z and 0-10)
+
   @personas
   Scenario: Editing a procurement group
     Given I am Hans Ueli

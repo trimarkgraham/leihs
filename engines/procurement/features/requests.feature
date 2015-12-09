@@ -61,7 +61,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     |Quantity|
     |Price|
     |Supplier|
-    And the quantity is set to 1  
+    And the quantity is set to 1
 
   @personas
   Scenario: Choosing an existing or non existing Model
