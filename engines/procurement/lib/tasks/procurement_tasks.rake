@@ -7,19 +7,29 @@ namespace :procurement do
   desc 'Procurement data seed'
   task seed: :environment do
 
-    {'Services' => ['ITZ'],
-     'DKM' => ['Vertiefung Fotografie']}.each_pair do |k, v|
+    {'Services' => ['ITZ', 'FM', 'PZ'],
+     'DKM' => ['Vertiefung Fotografie', 'Departementsleitung', 'BA Arts in Medien und Kunst'],
+     'DDK' => ['Departementsleitung', 'BA Film', 'BA Design'],
+     'DDE' => ['Departementsleitung'],
+     'DKV' => ['Departementsleitung', 'BA Art Education'],
+     'DMU' => ['Departementsleitung', 'BA of Arts in Musik', 'Betriebsleiter']}.each_pair do |k, v|
       parent = Procurement::Organization.create name: k, shortname: nil, parent_id: nil
       v.each do |w|
         parent.children.create name: w, shortname: nil
       end
     end
 
-    [1973, 5824, 601].each do |id|
-      Procurement::Access.admins.create user_id: id
+    [1973, 5824, 601, 9103, 10558].each do |user_id|
+      Procurement::Access.admins.create user_id: user_id
     end
-    [1973, 5824, 12, 350, 3848].each do |id|
-      Procurement::Access.requesters.create user_id: id, organization: Procurement::Organization.where.not(parent_id: nil).order('RAND()').first
+    {12=>['Services', 'PZ'], 3881=>['Services', 'PZ'], 10=>['Services', 'ITZ'], 1363=>['DDK', 'BA Film'], 667=>['DKV', 'Departementsleitung'],
+     4423=>['DKM', 'Departementsleitung'], 850=>['DDE', 'Departementsleitung'], 4491=>['DDK', 'Departementsleitung'], 114=>['Services', 'FM'],
+     3848=>['DMU', 'Betriebsleiter'], 9103=>['Services', 'ITZ'], 2415=>['DMU', 'Departementsleitung'], 350=>['Services', 'PZ'],
+     422=>['DKM', 'BA Arts in Medien und Kunst'], 5824=>['Services', 'ITZ'], 1260=>['DKV', 'BA Art Education'],
+     9069=>['DMU', 'BA of Arts in Musik'], 10558=>['Services', 'ITZ']}.each_pair do |user_id, organization_names|
+      parent = Procurement::Organization.find_by(name: organization_names.first)
+      organization = parent.children.find_by(name: organization_names.last)
+      Procurement::Access.requesters.create user_id: user_id, organization: organization
     end
 
     {'Werkstatt-Technik' => [12, 5824],
@@ -79,7 +89,7 @@ namespace :procurement do
 
     Procurement::Request.create budget_period: Procurement::BudgetPeriod.find_by(name: '2017'),
                                 group: Procurement::Group.find_by(name: 'IT'),
-                                user_id: 1973,
+                                user_id: 5824,
                                 model_description: 'MacBook 12" 2015',
                                 requested_quantity: 5,
                                 approved_quantity: 5,
@@ -148,6 +158,12 @@ namespace :procurement do
       Procurement::BudgetPeriod.create name: '2016', inspection_start_date: '2015-10-01', end_date: '2015-11-30'
 
       user_id = 1973
+
+      {user_id => ['Services', 'ITZ']}.each_pair do |user_id, organization_names|
+        parent = Procurement::Organization.find_by(name: organization_names.first)
+        organization = parent.children.find_by(name: organization_names.last)
+        Procurement::Access.requesters.create user_id: user_id, organization: organization
+      end
 
       50.times do
         Procurement::Request.create budget_period: Procurement::BudgetPeriod.order('RAND()').first,
