@@ -2,8 +2,9 @@ module Procurement
   class Request < ActiveRecord::Base
 
     belongs_to :budget_period
-    belongs_to :user
     belongs_to :group
+    belongs_to :user
+    belongs_to :organization
 
     has_many :attachments, dependent: :destroy, inverse_of: :request
     accepts_nested_attributes_for :attachments
@@ -13,9 +14,11 @@ module Procurement
     before_validation do
       self.order_quantity ||= approved_quantity
       self.approved_quantity ||= order_quantity
+
+      self.organization_id ||= Access.requesters.find_by(user_id: user_id).organization_id
     end
 
-    validates_presence_of :user, :model_description, :requested_quantity
+    validates_presence_of :user, :organization, :model_description, :requested_quantity
     validates_presence_of :inspection_comment, if: Proc.new {|r| r.approved_quantity and r.approved_quantity < r.requested_quantity }
     validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 

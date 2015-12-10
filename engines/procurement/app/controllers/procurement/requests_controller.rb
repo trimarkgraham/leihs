@@ -65,7 +65,7 @@ module Procurement
     def filter_overview
       params[:filter] ||= {}
       params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
-      params[:filter][:group_ids] ||= Procurement::Group.pluck(:id)
+      params[:filter][:group_ids] ||= Procurement::Group.all.select {|group| group.inspectable_by?(current_user) }.map(&:id)
       params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
       params[:filter][:priorities] ||=['high', 'normal']
       params[:filter][:states] ||= Procurement::Request::STATES
@@ -91,13 +91,30 @@ module Procurement
         #   end
         # end
 
-        requests = budget_period.requests.where(group_id: params[:filter][:group_ids], priority: params[:filter][:priorities]).
+        requests = budget_period.requests.joins(:organization).
+                      where(procurement_organizations: {parent_id: params[:filter][:department_ids]}).
+                      where(group_id: params[:filter][:group_ids], priority: params[:filter][:priorities]).
                       select {|r| params[:filter][:states].map(&:to_sym).include? r.state(current_user)}
+        if params[:sort_by] and params[:sort_dir]
+          requests = requests.sort do |a,b|
+            case params[:sort_by]
+              when 'total_price'
+                a.total_price(current_user) <=> b.total_price(current_user)
+              when 'state'
+                a.state(current_user) <=> b.state(current_user)
+              when 'department'
+                a.organization.parent <=> b.organization.parent
+              else
+                a.send(params[:sort_by]) <=> b.send(params[:sort_by])
+            end
+          end
+          requests.reverse! if params[:sort_dir] == 'desc'
+        end
         @h[budget_period] = requests
       end
 
       respond_to do |format|
-        format.html { render :filter_overview_3 }
+        format.html { render :filter_overview_4 }
         format.csv {
           # requests = @h.values.flat_map(&:values).flat_map{|x| x[:departments].values.flat_map(&:values)}.flat_map{|x| x[:requests]}
           requests = @h.values.flatten

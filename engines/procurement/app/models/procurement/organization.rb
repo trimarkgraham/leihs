@@ -5,7 +5,7 @@ module Procurement
     acts_as_tree #order: "name"
 
     has_many :accesses
-    has_many :requests, through: :accesses
+    has_many :requests
 
     validates_presence_of :name
 

@@ -1,19 +1,25 @@
 %form#filter_panel.well.well-sm
-  %b= _('Budget periods')
+  %b
+    %i.fa.fa-calendar
+    = _('Budget periods')
   %ul
     - Procurement::BudgetPeriod.order(end_date: :desc).each do |budget_period|
       %li
         %input{type: :checkbox, name: 'filter[budget_period_ids][]', value: budget_period.id, checked: params[:filter][:budget_period_ids].map(&:to_i).include?(budget_period.id)}
         = budget_period
 
-  %b= _('Groups')
+  %b
+    %i.fa.fa-object-group
+    = _('Groups')
   %ul
     - Procurement::Group.all.each do |group|
       %li
         %input{type: :checkbox, name: 'filter[group_ids][]', value: group.id, checked: params[:filter][:group_ids].map(&:to_i).include?(group.id)}
         = group
 
-  %b= _('Departments')
+  %b
+    %i.fa.fa-sitemap
+    = _('Departments')
   %ul
     - Procurement::Organization.departments.each do |department|
       %li

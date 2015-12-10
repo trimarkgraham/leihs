@@ -68,6 +68,11 @@
     line-height: 2.4em;
 }
 
+.sidebar-nav form li {
+    text-indent: 0;
+    line-height: 1em;
+}
+
 .sidebar-nav li a {
     display: block;
     text-decoration: none;

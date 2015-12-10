@@ -27,5 +27,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'paperclip', '~> 4.3'
   s.add_dependency 'remotipart', '~> 1.2'
   s.add_dependency 'rails-assets-jquery-tokeninput', '~> 1.7'
-  s.add_dependency 'rails-assets-datatables', '~> 1.10'
 end

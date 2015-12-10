@@ -51,6 +51,7 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.belongs_to :budget_period
       t.belongs_to :group
       t.belongs_to :user,              foreign_key: true
+      t.belongs_to :organization
       t.string :model_description,     null: false
       t.integer :requested_quantity,     null: false
       t.integer :approved_quantity,    null: true
@@ -67,6 +68,7 @@ class CreateProcurementTables < ActiveRecord::Migration
     end
     add_foreign_key(:procurement_requests, :procurement_budget_periods, column: 'budget_period_id')
     add_foreign_key(:procurement_requests, :procurement_groups, column: 'group_id')
+    add_foreign_key(:procurement_requests, :procurement_organizations, column: 'organization_id')
 
     create_table :procurement_template_categories do |t|
       t.belongs_to :group

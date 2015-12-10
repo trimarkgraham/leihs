@@ -1,0 +1,101 @@
+- @h.each_pair do |budget_period, requests|
+
+  .panel.panel-info
+    .panel-heading
+      .row
+        .col-sm-2.h4
+          %i.fa.fa-calendar
+          = budget_period
+        .col-sm-10
+          = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
+
+    .panel-body
+      .row
+        %b.col-sm-1
+          %a{href: url_for(params: params.merge(sort_by: :requested_quantity, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+            = _('Quantities')
+        %b.col-sm-2
+          %a{href: url_for(params: params.merge(sort_by: :model_description, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+            = _('Article')
+        %b.col-sm-2
+          %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+            = _('Requester')
+        %b.col-sm-2
+          %a{href: url_for(params: params.merge(sort_by: :department, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+            = _('Department')
+        %b.col-sm-1
+          %a{href: url_for(params: params.merge(sort_by: :price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+            = _('Price')
+        %b.col-sm-2
+          %a{href: url_for(params: params.merge(sort_by: :total_price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+            = _('Total price')
+        %b.col-sm-1
+          %a{href: url_for(params: params.merge(sort_by: :priority, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+            = _('Priority')
+        %b.col-sm-1
+          %a{href: url_for(params: params.merge(sort_by: :state, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+            = _('State')
+
+      - requests.group_by(&:group).each_pair do |group, requests|
+        .row.bg-info
+          .col-sm-8.h4
+            %i.fa.fa-object-group
+            = group
+          .col-sm-1
+            - total_price = requests.map {|r| r.total_price(current_user) }.sum
+            - budget_limit_amount = group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)
+
+            .label.label-info.budget_limit
+              = money_without_cents_and_with_symbol budget_limit_amount
+            %br
+            .label.label-primary.big_total_price
+              = money_without_cents_and_with_symbol total_price
+
+          .col-sm-3
+            - if budget_limit_amount.to_i > 0
+              - percentage = total_price.to_i * 100 / budget_limit_amount.to_i
+              .progress-radial{class: "progress-#{(percentage / 5).to_i * 5}"}
+                .overlay
+                  = succeed '%' do
+                    = percentage
+
+
+        - requests.each do |request|
+          %a.list-group-item.row{href: group_user_budget_period_requests_path(request.group, request.user, request.budget_period)}
+            .col-sm-1
+              .label.label-info
+                = request.requested_quantity
+
+              - if request.approved_quantity
+                &nbsp;
+                :ruby
+                  state, label_class = state_label(request)
+                .label{class: label_class}
+                  = request.approved_quantity
+
+                - if request.order_quantity
+                  &nbsp;
+                  .label{class: label_class}
+                    = request.order_quantity
+
+            .col-sm-2
+              = request.model_description
+            .col-sm-2
+              = request.user
+            .col-sm-2
+              = request.organization.parent
+              %br
+              = request.organization
+            .col-sm-1.small
+              .label.label-primary.total_price
+                = money_without_cents_and_with_symbol request.price
+            .col-sm-2.small
+              .label.label-primary.total_price
+                = money_without_cents_and_with_symbol request.total_price(current_user)
+            .col-sm-1.small
+              .label.label-default= _(request.priority)
+            .col-sm-1.small
+              :ruby
+                state, label_class = state_label(request)
+              .label{class: label_class}
+                = _(state.to_s.humanize)

@@ -43,29 +43,16 @@
 
   - if is_procurement_requester?
     %li
-      %a{"data-parent" => "#leftMenu", "data-toggle" => "collapse", :href => "#collapse_request"}
-        %i.fa.fa-edit
-        = _('Requests')
-      %ul#collapse_request.collapse{class: opened_menu == :request ? 'in' : nil}
-        %li
-          %a{href: overview_user_requests_path(current_user), class: opened_menu == :request ? "active" : nil}
-            %i.fa.fa-tasks
-            = _('My requests')
-            =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
+      %a{href: overview_user_requests_path(current_user), class: opened_menu == :request ? "active" : nil}
+        %i.fa.fa-tasks
+        = _('My requests')
+        =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
 
   - if Procurement::Group.inspector_of_any_group?(current_user)
     %li
-      %a{"data-parent" => "#leftMenu", "data-toggle" => "collapse", :href => "#collapse_inspect"}
+      - b = controller.action_name == 'filter_overview'
+      %a{href: filter_overview_requests_path, class: b ? "active" : nil}
         %i.fa.fa-eye
         = _('Inspect')
-      %ul#collapse_inspect.collapse{class: opened_menu == :inspect ? 'in' : nil}
-        %li
-          %a{href: filter_overview_requests_path, class: controller.action_name == 'filter_overview' ? "active" : nil}
-            %i.fa.fa-eye
-            = _('Overview')
-        - Procurement::Group.all.partition{|group| group.inspectable_by?(current_user)}.flatten.each do |group|
-          %li
-            %a{href: overview_group_requests_path(group), class: "#{@group == group ? "active" : nil}"}
-              %i.fa.fa-object-group
-              = group
-              = render partial: 'layouts/procurement/counts', locals: {group: group}
+      - if b
+        = render partial: 'procurement/requests/filter_panel'
