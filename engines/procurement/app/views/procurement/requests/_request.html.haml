@@ -7,19 +7,28 @@
       %label.col-xs-4.control-label
         = _('Article')
       .col-xs-8
-        - if request.editable?(current_user) and not @group.template_categories.joins(:templates).where(procurement_templates: {model_description: request.model_description}).exists?
-          %input.form-control{name: "requests[#{request.id}][model_description]", placeholder: _('Article'), value: request.model_description, data: {toggle: 'tooltip'}, title: request.model_description}
+        - if request.editable?(current_user) and not @group.template_categories.joins(:templates).where(procurement_templates: {article_name: request.article_name}).exists?
+          %input.form-control{name: "requests[#{request.id}][article_name]", placeholder: _('Article'), value: request.article_name, data: {toggle: 'tooltip'}, title: request.article_name}
         - else
-          = request.model_description
+          = request.article_name
+
+    .form-group
+      %label.col-xs-4.control-label
+        = _('Article nr. / Producer nr.')
+      .col-xs-8
+        - if request.editable?(current_user)
+          %input.form-control{name: "requests[#{request.id}][article_number]", placeholder: _('Article nr. / Producer nr.'), value: request.article_number}
+        - else
+          = request.article_number
 
     .form-group
       %label.col-xs-4.control-label
         = _('Supplier')
       .col-xs-8
         - if request.editable?(current_user)
-          %input.form-control{name: "requests[#{request.id}][supplier]", placeholder: _('Supplier'), value: request.supplier}
+          %input.form-control{name: "requests[#{request.id}][supplier_name]", placeholder: _('Supplier'), value: request.supplier_name}
         - else
-          = request.supplier
+          = request.supplier_name
 
     .form-group
       %label.col-xs-4.control-label
@@ -35,9 +44,9 @@
         = _('Point of Delivery')
       .col-xs-8
         - if request.editable?(current_user)
-          %input.form-control{name: "requests[#{request.id}][location]", value: request.location, placeholder: _('Point of Delivery'), autocomplete: :false}
+          %input.form-control{name: "requests[#{request.id}][location_name]", value: request.location_name, placeholder: _('Point of Delivery'), autocomplete: :false}
         - else
-          = request.location
+          = request.location_name
 
     .form-group
       %label.col-xs-4.control-label
@@ -54,22 +63,25 @@
       .col-xs-8
         - if request.editable?(current_user) and request.user_id == current_user.id
           - ['high', 'normal'].each do |priority|
-            %input{type: 'radio', name: "requests[#{request.id}][priority]", value: priority, checked: request.priority == priority}
-            .label.label-default= _(priority)
+            %label
+              %input{type: 'radio', name: "requests[#{request.id}][priority]", value: priority, checked: request.priority == priority}
+              .label.label-default= _(priority)
         - else
           .label.label-default= _(request.priority)
 
     .form-group
       %label.col-xs-4.control-label
-        = _('Attachments')
+        = "%s / %s" % [_('Replacement'), _('New')]
       .col-xs-8
-        - if request.editable?(current_user)
-          %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
-        %ul
-          - request.attachments.each do |attachment|
-            %li
-              %a{href: attachment.file.url, target: '_blank'}
-                = attachment.file.original_filename
+        - if request.editable?(current_user) and request.user_id == current_user.id
+          %label
+            %input{type: 'radio', name: "requests[#{request.id}][replacement]", value: 1, checked: request.replacement}
+            .label.label-default= _('Replacement')
+          %label
+            %input{type: 'radio', name: "requests[#{request.id}][replacement]", value: 0, checked: (not request.replacement)}
+            .label.label-default= _('New')
+        - else
+          .label.label-default= request.replacement ? _('Replacement') : _('New')
 
   .col-xs-6
     .form-group
@@ -128,6 +140,18 @@
       .col-xs-8
         .label.label-primary.total_price{data: {total: request.total_price(current_user)}}
           = money_without_cents_and_with_symbol request.total_price(current_user)
+
+    .form-group
+      %label.col-xs-4.control-label
+        = _('Attachments')
+      .col-xs-8
+        - if request.editable?(current_user)
+          %input{type: :file, name: "requests[#{request.id}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
+        %ul
+          - request.attachments.each do |attachment|
+            %li
+              %a{href: attachment.file.url, target: '_blank'}
+                = attachment.file.original_filename
 
     - if request.group.inspectable_by? current_user
       .form-group

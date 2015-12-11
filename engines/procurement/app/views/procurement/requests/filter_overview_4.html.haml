@@ -15,7 +15,7 @@
           %a{href: url_for(params: params.merge(sort_by: :requested_quantity, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Quantities')
         %b.col-sm-2
-          %a{href: url_for(params: params.merge(sort_by: :model_description, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+          %a{href: url_for(params: params.merge(sort_by: :article_name, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Article')
         %b.col-sm-2
           %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
@@ -79,7 +79,7 @@
                     = request.order_quantity
 
             .col-sm-2
-              = request.model_description
+              = request.article_name
             .col-sm-2
               = request.user
             .col-sm-2

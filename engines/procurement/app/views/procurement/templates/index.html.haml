@@ -31,21 +31,21 @@
             %tr.row
               %td.col-xs-4
                 %input{type: :hidden, name: "template_categories[#{template_category.object_id}][templates_attributes][][id]", value: template.id}
-                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]", placeholder: _('Article'), value: template.model_description}
+                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][article_name]", placeholder: _('Article'), value: template.article_name}
               %td.col-xs-4
                 %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, value: template.price, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :false}
               %td.col-xs-3
-                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier]", placeholder: _('Supplier'), value: template.supplier}
+                %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier_name]", placeholder: _('Supplier'), value: template.supplier_name}
               %td.col-xs-1.text-right.h3
                 &nbsp;
                 -#%i.fa.fa-minus-circle
           %tr.row
             %td.col-xs-4
-              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][model_description]", placeholder: _('Article')}
+              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][article_name]", placeholder: _('Article')}
             %td.col-xs-4
               %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :false}
             %td.col-xs-3
-              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier]", placeholder: _('Supplier')}
+              %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier_name]", placeholder: _('Supplier')}
             %td.col-xs-1.text-right
               &nbsp;
         %tfoot
@@ -64,7 +64,7 @@
 :coffeescript
   $(document).ready ->
     initAutocompletes = ->
-      $("input[name*='[templates_attributes][][model_description]']").autocomplete
+      $("input[name*='[templates_attributes][][article_name]']").autocomplete
         minLength: 3
         source: ( request, response )->
           $.ajax
@@ -81,7 +81,7 @@
         $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
           $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )
 
-      $("input[name*='[templates_attributes][][supplier]']").autocomplete
+      $("input[name*='[templates_attributes][][supplier_name]']").autocomplete
         minLength: 3
         source: ( request, response )->
           $.ajax

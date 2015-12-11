@@ -126,12 +126,12 @@ module Procurement
     end
 
     def create
-      keys = [:model_description, :price, :supplier, :motivation, :receiver, :location, attachments_attributes: [:file]]
+      keys = [:article_name, :article_number, :price, :supplier_name, :motivation, :receiver, :location_name, attachments_attributes: [:file]]
       keys += [:approved_quantity, :order_quantity, :inspection_comment] if @group.inspectable_by?(current_user)
 
       errors = params.require(:requests).values.map do |param|
         to_permit_keys = if param[:id].blank? or @user == current_user
-                           keys + [:requested_quantity, :priority]
+                           keys + [:requested_quantity, :priority, :replacement]
                          else
                            keys
                          end

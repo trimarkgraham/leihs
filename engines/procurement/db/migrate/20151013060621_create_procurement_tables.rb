@@ -52,15 +52,20 @@ class CreateProcurementTables < ActiveRecord::Migration
       t.belongs_to :group
       t.belongs_to :user,              foreign_key: true
       t.belongs_to :organization
-      t.string :model_description,     null: false
-      t.integer :requested_quantity,     null: false
+      t.belongs_to :model,             foreign_key: true
+      t.belongs_to :supplier,          foreign_key: true
+      t.belongs_to :location,          foreign_key: true
+      t.string :article_name,          null: false
+      t.string :article_number,        null: true
+      t.integer :requested_quantity,   null: false
       t.integer :approved_quantity,    null: true
       t.integer :order_quantity,       null: true
       t.money :price
-      t.string :supplier
       t.column :priority,              "ENUM('normal', 'high')"
+      t.boolean :replacement,          default: false
+      t.string :supplier_name
       t.string :receiver,              null: true
-      t.string :location,              null: true
+      t.string :location_name,              null: true
       t.string :motivation,            null: true
       t.string :inspection_comment,    null: true
 
@@ -80,9 +85,12 @@ class CreateProcurementTables < ActiveRecord::Migration
 
     create_table :procurement_templates do |t|
       t.belongs_to :template_category
-      t.string :model_description, null: false
+      t.belongs_to :model,             foreign_key: true
+      t.belongs_to :supplier,          foreign_key: true
+      t.string :article_name, null: false
+      t.string :article_number,        null: true
       t.money :price
-      t.string :supplier
+      t.string :supplier_name
     end
     add_foreign_key(:procurement_templates, :procurement_template_categories, column: 'template_category_id')
 

@@ -3,8 +3,11 @@ module Procurement
 
     belongs_to :budget_period
     belongs_to :group
-    belongs_to :user
     belongs_to :organization
+    belongs_to :user      # from parent application
+    belongs_to :model     # from parent application
+    belongs_to :supplier  # from parent application
+    belongs_to :location  # from parent application
 
     has_many :attachments, dependent: :destroy, inverse_of: :request
     accepts_nested_attributes_for :attachments
@@ -18,7 +21,7 @@ module Procurement
       self.organization_id ||= Access.requesters.find_by(user_id: user_id).organization_id
     end
 
-    validates_presence_of :user, :organization, :model_description, :requested_quantity
+    validates_presence_of :user, :organization, :article_name, :requested_quantity
     validates_presence_of :inspection_comment, if: Proc.new {|r| r.approved_quantity and r.approved_quantity < r.requested_quantity }
     validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 
@@ -74,8 +77,8 @@ module Procurement
             _('Budget period') => request.budget_period,
             _('Procurement group') => request.group,
             _('Requester') => request.user,
-            _('Article') => request.model_description,
-            _('Supplier') => request.supplier,
+            _('Article') => request.article_name,
+            _('Supplier') => request.supplier_name,
             _('Requested quantity') => request.requested_quantity,
             _('Approved quantity') => (show_all ? request.approved_quantity : nil),
             _('Order quantity') => (show_all ? request.order_quantity : nil),
@@ -84,7 +87,7 @@ module Procurement
             _('State') => _(request.state(current_user).to_s.humanize),
             _('Priority') => request.priority,
             _('Name of receiver') => request.receiver,
-            _('Point of Delivery') => request.location,
+            _('Point of Delivery') => request.location_name,
             _('Motivation') => request.motivation,
             _('Inspection comment') => (show_all ? request.inspection_comment : nil)
         }

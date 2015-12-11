@@ -2,13 +2,15 @@ module Procurement
   class Template < ActiveRecord::Base
 
     belongs_to :template_category
+    belongs_to :model     # from parent application
+    belongs_to :supplier  # from parent application
 
     monetize :price_cents
 
-    validates_presence_of :model_description
+    validates_presence_of :article_name
 
     def to_s
-      "%s - %s %s" % [model_description, price.currency, price.to_i]
+      "%s - %s %s" % [article_name, price.currency, price.to_i]
     end
 
   end

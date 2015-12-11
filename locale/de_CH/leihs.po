@@ -3088,3 +3088,9 @@ msgstr "Artikel"
 
 msgid "Procurement"
 msgstr "Bedarfsermittlung"
+
+msgid "Article nr. / Producer nr."
+msgstr "Artikelnr. / Herstellernr."
+
+msgid "Replacement"
+msgstr "Ersatz"

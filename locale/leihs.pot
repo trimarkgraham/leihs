@@ -2997,3 +2997,9 @@ msgstr ""
 
 msgid "Procurement"
 msgstr ""
+
+msgid "Article nr. / Producer nr."
+msgstr ""
+
+msgid "Replacement"
+msgstr ""
