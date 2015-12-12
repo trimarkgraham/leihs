@@ -148,6 +148,7 @@
                 = _('Article')
               .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][article_name]", placeholder: _('Article')}
+                %input.form-control{type: :hidden, name: "requests[new_#{i}][model_id]"}
             .form-group
               %label.col-xs-4.control-label
                 = _('Article nr. / Producer nr.')
@@ -158,6 +159,7 @@
                 = _('Supplier')
               .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][supplier_name]", placeholder: _('Supplier')}
+                %input.form-control{type: :hidden, name: "requests[new_#{i}][supplier_id]"}
             .form-group
               %label.col-xs-4.control-label
                 = _('Name of receiver')
@@ -168,6 +170,7 @@
                 = _('Point of Delivery')
               .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][location_name]", placeholder: _('Point of Delivery'), autocomplete: :false}
+                %input.form-control{type: :hidden, name: "requests[new_#{i}][location_id]"}
             .form-group
               %label.col-xs-4.control-label
                 = _('Motivation')
@@ -338,7 +341,9 @@
 
     $('input[data-toggle="tooltip"]').on 'focus mouseover', -> $(this).tooltip('toggle')
 
-    $("input[name*='[article_name]']").autocomplete
+    $("input[name*='[article_name]']").on('keypress', ->
+      $(this).closest('.form-group').find("input[name*='[model_id]']").val('')
+    ).autocomplete
       minLength: 3
       source: ( request, response )->
         $.ajax
@@ -349,13 +354,16 @@
           success: ( data )->
             response( data )
       select: ( event, ui )->
+        $(this).closest('.form-group').find("input[name*='[model_id]']").val( ui.item.id )
         $(this).val( ui.item.name ).change()
         false
     .each ->
       $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
         $( "<li>" ).append( "<a>" + item.name + "</a>" ).appendTo( ul )
 
-    $("input[name*='[supplier_name]']").autocomplete
+    $("input[name*='[supplier_name]']").on('keypress', ->
+      $(this).closest('.form-group').find("input[name*='[supplier_id]']").val('')
+    ).autocomplete
       minLength: 3
       source: ( request, response )->
         $.ajax
@@ -366,6 +374,7 @@
           success: ( data )->
             response( data )
       select: ( event, ui )->
+        $(this).closest('.form-group').find("input[name*='[supplier_id]']").val( ui.item.id )
         $(this).val( ui.item.name ).change()
         false
     .each ->
@@ -391,7 +400,9 @@
       $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
         $( "<li>" ).append( "<a>" + item.firstname + " " + item.lastname + "</a>" ).appendTo( ul )
 
-    $("input[name*='[location_name]']").autocomplete
+    $("input[name*='[location_name]']").on('keypress', ->
+      $(this).closest('.form-group').find("input[name*='[location_id]']").val('')
+    ).autocomplete
       minLength: 3
       source: ( request, response )->
         $.ajax
@@ -402,6 +413,7 @@
           success: ( data )->
             response( data )
       select: ( event, ui )->
+        $(this).closest('.form-group').find("input[name*='[location_id]']").val( ui.item.id )
         $(this).val( ui.item.to_s ).change()
         false
     .each ->
