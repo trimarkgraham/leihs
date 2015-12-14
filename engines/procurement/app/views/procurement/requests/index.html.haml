@@ -128,17 +128,17 @@
                     %span.small= _('incl. VAT')
                   .col-xs-8
                     .label.label-primary.total_price
-                .form-group
-                  %label.col-xs-4.control-label
-                    = _('Attachments')
-                  .col-xs-8
-                    %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
                 - if @group.inspectable_by? current_user
                   .form-group
                     %label.col-xs-4.control-label
                       = _('Inspection comment')
                     .col-xs-8
                       %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+                .form-group
+                  %label.col-xs-4.control-label
+                    = _('Attachments')
+                  .col-xs-8
+                    %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
 
         .row.request#new_request.hidden
           - i += 1
@@ -230,17 +230,17 @@
                 %span.small= _('incl. VAT')
               .col-xs-8
                 .label.label-primary.total_price
-            .form-group
-              %label.col-xs-4.control-label
-                = _('Attachments')
-              .col-xs-8
-                %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
             - if @group.inspectable_by? current_user
               .form-group
                 %label.col-xs-4.control-label
                   = _('Inspection comment')
                 .col-xs-8
                   %input.form-control{name: "requests[new_#{i}][inspection_comment]", placeholder: _('Inspection comment'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+            .form-group
+              %label.col-xs-4.control-label
+                = _('Attachments')
+              .col-xs-8
+                %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
 
     .panel-footer
       - if is_editable

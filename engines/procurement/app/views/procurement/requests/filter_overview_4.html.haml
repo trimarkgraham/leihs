@@ -37,7 +37,7 @@
             = _('State')
 
       - requests.group_by(&:group).each_pair do |group, requests|
-        .row.bg-info
+        .row.bg-info{style: 'line-height: 2.5em'}
           .col-sm-8.h4
             %a{href: overview_group_requests_path(group)}
               %i.fa.fa-object-group
@@ -64,13 +64,13 @@
         - requests.each do |request|
           %a.list-group-item.row{href: group_user_budget_period_requests_path(request.group, request.user, request.budget_period)}
             .col-sm-1
-              .label.label-info
+              :ruby
+                state, label_class = state_label(request)
+              .label{class: label_class}
                 = request.requested_quantity
 
               - if request.approved_quantity
                 &nbsp;
-                :ruby
-                  state, label_class = state_label(request)
                 .label{class: label_class}
                   = request.approved_quantity
 
