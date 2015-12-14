@@ -12,7 +12,7 @@ module Procurement
     has_many :attachments, dependent: :destroy, inverse_of: :request
     accepts_nested_attributes_for :attachments
 
-    monetize :price_cents
+    monetize :price_cents # TODO not required
 
     before_validation do
       self.order_quantity ||= approved_quantity
@@ -21,8 +21,9 @@ module Procurement
       self.organization_id ||= Access.requesters.find_by(user_id: user_id).organization_id
     end
 
-    validates_presence_of :user, :organization, :article_name, :requested_quantity
+    validates_presence_of :user, :organization, :article_name, :motivation
     validates_presence_of :inspection_comment, if: Proc.new {|r| r.approved_quantity and r.approved_quantity < r.requested_quantity }
+    validates :requested_quantity, presence: true, numericality: {greater_than: 0}
     validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 
     #################################################################
@@ -75,9 +76,10 @@ module Procurement
         show_all = (not request.budget_period.in_requesting_phase?) or request.group.inspectable_or_readable_by?(current_user)
         objects << {
             _('Budget period') => request.budget_period,
-            _('Procurement group') => request.group,
+            _('Group') => request.group,
             _('Requester') => request.user,
             _('Article') => request.article_name,
+            _('Article nr. / Producer nr.') => request.article_number,
             _('Supplier') => request.supplier_name,
             _('Requested quantity') => request.requested_quantity,
             _('Approved quantity') => (show_all ? request.approved_quantity : nil),
@@ -86,7 +88,8 @@ module Procurement
             ("%s %s" % [_('Total'), _('incl. VAT')]) => request.total_price(current_user),
             _('State') => _(request.state(current_user).to_s.humanize),
             _('Priority') => request.priority,
-            _('Name of receiver') => request.receiver,
+            _('Article nr. / Producer nr.') => request.article_number,
+            "%s / %s" % [_('Replacement'), _('New')] => request.replacement,
             _('Point of Delivery') => request.location_name,
             _('Motivation') => request.motivation,
             _('Inspection comment') => (show_all ? request.inspection_comment : nil)

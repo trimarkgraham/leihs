@@ -2929,6 +2929,9 @@ msgstr ""
 msgid "Template Categories"
 msgstr ""
 
+msgid "Requester"
+msgstr ""
+
 msgid "Requesters"
 msgstr ""
 

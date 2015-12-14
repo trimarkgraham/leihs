@@ -39,8 +39,9 @@
       - requests.group_by(&:group).each_pair do |group, requests|
         .row.bg-info
           .col-sm-8.h4
-            %i.fa.fa-object-group
-            = group
+            %a{href: overview_group_requests_path(group)}
+              %i.fa.fa-object-group
+              = group
           .col-sm-1
             - total_price = requests.map {|r| r.total_price(current_user) }.sum
             - budget_limit_amount = group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)

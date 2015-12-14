@@ -33,8 +33,8 @@
     %header
       %nav.navbar.navbar-inverse.navbar-fixed-top
         .container
-          -#%a.navbar-brand{href: admin.root_path}
-                = render partial: 'layouts/leihs_admin/logo'
+          %a.navbar-brand{href: procurement.root_path}
+            = render partial: 'layouts/procurement/logo'
           %ul.nav.navbar-nav.navbar-right
             -#= render partial: 'layouts/leihs_admin/navigation'
             - if current_user

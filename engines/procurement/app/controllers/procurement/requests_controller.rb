@@ -139,13 +139,13 @@ module Procurement
 
         if param[:id]
           r = Request.find(param[:id])
-          if permitted.values.all?(&:blank?) or (param[:requested_quantity] and param[:requested_quantity].to_i.zero?)
+          if permitted.values.all?(&:blank?)
             r.destroy
           else
             r.update_attributes(permitted)
           end
         else
-          next if permitted.values.all?(&:blank?) or (param[:requested_quantity] and param[:requested_quantity].to_i.zero?)
+          next if permitted[:article_name].blank?
           r = @group.requests.create(permitted) do |x|
             x.user = @user
             x.budget_period = @budget_period

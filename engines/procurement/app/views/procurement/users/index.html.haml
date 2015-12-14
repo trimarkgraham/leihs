@@ -12,23 +12,30 @@
     .panel-heading
       %i.fa.fa-user
       = _('Requesters')
-    .panel-body
+    %table.table.table-striped
+      %thead
+        %tr
+          %th.col-xs-4= _('Name of the requester')
+          %th.col-xs-4= _('Department')
+          %th.col-xs-4= _('Organization unit')
+
+      %tbody
       - @requester_accesses.each do |requester_access|
-        .row
-          .col-xs-4
+        %tr
+          %td
             %input{type: :hidden, name: 'requesters[][id]', value: requester_access.user_id}
             %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false, value: requester_access.user}
-          .col-xs-4
+          %td
             %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false, value: requester_access.organization.parent}
-          .col-xs-4
+          %td
             %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false, value: requester_access.organization}
-      .row
-        .col-xs-4
+      %tr
+        %td
           %input{type: :hidden, name: 'requesters[][id]'}
           %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false}
-        .col-xs-4
+        %td
           %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false}
-        .col-xs-4
+        %td
           %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false}
     .panel-footer
       %div{style: 'font-size: 2em'}
@@ -77,7 +84,7 @@
     do initAutocompletes
 
     $('.panel-footer').on 'click', '.fa-plus-circle', ->
-      target_el = $(this).closest('.panel').find('.panel-body > .row:last-child')
+      target_el = $(this).closest('.panel').find('tbody > tr:last-child')
       cloned_el = target_el.clone()
       cloned_el.find('input').val('')
       cloned_el.insertAfter(target_el)
