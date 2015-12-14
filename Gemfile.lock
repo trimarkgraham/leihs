@@ -320,7 +320,7 @@ GEM
     phantomjs (1.9.8.0)
     powerpack (0.1.1)
     procto (0.0.2)
-    psych (2.0.15)
+    psych (2.0.5)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -552,7 +552,7 @@ DEPENDENCIES
   paperclip (~> 4.3)
   phantomjs (~> 1.9.8)
   procurement!
-  psych (= 2.0.15)
+  psych (= 2.0.5)
   rack_session_access (~> 0.1.1)
   rails (= 4.2.5)
   rails-assets-accounting.js (~> 0.4)!
