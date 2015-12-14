@@ -6,6 +6,7 @@
 *
 *= require procurement/simple-sidebar
 *= require procurement/radial-progress-bar
+*= require procurement/jquery-tokeninput-facebook-theme
 *
 *= require_self
 */
@@ -46,7 +47,7 @@ header {
   overflow-x: hidden;
 }
 
-form .fa-plus-circle {
+.fa-plus-circle {
   cursor: pointer;
   color: #5cb85c;
 }

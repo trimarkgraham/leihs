@@ -13,5 +13,11 @@ module Procurement
     scope :requesters, -> { where(is_admin: [nil, false]) }
     scope :admins, -> { where(is_admin: true) }
 
+    class << self
+      def is_admin?(user)
+        admins.where(user_id: user).exists?
+      end
+    end
+
   end
 end

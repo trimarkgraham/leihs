@@ -59,3 +59,4 @@
         "<li>" + item.firstname + " " + item.lastname + "</li>"
       prePopulate: #{@group.inspectors.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}
       preventDuplicates: true
+      theme: 'facebook'

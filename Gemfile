@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 
+gem 'psych', '2.0.15' # NOTE 2.0.16 doesn't work
+
 gem 'leihs_admin', path: "engines/leihs_admin"
 gem 'procurement', path: "engines/procurement"
 

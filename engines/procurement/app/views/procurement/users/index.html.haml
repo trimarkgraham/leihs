@@ -15,7 +15,7 @@
     %table.table.table-striped
       %thead
         %tr
-          %th.col-xs-4= _('Name of the requester')
+          %th.col-xs-4= _('Name')
           %th.col-xs-4= _('Department')
           %th.col-xs-4= _('Organization unit')
 
@@ -59,6 +59,7 @@
         "<li>" + item.firstname + " " + item.lastname + "</li>"
       prePopulate: #{@admins.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}
       preventDuplicates: true
+      theme: 'facebook'
 
     initAutocompletes = ->
       $("input[name='requesters[][name]']").autocomplete

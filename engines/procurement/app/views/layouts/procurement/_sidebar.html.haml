@@ -48,11 +48,11 @@
         = _('My requests')
         =#FIXME :in_inspection# render partial: 'layouts/procurement/counts', locals: {user: current_user}
 
-  - if Procurement::Group.inspector_of_any_group?(current_user)
+  - if Procurement::Group.inspector_of_any_group_or_admin?(current_user)
     %li
       - b = controller.action_name == 'filter_overview'
       %a{href: filter_overview_requests_path, class: b ? "active" : nil}
         %i.fa.fa-eye
-        = _('Inspect')
+        = _('Inspection')
       - if b
         = render partial: 'procurement/requests/filter_panel'

@@ -30,7 +30,7 @@ module Procurement
     end
 
     before_action only: :filter_overview do
-      unless Procurement::Group.inspector_of_any_group?(current_user)
+      unless Procurement::Group.inspector_of_any_group_or_admin?(current_user)
         redirect_to root_path
       end
     end
@@ -65,7 +65,11 @@ module Procurement
     def filter_overview
       params[:filter] ||= {}
       params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
-      params[:filter][:group_ids] ||= Procurement::Group.all.select {|group| group.inspectable_by?(current_user) }.map(&:id)
+      params[:filter][:group_ids] ||= if (not Procurement::Group.inspector_of_any_group?(current_user) and Procurement::Access.is_admin?(current_user))
+                                        Procurement::Group.pluck(:id)
+                                      else
+                                        Procurement::Group.all.select {|group| group.inspectable_by?(current_user) }.map(&:id)
+                                      end
       params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
       params[:filter][:priorities] ||=['high', 'normal']
       params[:filter][:states] ||= Procurement::Request::STATES
@@ -145,7 +149,7 @@ module Procurement
             r.update_attributes(permitted)
           end
         else
-          next if permitted[:article_name].blank?
+          next if permitted[:motivation].blank?
           r = @group.requests.create(permitted) do |x|
             x.user = @user
             x.budget_period = @budget_period

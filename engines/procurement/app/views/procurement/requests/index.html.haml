@@ -34,7 +34,7 @@
         = render partial: 'request', locals: {request: request}
 
       - if is_editable
-        - @group.template_categories.each do |template_category|
+        - @group.template_categories.each do |template_category| # FIXME
           - template_category.templates.where.not(article_name: already_requested_article_names).each do |template|
             .row.request.hidden{data: {template_id: template.id}}
               - i += 1
@@ -71,7 +71,7 @@
                   %label.col-xs-4.control-label
                     = _('Motivation')
                   .col-xs-8
-                    %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters')}
+                    %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters'), data: {to_be_required: true}}
                 .form-group
                   %label.col-xs-4.control-label
                     = _('Priority')
@@ -87,10 +87,10 @@
                     = "%s / %s" % [_('Replacement'), _('New')]
                   .col-xs-8
                     %label
-                      %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 1}
+                      %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 1, checked: true}
                       .label.label-default= _('Replacement')
                     %label
-                      %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 0, checked: true}
+                      %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 0}
                       .label.label-default= _('New')
               .col-xs-6
                 .form-group
@@ -191,10 +191,10 @@
                 = "%s / %s" % [_('Replacement'), _('New')]
               .col-xs-8
                 %label
-                  %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 1}
+                  %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 1, checked: true}
                   .label.label-default= _('Replacement')
                 %label
-                  %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 0, checked: true}
+                  %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 0}
                   .label.label-default= _('New')
           .col-xs-6
             .form-group
@@ -308,7 +308,6 @@
     $("input[name*='[approved_quantity]']").on 'change', ->
       target_el = $(this).closest('.request').find("input[name*='[order_quantity]']")
       new_val = $(this).val()
-      target_el.attr('max', new_val)
       if (not target_el.val()) or Number(target_el.val()) > Number(new_val)
         target_el.val(new_val)
 
@@ -332,6 +331,7 @@
       $(this).hide()
       $(this).closest('.dropdown-menu').dropdown('toggle')
       el = $(".row[data-template_id='" + $(this).data('template_id') + "']").removeClass('hidden')
+      el.find('input[data-to_be_required]').attr('required', 'true')
       el.find("input[name*='requested_quantity]']").val(1).change()
       $('html, body').animate({
         scrollTop: el.offset().top - 100

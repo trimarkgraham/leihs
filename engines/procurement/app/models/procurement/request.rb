@@ -24,7 +24,6 @@ module Procurement
     validates_presence_of :user, :organization, :article_name, :motivation
     validates_presence_of :inspection_comment, if: Proc.new {|r| r.approved_quantity and r.approved_quantity < r.requested_quantity }
     validates :requested_quantity, presence: true, numericality: {greater_than: 0}
-    validates_numericality_of :order_quantity, less_than_or_equal_to: :approved_quantity, allow_nil: true
 
     #################################################################
 
@@ -89,7 +88,7 @@ module Procurement
             _('State') => _(request.state(current_user).to_s.humanize),
             _('Priority') => request.priority,
             _('Article nr. / Producer nr.') => request.article_number,
-            "%s / %s" % [_('Replacement'), _('New')] => request.replacement,
+            "%s / %s" % [_('Replacement'), _('New')] => (request.replacement ? _('Replacement') : _('New')),
             _('Point of Delivery') => request.location_name,
             _('Motivation') => request.motivation,
             _('Inspection comment') => (show_all ? request.inspection_comment : nil)

@@ -1,13 +1,17 @@
 - @h.each_pair do |budget_period, requests|
 
-  .panel.panel-info
+  .panel{class: "panel-#{header_color(budget_period)}"}
     .panel-heading
       .row
         .col-sm-2.h4
           %i.fa.fa-calendar
           = budget_period
-        .col-sm-10
+        .col-sm-6
           = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
+        .col-sm-4
+          - total_price = requests.map {|r| r.total_price(current_user) }.sum
+          .label.label-primary.big_total_price
+            = money_without_cents_and_with_symbol total_price
 
     .panel-body
       .row
@@ -39,9 +43,10 @@
       - requests.group_by(&:group).each_pair do |group, requests|
         .row.bg-info{style: 'line-height: 2.5em'}
           .col-sm-8.h4
+            %i.fa.fa-object-group
+            = group
             %a{href: overview_group_requests_path(group)}
-              %i.fa.fa-object-group
-              = group
+              %i.fa.fa-plus-circle
           .col-sm-1
             - total_price = requests.map {|r| r.total_price(current_user) }.sum
             - budget_limit_amount = group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)

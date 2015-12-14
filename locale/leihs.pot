@@ -2944,6 +2944,9 @@ msgstr ""
 msgid "Inspectors"
 msgstr ""
 
+msgid "Inspection"
+msgstr ""
+
 msgid "Inspection comment"
 msgstr ""
 
@@ -2954,6 +2957,9 @@ msgid "Name of receiver"
 msgstr ""
 
 msgid "Organizations"
+msgstr ""
+
+msgid "Organization unit"
 msgstr ""
 
 msgid "Department"

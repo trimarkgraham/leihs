@@ -3035,6 +3035,9 @@ msgstr "Begründung"
 msgid "Inspectors"
 msgstr "Prüfer"
 
+msgid "Inspection"
+msgstr "Überprüfung"
+
 msgid "Inspection comment"
 msgstr "Kommentar des Prüfers"
 
@@ -3047,8 +3050,11 @@ msgstr "Name des Empfängers"
 msgid "Organizations"
 msgstr "Organisationen"
 
+msgid "Organization unit"
+msgstr "Organisationseinheiten"
+
 msgid "Department"
-msgstr "Abteilung"
+msgstr "Departemente"
 
 msgid "Attachment"
 msgstr "Anhang"

@@ -5,12 +5,12 @@ module Procurement
     before_action :require_login, :require_admins, except: :root
 
     def root
-      if current_user and Procurement::Group.inspector_of_any_group?(current_user)
+      if current_user and Procurement::Group.inspector_of_any_group_or_admin?(current_user)
         redirect_to filter_overview_requests_path
       elsif is_procurement_requester?
         redirect_to overview_user_requests_path(current_user)
-      elsif is_procurement_admin?
-        redirect_to budget_periods_path
+      # elsif is_procurement_admin?
+      #   redirect_to budget_periods_path
       end
     end
 
@@ -19,7 +19,7 @@ module Procurement
     helper_method :is_procurement_admin?, :is_procurement_requester?
 
     def is_procurement_admin?
-      current_user and (Access.admins.where(user_id: current_user).exists? or (Access.admins.empty? and is_admin?))
+      current_user and (Access.is_admin?(current_user) or (Access.admins.empty? and is_admin?))
     end
 
     def is_procurement_requester?
@@ -47,7 +47,7 @@ module Procurement
     end
 
     def require_admin_role
-      redirect_to root_path unless Access.admins.where(user_id: current_user).exists?
+      redirect_to root_path unless Access.is_admin?(current_user)
     end
 
   end
