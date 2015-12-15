@@ -88,7 +88,7 @@ Feature: Inventory
     | Normal Model |
     | AVZ40020     |
 
-  @personas @javascript @browser
+  @personas @javascript @browser @problematic
   Scenario: The tab 'All'
     Then I can click one of the following tabs to filter inventory by:
       | Choice |
@@ -118,7 +118,7 @@ Feature: Inventory
       | Choice |
       | Software           |
 
-  @personas @javascript @browser
+  @personas @javascript @browser @problematic
   Scenario Outline: Filtering used and unused inventory
     Given I see retired and not retired inventory
     When I choose inside all inventory as "<dropdown>" the option "<property>"
@@ -128,7 +128,7 @@ Feature: Inventory
     | used & not used | used     |
     | used & not used | not used |
 
-  @personas @javascript @browser
+  @personas @javascript @browser @problematic
   Scenario Outline: Filtering borrowable and not borrowable inventory
     Given I see retired and not retired inventory
     When I choose inside all inventory as "<dropdown>" the option "<property>"
@@ -138,7 +138,7 @@ Feature: Inventory
     | borrowable & unborrowable | borrowable     |
     | borrowable & unborrowable | unborrowable   |
 
-  @personas @javascript @browser
+  @personas @javascript @browser @problematic
   Scenario Outline: Filtering retired and not retired inventory
     Given I see retired and not retired inventory
     When I choose inside all inventory as "<dropdown>" the option "<property>"

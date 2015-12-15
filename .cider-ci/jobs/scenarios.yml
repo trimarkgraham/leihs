@@ -1,0 +1,16 @@
+jobs:
+
+  scenarios:
+
+    name: Scenarios
+
+    description: |
+      Run leihs features (except engines) under MRI
+
+    context:
+      task-defaults:
+        max-auto-trials: 3
+
+      _cider-ci_include:
+        - .cider-ci/shared/tests-context.yml
+        - .cider-ci/tasks/cucumber_scenarios.yml
