@@ -63,7 +63,7 @@ module Procurement
     end
 
     def filter_overview
-      params[:filter] ||= {}
+      params[:filter] ||= session[:requests_filter] || {}
       params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
       params[:filter][:group_ids] ||= if (not Procurement::Group.inspector_of_any_group?(current_user) and Procurement::Access.is_admin?(current_user))
                                         Procurement::Group.pluck(:id)
@@ -73,6 +73,7 @@ module Procurement
       params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
       params[:filter][:priorities] ||=['high', 'normal']
       params[:filter][:states] ||= Procurement::Request::STATES
+      session[:requests_filter] = params[:filter]
 
       @h = {}
       Procurement::BudgetPeriod.order(end_date: :desc).find(params[:filter][:budget_period_ids]).each do |budget_period|
