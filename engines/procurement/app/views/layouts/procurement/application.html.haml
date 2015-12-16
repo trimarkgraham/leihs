@@ -36,7 +36,7 @@
           %a.navbar-brand{href: procurement.root_path}
             = render partial: 'layouts/procurement/logo'
           %ul.nav.navbar-nav.navbar-right
-            -#= render partial: 'layouts/leihs_admin/navigation'
+            = render partial: 'layouts/procurement/navigation'
             - if current_user
               = render partial: 'layouts/leihs_admin/user'
             = render partial: 'layouts/procurement/locale'

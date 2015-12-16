@@ -7,7 +7,7 @@ module Procurement
     has_many :requests, foreign_key: :user_id, primary_key: :user_id
 
     validates_presence_of :user
-    validates_presence_of :organization, unless: Proc.new {|r| r.is_admin }
+    validates_presence_of :organization, unless: Proc.new { |r| r.is_admin }
     validates_uniqueness_of :user, scope: :is_admin
 
     scope :requesters, -> { where(is_admin: [nil, false]) }
@@ -17,6 +17,13 @@ module Procurement
       def is_admin?(user)
         admins.where(user_id: user).exists?
       end
+
+      def has_some_access?(user)
+        where(user_id: user).exists? or
+            Group.inspector_of_any_group_or_admin?(user) or
+            (admins.empty? and user.has_role?(:admin))
+      end
+
     end
 
   end
