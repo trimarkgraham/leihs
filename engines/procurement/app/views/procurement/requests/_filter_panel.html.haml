@@ -21,10 +21,19 @@
     %i.fa.fa-sitemap
     = _('Departments')
   %ul
-    - Procurement::Organization.departments.each do |department|
+    -#- Procurement::Organization.departments.each do |department|
       %li
         %input{type: :checkbox, name: 'filter[department_ids][]', value: department.id, checked: params[:filter][:department_ids].map(&:to_i).include?(department.id)}
         = department
+    %select{name: 'filter[organization_id]'}
+      %option{value: ''}= _('All')
+      %optgroup{label: "----------"}
+      - Procurement::Organization.departments.each do |department|
+        %option{value: department.id, selected: (params[:filter][:organization_id].to_i == department.id)}= department
+        - department.children.each do |organization_unit|
+          %option{value: organization_unit.id, selected: (params[:filter][:organization_id].to_i == organization_unit.id)}
+            &nbsp;&nbsp;&nbsp;
+            = organization_unit
 
   %b= _('Priority')
   %ul

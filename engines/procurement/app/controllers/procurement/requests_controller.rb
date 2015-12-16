@@ -70,7 +70,8 @@ module Procurement
                                       else
                                         Procurement::Group.all.select {|group| group.inspectable_by?(current_user) }.map(&:id)
                                       end
-      params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
+      # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
+      params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
       params[:filter][:priorities] ||=['high', 'normal']
       params[:filter][:states] ||= Procurement::Request::STATES
       session[:requests_filter] = params[:filter]
@@ -96,10 +97,15 @@ module Procurement
         #   end
         # end
 
-        requests = budget_period.requests.joins(:organization).
-                      where(procurement_organizations: {parent_id: params[:filter][:department_ids]}).
-                      where(group_id: params[:filter][:group_ids], priority: params[:filter][:priorities]).
-                      select {|r| params[:filter][:states].map(&:to_sym).include? r.state(current_user)}
+        requests = budget_period.requests.where(group_id: params[:filter][:group_ids], priority: params[:filter][:priorities])
+        if params[:filter][:organization_id]
+                     # where(procurement_organizations: {parent_id: params[:filter][:organization_id]})
+          requests = requests.joins(:organization).
+                         where(["organization_id = :id OR procurement_organizations.parent_id = :id", {id: params[:filter][:organization_id]}])
+        end
+        requests = requests.select {|r| params[:filter][:states].map(&:to_sym).include? r.state(current_user)}
+
+
         if params[:sort_by] and params[:sort_dir]
           requests = requests.sort do |a,b|
             case params[:sort_by]
