@@ -110,12 +110,12 @@
             = request.requested_quantity
       .col-xs-4
 
-    - if request.group.inspectable_by?(current_user) or request.user_id == current_user.id
+    - if request.group.inspectable_or_readable_by?(current_user) or request.user_id == current_user.id
       .form-group
         %label.col-xs-4.control-label
           = _('Approved quantity')
         .col-xs-4
-          - if request.editable?(current_user)
+          - if request.editable?(current_user) and request.group.inspectable_by?(current_user)
             %input.form-control{name: "requests[#{request.id}][approved_quantity]", type: :number, min: 0, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :false}
           - else
             - if request.approved_quantity
@@ -125,12 +125,12 @@
                 = request.approved_quantity
         .col-xs-4
 
-    - if request.group.inspectable_by?(current_user)
+    - if request.group.inspectable_or_readable_by?(current_user)
       .form-group
         %label.col-xs-4.control-label
           = _('Order quantity')
         .col-xs-4
-          - if request.editable?(current_user)
+          - if request.editable?(current_user) and request.group.inspectable_by?(current_user)
             %input.form-control{name: "requests[#{request.id}][order_quantity]", type: :number, min: 0, value: request.order_quantity, placeholder: _('Order quantity'), autocomplete: :false}
           - elsif request.approved_quantity and request.order_quantity
             .label{class: label_class}
@@ -145,7 +145,7 @@
         .label.label-primary.total_price{data: {total: request.total_price(current_user)}}
           = money_without_cents_and_with_symbol request.total_price(current_user)
 
-    - if request.group.inspectable_by? current_user
+    - if request.group.inspectable_or_readable_by? current_user
       .form-group
         %label.col-xs-4.control-label
           = _('Inspection comment')

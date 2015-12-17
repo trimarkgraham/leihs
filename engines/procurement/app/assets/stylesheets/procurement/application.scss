@@ -67,3 +67,7 @@ div[data-toggle] {
     padding-left: 1em;
   }
 }
+
+input[required]:invalid {
+  background-color: #f2dede !important;
+}

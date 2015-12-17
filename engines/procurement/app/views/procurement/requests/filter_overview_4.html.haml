@@ -18,27 +18,35 @@
         %b.col-sm-1
           %a{href: url_for(params: params.merge(sort_by: :requested_quantity, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Quantities')
+            %i.fa.fa-sort
         %b.col-sm-2
           %a{href: url_for(params: params.merge(sort_by: :article_name, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Article')
+            %i.fa.fa-sort
         %b.col-sm-2
           %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Requester')
+            %i.fa.fa-sort
         %b.col-sm-2
           %a{href: url_for(params: params.merge(sort_by: :department, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Department')
+            %i.fa.fa-sort
         %b.col-sm-1
           %a{href: url_for(params: params.merge(sort_by: :price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Price')
+            %i.fa.fa-sort
         %b.col-sm-2
           %a{href: url_for(params: params.merge(sort_by: :total_price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Total price')
+            %i.fa.fa-sort
         %b.col-sm-1
           %a{href: url_for(params: params.merge(sort_by: :priority, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('Priority')
+            %i.fa.fa-sort
         %b.col-sm-1
           %a{href: url_for(params: params.merge(sort_by: :state, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
             = _('State')
+            %i.fa.fa-sort
 
       - requests.group_by(&:group).each_pair do |group, requests|
         .row.bg-info{style: 'line-height: 2.5em'}
@@ -51,7 +59,7 @@
             - total_price = requests.map {|r| r.total_price(current_user) }.sum
             - budget_limit_amount = group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)
 
-            .label.label-info.budget_limit
+            .label.label-default.budget_limit
               = money_without_cents_and_with_symbol budget_limit_amount
             %br
             .label.label-primary.big_total_price
@@ -105,3 +113,9 @@
                 state, label_class = state_label(request)
               .label{class: label_class}
                 = _(state.to_s.humanize)
+
+:scss
+
+  .panel-body > .row > b {
+    white-space: nowrap;
+  }

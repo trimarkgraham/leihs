@@ -3047,6 +3047,9 @@ msgstr "Priorität"
 msgid "Name of receiver"
 msgstr "Name des Empfängers"
 
+msgid "Organization"
+msgstr "Organisation"
+
 msgid "Organizations"
 msgstr "Organisationen"
 
@@ -3080,6 +3083,9 @@ msgstr "Stückpreis"
 msgid "State"
 msgstr "Status"
 
+msgid "State of Request"
+msgstr "Status Antrag"
+
 msgid "Move to another group"
 msgstr "Gruppe ändern"
 
@@ -3103,3 +3109,6 @@ msgstr "Artikelnr. / Herstellernr."
 
 msgid "Replacement"
 msgstr "Ersatz"
+
+msgid "Custom articles"
+msgstr "Gebräuchliche Artikel"

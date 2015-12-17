@@ -17,7 +17,8 @@
         %tr
           %th.col-xs-4= _('Name')
           %th.col-xs-4= _('Department')
-          %th.col-xs-4= _('Organization unit')
+          %th.col-xs-3= _('Organization unit')
+          %th.col-xs-1
 
       %tbody
       - @requester_accesses.each do |requester_access|
@@ -29,6 +30,9 @@
             %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false, value: requester_access.organization.parent}
           %td
             %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false, value: requester_access.organization}
+          %td.text-right.h3
+            %i.fa.fa-minus-circle
+
       %tr
         %td
           %input{type: :hidden, name: 'requesters[][id]'}
@@ -37,6 +41,8 @@
           %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false}
         %td
           %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false}
+        %td.text-right.h3
+          %i.fa.fa-minus-circle
     .panel-footer
       %div{style: 'font-size: 2em'}
         %i.fa.fa-plus-circle
@@ -59,7 +65,7 @@
         "<li>" + item.firstname + " " + item.lastname + "</li>"
       prePopulate: #{@admins.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}
       preventDuplicates: true
-      theme: 'facebook'
+      #theme: 'facebook'
 
     initAutocompletes = ->
       $("input[name='requesters[][name]']").autocomplete
@@ -75,7 +81,7 @@
               #response($.map data, (item)->
               #  {label: item.firstname + ' ' + item.lastname, value: item.id})
         select: ( event, ui )->
-          $(this).closest('.row').find("input[name='requesters[][id]']").val( ui.item.id )
+          $(this).closest('tr').find("input[name='requesters[][id]']").val( ui.item.id )
           $(this).val( ui.item.firstname + " " + ui.item.lastname )
           false
       .each ->
@@ -92,6 +98,9 @@
       do initAutocompletes
       false
 
+    $('tbody').on 'click', '.fa-minus-circle', ->
+      $(this).closest('tr').remove()
+      false
 
 -#:coffeescript
   $(document).ready ->

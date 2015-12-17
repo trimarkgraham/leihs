@@ -19,7 +19,7 @@
 
   %b
     %i.fa.fa-sitemap
-    = _('Departments')
+    = _('Organization')
   %ul
     -#- Procurement::Organization.departments.each do |department|
       %li
@@ -35,25 +35,30 @@
             &nbsp;&nbsp;&nbsp;
             = organization_unit
 
-  %b= _('Priority')
+  %b
+    %i.fa.fa-sort-amount-asc
+    = _('Priority')
   %ul
     - ['high', 'normal'].each do |priority|
       %input{type: :checkbox, name: "filter[priorities][]", value: priority, checked: params[:filter][:priorities].include?(priority)}
       .label.label-default= _(priority)
 
-  %b= _('State')
+  %b
+    %i.fa.fa-code-fork
+    = _('State of Request')
   %ul
     - Procurement::Request::STATES.each do |state|
       %li
         %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
         .label{class: label_class(state)}= _(state.to_s.humanize)
 
-  .row
-    .col-xs-6
-      %button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv'}
-        %i.fa.fa-table
-        = _('CSV Export')
-    .col-xs-6.text-right
-      %button.btn.btn-primary{type: :submit}
-        %i.fa.fa-filter
-        = _('Filter')
+  .text-center
+    %br
+    %button.btn.btn-primary{type: :submit}
+      %i.fa.fa-filter
+      = _('Filter')
+    %br
+    %br
+    %button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv'}
+      %i.fa.fa-table
+      = _('CSV Export')

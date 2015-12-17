@@ -16,7 +16,7 @@
           .col-xs-2
             %b
               = succeed ':' do
-                = _('Templates')
+                = _('Custom articles')
           .col-xs-10
             - @group.template_categories.each do |template_category|
               .btn-group
@@ -99,7 +99,8 @@
                     %span.small=_('incl. VAT')
                   .col-xs-4
                     %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
-                    = template.price
+                    .label.label-primary
+                      = template.price
                     -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
                   .col-xs-4
                 .form-group
@@ -242,6 +243,24 @@
               .col-xs-8
                 %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
 
+            .form-group
+              %label.col-xs-4.control-label
+                = _('State')
+              .col-xs-6
+                .label.label-info
+                  = _('New')
+
+              .col-xs-2.text-right
+                .btn-group
+                  %button.btn.btn-default.btn-sm.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: true, expanded: false}}
+                    %i.fa.fa-gear
+                    %span.caret
+                  %ul.dropdown-menu.dropdown-menu-right
+                    %li
+                      %a{href: '#', data: {method: :delete}}
+                        %i.fa.fa-trash
+                        = _('Delete')
+
     .panel-footer
       - if is_editable
         .row
@@ -291,6 +310,11 @@
       $(this).hide()
       $('#new_request input[data-to_be_required]').attr('required', 'true')
       $('#new_request').removeClass('hidden').closest('form').change()
+      false
+
+    $("#new_request a[data-method='delete']").on 'click', ->
+      $('#new_request input[data-to_be_required]').removeAttr('required')
+      $('#new_request').addClass('hidden').find('input').val('')
       false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->

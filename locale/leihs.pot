@@ -2956,6 +2956,9 @@ msgstr ""
 msgid "Name of receiver"
 msgstr ""
 
+msgid "Organization"
+msgstr ""
+
 msgid "Organizations"
 msgstr ""
 
@@ -2989,6 +2992,9 @@ msgstr ""
 msgid "State"
 msgstr ""
 
+msgid "State of Request"
+msgstr ""
+
 msgid "Move to another group"
 msgstr ""
 
@@ -3011,4 +3017,7 @@ msgid "Article nr. / Producer nr."
 msgstr ""
 
 msgid "Replacement"
+msgstr ""
+
+msgid "Custom articles"
 msgstr ""
