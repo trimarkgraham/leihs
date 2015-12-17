@@ -24,7 +24,7 @@ namespace :leihs do
     json = JSON.parse response.body
     author = json['commit']['author']
     time_of_commit = DateTime.parse(author['date']).to_s
-    time_now = Time.zone.now.to_s
+    time_now = Time.now.to_s
     sha = json['sha']
 
     # new#
