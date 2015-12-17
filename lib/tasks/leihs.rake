@@ -23,7 +23,7 @@ namespace :leihs do
       end
     json = JSON.parse response.body
     author = json['commit']['author']
-    time_of_commit = Time.zone.parse(author['date']).to_s
+    time_of_commit = DateTime.zone.parse(author['date']).to_s
     time_now = Time.zone.now.to_s
     sha = json['sha']
 
