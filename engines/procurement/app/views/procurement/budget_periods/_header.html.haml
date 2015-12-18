@@ -25,6 +25,11 @@
       %h4
         %i.fa.fa-user
         = @user
+      - unless Procurement::Access.requesters.find_by(user_id: @user)
+        .text-danger.h4
+          %i.fa.fa-warning
+          = _('Not a requester')
+
   .col-xs-4
     %h4
       %i.fa.fa-calendar

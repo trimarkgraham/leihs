@@ -54,5 +54,5 @@
       %a{href: filter_overview_requests_path, class: b ? "active" : nil}
         %i.fa.fa-eye
         = _('Inspection')
-      - if b
-        = render partial: 'procurement/requests/filter_panel'
+    - if b
+      = render partial: 'procurement/requests/filter_panel'

@@ -2935,6 +2935,9 @@ msgstr ""
 msgid "Requesters"
 msgstr ""
 
+msgid "Not a requester"
+msgstr ""
+
 msgid "My requests"
 msgstr ""
 

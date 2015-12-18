@@ -28,8 +28,11 @@ module Procurement
     #################################################################
 
     def editable?(user)
-      (budget_period.in_requesting_phase? and (user_id == user.id or group.inspectable_by?(user))) or
-        (budget_period.in_inspection_phase? and group.inspectable_by?(user))
+      Access.requesters.find_by(user_id: user_id) and
+          (
+            (budget_period.in_requesting_phase? and (user_id == user.id or group.inspectable_by?(user))) or
+            (budget_period.in_inspection_phase? and group.inspectable_by?(user))
+          )
     end
 
     STATES = [:new, :in_inspection, :denied, :partially_approved, :approved]
