@@ -1,3 +1,38 @@
+.well.well-sm
+  #column-titles.row
+    %b.col-sm-2
+      %a{href: url_for(params: params.merge(sort_by: :article_name, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Article')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Requester')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: url_for(params: params.merge(sort_by: :department, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Department')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: url_for(params: params.merge(sort_by: :price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Price')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: url_for(params: params.merge(sort_by: :requested_quantity, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Quantities')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: url_for(params: params.merge(sort_by: :total_price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Total price')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: url_for(params: params.merge(sort_by: :priority, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Priority')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: url_for(params: params.merge(sort_by: :state, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('State')
+        %i.fa.fa-sort
+
 - @h.each_pair do |budget_period, requests|
 
   .panel{class: "panel-#{header_color(budget_period)}"}
@@ -15,40 +50,6 @@
             = money_without_cents_and_with_symbol total_price
 
     .panel-body
-      .row
-        %b.col-sm-1
-          %a{href: url_for(params: params.merge(sort_by: :requested_quantity, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-            = _('Quantities')
-            %i.fa.fa-sort
-        %b.col-sm-2
-          %a{href: url_for(params: params.merge(sort_by: :article_name, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-            = _('Article')
-            %i.fa.fa-sort
-        %b.col-sm-2
-          %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-            = _('Requester')
-            %i.fa.fa-sort
-        %b.col-sm-2
-          %a{href: url_for(params: params.merge(sort_by: :department, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-            = _('Department')
-            %i.fa.fa-sort
-        %b.col-sm-1
-          %a{href: url_for(params: params.merge(sort_by: :price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-            = _('Price')
-            %i.fa.fa-sort
-        %b.col-sm-2
-          %a{href: url_for(params: params.merge(sort_by: :total_price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-            = _('Total price')
-            %i.fa.fa-sort
-        %b.col-sm-1
-          %a{href: url_for(params: params.merge(sort_by: :priority, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-            = _('Priority')
-            %i.fa.fa-sort
-        %b.col-sm-1
-          %a{href: url_for(params: params.merge(sort_by: :state, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-            = _('State')
-            %i.fa.fa-sort
-
       - requests.group_by(&:group).each_pair do |group, requests|
         .row.bg-info{style: 'line-height: 2.5em'}
           .col-sm-8.h4
@@ -73,25 +74,6 @@
 
         - requests.each do |request|
           %a.list-group-item.row{href: group_user_budget_period_requests_path(request.group, request.user, request.budget_period)}
-            .col-sm-1
-              :ruby
-                state, label_class = state_label(request)
-              .label{class: label_class}
-                = request.requested_quantity
-                %i.fa.fa-question
-
-              - if request.approved_quantity
-                %br
-                .label{class: label_class}
-                  = request.approved_quantity
-                  %i.fa.fa-check
-
-                - if request.order_quantity
-                  %br
-                  .label{class: label_class}
-                    = request.order_quantity
-                    %i.fa.fa-shopping-cart
-
             .col-sm-2
               = request.article_name
             .col-sm-2
@@ -100,22 +82,61 @@
               = request.organization.parent
               %br
               = request.organization
-            .col-sm-1.small
+            .col-sm-1
               .label.label-primary.total_price
+                %i.fa.fa-tag
                 = money_without_cents_and_with_symbol request.price
-            .col-sm-2.small
+            .col-sm-1.quantities
+              :ruby
+                state, label_class = state_label(request)
+              .label{class: label_class}
+                = request.requested_quantity
+                %i.fa.fa-question
+              %br
+              .label{class: label_class}
+                - if request.approved_quantity
+                  = request.approved_quantity
+                  %i.fa.fa-check
+                - else
+                  &nbsp;
+              %br
+              .label{class: label_class}
+                - if request.order_quantity
+                  = request.order_quantity
+                  %i.fa.fa-shopping-cart
+                - else
+                  &nbsp;
+            .col-sm-2
+              %br
+              %br
               .label.label-primary.total_price
+                %i.fa.fa-shopping-cart
                 = money_without_cents_and_with_symbol request.total_price(current_user)
-            .col-sm-1.small
+            .col-sm-1
               .label.label-default= _(request.priority)
-            .col-sm-1.small
+            .col-sm-1
               :ruby
                 state, label_class = state_label(request)
               .label{class: label_class}
                 = _(state.to_s.humanize)
 
 :scss
-
-  .panel-body > .row > b {
+  #column-titles > b {
     white-space: nowrap;
+  }
+
+  .panel-body {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    .list-group-item {
+      padding-left: 0;
+      padding-right: 0;
+      min-height: 6em;
+
+      .quantities .label {
+        min-width: 4em;
+        display: inline-block;
+      }
+    }
   }
