@@ -9,7 +9,7 @@
   - @group.template_categories.build
   - @template_categories.each do |template_category|
     .panel.panel-default
-      .panel-heading(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{template_category.id}")
+      .panel-heading.collapsed(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{template_category.id}")
         %i.fa.fa-cube
         - if template_category.id
           %input{type: :hidden, name: "template_categories[#{template_category.object_id}][id]", value: template_category.id}
@@ -36,9 +36,8 @@
                 %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][price]", type: :number, min: 0, value: template.price, placeholder: ("%s %s" % [_('Price'), _('incl. VAT')]), autocomplete: :false}
               %td.col-xs-3
                 %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier_name]", placeholder: _('Supplier'), value: template.supplier_name}
-              %td.col-xs-1.text-right.h3
-                &nbsp;
-                -#%i.fa.fa-minus-circle
+              %td.col-xs-1.text-right
+                %i.fa.fa-minus-circle
           %tr.row
             %td.col-xs-4
               %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][article_name]", placeholder: _('Article')}
@@ -47,7 +46,7 @@
             %td.col-xs-3
               %input.form-control{name: "template_categories[#{template_category.object_id}][templates_attributes][][supplier_name]", placeholder: _('Supplier')}
             %td.col-xs-1.text-right
-              &nbsp;
+              %i.fa.fa-minus-circle
         %tfoot
           %tr
             %td.h3{colspan: 4}
@@ -114,6 +113,13 @@
       target_el = panel_el.find(".panel-heading input[name*='[_destroy]']")
       target_el.val('1').change()
       false
+
+    $('tbody').on 'click', '.fa-minus-circle', ->
+      $(this).closest('tr').remove()
+      false
+
+    $('.panel').on 'click', '.panel-heading:not(.collapsed) input', (e)->
+      e.stopPropagation()
 
     $('form').on('ajax:success', (e, data, status, xhr) ->
       location.reload()

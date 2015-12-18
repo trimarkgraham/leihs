@@ -180,16 +180,16 @@
               %i.fa.fa-gear
               %span.caret
             %ul.dropdown-menu.dropdown-menu-right
-              %li.dropdown-header
-                %h5
-                  = _('Move to another group')
-              - Procurement::Group.where.not(id: @group).each do |group|
-                %li
-                  %a{href: move_group_user_budget_period_request_path(@group, @user, @budget_period, request, to_group_id: group.id), data: {method: :put}}
-                    %i.fa.fa-arrow-right
-                    = group
-              %li.divider{role: 'separator'}
               - if request.group.inspectable_by? current_user
+                %li.dropdown-header
+                  %h5
+                    = _('Move to another group')
+                - Procurement::Group.where.not(id: @group).each do |group|
+                  %li
+                    %a{href: move_group_user_budget_period_request_path(@group, @user, @budget_period, request, to_group_id: group.id), data: {method: :put}}
+                      %i.fa.fa-arrow-right
+                      = group
+                %li.divider{role: 'separator'}
                 %li.dropdown-header
                   %h5
                     = _('Move to another budget period')
@@ -199,7 +199,8 @@
                       %i.fa.fa-arrow-right
                       = budget_period
                 %li.divider{role: 'separator'}
-              %li
-                %a{href: group_user_budget_period_request_path(@group, @user, @budget_period, request), data: {method: :delete}}
-                  %i.fa.fa-trash
-                  = _('Delete')
+              - if request.group.inspectable_by?(current_user) or current_user == request.user
+                %li
+                  %a{href: group_user_budget_period_request_path(@group, @user, @budget_period, request), data: {method: :delete}}
+                    %i.fa.fa-trash
+                    = _('Delete')
