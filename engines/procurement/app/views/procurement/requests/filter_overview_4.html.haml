@@ -11,6 +11,7 @@
         .col-sm-4
           - total_price = requests.map {|r| r.total_price(current_user) }.sum
           .label.label-primary.big_total_price
+            %i.fa.fa-shopping-cart
             = money_without_cents_and_with_symbol total_price
 
     .panel-body
@@ -51,7 +52,7 @@
       - requests.group_by(&:group).each_pair do |group, requests|
         .row.bg-info{style: 'line-height: 2.5em'}
           .col-sm-8.h4
-            %i.fa.fa-object-group
+            %i.fa.fa-shopping-cart
             = group
             %a{href: overview_group_requests_path(group)}
               %i.fa.fa-plus-circle
@@ -60,19 +61,15 @@
             - budget_limit_amount = group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)
 
             .label.label-default.budget_limit
+              %i.fa.fa-pie-chart
               = money_without_cents_and_with_symbol budget_limit_amount
             %br
             .label.label-primary.big_total_price
+              %i.fa.fa-shopping-cart
               = money_without_cents_and_with_symbol total_price
 
           .col-sm-3
-            - if budget_limit_amount.to_i > 0
-              - percentage = total_price.to_i * 100 / budget_limit_amount.to_i
-              .progress-radial{class: "progress-#{(percentage / 5).to_i * 5}"}
-                .overlay
-                  = succeed '%' do
-                    = percentage
-
+            = render partial: 'procurement/requests/progress_radial', locals: {used: total_price.to_i, max: budget_limit_amount.to_i}
 
         - requests.each do |request|
           %a.list-group-item.row{href: group_user_budget_period_requests_path(request.group, request.user, request.budget_period)}
@@ -81,16 +78,19 @@
                 state, label_class = state_label(request)
               .label{class: label_class}
                 = request.requested_quantity
+                %i.fa.fa-question
 
               - if request.approved_quantity
-                &nbsp;
+                %br
                 .label{class: label_class}
                   = request.approved_quantity
+                  %i.fa.fa-check
 
                 - if request.order_quantity
-                  &nbsp;
+                  %br
                   .label{class: label_class}
                     = request.order_quantity
+                    %i.fa.fa-shopping-cart
 
             .col-sm-2
               = request.article_name

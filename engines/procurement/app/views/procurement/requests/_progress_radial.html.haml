@@ -1,0 +1,6 @@
+- if max > 0
+  - percentage = used * 100 / max
+  .progress-radial{class: "progress-#{(percentage / 5).to_i * 5}"}
+    .overlay
+      = succeed '%' do
+        = percentage

@@ -30,7 +30,7 @@
               %i.fa.fa-warning.text-danger
         %li
           %a{href: groups_path, class: request.path == groups_path ? "active" : nil}
-            %i.fa.fa-object-group
+            %i.fa.fa-shopping-cart
             = _('Groups')
             - unless Procurement::Group.exists?
               %i.fa.fa-warning.text-danger

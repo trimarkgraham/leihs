@@ -1,6 +1,6 @@
 %li.dropdown
   %a.dropdown-toggle{href: "#", data: {toggle: "dropdown"}}
-    %i.fa.fa-object-group
+    %i.fa.fa-shopping-cart
     %span= _("Procurement")
     %i.caret
   %ul.dropdown-menu
@@ -18,7 +18,7 @@
       %li.divider
       %li
         %a.dropdown-item{href: procurement.root_path}
-          %i.fa.fa-object-group
+          %i.fa.fa-shopping-cart
           %span= _('Procurement')
     - if current_user.has_role?(:group_manager)
       %li.divider

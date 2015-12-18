@@ -17,19 +17,17 @@
                   .col-xs-7
                     %h3= group
                   .col-xs-1
-                    - if values1[:budget_limit_amount].to_i > 0
-                      - percentage = total_price.to_i * 100 / values1[:budget_limit_amount].to_i
-                      .progress-radial{class: "progress-#{(percentage / 5).to_i * 5}"}
-                        .overlay
-                          = succeed '%' do
-                            = percentage
+                    = render partial: 'procurement/requests/progress_radial', locals: {used: total_price.to_i, max: values1[:budget_limit_amount].to_i}
+
                   .col-xs-4
                     - if values1[:budget_limit_amount].to_i > 0
                       .label.label-default.budget_limit
+                        %i.fa.fa-pie-chart
                         = money_without_cents_and_with_symbol values1[:budget_limit_amount]
                       %br
 
                     .label.label-primary.big_total_price
+                      %i.fa.fa-shopping-cart
                       = money_without_cents_and_with_symbol total_price
 
               .panel-body

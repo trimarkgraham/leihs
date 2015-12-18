@@ -2,7 +2,7 @@
   .col-xs-3
     - if @group
       %h4
-        %i.fa.fa-object-group
+        %i.fa.fa-shopping-cart
         = @group
       - if @user
         - if @group.email
@@ -36,16 +36,13 @@
     - if @user.nil? and @group and @group.inspectable_or_readable_by?(current_user)
       - budget_limit_amount = @group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)
 
-      - if budget_limit_amount.to_i > 0
-        - percentage = total_price.to_i * 100 / budget_limit_amount.to_i
-        .progress-radial{class: "progress-#{(percentage / 5).to_i * 5}"}
-          .overlay
-            = succeed '%' do
-              = percentage
+      = render partial: 'procurement/requests/progress_radial', locals: {used: total_price.to_i, max: budget_limit_amount.to_i}
 
       .label.label-default.budget_limit
+        %i.fa.fa-pie-chart
         = money_without_cents_and_with_symbol budget_limit_amount
       %br
 
     .label.label-primary.big_total_price
+      %i.fa.fa-shopping-cart
       = money_without_cents_and_with_symbol total_price
