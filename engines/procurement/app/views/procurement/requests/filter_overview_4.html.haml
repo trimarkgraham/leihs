@@ -22,7 +22,7 @@
         %i.fa.fa-sort
     %b.col-sm-2
       %a{href: url_for(params: params.merge(sort_by: :total_price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-        = _('Total price')
+        = "%s %s" % [_('Total'), _('Price')]
         %i.fa.fa-sort
     %b.col-sm-1
       %a{href: url_for(params: params.merge(sort_by: :priority, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
