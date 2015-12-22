@@ -2990,6 +2990,12 @@ msgstr "höchstmöglich"
 msgid "Swap Model"
 msgstr "Modell tauschen"
 
+msgid "Checked before"
+msgstr "Inventur vor"
+
+msgid "Search category"
+msgstr "Kategorie suchen"
+
 msgid "Budget period"
 msgstr "Budget Periode"
 

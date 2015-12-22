@@ -64,7 +64,7 @@ Feature: Lending
     And I click on "Hand Over"
     Then there are inventory codes for item and license in the contract
 
-  @javascript @browser @personas
+  @javascript @browser @personas @problematic
   Scenario: Handing over items and licenses by model search
     Given I am doing a hand over
     When I add a borrowable item to the hand over by using the search input field
@@ -117,7 +117,7 @@ Feature: Lending
     Then I can choose to see all results
     When I choose to see all results, I receive a separate list with all results from this category
 
-  @javascript @personas @browser
+  @javascript @personas @browser @problematic
   Scenario: Merging the numbers in an item popup
     Given I navigate to the open orders
     And I hover over the number of items in a line
