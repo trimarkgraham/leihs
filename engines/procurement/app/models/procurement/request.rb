@@ -12,9 +12,11 @@ module Procurement
     has_many :attachments, dependent: :destroy, inverse_of: :request
     accepts_nested_attributes_for :attachments
 
-    monetize :price_cents # TODO not required
+    monetize :price_cents, allow_nil: true
 
     before_validation do
+      self.price ||= 0
+
       self.order_quantity ||= approved_quantity
       self.approved_quantity ||= order_quantity
 

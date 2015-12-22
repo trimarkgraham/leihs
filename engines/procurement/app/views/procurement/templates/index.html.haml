@@ -10,13 +10,17 @@
   - @template_categories.each do |template_category|
     .panel.panel-default
       .panel-heading.collapsed(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{template_category.id}")
-        %i.fa.fa-cube
-        - if template_category.id
-          %input{type: :hidden, name: "template_categories[#{template_category.object_id}][id]", value: template_category.id}
-          %input{type: :hidden, name: "template_categories[#{template_category.object_id}][_destroy]"}
-        = succeed ':' do
-          = _('Category')
-        %input{name: "template_categories[#{template_category.object_id}][name]", value: template_category.name}
+        .row
+          .col-xs-11
+            %i.fa.fa-cube
+            - if template_category.id
+              %input{type: :hidden, name: "template_categories[#{template_category.object_id}][id]", value: template_category.id}
+              %input{type: :hidden, name: "template_categories[#{template_category.object_id}][_destroy]"}
+            = succeed ':' do
+              = _('Category')
+            %input{name: "template_categories[#{template_category.object_id}][name]", value: template_category.name}
+          .col-xs-1.text-right{style: 'font-size: 1.6em'}
+            %i.fa.fa-minus-circle
 
       %table.table(id="collapse_#{template_category.id}" class="panel-collapse collapse" role="tabpanel")
         %thead
@@ -24,8 +28,7 @@
             %th.col-xs-4= _('Description')
             %th.col-xs-4= "%s %s %s" % [_('Price'), MoneyRails.default_currency, _('incl. VAT')]
             %th.col-xs-3= _('Supplier')
-            %th.col-xs-1.text-right.h3
-              %i.fa.fa-minus-circle
+            %th.col-xs-1
         %tbody
           - template_category.templates.each do |template|
             %tr.row
@@ -108,7 +111,7 @@
       do initAutocompletes
       false
 
-    $('thead').on 'click', '.fa-minus-circle', ->
+    $('.panel-heading').on 'click', '.fa-minus-circle', ->
       panel_el = $(this).closest('.panel')
       target_el = panel_el.find(".panel-heading input[name*='[_destroy]']")
       target_el.val('1').change()
