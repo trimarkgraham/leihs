@@ -41,6 +41,9 @@
           %button.btn.btn-success{type: :submit}
             %i.fa.fa-check
             = _('Save')
+      %tr
+        %td{colspan: 5}
+          = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
 
 :coffeescript
   $(document).ready ->

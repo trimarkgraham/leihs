@@ -20,7 +20,7 @@ module Procurement
     def create
       Access.requesters.delete_all
       params[:requesters].each do |param|
-        next if param[:name].blank?
+        next if param[:name].blank? or param[:_destroy] == '1'
         access = Access.requesters.find_or_initialize_by(user_id: param[:id])
         parent = Organization.find_or_create_by(name: param[:department])
         organization = parent.children.find_or_create_by(name: param[:organization])

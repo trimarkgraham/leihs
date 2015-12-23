@@ -25,6 +25,7 @@
         %tr
           %td
             %input{type: :hidden, name: 'requesters[][id]', value: requester_access.user_id}
+            %input{type: :hidden, name: 'requesters[][_destroy]'}
             %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false, value: requester_access.user}
           %td
             %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false, value: requester_access.organization.parent}
@@ -99,7 +100,10 @@
       false
 
     $('tbody').on 'click', '.fa-minus-circle', ->
-      $(this).closest('tr').remove()
+      row_el = $(this).closest('tr')
+      target_el = row_el.find("input[name*='[_destroy]']")
+      target_el.val('1').change()
+      row_el.addClass('bg-danger')
       false
 
 -#:coffeescript
