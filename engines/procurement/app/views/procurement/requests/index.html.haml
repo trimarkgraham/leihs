@@ -10,13 +10,20 @@
       = render partial: 'procurement/budget_periods/header', locals: {budget_period: @budget_period, requests: @requests}
 
     .panel-body
-      - if is_editable and @group.template_categories.exists?
+      - if is_editable and (@group.template_categories.exists? or @group.inspectable_by?(current_user))
         - already_requested_article_names = @requests.map &:article_name
         .row{style: 'margin-top: 0.5em; margin-bottom: 0.5em;'}
           .col-xs-2
             %b
               = succeed ':' do
                 = _('Custom articles')
+            - if @group.inspectable_by?(current_user)
+              %br
+              %a.btn.btn-primary.btn-sm{href: group_templates_path(@group)}
+                %i.fa.fa-cube
+                = "%s %s" % [_('Edit'), _('Templates')]
+                .label.label-info= @group.templates.count
+
           .col-xs-10
             - @group.template_categories.each do |template_category|
               .btn-group
@@ -277,10 +284,6 @@
 :scss
   .panel-body {
     padding-top: 0;
-
-    & > .row.request:not(.hidden):nth-of-type(even) {
-      background: #e2e2e2;
-    }
     & > .row.request {
       border-top: 1px solid #cccccc;
       padding-top: 0.5em;
@@ -306,6 +309,12 @@
 
 :coffeescript
   $(document).ready ->
+    zebra_rows = ->
+      $('.panel-body > .row.request').css('background-color', 'white')
+      $('.panel-body > .row.request:visible:even').css('background-color', '#e2e2e2')
+
+    do zebra_rows
+
     $('.panel-footer').on 'click', '.fa-plus-circle', ->
       #target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
       #cloned_el = target_el.clone()
@@ -314,11 +323,13 @@
       $(this).hide()
       $('#new_request input[data-to_be_required]').attr('required', 'true')
       $('#new_request').removeClass('hidden').closest('form').change()
+      do zebra_rows
       false
 
     $("#new_request a[data-method='delete']").on 'click', ->
       $('#new_request input[data-to_be_required]').removeAttr('required')
       $('#new_request').addClass('hidden').find('input').val('')
+      do zebra_rows
       false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->
@@ -359,6 +370,7 @@
       $(this).hide()
       $(this).closest('.dropdown-menu').dropdown('toggle')
       el = $(".row[data-template_id='" + $(this).data('template_id') + "']").removeClass('hidden')
+      do zebra_rows
       el.find('input[data-to_be_required]').attr('required', 'true')
       el.find("input[name*='requested_quantity]']").val(1).change()
       $('html, body').animate({
