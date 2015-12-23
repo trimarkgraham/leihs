@@ -10,7 +10,7 @@
         %i.fa.fa-sort
     %b.col-sm-2
       %a{href: url_for(params: params.merge(sort_by: :department, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-        = _('Department')
+        = _('Organization')
         %i.fa.fa-sort
     %b.col-sm-1
       %a{href: url_for(params: params.merge(sort_by: :price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
@@ -55,8 +55,9 @@
           .col-sm-8.h4
             %i.fa.fa-shopping-cart
             = group
-            %a{href: overview_group_requests_path(group)}
-              %i.fa.fa-plus-circle
+            - if group.inspectable_by? current_user
+              %a{href: overview_group_requests_path(group)}
+                %i.fa.fa-plus-circle
           .col-sm-1
             - total_price = requests.map {|r| r.total_price(current_user) }.sum
             - budget_limit_amount = group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)

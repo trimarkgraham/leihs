@@ -1061,6 +1061,9 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
+msgid "Quantities"
+msgstr ""
+
 msgid "Quantity allocations"
 msgstr ""
 

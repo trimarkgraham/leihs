@@ -1077,6 +1077,9 @@ msgstr "Anz."
 msgid "Quantity"
 msgstr "Anzahl"
 
+msgid "Quantities"
+msgstr "Mengen"
+
 msgid "Quantity allocations"
 msgstr "Anzahl-Zuteilungen"
 
