@@ -14,7 +14,8 @@ namespace :app do
 
       puts `mysql -h localhost -u root leihs2_dev < ./db/backups/leihs-current.sql`
 
-      puts `rake db:migrate` # NOTE Rake::Task['db:migrate'].invoke doesn't include engines' migrations
+      # NOTE Rake::Task['db:migrate'].invoke doesn't include engines' migrations
+      puts `rake db:migrate`
       Rake::Task['leihs:maintenance'].invoke
 
       # also sync the test database schema
