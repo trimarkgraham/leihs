@@ -1,4 +1,4 @@
-require "procurement/engine"
+require 'procurement/engine'
 
 module Procurement
 end

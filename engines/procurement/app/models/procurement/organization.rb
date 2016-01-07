@@ -2,7 +2,7 @@ module Procurement
   class Organization < ActiveRecord::Base
     extend ActsAsTree::TreeWalker
 
-    acts_as_tree #order: "name"
+    acts_as_tree # order: "name"
 
     has_many :accesses
     has_many :requests

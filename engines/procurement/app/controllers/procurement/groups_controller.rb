@@ -1,4 +1,4 @@
-require_dependency "procurement/application_controller"
+require_dependency 'procurement/application_controller'
 
 module Procurement
   class GroupsController < ApplicationController

@@ -1,4 +1,4 @@
-require_dependency "procurement/application_controller"
+require_dependency 'procurement/application_controller'
 
 module Procurement
   class RequestsController < ApplicationController
@@ -50,11 +50,11 @@ module Procurement
 
       respond_to do |format|
         format.html
-        format.csv {
+        format.csv do
           send_data Request.csv_export(@requests, current_user),
                     type: 'text/csv; charset=utf-8; header=present',
-                    disposition: "attachment; filename=requests.csv"
-        }
+                    disposition: 'attachment; filename=requests.csv'
+        end
       end
     end
 
@@ -68,11 +68,11 @@ module Procurement
       params[:filter][:group_ids] ||= if (not Procurement::Group.inspector_of_any_group?(current_user) and Procurement::Access.is_admin?(current_user))
                                         Procurement::Group.pluck(:id)
                                       else
-                                        Procurement::Group.all.select {|group| group.inspectable_by?(current_user) }.map(&:id)
+                                        Procurement::Group.all.select { |group| group.inspectable_by?(current_user) }.map(&:id)
                                       end
       # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
       params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
-      params[:filter][:priorities] ||=['high', 'normal']
+      params[:filter][:priorities] ||= ['high', 'normal']
       params[:filter][:states] ||= Procurement::Request::STATES
       session[:requests_filter] = params[:filter]
 
@@ -99,23 +99,22 @@ module Procurement
 
         requests = budget_period.requests.where(group_id: params[:filter][:group_ids], priority: params[:filter][:priorities])
         if params[:filter][:organization_id]
-                     # where(procurement_organizations: {parent_id: params[:filter][:organization_id]})
-          requests = requests.joins(:organization).
-                         where(["organization_id = :id OR procurement_organizations.parent_id = :id", {id: params[:filter][:organization_id]}])
+          # where(procurement_organizations: {parent_id: params[:filter][:organization_id]})
+          requests = requests.joins(:organization)
+                         .where(['organization_id = :id OR procurement_organizations.parent_id = :id', { id: params[:filter][:organization_id] }])
         end
-        requests = requests.select {|r| params[:filter][:states].map(&:to_sym).include? r.state(current_user)}
-
+        requests = requests.select { |r| params[:filter][:states].map(&:to_sym).include? r.state(current_user) }
 
         if params[:sort_by] and params[:sort_dir]
-          requests = requests.sort do |a,b|
+          requests = requests.sort do |a, b|
             case params[:sort_by]
-              when 'total_price'
+            when 'total_price'
                 a.total_price(current_user) <=> b.total_price(current_user)
-              when 'state'
+            when 'state'
                 a.state(current_user) <=> b.state(current_user)
-              when 'department'
+            when 'department'
                 a.organization.parent <=> b.organization.parent
-              else
+            else
                 a.send(params[:sort_by]) <=> b.send(params[:sort_by])
             end
           end
@@ -126,13 +125,13 @@ module Procurement
 
       respond_to do |format|
         format.html { render :filter_overview_4 }
-        format.csv {
+        format.csv do
           # requests = @h.values.flat_map(&:values).flat_map{|x| x[:departments].values.flat_map(&:values)}.flat_map{|x| x[:requests]}
           requests = @h.values.flatten
           send_data Request.csv_export(requests, current_user),
                     type: 'text/csv; charset=utf-8; header=present',
-                    disposition: "attachment; filename=requests.csv"
-        }
+                    disposition: 'attachment; filename=requests.csv'
+        end
       end
     end
 

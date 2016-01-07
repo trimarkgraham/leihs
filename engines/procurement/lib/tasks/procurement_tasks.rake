@@ -7,7 +7,7 @@ namespace :procurement do
   desc 'Procurement data seed'
   task seed: :environment do
 
-    {'Services' => ['ITZ', 'FM', 'PZ'],
+    {'Services' => %w(ITZ FM PZ),
      'DKM' => ['Vertiefung Fotografie', 'Departementsleitung', 'BA Arts in Medien und Kunst'],
      'DDK' => ['Departementsleitung', 'BA Film', 'BA Design'],
      'DDE' => ['Departementsleitung'],
@@ -22,11 +22,11 @@ namespace :procurement do
     [1973, 5824, 601, 9103, 10558].each do |user_id|
       Procurement::Access.admins.create user_id: user_id
     end
-    {12=>['Services', 'PZ'], 3881=>['Services', 'PZ'], 10=>['Services', 'ITZ'], 1363=>['DDK', 'BA Film'], 667=>['DKV', 'Departementsleitung'],
-     4423=>['DKM', 'Departementsleitung'], 850=>['DDE', 'Departementsleitung'], 4491=>['DDK', 'Departementsleitung'], 114=>['Services', 'FM'],
-     3848=>['DMU', 'Betriebsleiter'], 9103=>['Services', 'ITZ'], 2415=>['DMU', 'Departementsleitung'], 350=>['Services', 'PZ'],
-     422=>['DKM', 'BA Arts in Medien und Kunst'], 5824=>['Services', 'ITZ'], 1260=>['DKV', 'BA Art Education'],
-     9069=>['DMU', 'BA of Arts in Musik'], 10558=>['Services', 'ITZ']}.each_pair do |user_id, organization_names|
+    {12 => ['Services', 'PZ'], 3881 => ['Services', 'PZ'], 10 => ['Services', 'ITZ'], 1363 => ['DDK', 'BA Film'], 667 => ['DKV', 'Departementsleitung'],
+     4423 => ['DKM', 'Departementsleitung'], 850 => ['DDE', 'Departementsleitung'], 4491 => ['DDK', 'Departementsleitung'], 114 => ['Services', 'FM'],
+     3848 => ['DMU', 'Betriebsleiter'], 9103 => ['Services', 'ITZ'], 2415 => ['DMU', 'Departementsleitung'], 350 => ['Services', 'PZ'],
+     422 => ['DKM', 'BA Arts in Medien und Kunst'], 5824 => ['Services', 'ITZ'], 1260 => ['DKV', 'BA Art Education'],
+     9069 => ['DMU', 'BA of Arts in Musik'], 10558 => ['Services', 'ITZ']}.each_pair do |user_id, organization_names|
       parent = Procurement::Organization.find_by(name: organization_names.first)
       organization = parent.children.find_by(name: organization_names.last)
       Procurement::Access.requesters.create user_id: user_id, organization: organization
@@ -152,7 +152,6 @@ namespace :procurement do
       x[:templates].each { |y| tc.templates.create y }
     end
 
-
     if Rails.env.development?
       Procurement::BudgetPeriod.create name: '2015', inspection_start_date: '2014-10-01', end_date: '2014-11-30'
       Procurement::BudgetPeriod.create name: '2016', inspection_start_date: '2015-10-01', end_date: '2015-11-30'
@@ -190,7 +189,7 @@ namespace :procurement do
 
       Procurement::Group.all.each do |group|
         attrs = {}
-        Procurement::BudgetPeriod.all.each { |bp| attrs[bp.id] = {budget_period_id: bp.id, amount: rand(200000..1200000)} }
+        Procurement::BudgetPeriod.all.each { |bp| attrs[bp.id] = {budget_period_id: bp.id, amount: rand(200000..1_200_000)} }
         group.update_attributes(budget_limits_attributes: attrs)
       end
 

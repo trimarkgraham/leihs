@@ -1,18 +1,18 @@
-require_dependency "procurement/application_controller"
+require_dependency 'procurement/application_controller'
 
 module Procurement
   class UsersController < ApplicationController
 
     skip_before_action :require_admins
-    # TODO ?? before_action :require_admin_role if admins empty ??
+    # TODO: ?? before_action :require_admin_role if admins empty ??
 
     def index
       respond_to do |format|
-        format.html {
+        format.html do
           @requester_accesses = Access.requesters.joins(:user).order('users.firstname')
-          @admins = User.not_as_delegations.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id').
-              where(procurement_accesses: {is_admin: true}).order(:firstname)
-        }
+          @admins = User.not_as_delegations.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id')
+              .where(procurement_accesses: { is_admin: true }).order(:firstname)
+        end
         format.json { render json: User.not_as_delegations.filter(params).to_json(only: [:id, :firstname, :lastname]) }
       end
     end

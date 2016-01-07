@@ -4,22 +4,22 @@ module Procurement
     # override money-rails helper
     def money_without_cents_and_with_symbol(value)
       value = Money.new(value) unless value.respond_to? :currency
-      number_to_currency(value.to_i, unit: "#{value.currency} ", separator: ".", delimiter: "'", precision: 0)
+      number_to_currency(value.to_i, unit: "#{value.currency} ", separator: '.', delimiter: "'", precision: 0)
     end
 
     def label_class(key)
       case key
-        when :new
+      when :new
           'label-info'
-        when :in_inspection
+      when :in_inspection
           'label-primary'
-        when :denied
+      when :denied
           'label-danger'
-        when :partially_approved
+      when :partially_approved
           'label-warning'
-        when :approved
+      when :approved
           'label-success'
-        else
+      else
           raise
       end
     end

@@ -1,4 +1,4 @@
-require_dependency "procurement/application_controller"
+require_dependency 'procurement/application_controller'
 
 module Procurement
   class TemplatesController < ApplicationController
@@ -17,7 +17,7 @@ module Procurement
 
     def create
       errors = params.require(:template_categories).values.map do |param|
-        #param = param.permit(:name, :template_attributes)
+        # param = param.permit(:name, :template_attributes)
 
         if param[:id]
           r = @group.template_categories.find(param[:id])

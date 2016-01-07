@@ -34,22 +34,22 @@ module Procurement
 
       if past? or (args[:group] and args[:group].inspectable_or_readable_by?(args[:current_user]))
         {
-            new: requests.where(approved_quantity: nil).count,
-            denied: requests.where(approved_quantity: 0).count,
-            partially_approved: requests.where('0 < approved_quantity AND approved_quantity < requested_quantity').count,
-            approved: requests.where('approved_quantity >= requested_quantity').count
+          new: requests.where(approved_quantity: nil).count,
+          denied: requests.where(approved_quantity: 0).count,
+          partially_approved: requests.where('0 < approved_quantity AND approved_quantity < requested_quantity').count,
+          approved: requests.where('approved_quantity >= requested_quantity').count
         }
       else
         if in_inspection_phase?
-          {in_inspection: requests.count}
+          { in_inspection: requests.count }
         else
-          {new: requests.count}
+          { new: requests.count }
         end
       end
     end
 
     def previous
-      self.class.order(end_date: :desc).where("end_date < ?", end_date).first
+      self.class.order(end_date: :desc).find_by('end_date < ?', end_date)
     end
 
     def current?
@@ -63,7 +63,7 @@ module Procurement
     class << self
 
       def current
-        order(end_date: :asc).where("end_date >= CURDATE()").first
+        order(end_date: :asc).find_by('end_date >= CURDATE()')
       end
 
     end

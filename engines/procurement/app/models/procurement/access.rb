@@ -7,7 +7,7 @@ module Procurement
     has_many :requests, foreign_key: :user_id, primary_key: :user_id
 
     validates_presence_of :user
-    validates_presence_of :organization, unless: Proc.new { |r| r.is_admin }
+    validates_presence_of :organization, unless: proc { |r| r.is_admin }
     validates_uniqueness_of :user, scope: :is_admin
 
     scope :requesters, -> { where(is_admin: [nil, false]) }
