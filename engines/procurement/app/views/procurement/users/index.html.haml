@@ -12,7 +12,7 @@
     .panel-heading
       %i.fa.fa-user
       = _('Requesters')
-    %table.table.table-striped
+    %table.table
       %thead
         %tr
           %th.col-xs-4= _('Name')
@@ -53,6 +53,11 @@
       %i.fa.fa-check
       = _('Save')
 
+
+:scss
+  table > tbody > tr:nth-of-type(odd):not(.bg-danger) {
+    background: #f9f9f9;
+  }
 
 :coffeescript
   $(document).ready ->

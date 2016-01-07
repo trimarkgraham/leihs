@@ -173,13 +173,14 @@ module Procurement
     end
 
     def move
+      h = {inspection_comment: nil, approved_quantity: nil, order_quantity: nil}
       if params[:to_group_id]
-        @request.update_attributes group: Procurement::Group.find(params[:to_group_id])
+        @request.update_attributes h.merge({group: Procurement::Group.find(params[:to_group_id])})
       elsif params[:to_budget_period_id]
-        @request.update_attributes budget_period: BudgetPeriod.find(params[:to_budget_period_id])
+        @request.update_attributes h.merge({budget_period: BudgetPeriod.find(params[:to_budget_period_id])})
       end
 
-      flash[:success] = _('Moved')
+      flash[:success] = _('Request moved')
       redirect_to group_user_budget_period_requests_path(@group, @user, @budget_period)
     end
 

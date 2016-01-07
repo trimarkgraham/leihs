@@ -2932,6 +2932,9 @@ msgstr ""
 msgid "Template Categories"
 msgstr ""
 
+msgid "Edit templates"
+msgstr ""
+
 msgid "Requester"
 msgstr ""
 
@@ -3019,6 +3022,9 @@ msgstr ""
 msgid "Procurement"
 msgstr ""
 
+msgid "Procurement request"
+msgstr ""
+
 msgid "Article nr. / Producer nr."
 msgstr ""
 
@@ -3026,4 +3032,7 @@ msgid "Replacement"
 msgstr ""
 
 msgid "Custom articles"
+msgstr ""
+
+msgid "Request moved"
 msgstr ""

@@ -5,9 +5,9 @@
     %thead
       %tr
         %th= _('Name')
-        %th= _('Inspection start date')
-        %th= _('Budget period end date')
-        %th= _('Total requests')
+        %th= '%s %s' % [_('Inspection'), _('Start date')]
+        %th= '%s %s' % [_('Budget period'), _('End date')]
+        %th= '%s %s' % [_('Total'), _('Requests')]
     %tbody
       - @budget_periods.each do |budget_period|
         %tr{class: header_color(budget_period)}

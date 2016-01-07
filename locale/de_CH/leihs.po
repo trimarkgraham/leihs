@@ -3029,6 +3029,9 @@ msgstr "Anträge"
 msgid "Template Categories"
 msgstr "Vorlag Kategorien"
 
+msgid "Edit templates"
+msgstr "Vorlagen editieren"
+
 msgid "Requester"
 msgstr "Antragsteller"
 
@@ -3116,6 +3119,9 @@ msgstr "Artikel"
 msgid "Procurement"
 msgstr "Bedarfsermittlung"
 
+msgid "Procurement request"
+msgstr "Beschaffungsantrag"
+
 msgid "Article nr. / Producer nr."
 msgstr "Artikelnr. / Herstellernr."
 
@@ -3124,3 +3130,6 @@ msgstr "Ersatz"
 
 msgid "Custom articles"
 msgstr "Gebräuchliche Artikel"
+
+msgid "Request moved"
+msgstr "Antrag Verschoben"

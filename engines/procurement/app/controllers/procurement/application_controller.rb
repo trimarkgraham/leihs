@@ -9,8 +9,6 @@ module Procurement
         redirect_to filter_overview_requests_path
       elsif is_procurement_requester?
         redirect_to overview_user_requests_path(current_user)
-      # elsif is_procurement_admin?
-      #   redirect_to budget_periods_path
       end
     end
 
