@@ -76,58 +76,65 @@ module Procurement
       params[:filter][:states] ||= Procurement::Request::STATES
       session[:requests_filter] = params[:filter]
 
-      @h = {}
-      Procurement::BudgetPeriod.order(end_date: :desc).find(params[:filter][:budget_period_ids]).each do |budget_period|
-        # @h[budget_period] = {}
-        # Procurement::Group.find(params[:filter][:group_ids]).each do |group|
-        #   @h[budget_period][group] = {}
-        #   @h[budget_period][group][:budget_limit_amount] = group.budget_limits.find_by(budget_period_id: budget_period).try(:amount)
-        #
-        #   @h[budget_period][group][:departments] = {}
-        #   Procurement::Organization.departments.find(params[:filter][:department_ids]).each do |parent_organization|
-        #     @h[budget_period][group][:departments][parent_organization] = {}
-        #     parent_organization.children.each do |organization_unit|
-        #       requests = organization_unit.requests.where(budget_period_id: budget_period, group_id: group, priority: params[:filter][:priorities]).
-        #                   select {|r| params[:filter][:states].map(&:to_sym).include? r.state(current_user)}
-        #       @h[budget_period][group][:departments][parent_organization][organization_unit] = {
-        #           requests: requests,
-        #           total_price: requests.map{|r| r.total_price(current_user)}.sum
-        #       }
-        #     end
-        #   end
-        # end
+      def get_requests
+        h = {}
+        Procurement::BudgetPeriod.order(end_date: :desc).find(params[:filter][:budget_period_ids]).each do |budget_period|
+          # h[budget_period] = {}
+          # Procurement::Group.find(params[:filter][:group_ids]).each do |group|
+          #   h[budget_period][group] = {}
+          #   h[budget_period][group][:budget_limit_amount] = group.budget_limits.find_by(budget_period_id: budget_period).try(:amount)
+          #
+          #   h[budget_period][group][:departments] = {}
+          #   Procurement::Organization.departments.find(params[:filter][:department_ids]).each do |parent_organization|
+          #     h[budget_period][group][:departments][parent_organization] = {}
+          #     parent_organization.children.each do |organization_unit|
+          #       requests = organization_unit.requests.where(budget_period_id: budget_period, group_id: group, priority: params[:filter][:priorities]).
+          #                   select {|r| params[:filter][:states].map(&:to_sym).include? r.state(current_user)}
+          #       h[budget_period][group][:departments][parent_organization][organization_unit] = {
+          #           requests: requests,
+          #           total_price: requests.map{|r| r.total_price(current_user)}.sum
+          #       }
+          #     end
+          #   end
+          # end
 
-        requests = budget_period.requests.where(group_id: params[:filter][:group_ids], priority: params[:filter][:priorities])
-        if params[:filter][:organization_id]
-          # where(procurement_organizations: {parent_id: params[:filter][:organization_id]})
-          requests = requests.joins(:organization)
-                         .where(['organization_id = :id OR procurement_organizations.parent_id = :id', { id: params[:filter][:organization_id] }])
-        end
-        requests = requests.select { |r| params[:filter][:states].map(&:to_sym).include? r.state(current_user) }
-
-        if params[:sort_by] and params[:sort_dir]
-          requests = requests.sort do |a, b|
-            case params[:sort_by]
-            when 'total_price'
-                a.total_price(current_user) <=> b.total_price(current_user)
-            when 'state'
-                a.state(current_user) <=> b.state(current_user)
-            when 'department'
-                a.organization.parent <=> b.organization.parent
-            else
-                a.send(params[:sort_by]) <=> b.send(params[:sort_by])
-            end
+          requests = budget_period.requests.where(group_id: params[:filter][:group_ids], priority: params[:filter][:priorities])
+          if params[:filter][:organization_id]
+            # where(procurement_organizations: {parent_id: params[:filter][:organization_id]})
+            requests = requests.joins(:organization)
+                           .where(['organization_id = :id OR procurement_organizations.parent_id = :id', { id: params[:filter][:organization_id] }])
           end
-          requests.reverse! if params[:sort_dir] == 'desc'
+          requests = requests.select { |r| params[:filter][:states].map(&:to_sym).include? r.state(current_user) }
+
+          if params[:sort_by] and params[:sort_dir]
+            requests = requests.sort do |a, b|
+              case params[:sort_by]
+                when 'total_price'
+                  a.total_price(current_user) <=> b.total_price(current_user)
+                when 'state'
+                  a.state(current_user) <=> b.state(current_user)
+                when 'department'
+                  a.organization.parent <=> b.organization.parent
+                else
+                  a.send(params[:sort_by]) <=> b.send(params[:sort_by])
+              end
+            end
+            requests.reverse! if params[:sort_dir] == 'desc'
+          end
+          h[budget_period] = requests
         end
-        @h[budget_period] = requests
+        h
       end
 
       respond_to do |format|
-        format.html { render :filter_overview_4 }
+        format.html
+        format.js do
+          @h = get_requests
+          render partial: 'filter_overview'
+        end
         format.csv do
-          # requests = @h.values.flat_map(&:values).flat_map{|x| x[:departments].values.flat_map(&:values)}.flat_map{|x| x[:requests]}
-          requests = @h.values.flatten
+          # requests = get_requests.values.flat_map(&:values).flat_map{|x| x[:departments].values.flat_map(&:values)}.flat_map{|x| x[:requests]}
+          requests = get_requests.values.flatten
           send_data Request.csv_export(requests, current_user),
                     type: 'text/csv; charset=utf-8; header=present',
                     disposition: 'attachment; filename=requests.csv'

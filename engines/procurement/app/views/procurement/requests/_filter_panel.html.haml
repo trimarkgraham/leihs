@@ -1,4 +1,4 @@
-%form#filter_panel.well.well-sm
+%form#filter_panel.well.well-sm{data: {remote: true}}
   %b
     %i.fa.fa-calendar
     = _('Budget periods')
@@ -63,3 +63,20 @@
     %button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv'}
       %i.fa.fa-table
       = _('CSV Export')
+
+:scss
+  .transparency {
+    opacity:0.5;
+    filter:alpha(opacity=50);
+    -moz-opacity:0.5;
+  }
+
+:coffeescript
+  $(document).ready ->
+    $('form#filter_panel').on('ajax:beforeSend', ->
+      $('#page-content-wrapper > .container-fluid').addClass('transparency')
+    ).on('ajax:complete', (e, data, status, xhr) ->
+      $('#page-content-wrapper > .container-fluid').html(data.responseText).removeClass('transparency')
+    ).on('change', ->
+      $(this).submit()
+    ).trigger 'submit'
