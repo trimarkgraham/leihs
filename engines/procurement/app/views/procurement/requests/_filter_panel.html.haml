@@ -8,11 +8,23 @@
         %input{type: :checkbox, name: 'filter[budget_period_ids][]', value: budget_period.id, checked: params[:filter][:budget_period_ids].map(&:to_i).include?(budget_period.id)}
         = budget_period
 
+  :ruby
+    my_groups, other_groups = Procurement::Group.all.partition { |group| group.inspectable_by?(current_user) }
+
   %b
     %i.fa.fa-shopping-cart
-    = _('Groups')
+    = _('My groups')
   %ul
-    - Procurement::Group.all.each do |group|
+    - my_groups.each do |group|
+      %li
+        %input{type: :checkbox, name: 'filter[group_ids][]', value: group.id, checked: params[:filter][:group_ids].map(&:to_i).include?(group.id)}
+        = group
+
+  %b
+    %i.fa.fa-shopping-cart
+    = _('Other groups')
+  %ul
+    - other_groups.each do |group|
       %li
         %input{type: :checkbox, name: 'filter[group_ids][]', value: group.id, checked: params[:filter][:group_ids].map(&:to_i).include?(group.id)}
         = group

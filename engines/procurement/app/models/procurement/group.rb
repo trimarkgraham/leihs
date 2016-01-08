@@ -14,6 +14,8 @@ module Procurement
     has_many :budget_limits, dependent: :delete_all
     accepts_nested_attributes_for :budget_limits, allow_destroy: true, reject_if: proc { |attributes| attributes['amount'].to_i.zero? }
 
+    default_scope -> { order(:name) }
+
     def to_s
       name
     end

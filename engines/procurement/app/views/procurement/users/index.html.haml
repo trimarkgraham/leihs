@@ -21,29 +21,29 @@
           %th.col-xs-1
 
       %tbody
-      - @requester_accesses.each do |requester_access|
+        - @requester_accesses.each do |requester_access|
+          %tr
+            %td
+              %input{type: :hidden, name: 'requesters[][id]', value: requester_access.user_id}
+              %input{type: :hidden, name: 'requesters[][_destroy]'}
+              %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false, value: requester_access.user}
+            %td
+              %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false, value: requester_access.organization.parent}
+            %td
+              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false, value: requester_access.organization}
+            %td.text-right.h3
+              %i.fa.fa-minus-circle
+
         %tr
           %td
-            %input{type: :hidden, name: 'requesters[][id]', value: requester_access.user_id}
-            %input{type: :hidden, name: 'requesters[][_destroy]'}
-            %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false, value: requester_access.user}
+            %input{type: :hidden, name: 'requesters[][id]'}
+            %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false}
           %td
-            %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false, value: requester_access.organization.parent}
+            %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false}
           %td
-            %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false, value: requester_access.organization}
+            %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false}
           %td.text-right.h3
             %i.fa.fa-minus-circle
-
-      %tr
-        %td
-          %input{type: :hidden, name: 'requesters[][id]'}
-          %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false}
-        %td
-          %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false}
-        %td
-          %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false}
-        %td.text-right.h3
-          %i.fa.fa-minus-circle
     .panel-footer
       %div{style: 'font-size: 2em'}
         %i.fa.fa-plus-circle
@@ -110,6 +110,16 @@
       target_el.val('1').change()
       row_el.addClass('bg-danger')
       false
+
+    $('tbody tr td input').on 'keyup change', ->
+      inputs = $(this).closest('tr').find('input')
+      values = ''
+      inputs.each ->
+        values += $.trim($(this).val());
+      if values.length
+        inputs.attr('required', 'true')
+      else
+        inputs.removeAttr('required')
 
 -#:coffeescript
   $(document).ready ->

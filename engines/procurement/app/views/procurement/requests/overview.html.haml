@@ -1,3 +1,22 @@
+.well.well-sm
+  #column-titles.row
+    %b.col-sm-3
+      %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Requester')
+        %i.fa.fa-sort
+    %b.col-sm-3
+      %a{href: url_for(params: params.merge(sort_by: :department, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Department')
+        %i.fa.fa-sort
+    %b.col-sm-3
+      %a{href: url_for(params: params.merge(sort_by: :organization, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Organization')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      = _('Requests')
+    %b.col-sm-2.text-right
+      = "%s %s" % [_('Total'), _('Price')]
+
 .panel-group#accordion{role: "tablist"}
 
   - @budget_periods.each do |budget_period|
@@ -32,15 +51,37 @@
                     = _('CSV Export')
 
         - if @group
-          - Procurement::Access.requesters.each do |access|
+          :ruby
+            requesters = Procurement::Access.requesters
+            if params[:sort_by] and params[:sort_dir]
+              requesters = requesters.sort do |a, b|
+                case params[:sort_by]
+                  when 'user'
+                    a.user.to_s <=> b.user.to_s
+                  when 'organization'
+                    a.organization.to_s <=> b.organization.to_s
+                  when 'department'
+                    a.organization.parent.to_s <=> b.organization.parent.to_s
+                  else
+                    a.send(params[:sort_by]) <=> b.send(params[:sort_by])
+                end
+              end
+              requesters.reverse! if params[:sort_dir] == 'desc'
+            end
+
+          - requesters.each do |access|
             - requests = @requests.where(budget_period_id: budget_period, user_id: access.user)
             -# next if not budget_period.current? and requests.empty?
             %a.list-group-item{href: group_user_budget_period_requests_path(@group, access.user, budget_period)}
               .row
-                .col-xs-5
+                .col-xs-3
                   %i.fa.fa-user
                   = access.user
-                .col-xs-5
+                .col-xs-3
+                  = access.organization.parent
+                .col-xs-3
+                  = access.organization
+                .col-xs-1
                   = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: @group, user: access.user}
                 .col-xs-2.text-right
                   - unless requests.blank?
@@ -64,6 +105,10 @@
                       = money_without_cents_and_with_symbol requests.map {|r| r.total_price(current_user) }.sum
 
 :scss
+  #column-titles > b {
+    white-space: nowrap;
+  }
+
   .panel-heading > a, .heading {
     color: black;
   }
