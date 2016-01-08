@@ -9,11 +9,16 @@ module Procurement
     def index
       respond_to do |format|
         format.html do
-          @requester_accesses = Access.requesters.joins(:user).order('users.firstname')
-          @admins = User.not_as_delegations.joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id')
-              .where(procurement_accesses: { is_admin: true }).order(:firstname)
+          @requester_accesses = Access.requesters.joins(:user) \
+                                  .order('users.firstname')
+          @admins = User.not_as_delegations \
+                        .joins('INNER JOIN procurement_accesses ON users.id = procurement_accesses.user_id')
+                        .where(procurement_accesses: { is_admin: true }).order(:firstname)
         end
-        format.json { render json: User.not_as_delegations.filter(params).to_json(only: [:id, :firstname, :lastname]) }
+        format.json do
+          render json: User.not_as_delegations.filter(params) \
+                        .to_json(only: [:id, :firstname, :lastname])
+        end
       end
     end
 

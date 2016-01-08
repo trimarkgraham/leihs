@@ -32,7 +32,9 @@ module Procurement
     def editable?(user)
       Access.requesters.find_by(user_id: user_id) and
           (
-            (budget_period.in_requesting_phase? and (user_id == user.id or group.inspectable_by?(user))) or
+            (budget_period.in_requesting_phase? \
+              and (user_id == user.id or group.inspectable_by?(user))) \
+            or
             (budget_period.in_inspection_phase? and group.inspectable_by?(user))
           )
     end
@@ -62,7 +64,8 @@ module Procurement
     end
 
     def total_price(current_user)
-      quantity = if (not budget_period.in_requesting_phase?) or group.inspectable_or_readable_by?(current_user)
+      quantity = if (not budget_period.in_requesting_phase?) \
+                      or group.inspectable_or_readable_by?(current_user)
                    order_quantity || approved_quantity || requested_quantity
                  else
                    requested_quantity
@@ -77,7 +80,8 @@ module Procurement
 
       objects = []
       requests.each do |request|
-        show_all = (not request.budget_period.in_requesting_phase?) or request.group.inspectable_or_readable_by?(current_user)
+        show_all = (not request.budget_period.in_requesting_phase?) \
+                      or request.group.inspectable_or_readable_by?(current_user)
         objects << {
           _('Budget period') => request.budget_period,
           _('Group') => request.group,
@@ -102,7 +106,10 @@ module Procurement
 
       csv_header = objects.flat_map(&:keys).uniq
 
-      CSV.generate(col_sep: ';', quote_char: "\"", force_quotes: true, headers: :first_row) do |csv|
+      CSV.generate(col_sep: ';',
+                   quote_char: "\"",
+                   force_quotes: true,
+                   headers: :first_row) do |csv|
         csv << csv_header
         objects.each do |object|
           csv << csv_header.map { |h| object[h] }

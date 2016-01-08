@@ -6,7 +6,8 @@ module Procurement
     before_action :require_admin_role
 
     before_action only: [:create, :update] do
-      params[:group][:inspector_ids] = params[:group][:inspector_ids].split(',').map &:to_i
+      params[:group][:inspector_ids] = \
+        params[:group][:inspector_ids].split(',').map &:to_i
     end
 
     before_action only: [:edit, :update, :destroy] do

@@ -5,22 +5,24 @@ module Procurement
     before_action :require_login, :require_admins, except: :root
 
     def root
-      if current_user and Procurement::Group.inspector_of_any_group_or_admin?(current_user)
+      if current_user \
+        and Procurement::Group.inspector_of_any_group_or_admin?(current_user)
         redirect_to filter_overview_requests_path
-      elsif is_procurement_requester?
+      elsif procurement_requester?
         redirect_to overview_user_requests_path(current_user)
       end
     end
 
     protected
 
-    helper_method :is_procurement_admin?, :is_procurement_requester?
+    helper_method :procurement_admin?, :procurement_requester?
 
-    def is_procurement_admin?
-      current_user and (Access.is_admin?(current_user) or (Access.admins.empty? and is_admin?))
+    def procurement_admin?
+      current_user and (Access.admin?(current_user) \
+        or (Access.admins.empty? and is_admin?))
     end
 
-    def is_procurement_requester?
+    def procurement_requester?
       current_user and Access.requesters.where(user_id: current_user).exists?
     end
 
@@ -36,7 +38,7 @@ module Procurement
     def require_admins
       if Access.admins.empty?
         flash[:error] = _('No admins defined yet')
-        if is_procurement_admin?
+        if procurement_admin?
           redirect_to users_path
         else
           redirect_to root_path
@@ -45,7 +47,7 @@ module Procurement
     end
 
     def require_admin_role
-      redirect_to root_path unless Access.is_admin?(current_user)
+      redirect_to root_path unless Access.admin?(current_user)
     end
 
   end

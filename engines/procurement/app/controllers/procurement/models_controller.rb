@@ -6,7 +6,9 @@ module Procurement
     def index
       respond_to do |format|
         params[:paginate] = 'false'
-        format.json { render json: Model.filter(params).to_json(only: :id, methods: :name) }
+        format.json do
+          render json: Model.filter(params).to_json(only: :id, methods: :name)
+        end
       end
     end
 

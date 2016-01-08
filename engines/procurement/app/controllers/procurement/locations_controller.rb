@@ -5,7 +5,10 @@ module Procurement
 
     def index
       respond_to do |format|
-        format.json { render json: Location.search(params[:search_term]).to_json(only: :id, methods: :to_s) }
+        format.json do
+          render json: Location.search(params[:search_term]) \
+                        .to_json(only: :id, methods: :to_s)
+        end
       end
     end
 

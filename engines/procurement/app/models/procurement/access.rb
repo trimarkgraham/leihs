@@ -14,7 +14,7 @@ module Procurement
     scope :admins, -> { where(is_admin: true) }
 
     class << self
-      def is_admin?(user)
+      def admin?(user)
         admins.where(user_id: user).exists?
       end
 

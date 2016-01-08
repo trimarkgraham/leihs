@@ -10,7 +10,7 @@
   end
 
 %ul.sidebar-nav#leftMenu{style: 'margin-top: 1em'}
-  - if is_procurement_admin?
+  - if procurement_admin?
     %li
       %a{"data-parent" => "#leftMenu", "data-toggle" => "collapse", :href => "#collapse_admin"}
         %i.fa.fa-gear
@@ -41,7 +41,7 @@
             - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
               %i.fa.fa-warning.text-danger
 
-  - if is_procurement_requester?
+  - if procurement_requester?
     %li
       %a{href: overview_user_requests_path(current_user), class: opened_menu == :request ? "active" : nil}
         %i.fa.fa-tasks

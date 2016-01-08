@@ -32,7 +32,8 @@ module Procurement
       requests = requests.where(user_id: args[:user]) if args[:user]
       requests = requests.where(group_id: args[:group]) if args[:group]
 
-      if past? or (args[:group] and args[:group].inspectable_or_readable_by?(args[:current_user]))
+      if past? or (args[:group] \
+        and args[:group].inspectable_or_readable_by?(args[:current_user]))
         {
           new: requests.where(approved_quantity: nil).count,
           denied: requests.where(approved_quantity: 0).count,

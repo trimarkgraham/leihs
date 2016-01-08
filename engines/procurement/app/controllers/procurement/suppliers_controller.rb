@@ -5,7 +5,9 @@ module Procurement
 
     def index
       respond_to do |format|
-        format.json { render json: Supplier.filter(params).to_json(only: [:id, :name]) }
+        format.json do
+          render json: Supplier.filter(params).to_json(only: [:id, :name])
+        end
       end
     end
 
