@@ -167,8 +167,9 @@
               %input{type: :hidden, name: "requests[#{request.id}][attachments_delete][#{attachment.id}]"}
               %a{href: attachment.file.url, target: '_blank'}
                 = attachment.file.original_filename
-              %a.delete{href: '#', data: {confirm: _("Are you sure you want to delete '%s'?") % attachment.file.original_filename}}
-                %i.fa.fa-trash
+              - if request.editable?(current_user)
+                %a.delete{href: '#', data: {confirm: _("Are you sure you want to delete '%s'?") % attachment.file.original_filename}}
+                  %i.fa.fa-trash
               - if attachment.file_content_type =~ /image/
                 %br
                 %img{src: attachment.file.url, style: 'height: 4em; max-width: 10em'}
