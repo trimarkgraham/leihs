@@ -7,7 +7,7 @@ Feature: Procurement Groups
     When I create a procurement group the following information is needed
     |field|value|
     |name|text|
-    |Inspector|leihs user|
+    |Inspectors|leihs user|
     |Email|text|
     |Budget limits|number|
 

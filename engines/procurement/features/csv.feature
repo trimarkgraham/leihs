@@ -8,8 +8,8 @@ Scenario: Export data
   |Budget Period|
   |Procurement Group|
   |article|
-  |article nr./manufacturer nr|
-  |Replacement|
+  |article nr./manufacturer nr.|
+  |Replacement / New|
   |New|
   |Requested Quantity|
   |Approved Quantity|

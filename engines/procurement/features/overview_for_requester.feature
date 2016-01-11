@@ -2,20 +2,14 @@ Feature: Overview for requester
 
   # not yet implemented
   @personas
-  Scenario: View requests of current budget phase
+  Scenario: View requests
     Given I am Roger
-    Given a request for the current budget phase exists
-    Given a request for a past budget phase exists
-    Then I see my requests for the current budget phase
-    And I see my requests for a past budget phase
+    Then I see my requests sorted according to the budget periods and procurement groups
 
   # not yet implemented
   Scenario: Structure of overview
     Given a request exists
-    Then the overview shows the request in the following structure
-    |Highest Hierarchie|Departement|Services|
-    |Second Hierarchie|Organisation Unit|ITZ|
-    |Third Hierarchie|request line|Laptop|
+    Then the overview shows the request in the following structure: 1st Budget Period, 2nd Procurement Group, 3rd Articles
 
   # not yet implemented
   Scenario: Visible Information of current requests

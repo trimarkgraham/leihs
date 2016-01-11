@@ -8,13 +8,32 @@ Feature: Templates
     |Article|
     |Price|
     |Supplier|
-
-  @personas
-  Scenario: Deleting an Article
-  Given I am Barbara
-  Then I can delete a whole line in a category
+    |article nr./manufacturer nr|
 
   @personas
   Scenario: Deleting a Category
-  Given I am Barbara
-  Then I can delete the whole Category
+    Given I am Barbara
+    Then I can delete the whole Category
+
+  @personas
+  Scenario: Deleting an Article
+    Given I am Barbara
+    Then I can delete a whole line in a category
+
+  @personas
+  Scenario: Deleting information
+    Given I am Barbara
+    Then I can delete existing information of the fields
+    |Price|
+    |Supplier|
+    |article nr./manufacturer nr|
+
+  @personas
+  Scenario: Edit information
+    Given I am Barbara
+    Then I can edit existing information of the fields
+    |Category|
+    |Article|
+    |Price|
+    |Supplier|
+    |article nr./manufacturer nr.|
