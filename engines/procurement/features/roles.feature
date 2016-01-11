@@ -10,10 +10,9 @@ Feature: Describing the roles
     Given I am Barbara
     Then I can create requests for myself
     And I can create requests for other users
-    And I can manage my requests
+    And I can manage my own requests
     And I can manage requests of the procurement group I am responsible for
     And I can create templates of the procurement group I am responsible for
-    And I can add other inspectors to a procurement group I am responsible for
 
   @personas
   Scenario: Role Admin

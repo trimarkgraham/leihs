@@ -14,6 +14,7 @@ Scenario: Create a Request
   |Order Size|
   |Price|
   |Priority of Inspection|
+  |Replacement / New|
   |Supplier|
   |Motivation|
   |Inspection Comment|
@@ -33,6 +34,7 @@ Scenario: Mandatory Fields
   |Requested Quantity|
   |Price|
   |Priority of Inspection|
+  |Replacement / New|
   |Motivation|
   |Receiver|
   |Point of Delivery|
@@ -56,14 +58,13 @@ Scenario: modify a request
   Given I am Barbara
   Given a request created by Roger exists
   Then I can modify the following fields of requests of my procurement groups
-  |Budget Period|
-  |Procurement Group|
   |Article|
   |Article nr./Manufacturer nr.|
   |Replacement/New|
   |Approved Quantity|
   |Order Size|
   |Price|
+  |Replacement / New|
   |Supplier|
   |Inspection Comment|
   |Receiver|
