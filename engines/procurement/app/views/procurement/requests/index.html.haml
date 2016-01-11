@@ -466,3 +466,11 @@
       charCode = e.charCode || e.keyCode || e.which
       if charCode  == 13
         return false
+
+    $('.attachments a.delete').on 'click', ->
+      li = $(this).closest('li')
+      if li.find("input[name*='[attachments_delete]']").val() == '1'
+        li.css('text-decoration', 'none').find("input[name*='[attachments_delete]']").val('')
+      else
+        li.css('text-decoration', 'line-through').find("input[name*='[attachments_delete]']").val('1')
+      false

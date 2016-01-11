@@ -174,6 +174,11 @@ module Procurement
 
         if param[:id]
           r = Request.find(param[:id])
+          param[:attachments_delete].each_pair do |k,v|
+            if v == '1'
+              r.attachments.destroy(k)
+            end
+          end if param[:attachments_delete]
           if permitted.values.all?(&:blank?)
             r.destroy
           else
