@@ -1,9 +1,17 @@
 AllCops:
   Exclude:
-    - 'db/**/*'
+    - 'bin/**/*'
     - 'config/**/*'
-    - 'script/**/*'
+    - 'cider-ci/**/*'
+    - 'db/**/*'
     - 'doc/**/*'
+    - 'engines/**/*'
+    - 'features/**/*'
+    - 'Gemfile'
+    - 'Guardfile'
+    - 'tmp/**/*'
+    - 'node_modules/**/*'
+    - 'script/**/*'
   RunRailsCops: true
 
 Lint/AmbiguousOperator:
@@ -36,21 +44,24 @@ Metrics/AbcSize:
 
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
-  Max: 128
+  Max: 500
 
 Metrics/CyclomaticComplexity:
-  Max: 10
+  Max: 25
 
 # Configuration parameters: AllowURI, URISchemes.
 Metrics/LineLength:
-  Max: 125 
+  Max: 83
 
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
-  Max: 125
+  Max: 60
+
+Metrics/ParameterLists:
+  Max: 12
 
 Metrics/PerceivedComplexity:
-  Max: 11
+  Max: 30
 
 Style/AccessorMethodName:
   Enabled: false
@@ -93,6 +104,9 @@ Style/EmptyLinesAroundModuleBody:
 Style/FileName:
   Enabled: false
 
+Style/GuardClause:
+  Enabled: false
+
 # Configuration parameters: MaxLineLength.
 Style/IfUnlessModifier:
   Enabled: false
@@ -100,6 +114,9 @@ Style/IfUnlessModifier:
 # Cop supports --auto-correct.
 # Configuration parameters: Width.
 Style/IndentationWidth:
+  Enabled: false
+
+Style/MultilineBlockChain:
   Enabled: false
 
 # Cop supports --auto-correct.

@@ -25,7 +25,7 @@ Feature: Viewing my orders
     Then the items are available for borrowing again
      And the entry is removed from the order
 
-  @javascript @personas
+  @javascript @personas @problematic
   Scenario: Timeout
     Given the timeout is set to 1 minute
     When I add a model to an order
@@ -35,7 +35,7 @@ Feature: Viewing my orders
     When the timer has run down
     Then I am redirected to the timeout page
 
-  @javascript @personas
+  @javascript @personas @browser
   Scenario: Changing one of my orders
     When I change the entry
     Then the calendar opens

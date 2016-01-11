@@ -59,7 +59,7 @@ Feature: Edit a hand over
     Then a hand over dialog appears
     And the contract note field in this dialog is already filled in with the default note
 
-  @javascript @personas
+  @javascript @personas @problematic
   Scenario: Contract note
     When I open a hand over with at least one assigned item
     And I hand over the items
@@ -69,7 +69,7 @@ Feature: Edit a hand over
     And I click hand over inside the dialog
     Then "something" appears on the contract
 
-  @javascript @browser @personas
+  @javascript @browser @personas @problematic
   Scenario: Hand over options with at least quantity 1
     When I open a hand over
     And I add an option

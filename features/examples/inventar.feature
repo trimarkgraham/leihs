@@ -88,19 +88,19 @@ Feature: Inventory
     | Normal Model |
     | AVZ40020     |
 
-  @personas @javascript @browser
+  @personas @javascript @browser @problematic
   Scenario: The tab 'All'
     Then I can click one of the following tabs to filter inventory by:
       | Choice |
       | All               |
 
-  @personas @javascript @browser
+  @personas @javascript @browser @problematic
   Scenario: The tab 'Models'
     Then I can click one of the following tabs to filter inventory by:
       | Choice |
       | Models            |
 
-  @personas @javascript @browser
+  @personas @javascript @browser @problematic
   Scenario: The tab 'Packages'
     Then I can click one of the following tabs to filter inventory by:
       | Choice |
@@ -128,7 +128,7 @@ Feature: Inventory
     | used & not used | used     |
     | used & not used | not used |
 
-  @personas @javascript @browser
+  @personas @javascript @browser @problematic
   Scenario Outline: Filtering borrowable and not borrowable inventory
     Given I see retired and not retired inventory
     When I choose inside all inventory as "<dropdown>" the option "<property>"
@@ -212,7 +212,7 @@ Feature: Inventory
       | Number available (now)   |
       | Number available (total) |
 
-  @javascript @personas @browser
+  @javascript @personas @browser @problematic
   Scenario: Look of an item line
     When I view the tab "Models"
     And the item is in stock and my department is responsible for it

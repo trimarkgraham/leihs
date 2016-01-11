@@ -1,5 +1,6 @@
 script-defaults:
   timeout: 600
+  template-environment-variables: true
 
 task-defaults:
   eager-trials: 1
@@ -8,6 +9,7 @@ task-defaults:
     RBENV_VERSION: 2.1
     RAILS_ENV: test
     LANG: "en_US.UTF-8"
+    DATABASE: "leihs_test_{{CIDER_CI_TRIAL_ID}}"
 
   git-options:
     submodules:
@@ -16,19 +18,7 @@ task-defaults:
 
   trial-attachments:
     logs:
-      glob: 'log/*.log'
-      content-type: text/plain
-    coverage_resultset:
-      glob: 'coverage/.resultset.json'
-      content-type: application/json
-    coverage_last_run:
-      glob: 'coverage/.last_run.json'
-      content-type: application/json
-    styleguide_artefacts:
-      glob: 'tmp/styleguide-ref.tar.gz'
-      content-type: application/x-compressed
-    styleguide_hashes_new:
-      glob: 'tmp/styleguide-shasums.txt'
+      include-match: '\/logs?\/.+\.log$'
       content-type: text/plain
 
   traits:
@@ -60,38 +50,45 @@ task-defaults:
               'host' => 'localhost',
               'pool' => 3,
               'username' => ENV['MYSQL_USER'],
-              'password' =>  ENV['MYSQL_PASSWORD'],
-              'database' => "leihs_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
+              'password' => ENV['MYSQL_PASSWORD'],
+              'database' => ENV['DATABASE']}}
         File.open('config/database.yml','w') { |file| file.write config.to_yaml }
 
-    bundle-mri:
-      exclusive-executor-resource: bundler_2.2
-      body: bundle
+    bundle:
+      exclusive-executor-resource: bundler_2.1
+      body: cider-ci/bin/bundle_with_cachestamp.sh
 
     create-database:
-      body: bundle exec rake db:create
-      start-when:
-      - script: bundle-mri
-      - script: configure-database
+      body:  echo $DATABASE && mysqladmin --user=$MYSQL_USER --password=$MYSQL_PASSWORD create $DATABASE
 
     start-vnc:
       body: tightvncserver ":$XVNC_PORT"  -geometry 1024x768 -rfbport "$XVNC_PORT"  -interface '127.0.0.1'
+
+    precompile-assets:
+      exclusive-executor-resource: precompile-assets
+      body: cider-ci/bin/precompile-assets-with-caching.sh
+      start-when:
+      - script: bundle
+      - script: configure-database
+      - script: create-database
 
     test:
       environment-variables:
         RBENV_VERSION: 2.1
       body: |
         export DISPLAY=":$XVNC_PORT" \
-        && rm -rf coverage \
+        # && rm -rf coverage \
         && ruby -v \
         && bundle exec cucumber -p default -f json -o log/cucumber_report.json $CIDER_CI_TASK_FILE
       start-when:
       - script: start-vnc
       - script: create-database
+      - script: precompile-assets
 
     delete-database:
-      body:  bundle exec rake  db:drop
+      body:  mysqladmin --user=$MYSQL_USER --password=$MYSQL_PASSWORD --force drop $DATABASE
       ignore-state: true
+      ignore-abort: true
       start-when:
       - script: test
         states: [aborted, passed, failed, skipped]
@@ -99,6 +96,7 @@ task-defaults:
     stop-vnc:
       body: tightvncserver -kill ":$XVNC_PORT" -clean
       ignore-state: true
+      ignore-abort: true
       start-when:
       - script: test
         states: [aborted, passed, failed, skipped]
