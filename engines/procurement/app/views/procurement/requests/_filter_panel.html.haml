@@ -1,4 +1,4 @@
-%form#filter_panel.well.well-sm{data: {remote: true}}
+%form#filter_panel{data: {remote: true}}
   %b
     %i.fa.fa-calendar
     = _('Budget periods')
@@ -80,9 +80,9 @@
 :coffeescript
   $(document).ready ->
     $('form#filter_panel').on('ajax:beforeSend', ->
-      $('#page-content-wrapper > .container-fluid').addClass('transparency')
+      $('article .page-content-wrapper').addClass('transparency')
     ).on('ajax:complete', (e, data, status, xhr) ->
-      $('#page-content-wrapper > .container-fluid').html(data.responseText).removeClass('transparency')
+      $('article .page-content-wrapper').html(data.responseText).removeClass('transparency')
     ).on('change', ->
       $(this).submit()
     ).trigger 'submit'

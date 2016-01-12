@@ -32,12 +32,10 @@
   %body
     = render partial: 'layouts/procurement/header'
 
-    #wrapper
-      #sidebar-wrapper
-        .sidebar-nav#leftMenu
-          = yield :sidebar
+    %article.wrapper
+      .sidebar-wrapper
+        = yield :sidebar
 
-      #page-content-wrapper
-        .container-fluid
-          = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
-          = yield
+      .page-content-wrapper.container-fluid
+        = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
+        = yield

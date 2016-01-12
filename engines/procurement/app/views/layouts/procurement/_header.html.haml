@@ -10,11 +10,12 @@
   end
 
 %header
-  %nav.navbar.navbar-inverse.navbar-fixed-top
-    .container-fluid
-      %a.navbar-brand{href: procurement.root_path}
-        = render partial: 'layouts/procurement/logo'
+  %nav.navbar.navbar-inverse.navbar-fixed-top.wrapper
 
+    %a.navbar-brand.text-center{href: procurement.root_path}
+      = render partial: 'layouts/procurement/logo'
+
+    .page-content-wrapper.container-fluid
       %ul.nav.navbar-nav.h4
         - if procurement_admin?
           %li.dropdown{class: opened_menu == :admin ? 'active' : nil}
