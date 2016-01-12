@@ -64,12 +64,6 @@
         %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
         .label{class: label_class(state)}= _(state.to_s.humanize)
 
-  .text-left
-    %br
-    %button.btn.btn-primary{type: :submit}
-      %i.fa.fa-filter
-      = _('Filter')
-    %br
   .text-center
     %br
     %button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv'}

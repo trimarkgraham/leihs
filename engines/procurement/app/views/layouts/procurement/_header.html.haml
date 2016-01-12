@@ -1,0 +1,67 @@
+:ruby
+  opened_menu = if %w{requests templates}.include? controller.controller_name
+      if @user and @user == current_user
+        :request
+      else
+        :inspect
+      end
+    else
+      :admin
+  end
+
+%header
+  %nav.navbar.navbar-inverse.navbar-fixed-top
+    .container-fluid
+      %a.navbar-brand{href: procurement.root_path}
+        = render partial: 'layouts/procurement/logo'
+
+      %ul.nav.navbar-nav.h4
+        - if procurement_admin?
+          %li.dropdown{class: opened_menu == :admin ? 'active' : nil}
+            %a.dropdown-toggle{href: "#", data: {toggle: "dropdown"}}
+              %i.fa.fa-gear
+              = _('Admin')
+              %i.caret
+            %ul.dropdown-menu
+              %li
+                %a{href: budget_periods_path}
+                  %i.fa.fa-calendar
+                  = _('Budget periods')
+                  - unless Procurement::BudgetPeriod.current
+                    %i.fa.fa-warning.text-danger
+              %li
+                %a{href: organizations_path}
+                  %i.fa.fa-sitemap
+                  = _('Organizations')
+                  - unless Procurement::Organization.exists?
+                    %i.fa.fa-warning.text-danger
+              %li
+                %a{href: groups_path}
+                  %i.fa.fa-shopping-cart
+                  = _('Groups')
+                  - unless Procurement::Group.exists?
+                    %i.fa.fa-warning.text-danger
+              %li
+                %a{href: users_path}
+                  %i.fa.fa-user
+                  = _('Users')
+                  - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
+                    %i.fa.fa-warning.text-danger
+
+        - if procurement_requester?
+          %li{class: opened_menu == :request ? 'active' : nil}
+            %a{href: overview_user_requests_path(current_user)}
+              %i.fa.fa-tasks
+              = _('My requests')
+
+        - if Procurement::Group.inspector_of_any_group_or_admin?(current_user)
+          %li{class: opened_menu == :inspect ? 'active' : nil}
+            %a{href: filter_overview_requests_path}
+              %i.fa.fa-eye
+              = _('Inspection')
+
+      %ul.nav.navbar-nav.navbar-right
+        = render partial: 'layouts/procurement/navigation'
+        - if current_user
+          = render partial: 'layouts/leihs_admin/user'
+        = render partial: 'layouts/procurement/locale'
