@@ -41,13 +41,3 @@
         .container-fluid
           = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
           = yield
-
-          -#.row
-            .col-lg-12
-              %a#menu-toggle.btn.btn-default{:href => "#menu-toggle"} Toggle Menu
-
-    -#:javascript
-      $("#menu-toggle").click(function(e) {
-          e.preventDefault();
-          $("#wrapper").toggleClass("toggled");
-      });
