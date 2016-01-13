@@ -943,7 +943,7 @@ msgstr ""
 msgid "Orders"
 msgstr ""
 
-msgid "Other Groups"
+msgid "Other groups"
 msgstr ""
 
 msgid "Overbooked Quantity"
@@ -2902,10 +2902,16 @@ msgstr ""
 msgid "Swap Model"
 msgstr ""
 
+msgid "Budget limits"
+msgstr ""
+
 msgid "Budget period"
 msgstr ""
 
 msgid "Budget periods"
+msgstr ""
+
+msgid "Budget period end date"
 msgstr ""
 
 msgid "requesting phase until %s"
@@ -2944,6 +2950,9 @@ msgstr ""
 msgid "Not a requester"
 msgstr ""
 
+msgid "My groups"
+msgstr ""
+
 msgid "My requests"
 msgstr ""
 
@@ -2959,6 +2968,9 @@ msgstr ""
 msgid "Inspection comment"
 msgstr ""
 
+msgid "Inspection start date"
+msgstr ""
+
 msgid "Priority"
 msgstr ""
 
@@ -2972,6 +2984,9 @@ msgid "Organizations"
 msgstr ""
 
 msgid "Organization unit"
+msgstr ""
+
+msgid "Organizations of the requesters"
 msgstr ""
 
 msgid "Department"
@@ -3035,4 +3050,22 @@ msgid "Custom articles"
 msgstr ""
 
 msgid "Request moved"
+msgstr ""
+
+msgid "high"
+msgstr ""
+
+msgid "normal"
+msgstr ""
+
+msgid "Are you sure you want to delete '%s'?"
+msgstr ""
+
+msgid "Type in a search term"
+msgstr ""
+
+msgid "No results"
+msgstr ""
+
+msgid "Searching..."
 msgstr ""

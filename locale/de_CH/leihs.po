@@ -955,7 +955,7 @@ msgstr "Bestellung abgeschickt"
 msgid "Orders"
 msgstr "Bestellungen"
 
-msgid "Other Groups"
+msgid "Other groups"
 msgstr "Andere Gruppen"
 
 msgid "Overbooked Quantity"
@@ -2999,11 +2999,17 @@ msgstr "Inventur vor"
 msgid "Search category"
 msgstr "Kategorie suchen"
 
+msgid "Budget limits"
+msgstr "Budget Limiten"
+
 msgid "Budget period"
 msgstr "Budget Periode"
 
 msgid "Budget periods"
 msgstr "Budget Perioden"
+
+msgid "Budget period end date"
+msgstr "Enddatum der Budget Periode"
 
 msgid "requesting phase until %s"
 msgstr "Antragsphase bis %s"
@@ -3041,6 +3047,9 @@ msgstr "Antragsteller"
 msgid "Not a requester"
 msgstr "Kein Antragsteller"
 
+msgid "My groups"
+msgstr "Meine Gruppen"
+
 msgid "My requests"
 msgstr "Meine Anträge"
 
@@ -3056,6 +3065,9 @@ msgstr "Überprüfung"
 msgid "Inspection comment"
 msgstr "Kommentar des Prüfers"
 
+msgid "Inspection start date"
+msgstr "Startdatum der Prüfphase"
+
 msgid "Priority"
 msgstr "Priorität"
 
@@ -3070,6 +3082,9 @@ msgstr "Organisationen"
 
 msgid "Organization unit"
 msgstr "Organisationseinheiten"
+
+msgid "Organizations of the requesters"
+msgstr "Organisationen der Antragsteller"
 
 msgid "Department"
 msgstr "Departemente"
@@ -3129,7 +3144,25 @@ msgid "Replacement"
 msgstr "Ersatz"
 
 msgid "Custom articles"
-msgstr "Gebräuchliche Artikel"
+msgstr "Artikel auswählen"
 
 msgid "Request moved"
 msgstr "Antrag Verschoben"
+
+msgid "high"
+msgstr "hoch"
+
+msgid "normal"
+msgstr "normal"
+
+msgid "Are you sure you want to delete '%s'?"
+msgstr "Sind Sie sicher, dass Sie '%s' wirklich löschen?"
+
+msgid "Type in a search term"
+msgstr "Geben Sie einen Suchbegriff ein"
+
+msgid "No results"
+msgstr "Kein Ergebnis gefunden"
+
+msgid "Searching..."
+msgstr "Suche..."

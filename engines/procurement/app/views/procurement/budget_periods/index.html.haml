@@ -5,34 +5,36 @@
     %thead
       %tr
         %th= _('Name')
-        %th= '%s %s' % [_('Inspection'), _('Start date')]
-        %th= '%s %s' % [_('Budget period'), _('End date')]
+        %th= _('Inspection start date')
+        %th= _('Budget period end date')
         %th= '%s %s' % [_('Total'), _('Requests')]
     %tbody
-      - @budget_periods.each do |budget_period|
-        %tr{class: header_color(budget_period)}
+      - if @budget_periods.empty?
+        %tr
           %td
-            %input{type: :hidden, name: 'budget_periods[][id]', value: budget_period.id}
-            %input.form-control{name: 'budget_periods[][name]', value: budget_period.name, placeholder: _('Name'), autocomplete: :false}
+            %input.form-control{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :false}
           %td
-            %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', value: l(budget_period.inspection_start_date, format: I18n.translate('date.formats.default')), placeholder: _('Inspection start date'), autocomplete: :false}
+            %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', placeholder: _('Inspection start date'), autocomplete: :false}
           %td
-            %input.form-control.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: I18n.translate('date.formats.default')), placeholder: _('End date'), autocomplete: :false}
+            %input.form-control.datepicker{name: 'budget_periods[][end_date]', placeholder: _('End date'), autocomplete: :false}
           %td
-            - if budget_period.requests.empty?
-              %a.btn.btn-danger{href: budget_period_path(budget_period), data: {method: :delete, confirm: _("Are you sure you want to delete '%s'?") % budget_period}}
-                %i.fa.fa-trash-o
-                = _('Delete')
-            - else
-              = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period}
-      %tr
-        %td
-          %input.form-control{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :false}
-        %td
-          %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', placeholder: _('Inspection start date'), autocomplete: :false}
-        %td
-          %input.form-control.datepicker{name: 'budget_periods[][end_date]', placeholder: _('End date'), autocomplete: :false}
-        %td
+      - else
+        - @budget_periods.each do |budget_period|
+          %tr{class: header_color(budget_period)}
+            %td
+              %input{type: :hidden, name: 'budget_periods[][id]', value: budget_period.id}
+              %input.form-control{name: 'budget_periods[][name]', value: budget_period.name, placeholder: _('Name'), autocomplete: :false}
+            %td
+              %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', value: l(budget_period.inspection_start_date, format: I18n.translate('date.formats.default')), placeholder: _('Inspection start date'), autocomplete: :false}
+            %td
+              %input.form-control.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: I18n.translate('date.formats.default')), placeholder: _('End date'), autocomplete: :false}
+            %td
+              - if budget_period.requests.empty?
+                %a.btn.btn-danger{href: budget_period_path(budget_period), data: {method: :delete, confirm: _("Are you sure you want to delete '%s'?") % budget_period}}
+                  %i.fa.fa-trash-o
+                  = _('Delete')
+              - else
+                = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period}
     %tfoot
       %tr
         %td.h1{colspan: 3}

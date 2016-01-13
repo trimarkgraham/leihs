@@ -1,4 +1,4 @@
-%h1= _('Organizations')
+%h1= _('Organizations of the requesters')
 
 - Procurement::Organization.walk_tree do |organization, level|
   -#= link_to "#{'-'*level}#{organization.name}", organization_path(organization)

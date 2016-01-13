@@ -16,7 +16,7 @@ module Procurement
     def create
       errors = params.require(:budget_periods).map do |param|
         permitted = param.permit(:name, :inspection_start_date, :end_date)
-        if param[:id]
+        unless param[:id].blank?
           bp = BudgetPeriod.find(param[:id])
           if permitted.values.all? &:blank?
             bp.destroy

@@ -1,3 +1,6 @@
+:ruby
+  is_template = @group.template_categories.joins(:templates).where(procurement_templates: {article_name: request.article_name}).exists?
+
 .row.request
   .col-xs-6
     - if request.editable?(current_user)
@@ -7,7 +10,7 @@
       %label.col-xs-4.control-label
         = _('Article')
       .col-xs-8
-        - if request.editable?(current_user) and not @group.template_categories.joins(:templates).where(procurement_templates: {article_name: request.article_name}).exists?
+        - if request.editable?(current_user) and not is_template
           %input.form-control{name: "requests[#{request.id}][article_name]", placeholder: _('Article'), value: request.article_name, data: {toggle: 'tooltip'}, title: request.article_name, required: true}
           %input.form-control{type: :hidden, name: "requests[#{request.id}][model_id]", value: request.model_id}
         - else
@@ -17,7 +20,7 @@
       %label.col-xs-4.control-label
         = _('Article nr. / Producer nr.')
       .col-xs-8
-        - if request.editable?(current_user)
+        - if request.editable?(current_user) and not is_template
           %input.form-control{name: "requests[#{request.id}][article_number]", placeholder: _('Article nr. / Producer nr.'), value: request.article_number}
         - else
           = request.article_number
@@ -26,7 +29,7 @@
       %label.col-xs-4.control-label
         = _('Supplier')
       .col-xs-8
-        - if request.editable?(current_user) and not @group.template_categories.joins(:templates).where(procurement_templates: {article_name: request.article_name}).exists?
+        - if request.editable?(current_user) and not is_template
           %input.form-control{name: "requests[#{request.id}][supplier_name]", placeholder: _('Supplier'), value: request.supplier_name}
           %input.form-control{type: :hidden, name: "requests[#{request.id}][supplier_id]", value: request.supplier_id}
         - else
@@ -92,7 +95,7 @@
         = "%s %s" % [_('Item price'), MoneyRails.default_currency]
         %span.small=_('incl. VAT')
       .col-xs-4
-        - if request.editable?(current_user) and not @group.template_categories.joins(:templates).where(procurement_templates: {article_name: request.article_name}).exists?
+        - if request.editable?(current_user) and not is_template
           %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
         - else
           .label.label-primary
@@ -187,27 +190,25 @@
               %i.fa.fa-gear
               %span.caret
             %ul.dropdown-menu.dropdown-menu-right
-              - if request.group.inspectable_by? current_user
-                %li.dropdown-header
-                  %h5
-                    = _('Move to another group')
-                - Procurement::Group.where.not(id: @group).each do |group|
-                  %li
-                    %a{href: move_group_user_budget_period_request_path(@group, @user, @budget_period, request, to_group_id: group.id), data: {method: :put}}
-                      %i.fa.fa-arrow-right
-                      = group
-                %li.divider{role: 'separator'}
-                %li.dropdown-header
-                  %h5
-                    = _('Move to another budget period')
-                - Procurement::BudgetPeriod.future.where.not(id: @budget_period).each do |budget_period|
-                  %li
-                    %a{href: move_group_user_budget_period_request_path(@group, @user, @budget_period, request, to_budget_period_id: budget_period.id), data: {method: :put}}
-                      %i.fa.fa-arrow-right
-                      = budget_period
-                %li.divider{role: 'separator'}
-              - if request.group.inspectable_by?(current_user) or current_user == request.user
+              %li.dropdown-header
+                %h5
+                  = _('Move to another group')
+              - Procurement::Group.where.not(id: @group).each do |group|
                 %li
-                  %a{href: group_user_budget_period_request_path(@group, @user, @budget_period, request), data: {method: :delete}}
-                    %i.fa.fa-trash
-                    = _('Delete')
+                  %a{href: move_group_user_budget_period_request_path(@group, @user, @budget_period, request, to_group_id: group.id), data: {method: :put}}
+                    %i.fa.fa-arrow-right
+                    = group
+              %li.divider{role: 'separator'}
+              %li.dropdown-header
+                %h5
+                  = _('Move to another budget period')
+              - Procurement::BudgetPeriod.future.where.not(id: @budget_period).each do |budget_period|
+                %li
+                  %a{href: move_group_user_budget_period_request_path(@group, @user, @budget_period, request, to_budget_period_id: budget_period.id), data: {method: :put}}
+                    %i.fa.fa-arrow-right
+                    = budget_period
+              %li.divider{role: 'separator'}
+              %li
+                %a{href: group_user_budget_period_request_path(@group, @user, @budget_period, request), data: {method: :delete}}
+                  %i.fa.fa-trash
+                  = _('Delete')

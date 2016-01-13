@@ -64,11 +64,10 @@
         %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
         .label{class: label_class(state)}= _(state.to_s.humanize)
 
-  .text-center
-    %br
-    %button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv'}
-      %i.fa.fa-table
-      = _('CSV Export')
+  %br
+  %button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv'}
+    %i.fa.fa-table
+    = _('CSV Export')
 
 :scss
   .transparency {
