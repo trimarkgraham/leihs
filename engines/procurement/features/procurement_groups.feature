@@ -4,7 +4,7 @@ Feature: Procurement Groups
   Scenario: Creating the Procurement Groups
     Given I am Hans Ueli
     Then I can create one or more procurement groups
-    When I create a procurement group the following information is needed
+    And a procurement group can hold the following information
     |field|value|
     |name|text|
     |Inspectors|leihs user|
@@ -24,11 +24,24 @@ Feature: Procurement Groups
     And I can add a budget limit
     And I can change a budget limit
     And I can change the email address
-    When the procurement group does not yet have any requests
-    Then I can change the name of the procurement group
 
   @personas
   Scenario: Deleting a procurement group
     Given I am Hans Ueli
     When a procurement group does not yet have any requests
     Then I can delete the procurement group
+
+  Scenario: Overview of the procurement groups
+    Given procurement groups exist
+    Then the overview shows the names of the procurement groups
+    And the overview shows the Inspectors per procurement group
+    And the overview shows the email per procurement group
+
+  @personas
+  Scenario: Mandatory field
+    Given I am Hans Ueli
+    When I create a procurement group
+    Then the group name is mandatory
+    And the mandatory field is marked
+    When I save the request without entering the mandatory information
+    Then I receive an error message
