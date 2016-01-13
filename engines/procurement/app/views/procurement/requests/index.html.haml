@@ -12,22 +12,9 @@
     .panel-body
       - if is_editable and (@group.template_categories.exists? or @group.inspectable_by?(current_user))
         - already_requested_article_names = @requests.map &:article_name
-        - content_for :sidebar do
-          - if @group.inspectable_by?(current_user)
-            %a.btn.btn-primary.btn-sm{href: group_templates_path(@group)}
-              %i.fa.fa-cube
-              = _('Edit templates')
-              .label.label-info= @group.templates.count
-            %br
-          %h4
-            = _('Custom articles')
-          - @group.template_categories.each do |template_category|
-            %b= template_category
-            %ul.list-group
-              - template_category.templates.where.not(article_name: already_requested_article_names).each do |template|
-                %li.list-group-item
-                  %a.show_template{href: '#', data: {template_id: template.id}}= template
-
+        - if @group.inspectable_by?(current_user)
+          - content_for :sidebar do
+            = render partial: 'templates', locals: {already_requested_article_names: already_requested_article_names}
 
       - i = 0
       - @requests.each do |request|
