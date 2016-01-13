@@ -41,7 +41,7 @@ module Procurement
           'success'
         end
       else
-        'default'
+        'info'
       end
     end
   end
