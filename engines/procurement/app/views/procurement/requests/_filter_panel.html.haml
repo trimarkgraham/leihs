@@ -79,9 +79,9 @@
 :coffeescript
   $(document).ready ->
     $('form#filter_panel').on('ajax:beforeSend', ->
-      $('article .page-content-wrapper').addClass('transparency')
+      $('#filter_overview').addClass('transparency')
     ).on('ajax:complete', (e, data, status, xhr) ->
-      $('article .page-content-wrapper').html(data.responseText).removeClass('transparency')
+      $('#filter_overview').html(data.responseText).removeClass('transparency')
     ).on('change', ->
       $(this).submit()
     ).trigger 'submit'

@@ -50,6 +50,6 @@ Procurement::Engine.routes.draw do
   resources :suppliers, only: :index
   resources :locations, only: :index
 
-  resources :organizations
+  resources :organizations, only: :index
 
 end

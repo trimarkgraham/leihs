@@ -3069,3 +3069,6 @@ msgstr ""
 
 msgid "Searching..."
 msgstr ""
+
+msgid "must be greater or equal to the inspection start date"
+msgstr ""

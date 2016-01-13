@@ -2,10 +2,10 @@
 
 - Procurement::Organization.walk_tree do |organization, level|
   -#= link_to "#{'-'*level}#{organization.name}", organization_path(organization)
-  %div{style: "margin-left: #{level}em"}
+  %div{style: "margin-left: #{level}em; #{level.zero? ? 'font-weight: bold;' : nil}"}
     = organization
 
-.text-right
+-#.text-right
   %a.btn.btn-success{href: new_organization_path}
     %i.fa.fa-plus
     = _('Add')

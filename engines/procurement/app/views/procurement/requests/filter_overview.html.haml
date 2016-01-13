@@ -1,2 +1,39 @@
 - content_for :sidebar do
   = render partial: 'procurement/requests/filter_panel'
+
+.well.well-sm
+  #column-titles.row
+    %b.col-sm-2
+      %a{href: url_for(params: params.merge(sort_by: :article_name, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Article')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Requester')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: url_for(params: params.merge(sort_by: :department, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Organization')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: url_for(params: params.merge(sort_by: :price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = '%s %s' % [_('Price'), Setting.local_currency_string]
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: url_for(params: params.merge(sort_by: :requested_quantity, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Quantities')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: url_for(params: params.merge(sort_by: :total_price, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = '%s %s %s' % [_('Total'), _('Price'), Setting.local_currency_string]
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: url_for(params: params.merge(sort_by: :priority, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('Priority')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: url_for(params: params.merge(sort_by: :state, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
+        = _('State')
+        %i.fa.fa-sort
+
+#filter_overview

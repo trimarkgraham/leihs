@@ -32,7 +32,7 @@
               = ff.hidden_field :budget_period_id
               = budget_period
             .col-sm-4
-              = ff.number_field :amount, min: 0, placeholder: _('Budget'), autocomplete: :false, class: 'form-control'
+              = ff.number_field :amount, min: 0, step: 1, placeholder: _('Budget'), autocomplete: :false, class: 'form-control', value: ff.object.amount.to_i
             .col-sm-4
 
     .panel-footer
