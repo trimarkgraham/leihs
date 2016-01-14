@@ -1,5 +1,12 @@
 .row
   .col-xs-3
+    %h4
+      %i.fa.fa-calendar
+      = budget_period.name
+    - if @user and @group
+      = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
+
+  .col-xs-3
     - if @group
       %h4
         %i.fa.fa-shopping-cart
@@ -30,12 +37,6 @@
           %i.fa.fa-warning
           = _('Not a requester')
 
-  .col-xs-3
-    %h4
-      %i.fa.fa-calendar
-      = budget_period.name
-    - if @user and @group
-      = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
   .col-xs-3.text-right
     - total_price = requests.map {|r| r.total_price(current_user) }.sum
     - if @user.nil? and @group and @group.inspectable_or_readable_by?(current_user)

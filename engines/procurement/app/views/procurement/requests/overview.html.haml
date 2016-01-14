@@ -43,9 +43,9 @@
             .list-group-item.heading
               .row
                 .col-xs-3
+                  = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
                 .col-xs-3
                 .col-xs-4
-                  = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
                 .col-xs-2.text-right
                   %a.btn.btn-default.btn-sm{href: csv_path}
                     %i.fa.fa-table
@@ -106,10 +106,6 @@
                       = money_without_cents_and_with_symbol requests.map {|r| r.total_price(current_user) }.sum
 
 :scss
-  #column-titles > b {
-    white-space: nowrap;
-  }
-
   .panel-heading > a, .heading {
     color: black;
   }

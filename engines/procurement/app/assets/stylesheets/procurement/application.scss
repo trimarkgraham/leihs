@@ -28,10 +28,12 @@ header {
   }
 }
 
+/*
 .total_price, .big_total_price, .budget_limit {
   font-size: 0.9em;
   line-height: 2em;
 }
+*/
 
 .ui-autocomplete {
   max-height: 20em;
@@ -53,15 +55,6 @@ div[data-toggle] {
   cursor: pointer;
 }
 
-#filter_panel {
-  margin: 0.6em;
-  ul {
-    list-style-type: none;
-    padding-left: 1em;
-    margin-bottom: 1.2em;
-  }
-}
-
 input[required]:invalid {
   background-color: #f2dede !important;
 }
@@ -73,3 +66,17 @@ input[required]:invalid {
 a.show_template {
   overflow: hidden;
 }
+
+#column-titles > b {
+  white-space: nowrap;
+}
+
+#filter_panel {
+  margin: 0.6em;
+  ul {
+    list-style-type: none;
+    padding-left: 1em;
+    margin-bottom: 1.2em;
+  }
+}
+

@@ -2,8 +2,6 @@
   is_editable = ((@budget_period.in_requesting_phase? and (@user == current_user or @group.inspectable_by?(current_user))) or
                  (@budget_period.in_inspection_phase? and @group.inspectable_by?(current_user)))
 
-%h1= _('Requests')
-
 = form_tag nil, remote: true, multipart: true, class: 'form-horizontal' do
   .panel{class: "panel-#{header_color(@budget_period)}"}
     .panel-heading
@@ -93,7 +91,7 @@
                   %label.col-xs-4.control-label
                     = _('Requested quantity')
                   .col-xs-4
-                    %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :false}
+                    %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 1, placeholder: _('Requested quantity'), autocomplete: :false, data: {to_be_required: true}}
                   .col-xs-4
                 - if @group.inspectable_by? current_user
                   .form-group
@@ -195,7 +193,7 @@
               %label.col-xs-4.control-label
                 = _('Requested quantity')
               .col-xs-4
-                %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 0, placeholder: _('Requested quantity'), autocomplete: :false, data: {to_be_required: true}}
+                %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 1, placeholder: _('Requested quantity'), autocomplete: :false, data: {to_be_required: true}}
               .col-xs-4
             - if @group.inspectable_by? current_user
               .form-group

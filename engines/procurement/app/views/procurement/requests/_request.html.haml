@@ -107,7 +107,7 @@
         = _('Requested quantity')
       .col-xs-4
         - if request.editable?(current_user) and request.user_id == current_user.id
-          %input.form-control{name: "requests[#{request.id}][requested_quantity]", type: :number, min: 0, value: request.requested_quantity, placeholder: _('Requested quantity'), autocomplete: :false, required: true}
+          %input.form-control{name: "requests[#{request.id}][requested_quantity]", type: :number, min: 1, value: request.requested_quantity, placeholder: _('Requested quantity'), autocomplete: :false, required: true}
         - else
           .label.label-primary
             = request.requested_quantity
