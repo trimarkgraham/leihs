@@ -82,6 +82,7 @@ module Procurement
       params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
       params[:filter][:priorities] ||= ['high', 'normal']
       params[:filter][:states] ||= Procurement::Request::STATES
+      params[:filter][:sort_dir] ||= 'asc'
       session[:requests_filter] = params[:filter]
 
       def get_requests
@@ -120,9 +121,9 @@ module Procurement
                         .map(&:to_sym).include? r.state(current_user)
           end
 
-          if params[:sort_by] and params[:sort_dir]
+          unless params[:filter][:sort_by].blank?
             requests = requests.sort do |a, b|
-              case params[:sort_by]
+              case params[:filter][:sort_by]
               when 'total_price'
                   a.total_price(current_user) <=> b.total_price(current_user)
               when 'state'
@@ -130,10 +131,10 @@ module Procurement
               when 'department'
                   a.organization.parent <=> b.organization.parent
               else
-                  a.send(params[:sort_by]) <=> b.send(params[:sort_by])
+                  a.send(params[:filter][:sort_by]) <=> b.send(params[:filter][:sort_by])
               end
             end
-            requests.reverse! if params[:sort_dir] == 'desc'
+            requests.reverse! if params[:filter][:sort_dir] == 'desc'
           end
           h[budget_period] = requests
         end

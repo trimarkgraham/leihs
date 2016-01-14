@@ -1,4 +1,7 @@
 %form#filter_panel{data: {remote: true}}
+  %input{type: :hidden, name: 'filter[sort_by]', value: params[:filter][:sort_by]}
+  %input{type: :hidden, name: 'filter[sort_dir]', value: params[:filter][:sort_dir]}
+
   %b
     %i.fa.fa-calendar
     = _('Budget periods')
@@ -84,4 +87,4 @@
       $('#filter_overview').html(data.responseText).removeClass('transparency')
     ).on('change', ->
       $(this).submit()
-    ).trigger 'submit'
+    ).submit()
