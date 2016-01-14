@@ -33,17 +33,17 @@
               %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false, value: requester_access.organization}
             %td.text-right.h3
               %i.fa.fa-minus-circle
-
-        %tr
-          %td
-            %input{type: :hidden, name: 'requesters[][id]'}
-            %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false}
-          %td
-            %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false}
-          %td
-            %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false}
-          %td.text-right.h3
-            %i.fa.fa-minus-circle
+        - if @requester_accesses.empty?
+          %tr
+            %td
+              %input{type: :hidden, name: 'requesters[][id]'}
+              %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false}
+            %td
+              %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false}
+            %td
+              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false}
+            %td.text-right.h3
+              %i.fa.fa-minus-circle
     .panel-footer
       %div{style: 'font-size: 2em'}
         %i.fa.fa-plus-circle
@@ -109,13 +109,20 @@
 
     $('tbody').on 'click', '.fa-minus-circle', ->
       row_el = $(this).closest('tr')
-      target_el = row_el.find("input[name*='[_destroy]']")
-      target_el.val('1').change()
-      row_el.addClass('bg-danger')
+      if row_el.find("input[type='hidden'][name*='[id]']").val().length
+        target_el = row_el.find("input[name*='[_destroy]']")
+        if row_el.hasClass('bg-danger')
+          target_el.val('0').change()
+          row_el.removeClass('bg-danger')
+        else
+          target_el.val('1').change()
+          row_el.addClass('bg-danger')
+      else
+        row_el.remove()
       false
 
     $('tbody tr td input').on 'keyup change', ->
-      inputs = $(this).closest('tr').find('input')
+      inputs = $(this).closest('tr').find('input:not([type="hidden"])')
       values = ''
       inputs.each ->
         values += $.trim($(this).val());
@@ -123,59 +130,3 @@
         inputs.attr('required', 'true')
       else
         inputs.removeAttr('required')
-
--#:coffeescript
-  $(document).ready ->
-    $("input[name='requester_ids[]']").autocomplete
-      minLength: 3
-      source: ( request, response )->
-        $.ajax
-          url: '/procurement/users.json'
-          dataType: 'json'
-          data:
-            search_term: request.term
-          success: ( data )->
-            #response( data )
-            response($.map data, (item)->
-              {label: item.firstname + ' ' + item.lastname, value: item.id})
-      select: ( event, ui )->
-        terms = this.value.split( /,\s*/ );
-        terms.pop();
-        #terms.push( ui.item.firstname + ' ' + ui.item.lastname );
-        terms.push( ui.item.label );
-        terms.push( "" );
-        this.value = terms.join( ", " );
-        false
-    .each ->
-      $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
-        $( "<li>" ).append( "<a>" + item.firstname + ' ' + item.lastname + "</a>" ).appendTo( ul )
-
--#:coffeescript
-    #{@requesters.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
-      option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
-      element1.append(option)
-    element1.trigger('change')
-
-    element1 = $("input[name='admin_ids[]']").autocomplete
-      minLength: 3
-      ajax:
-        url: '/procurement/users.json'
-        dataType: 'json'
-        delay: 250
-        data: (params) -> search_term: params.term
-        processResults: (data) -> results: data
-        cache: true
-      escapeMarkup: (markup) -> markup
-      templateResult: (result) ->
-        if result.loading
-          return result.text
-        result.firstname + ' ' + result.lastname
-      templateSelection: (result) ->
-        if result.firstname and result.lastname
-          result.firstname + ' ' + result.lastname
-        else
-          result.text
-    #{@admins.sort{|a,b| a.firstname <=> b.firstname}.to_json(only: [:id, :firstname, :lastname])}.forEach (user, i)->
-      option = new Option(user.firstname + ' ' + user.lastname, user.id, true, true)
-      element1.append(option)
-    element1.trigger('change')

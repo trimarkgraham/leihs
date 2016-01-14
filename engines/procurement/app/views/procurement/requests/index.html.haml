@@ -322,10 +322,16 @@
       }, 200)
 
     $("input[name*='[approved_quantity]']").on 'change', ->
-      target_el = $(this).closest('.request').find("input[name*='[order_quantity]']")
+      order_quantity_el = $(this).closest('.request').find("input[name*='[order_quantity]']")
       new_val = $(this).val()
-      if (not target_el.val()) or Number(target_el.val()) > Number(new_val)
-        target_el.val(new_val)
+      if (not order_quantity_el.val()) or Number(order_quantity_el.val()) > Number(new_val)
+        order_quantity_el.val(new_val)
+
+      inspection_comment_el = $(this).closest('.request').find("input[name*='[inspection_comment]']")
+      if new_val == "0"
+        inspection_comment_el.attr('required', 'true')
+      else
+        inspection_comment_el.removeAttr('required')
 
     $("input[name*='_quantity]'], input[name*='[price]']").on 'change', ->
       order_quantity = $(this).closest('.request').find("input[name*='[order_quantity]']").val()
