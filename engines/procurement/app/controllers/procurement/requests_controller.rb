@@ -68,23 +68,6 @@ module Procurement
     end
 
     def filter_overview
-      params[:filter] ||= session[:requests_filter] || {}
-      params[:filter][:budget_period_ids] ||= \
-        [Procurement::BudgetPeriod.current.id]
-      params[:filter][:group_ids] ||= if (not Procurement::Group.inspector_of_any_group?(current_user) and Procurement::Access.admin?(current_user))
-                                        Procurement::Group.pluck(:id)
-                                      else
-                                        Procurement::Group.all.select do |group|
-                                          group.inspectable_by?(current_user)
-                                        end.map(&:id)
-                                      end
-      # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
-      params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
-      params[:filter][:priorities] ||= ['high', 'normal']
-      params[:filter][:states] ||= Procurement::Request::STATES
-      params[:filter][:sort_dir] ||= 'asc'
-      session[:requests_filter] = params[:filter]
-
       def get_requests
         h = {}
         Procurement::BudgetPeriod.order(end_date: :desc) \
@@ -141,13 +124,42 @@ module Procurement
         h
       end
 
+      def default_filters
+        params[:filter] ||= session[:requests_filter] || {}
+        params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
+        params[:filter][:group_ids] ||= if (not Procurement::Group.inspector_of_any_group?(current_user) and Procurement::Access.admin?(current_user))
+                                          Procurement::Group.pluck(:id)
+                                        else
+                                          Procurement::Group.all.select do |group|
+                                            group.inspectable_by?(current_user)
+                                          end.map(&:id)
+                                        end
+        # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
+        params[:filter][:priorities] ||= ['high', 'normal']
+        params[:filter][:states] ||= Procurement::Request::STATES
+        params[:filter][:sort_dir] ||= 'asc'
+      end
+
+      def fallback_filters
+        params[:filter][:budget_period_ids] ||= []
+        params[:filter][:group_ids] ||= []
+        params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
+        params[:filter][:priorities] ||= []
+        params[:filter][:states] ||= []
+        session[:requests_filter] = params[:filter]
+      end
+
       respond_to do |format|
-        format.html
+        format.html do
+          default_filters
+        end
         format.js do
+          fallback_filters
           @h = get_requests
           render partial: 'filter_overview'
         end
         format.csv do
+          fallback_filters
           # requests = get_requests.values.flat_map(&:values).flat_map{|x| x[:departments].values.flat_map(&:values)}.flat_map{|x| x[:requests]}
           requests = get_requests.values.flatten
           send_data Request.csv_export(requests, current_user),

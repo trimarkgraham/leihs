@@ -1,4 +1,4 @@
-%form#filter_panel{data: {remote: true}}
+%form#filter_panel
   %input{type: :hidden, name: 'filter[sort_by]', value: params[:filter][:sort_by]}
   %input{type: :hidden, name: 'filter[sort_dir]', value: params[:filter][:sort_dir]}
 
@@ -67,10 +67,10 @@
         %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
         .label{class: label_class(state)}= _(state.to_s.humanize)
 
-  %br
-  %button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv'}
-    %i.fa.fa-table
-    = _('CSV Export')
+%br
+%button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv', form: 'filter_panel'}
+  %i.fa.fa-table
+  = _('CSV Export')
 
 :scss
   .transparency {
@@ -84,7 +84,8 @@
     $('form#filter_panel').on('ajax:beforeSend', ->
       $('#filter_overview').addClass('transparency')
     ).on('ajax:complete', (e, data, status, xhr) ->
+      $(this).removeAttr("data-remote").removeData('remote')
       $('#filter_overview').html(data.responseText).removeClass('transparency')
     ).on('change', ->
-      $(this).submit()
-    ).submit()
+      $(this).data('remote', true).submit()
+    ).change()
