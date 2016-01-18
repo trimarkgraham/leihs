@@ -1,6 +1,6 @@
 module SmokeTestSteps
   step 'it should work' do
-    true
+    visit '/procurement'
   end
 end
 
