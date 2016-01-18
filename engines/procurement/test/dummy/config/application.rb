@@ -21,6 +21,13 @@ module Dummy
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # we are including some modules from the parent in the engine
+    config.autoload_paths += [
+      Rails.root.join('../../../..', 'app', 'controllers', 'concerns'),
+      Rails.root.join('../../../..', 'app', 'models'),
+      Rails.root.join('../../../..', 'lib')
+    ]
   end
 end
 

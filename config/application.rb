@@ -34,6 +34,10 @@ module Leihs
     config.active_record.raise_in_transactional_callbacks = true
     
     config.gettext_i18n_rails.use_for_active_record_attributes = false
+
+    config.autoload_paths += [
+      Rails.root.join('lib')
+    ]
   end
 end
 

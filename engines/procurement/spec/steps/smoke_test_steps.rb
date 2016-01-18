@@ -1,6 +1,7 @@
 module SmokeTestSteps
   step 'it should work' do
     visit '/procurement'
+    binding.pry
   end
 end
 

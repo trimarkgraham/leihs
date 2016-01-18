@@ -2,7 +2,6 @@ module MainHelpers
   extend ActiveSupport::Concern
 
   included do
-    require File.join(Rails.root, 'lib', 'authenticated_system.rb')
     include AuthenticatedSystem
 
     before_action :set_gettext_locale, :load_settings, :permit_params
