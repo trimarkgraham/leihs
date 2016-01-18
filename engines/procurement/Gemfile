@@ -18,3 +18,4 @@ gem 'pry', group: [:development, :test]
 gem 'rspec-rails', group: :test
 gem 'selenium-webdriver', group: :test
 gem 'turnip', group: :test
+gem 'mysql2', '~> 0.4', platform: :mri, group: :test
