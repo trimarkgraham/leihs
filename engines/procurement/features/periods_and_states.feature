@@ -9,10 +9,11 @@ Feature: Periods and states
     |name|text|
     |inspection period|start date|
     |budget period|end date|
-    And the start date of the inspection period should not be after the end date of the budget period
+    And the start date of the inspection period should not be later then the end date of the budget period
 
   Scenario: Sorting of budget periods
-  The budget periods are sorted alphabetically (a-z and 0-10)
+    Given budget periods exist
+    Then The budget periods are sorted from 0-10 and a-z
 
   @personas
   Scenario: Deleting a Period
@@ -28,12 +29,12 @@ Feature: Periods and states
     |name|
     |inspection period|
     |budget period|
-    When I set the start date of the inspection period to later than todays date
-    Then all users can edit the requests
-    When I set the start date of the inspection to today
-    Then Roger can not edit his requests
-    When I set the end date of the budget period to today
-    Then no user can edit the requests of this budget period
+
+  @personas
+  Scenario: Freeze budget period
+    Given I am Hans Ueli
+    When I set the end date of the budget period equal or later than today
+    Then requests of this budget period can not be edited by admin, requester or inspector
 
   @personas
   Scenario: State "New" - Request Date before Inspection Date
@@ -46,19 +47,27 @@ Feature: Periods and states
   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
     Given I am Roger
     Given a request exists
-    When the current date is between the Inspection Date and the Budget Period End Datea
+    When the current date is between the Inspection Date and the Budget Period End Date
     Then I see the state "Inspection"
-    And I can not modify the requests
+    And I can not modify the request
 
   @personas
-  Scenario: State "Inspection" - Current Date after Budget Period End Date
+  Scenario: State "Inspection", "Accepted", "Denied" "Partially Accepted" for requester when budget period has ended
     Given I am Roger
     Given a request exists
     When the current date is after the Budget Period End Date
-    Then I see the state "New", "Partially approved", "Approved", "Denied"
+    And the approved quantity is empty
+    Then I see the state "Inspection"
+    When the approved quantity is equal to the requested quantity
+    Then I see the state "Accepted"
+    When the approved quantity is smaller than the requested quantity
+    And the approved quantity is not equal 0
+    Then I see the state "Partially Accepted"
+    When the approved quantity is equal 0
+    Then I see the state "Denied"
 
   @personas
-  Scenario: State "Accepted", "Denied" "Partially Accepted" for inspector
+  Scenario: State "New", "Accepted", "Denied" "Partially Accepted" for inspector
     Given I am Barbara
     Given a request exists
     When the approved quantity is empty
@@ -72,15 +81,6 @@ Feature: Periods and states
     Then I see the state "Denied"
 
   @personas
-  Scenario: Additional Fields shown to Roger after budget period has ended
-    Given I am Roger
-    Given a request exists
-    When the budget period as ended
-    Then in addition I see the following information
-    |Approved Quantity|
-    |Inspection Comment|
-
-  @personas
   Scenario: No Modification or Deletion after Budget End Period date
     Given I am Barbara
     Given I am Hans Ueli
@@ -91,3 +91,9 @@ Feature: Periods and states
     And I can not modify any request for the budget period which has ended
     And I can not delete any requests for the budget period which has ended
     And I can not move a request to a budget period which has ended
+    And I can not move a request of a budget period which has ended to another procurement group
+
+  Scenario: Overview of Budget Periods
+    Given budget periods exist
+    Then the budget periods are sorted from 0-10 and a-z
+    And the amount of requests per budget period is shown

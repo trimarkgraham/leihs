@@ -1,9 +1,10 @@
-Feature: Describing the roles
+Feature: Description of roles
 
   @personas
   Scenario: Role Requester
     Given I am Roger
     Then I can manage my requests
+    And I can export data
 
   @personas
   Scenario: Role Inspector
@@ -12,7 +13,9 @@ Feature: Describing the roles
     And I can create requests for other users
     And I can manage my own requests
     And I can manage requests of the procurement group I am responsible for
-    And I can create templates of the procurement group I am responsible for
+    And I can view requests of other groups I am not responsible for
+    And I can create templates of the procurement groups I am responsible for
+    And I can export data
 
   @personas
   Scenario: Role Admin
