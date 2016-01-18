@@ -13,4 +13,8 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
+gem 'capybara-rails', group: :test
+gem 'pry', group: [:development, :test]
+gem 'rspec-rails', group: :test
+gem 'selenium-webdriver', group: :test
 gem 'turnip', group: :test
