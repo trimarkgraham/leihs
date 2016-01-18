@@ -1,5 +1,5 @@
 - if @group
-  .well.well-sm
+  .well.well-sm{style: 'padding-left: 15px; padding-right: 15px;'}
     #column-titles.row
       %b.col-sm-3
         %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}

@@ -1,7 +1,7 @@
 - content_for :sidebar do
   = render partial: 'procurement/requests/filter_panel'
 
-.well.well-sm
+.well.well-sm{style: 'padding-left: 15px; padding-right: 15px;'}
   #column-titles.row
     %b.col-sm-2
       %a{href: '#', data: {sort_by: :article_name}}
