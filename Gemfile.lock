@@ -122,6 +122,14 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-console (0.0.4)
+      capybara
+      rails (>= 3.0)
+    capybara-rails (0.0.2)
+      capybara
+      capybara-console
+      database_cleaner
+      exception_notification
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.10.2)
@@ -184,6 +192,9 @@ GEM
     equalizer (0.0.11)
     erubis (2.7.0)
     eventmachine (1.0.9.1)
+    exception_notification (4.1.4)
+      actionmailer (~> 4.0)
+      activesupport (~> 4.0)
     execjs (2.6.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
@@ -525,6 +536,7 @@ DEPENDENCIES
   capistrano (= 2.15.5)
   capistrano-ext
   capistrano-rbenv (~> 1.0)
+  capybara-rails
   chunky_png (~> 1.2)
   cider_ci-support
   coffee-rails (~> 4.0)

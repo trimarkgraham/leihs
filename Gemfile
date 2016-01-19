@@ -68,9 +68,11 @@ group :development do
 end
 
 group :test do
+  gem 'capybara-rails'
   gem 'ladle'
   gem 'open4'
   gem 'rack_session_access', '~> 0.1.1'
+  gem 'turnip'
 end
 
 group :development, :test do
@@ -93,7 +95,6 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'spring' # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'timecop', '~> 0.7'
-  gem 'turnip'
   gem 'web-console', '~> 2.0' # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'yard'
 end
