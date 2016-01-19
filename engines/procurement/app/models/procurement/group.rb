@@ -26,8 +26,7 @@ module Procurement
     end
 
     def inspectable_or_readable_by?(user)
-      Procurement::Group.inspector_of_any_group_or_admin?(user) \
-        or inspectable_by?(user)
+      Procurement::Group.inspector_of_any_group_or_admin?(user)
     end
 
     class << self

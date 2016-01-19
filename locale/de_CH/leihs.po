@@ -3156,7 +3156,7 @@ msgid "normal"
 msgstr "normal"
 
 msgid "Are you sure you want to delete '%s'?"
-msgstr "Sind Sie sicher, dass Sie '%s' wirklich löschen?"
+msgstr "Sind Sie sicher, dass Sie '%s' löschen möchten?"
 
 msgid "Type in a search term"
 msgstr "Geben Sie einen Suchbegriff ein"
@@ -3168,4 +3168,7 @@ msgid "Searching..."
 msgstr "Suche..."
 
 msgid "must be greater or equal to the inspection start date"
-msgstr "muss gleichzeitig oder später sein wie das Startdatum der Überprüfung"
+msgstr "muss gleichzeitig oder später sein wie das Startdatum der Prüfphase"
+
+msgid "Check invalid fields"
+msgstr "Es existieren ungültige Felder"

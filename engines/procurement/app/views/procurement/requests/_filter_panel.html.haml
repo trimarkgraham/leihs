@@ -6,10 +6,10 @@
     %b
       %i.fa.fa-calendar
       = _('Budget periods')
-    %br
-    %select{name: 'filter[budget_period_ids][]', multiple: true}
-      - Procurement::BudgetPeriod.order(end_date: :desc).each do |budget_period|
-        %option{value: budget_period.id, selected: params[:filter][:budget_period_ids].map(&:to_i).include?(budget_period.id)}= budget_period
+    %ul
+      %select{name: 'filter[budget_period_ids][]', multiple: true}
+        - Procurement::BudgetPeriod.order(end_date: :desc).each do |budget_period|
+          %option{value: budget_period.id, selected: params[:filter][:budget_period_ids].map(&:to_i).include?(budget_period.id)}= budget_period
 
   .form-group
     :ruby
@@ -17,29 +17,29 @@
     %b
       %i.fa.fa-shopping-cart
       = _('Groups')
-    %br
-    %select{name: 'filter[group_ids][]', multiple: true}
-      %optgroup{label: _('My groups')}
-        - my_groups.each do |group|
-          %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
-      %optgroup{label: _('Other groups')}
-        - other_groups.each do |group|
-          %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
+    %ul
+      %select{name: 'filter[group_ids][]', multiple: true}
+        %optgroup{label: _('My groups')}
+          - my_groups.each do |group|
+            %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
+        %optgroup{label: _('Other groups')}
+          - other_groups.each do |group|
+            %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
 
   .form-group
     %b
       %i.fa.fa-sitemap
       = _('Organization')
-    %br
-    %select{name: 'filter[organization_id]'}
-      %option{value: ''}= _('All')
-      %optgroup{label: "----------"}
-      - Procurement::Organization.departments.each do |department|
-        %option{value: department.id, selected: (params[:filter][:organization_id].to_i == department.id)}= department
-        - department.children.each do |organization_unit|
-          %option{value: organization_unit.id, selected: (params[:filter][:organization_id].to_i == organization_unit.id)}
-            &nbsp;&nbsp;&nbsp;
-            = organization_unit
+    %ul
+      %select{name: 'filter[organization_id]'}
+        %option{value: ''}= _('All')
+        %optgroup{label: "----------"}
+        - Procurement::Organization.departments.each do |department|
+          %option{value: department.id, selected: (params[:filter][:organization_id].to_i == department.id)}= department
+          - department.children.each do |organization_unit|
+            %option{value: organization_unit.id, selected: (params[:filter][:organization_id].to_i == organization_unit.id)}
+              &nbsp;&nbsp;&nbsp;
+              = organization_unit
 
   .form-group
     %b
@@ -56,12 +56,13 @@
       = _('State of Request')
     %ul
       - Procurement::Request::STATES.each do |state|
+        - next if state == :in_inspection
         %li
           %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
           .label{class: label_class(state)}= _(state.to_s.humanize)
 
 %br
-%button.btn.btn-default.btn-xs{type: :submit, name: 'format', value: 'csv', form: 'filter_panel'}
+%button.btn.btn-primary{type: :submit, name: 'format', value: 'csv', form: 'filter_panel'}
   %i.fa.fa-table
   = _('CSV Export')
 

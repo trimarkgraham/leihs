@@ -5,6 +5,7 @@
 *= require bootstrap-multiselect
 * require fontawesome
 *
+*= require procurement/bootstrap_override
 *= require procurement/simple-sidebar
 *= require procurement/radial-progress-bar
 *= require procurement/jquery-tokeninput-facebook-theme
@@ -61,7 +62,7 @@ input[required]:invalid {
 }
 
 .progress-radial {
-  margin: 0.6em;
+  margin: 0.7em 0 0.7em 0;
 }
 
 a.show_template {
