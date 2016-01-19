@@ -76,6 +76,8 @@ group :test do
 end
 
 group :development, :test do
+  gem 'better_errors'
+  gem 'binding_of_caller'
   gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'cider_ci-support'
   gem 'cucumber-rails', '~> 1.3', require: false # it already includes capybara
