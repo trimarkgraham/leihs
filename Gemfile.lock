@@ -410,6 +410,10 @@ GEM
       stream (>= 0.5)
     roodi (3.3.1)
       ruby_parser (~> 3.2, >= 3.2.2)
+    rspec (3.4.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
     rspec-core (3.4.1)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
@@ -479,6 +483,9 @@ GEM
     tins (1.6.0)
     traceroute (0.5.0)
       rails (>= 3.0.0)
+    turnip (2.0.2)
+      gherkin (~> 2.5)
+      rspec (>= 3.0, < 4.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.2)
@@ -587,6 +594,7 @@ DEPENDENCIES
   timecop (~> 0.7)
   traceroute
   trinidad
+  turnip
   uglifier (~> 2.4)
   web-console (~> 2.0)
   will_paginate (~> 3.0)
