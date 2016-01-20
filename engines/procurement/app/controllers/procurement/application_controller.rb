@@ -19,7 +19,7 @@ module Procurement
 
     def procurement_admin?
       current_user and (Access.admin?(current_user) \
-        or (Access.admins.empty? and is_admin?))
+        or (Access.admins.empty? and admin?))
     end
 
     def procurement_requester?

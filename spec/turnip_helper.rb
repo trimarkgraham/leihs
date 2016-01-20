@@ -26,6 +26,10 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(type: :feature) do
+    FactoryGirl.create(:setting) unless Setting.first
+  end
+
   config.before(browser: true) do
     Capybara.current_driver = :selenium_firefox
   end
