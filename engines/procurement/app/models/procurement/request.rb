@@ -4,6 +4,7 @@ module Procurement
     belongs_to :budget_period
     belongs_to :group
     belongs_to :organization
+    belongs_to :template
     belongs_to :user      # from parent application
     belongs_to :model     # from parent application
     belongs_to :supplier  # from parent application

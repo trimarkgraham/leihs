@@ -452,6 +452,7 @@ ActiveRecord::Schema.define(version: 20151013060621) do
     t.integer  "model_id",           limit: 4
     t.integer  "supplier_id",        limit: 4
     t.integer  "location_id",        limit: 4
+    t.integer  "template_id",        limit: 4
     t.string   "article_name",       limit: 255,                 null: false
     t.string   "article_number",     limit: 255
     t.integer  "requested_quantity", limit: 4,                   null: false
@@ -475,6 +476,7 @@ ActiveRecord::Schema.define(version: 20151013060621) do
   add_index "procurement_requests", ["model_id"], name: "fk_rails_214a7de1ff", using: :btree
   add_index "procurement_requests", ["organization_id"], name: "fk_rails_4c51bafad3", using: :btree
   add_index "procurement_requests", ["supplier_id"], name: "fk_rails_51707743b7", using: :btree
+  add_index "procurement_requests", ["template_id"], name: "fk_rails_bf7bec026c", using: :btree
   add_index "procurement_requests", ["user_id"], name: "fk_rails_f365098d3c", using: :btree
 
   create_table "procurement_template_categories", force: :cascade do |t|
@@ -679,6 +681,7 @@ ActiveRecord::Schema.define(version: 20151013060621) do
   add_foreign_key "procurement_requests", "procurement_budget_periods", column: "budget_period_id"
   add_foreign_key "procurement_requests", "procurement_groups", column: "group_id"
   add_foreign_key "procurement_requests", "procurement_organizations", column: "organization_id"
+  add_foreign_key "procurement_requests", "procurement_templates", column: "template_id"
   add_foreign_key "procurement_requests", "suppliers"
   add_foreign_key "procurement_requests", "users"
   add_foreign_key "procurement_template_categories", "procurement_groups", column: "group_id"

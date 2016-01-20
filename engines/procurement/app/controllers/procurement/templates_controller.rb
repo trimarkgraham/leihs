@@ -3,12 +3,17 @@ require_dependency 'procurement/application_controller'
 module Procurement
   class TemplatesController < ApplicationController
 
-    before_action do
+    before_action except: :choose do
       @group = Procurement::Group.find(params[:group_id])
 
       unless @group.inspectable_by?(current_user)
         redirect_to root_path
       end
+    end
+
+    def choose
+      @user = User.not_as_delegations.find(params[:user_id]) if params[:user_id]
+      @template_categories = TemplateCategory.all
     end
 
     def index

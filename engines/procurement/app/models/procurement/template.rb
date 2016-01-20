@@ -4,6 +4,7 @@ module Procurement
     belongs_to :template_category
     belongs_to :model     # from parent application
     belongs_to :supplier  # from parent application
+    has_many :requests, dependent: :nullify
 
     monetize :price_cents
 

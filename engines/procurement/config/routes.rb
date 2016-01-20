@@ -16,8 +16,13 @@ Procurement::Engine.routes.draw do
         get :overview
       end
     end
-    scope format: true, constraints: {format: 'csv'} do
-      resources :budget_periods, only: [] do
+    resources :budget_periods, only: [] do
+      resources :templates do
+        collection do
+          get :choose
+        end
+      end
+      scope format: true, constraints: {format: 'csv'} do
         resources :requests, only: [:index]
       end
     end
