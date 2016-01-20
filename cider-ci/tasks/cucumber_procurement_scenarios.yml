@@ -4,3 +4,7 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/smoke_test.feature:4
+- name: engines/procurement/spec/features/smoke_test.feature:9
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/smoke_test.feature:9

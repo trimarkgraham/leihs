@@ -15,6 +15,21 @@ module PersonasSteps
     login_as persona
   end
 
+  # inspector
+  step 'I am Barbara' do
+    persona = create_persona('Barbara')
+    FactoryGirl.create(:procurement_group_inspector,
+                       user: persona)
+    login_as persona
+  end
+
+  # leihs admin
+  step 'I am Gino' do
+    persona = create_persona('Gino')
+    FactoryGirl.create(:access_right, role: :admin)
+    login_as persona
+  end
+
   private
 
   def set_locale(user)

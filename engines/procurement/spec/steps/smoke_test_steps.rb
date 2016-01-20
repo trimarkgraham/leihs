@@ -14,6 +14,19 @@ module SmokeTestSteps
     visit '/procurement'
     expect(page).to have_content _('Procurement')
   end
+
+  step 'it should work with Gino' do
+    step 'I am Gino'
+    visit '/procurement'
+    expect(page).to have_content _('Procurement')
+  end
+
+  step 'it should work with Barbara' do
+    step 'I am Barbara'
+    visit '/procurement'
+    binding.pry
+    expect(page).to have_content _('Procurement')
+  end
 end
 
 RSpec.configure { |c| c.include SmokeTestSteps }
