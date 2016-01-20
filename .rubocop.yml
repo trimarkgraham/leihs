@@ -12,6 +12,7 @@ AllCops:
     - 'tmp/**/*'
     - 'node_modules/**/*'
     - 'script/**/*'
+    - 'spec/**/*'
   RunRailsCops: true
 
 Lint/AmbiguousOperator:
