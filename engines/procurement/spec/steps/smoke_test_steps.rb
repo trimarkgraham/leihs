@@ -24,7 +24,6 @@ module SmokeTestSteps
   step 'it should work with Barbara' do
     step 'I am Barbara'
     visit '/procurement'
-    binding.pry
     expect(page).to have_content _('Procurement')
   end
 end
