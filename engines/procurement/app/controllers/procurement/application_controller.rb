@@ -5,7 +5,10 @@ module Procurement
     before_action :require_login, :require_admins, except: :root
 
     def root
-      if current_user \
+      if not BudgetPeriod.current
+        flash.now[:error] = _('Current budget period not defined yet')
+        redirect_to budget_periods_path if procurement_admin?
+      elsif current_user \
         and Procurement::Group.inspector_of_any_group_or_admin?(current_user)
         redirect_to overview_requests_path
       elsif procurement_requester?
@@ -19,7 +22,7 @@ module Procurement
 
     def procurement_admin?
       current_user and (Access.admin?(current_user) \
-        or (Access.admins.empty? and is_admin?))
+        or (Access.admins.empty? and admin?))
     end
 
     def procurement_requester?

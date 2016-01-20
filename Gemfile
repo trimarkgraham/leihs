@@ -68,12 +68,16 @@ group :development do
 end
 
 group :test do
+  gem 'capybara-rails'
   gem 'ladle'
   gem 'open4'
   gem 'rack_session_access', '~> 0.1.1'
+  gem 'turnip'
 end
 
 group :development, :test do
+  gem 'better_errors'
+  gem 'binding_of_caller'
   gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'cider_ci-support'
   gem 'cucumber-rails', '~> 1.3', require: false # it already includes capybara

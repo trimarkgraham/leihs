@@ -1,0 +1,47 @@
+---
+tasks:
+- name: periods_and_states
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/periods_and_states.feature"
+- name: procurement_groups
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/procurement_groups.feature"
+- name: csv
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/csv.feature"
+- name: overview_for_requester
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/overview_for_requester.feature"
+- name: Requesters_and_Organisations
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/Requesters_and_Organisations.feature"
+- name: roles
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/roles.feature"
+- name: templates
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/templates.feature"
+- name: inspection
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/inspection.feature"
+- name: requests
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/requests.feature"
