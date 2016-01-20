@@ -175,6 +175,11 @@ tasks:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "features/login/login.feature"
+- name: email_templates
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "features/email_templates.feature"
 - name: search_complete
   scripts:
     test:

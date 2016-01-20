@@ -640,6 +640,11 @@ tasks:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  -f json -o log/cucumber_report.json
         --strict features/borrow/startseite.feature:25 DEFAULT_BROWSER=firefox
+- name: features/email_templates.feature:9
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default  -f json -o log/cucumber_report.json
+        --strict features/email_templates.feature:9 DEFAULT_BROWSER=firefox
 - name: features/examples/ruecknahme.feature:11
   scripts:
     test:
