@@ -1,6 +1,7 @@
 %form#filter_panel
-  %input{type: :hidden, name: 'filter[sort_by]', value: params[:filter][:sort_by]}
-  %input{type: :hidden, name: 'filter[sort_dir]', value: params[:filter][:sort_dir]}
+  - unless @user
+    %input{type: :hidden, name: 'filter[sort_by]', value: params[:filter][:sort_by]}
+    %input{type: :hidden, name: 'filter[sort_dir]', value: params[:filter][:sort_dir]}
 
   .form-group
     %b
@@ -11,81 +12,95 @@
         - Procurement::BudgetPeriod.order(end_date: :desc).each do |budget_period|
           %option{value: budget_period.id, selected: params[:filter][:budget_period_ids].map(&:to_i).include?(budget_period.id)}= budget_period
 
-  .form-group
-    :ruby
-      my_groups, other_groups = Procurement::Group.all.partition { |group| group.inspectable_by?(current_user) }
-    %b
-      %i.fa.fa-shopping-cart
-      = _('Groups')
-    %ul
-      %select{name: 'filter[group_ids][]', multiple: true}
-        %optgroup{label: _('My groups')}
-          - my_groups.each do |group|
+  - unless @user
+    .form-group
+      :ruby
+        my_groups, other_groups = Procurement::Group.all.partition { |group| group.inspectable_by?(current_user) }
+      %b
+        %i.fa.fa-shopping-cart
+        = _('Groups')
+      %ul
+        %select{name: 'filter[group_ids][]', multiple: true}
+          %optgroup{label: _('My groups')}
+            - my_groups.each do |group|
+              %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
+          %optgroup{label: _('Other groups')}
+            - other_groups.each do |group|
+              %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
+  - else
+    .form-group
+      %b
+        %i.fa.fa-shopping-cart
+        = _('Groups')
+      %ul
+        %select{name: 'filter[group_ids][]', multiple: true}
+          - Procurement::Group.all.each do |group|
             %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
-        %optgroup{label: _('Other groups')}
-          - other_groups.each do |group|
-            %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
+
+  - unless @user
+    .form-group
+      %b
+        %i.fa.fa-sitemap
+        = _('Organization')
+      %ul
+        %select{name: 'filter[organization_id]'}
+          %option{value: ''}= _('All')
+          %optgroup{label: "----------"}
+          - Procurement::Organization.departments.each do |department|
+            %option{value: department.id, selected: (params[:filter][:organization_id].to_i == department.id)}= department
+            - department.children.each do |organization_unit|
+              %option{value: organization_unit.id, selected: (params[:filter][:organization_id].to_i == organization_unit.id)}
+                &nbsp;&nbsp;&nbsp;
+                = organization_unit
+
+    .form-group
+      %b
+        %i.fa.fa-sort-amount-asc
+        = _('Priority')
+      %ul
+        - ['high', 'normal'].each do |priority|
+          %input{type: :checkbox, name: "filter[priorities][]", value: priority, checked: params[:filter][:priorities].include?(priority)}
+          .label.label-default= _(priority)
+
+    .form-group
+      %b
+        %i.fa.fa-code-fork
+        = _('State of Request')
+      %ul
+        - Procurement::Request::STATES.each do |state|
+          - next if state == :in_inspection
+          %li
+            %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
+            .label{class: label_class(state)}= _(state.to_s.humanize)
 
   .form-group
     %b
-      %i.fa.fa-sitemap
-      = _('Organization')
+      %i.fa.fa-search
+      = _('Search')
     %ul
-      %select{name: 'filter[organization_id]'}
-        %option{value: ''}= _('All')
-        %optgroup{label: "----------"}
-        - Procurement::Organization.departments.each do |department|
-          %option{value: department.id, selected: (params[:filter][:organization_id].to_i == department.id)}= department
-          - department.children.each do |organization_unit|
-            %option{value: organization_unit.id, selected: (params[:filter][:organization_id].to_i == organization_unit.id)}
-              &nbsp;&nbsp;&nbsp;
-              = organization_unit
-
-  .form-group
-    %b
-      %i.fa.fa-sort-amount-asc
-      = _('Priority')
-    %ul
-      - ['high', 'normal'].each do |priority|
-        %input{type: :checkbox, name: "filter[priorities][]", value: priority, checked: params[:filter][:priorities].include?(priority)}
-        .label.label-default= _(priority)
-
-  .form-group
-    %b
-      %i.fa.fa-code-fork
-      = _('State of Request')
-    %ul
-      - Procurement::Request::STATES.each do |state|
-        - next if state == :in_inspection
-        %li
-          %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
-          .label{class: label_class(state)}= _(state.to_s.humanize)
+      %input.form-control{name: 'filter[search]', placeholder: _('Search'), value: params[:filter][:search], autocomplete: :off}
 
 %br
 %button.btn.btn-primary{type: :submit, name: 'format', value: 'csv', form: 'filter_panel'}
   %i.fa.fa-table
   = _('CSV Export')
 
-:scss
-  .transparency {
-    opacity:0.5;
-    filter:alpha(opacity=50);
-    -moz-opacity:0.5;
-  }
-
-  #filter_panel select {
-    display: none;
-  }
 
 :coffeescript
   $(document).ready ->
     $('form#filter_panel').on('ajax:beforeSend', ->
-      $('#filter_overview').addClass('transparency')
+      $('#filter_target').addClass('transparency')
     ).on('ajax:complete', (e, data, status, xhr) ->
       $(this).removeAttr("data-remote").removeData('remote')
-      $('#filter_overview').html(data.responseText).removeClass('transparency')
-    ).on('change', ->
-      $(this).data('remote', true).submit()
+      $('#filter_target').html(data.responseText).removeClass('transparency')
+    ).on('keypress', (event)->
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout =>
+        $(this).data('remote', true).submit()
+      , 400
+    ).on('change', (event)->
+      unless event.target.name == 'filter[search]'
+        $(this).data('remote', true).submit()
     ).change()
 
     $("#filter_panel select").multiselect()

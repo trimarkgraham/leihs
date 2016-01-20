@@ -16,29 +16,21 @@ module Procurement
       @group = Procurement::Group.find(params[:group_id]) if params[:group_id]
       @budget_period = \
         BudgetPeriod.find(params[:budget_period_id]) if params[:budget_period_id]
-    end
 
-    before_action except: :overview do
-      unless @user.nil? or @user == current_user or @group.nil? \
-        or @group.inspectable_or_readable_by?(current_user)
+      unless @user.nil? or @user == current_user \
+        or @group.nil? or @group.inspectable_or_readable_by?(current_user)
         redirect_to root_path
       end
     end
 
     before_action only: :overview do
-      if (@group and not @group.inspectable_or_readable_by?(current_user)) \
-        or (@user and not @user == current_user)
+      if not Procurement::Group.inspector_of_any_group_or_admin?(current_user) \
+        and @user != current_user
         redirect_to root_path
       end
     end
 
-    before_action only: :filter_overview do
-      unless Procurement::Group.inspector_of_any_group_or_admin?(current_user)
-        redirect_to root_path
-      end
-    end
-
-    before_action only: [:index, :overview] do
+    before_action only: :index do
       @requests = Request.all
       @requests = @requests.where(user_id: @user) if @user
       @requests = @requests.where(group_id: @group) if @group
@@ -64,11 +56,8 @@ module Procurement
     end
 
     def overview
-      @budget_periods = BudgetPeriod.order(end_date: :desc)
-    end
-
-    def filter_overview
       def get_requests
+        fallback_filters
         h = {}
         Procurement::BudgetPeriod.order(end_date: :desc) \
           .find(params[:filter][:budget_period_ids]).each do |budget_period|
@@ -91,9 +80,10 @@ module Procurement
           #   end
           # end
 
-          requests = budget_period.requests \
+          requests = budget_period.requests.search(params[:filter][:search]) \
                       .where(group_id: params[:filter][:group_ids],
                              priority: params[:filter][:priorities])
+          requests = requests.where(user_id: @user) if @user
           if params[:filter][:organization_id]
             # where(procurement_organizations: {parent_id: params[:filter][:organization_id]})
             requests = requests.joins(:organization)
@@ -114,6 +104,7 @@ module Procurement
               when 'department'
                   a.organization.parent <=> b.organization.parent
               else
+                  # FIXME casecmp ?? case insensitive and strip
                   a.send(params[:filter][:sort_by]) <=> b.send(params[:filter][:sort_by])
               end
             end
@@ -124,42 +115,15 @@ module Procurement
         h
       end
 
-      def default_filters
-        params[:filter] ||= session[:requests_filter] || {}
-        params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
-        params[:filter][:group_ids] ||= if (not Procurement::Group.inspector_of_any_group?(current_user) and Procurement::Access.admin?(current_user))
-                                          Procurement::Group.pluck(:id)
-                                        else
-                                          Procurement::Group.all.select do |group|
-                                            group.inspectable_by?(current_user)
-                                          end.map(&:id)
-                                        end
-        # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
-        params[:filter][:priorities] ||= ['high', 'normal']
-        params[:filter][:states] ||= Procurement::Request::STATES
-        params[:filter][:sort_dir] ||= 'asc'
-      end
-
-      def fallback_filters
-        params[:filter][:budget_period_ids] ||= []
-        params[:filter][:group_ids] ||= []
-        params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
-        params[:filter][:priorities] ||= []
-        params[:filter][:states] ||= []
-        session[:requests_filter] = params[:filter]
-      end
-
       respond_to do |format|
         format.html do
           default_filters
         end
         format.js do
-          fallback_filters
           @h = get_requests
-          render partial: 'filter_overview'
+          render partial: 'overview'
         end
         format.csv do
-          fallback_filters
           # requests = get_requests.values.flat_map(&:values).flat_map{|x| x[:departments].values.flat_map(&:values)}.flat_map{|x| x[:requests]}
           requests = get_requests.values.flatten
           send_data Request.csv_export(requests, current_user),
@@ -226,18 +190,60 @@ module Procurement
       end
 
       flash[:success] = _('Request moved')
-      redirect_to group_user_budget_period_requests_path(@group,
-                                                         @user,
-                                                         @budget_period)
+      redirect_to group_budget_period_user_requests_path(@group,
+                                                         @budget_period,
+                                                         @user)
     end
 
     def destroy
       @request.destroy
 
       flash[:success] = _('Deleted')
-      redirect_to group_user_budget_period_requests_path(@group,
-                                                         @user,
-                                                         @budget_period)
+      redirect_to group_budget_period_user_requests_path(@group,
+                                                         @budget_period,
+                                                         @user)
+    end
+
+    private
+
+    def default_filters
+      params[:filter] ||= unless @user
+                            session[:requests_filter] || {}
+                          else
+                            {}
+                          end
+      params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
+      params[:filter][:group_ids] ||= unless @user
+                                        if (not Procurement::Group.inspector_of_any_group?(current_user) and Procurement::Access.admin?(current_user))
+                                          Procurement::Group.pluck(:id)
+                                        else
+                                          Procurement::Group.all.select do |group|
+                                            group.inspectable_by?(current_user)
+                                          end.map(&:id)
+                                        end
+                                      else
+                                        Procurement::Group.pluck(:id)
+                                      end
+      unless @user
+        # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
+        params[:filter][:priorities] ||= ['high', 'normal']
+        params[:filter][:states] ||= Procurement::Request::STATES
+        params[:filter][:sort_dir] ||= 'asc'
+      end
+    end
+
+    def fallback_filters
+      params[:filter][:budget_period_ids] ||= []
+      params[:filter][:group_ids] ||= []
+      if @user
+        params[:filter][:priorities] = ['high', 'normal']
+        params[:filter][:states] = Procurement::Request::STATES
+      else
+        params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
+        params[:filter][:priorities] ||= []
+        params[:filter][:states] ||= []
+        session[:requests_filter] = params[:filter]
+      end
     end
 
   end

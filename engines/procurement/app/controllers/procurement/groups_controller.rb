@@ -28,7 +28,14 @@ module Procurement
     end
 
     def create
-      Group.create(params[:group])
+      # FIXME
+      budget_limits_attributes = params[:group].delete(:budget_limits_attributes)
+      group = Group.create(params[:group])
+      if group.valid?
+        group.update_attributes(budget_limits_attributes: budget_limits_attributes)
+      else
+        flash[:error] = group.errors.full_messages
+      end
       redirect_to groups_path
     end
 

@@ -38,17 +38,18 @@
           = _('Not a requester')
 
   .col-xs-3.text-right
-    - total_price = requests.map {|r| r.total_price(current_user) }.sum
-    - if @user.nil? and @group and @group.inspectable_or_readable_by?(current_user)
-      - budget_limit_amount = @group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)
+    - if requests
+      - total_price = requests.map {|r| r.total_price(current_user) }.sum
+      - if @user.nil? and @group and @group.inspectable_or_readable_by?(current_user)
+        - budget_limit_amount = @group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)
 
-      = render partial: 'procurement/requests/progress_radial', locals: {used: total_price.to_i, max: budget_limit_amount.to_i}
+        = render partial: 'procurement/requests/progress_radial', locals: {used: total_price.to_i, max: budget_limit_amount.to_i}
 
-      .label.label-default.budget_limit
-        %i.fa.fa-pie-chart
-        = money_without_cents_and_with_symbol budget_limit_amount
-      %br
+        .label.label-default.budget_limit
+          %i.fa.fa-pie-chart
+          = money_without_cents_and_with_symbol budget_limit_amount
+        %br
 
-    .label.label-primary.big_total_price
-      %i.fa.fa-shopping-cart
-      = money_without_cents_and_with_symbol total_price
+      .label.label-primary.big_total_price
+        %i.fa.fa-shopping-cart
+        = money_without_cents_and_with_symbol total_price

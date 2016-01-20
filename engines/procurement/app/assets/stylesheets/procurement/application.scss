@@ -73,9 +73,20 @@ a.show_template {
   white-space: nowrap;
 }
 
-#filter_panel  ul {
-  list-style-type: none;
-  padding-left: 1em;
-  margin-bottom: 1.2em;
+#filter_panel {
+  ul {
+    list-style-type: none;
+    padding-left: 1em;
+    margin-bottom: 1.2em;
+  }
+
+  select {
+    display: none;
+  }
 }
 
+.transparency {
+  opacity:0.5;
+  filter:alpha(opacity=50);
+  -moz-opacity:0.5;
+}

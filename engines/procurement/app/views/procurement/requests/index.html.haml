@@ -9,9 +9,8 @@
 
     .panel-body
       - if is_editable and (@group.template_categories.exists? or @group.inspectable_by?(current_user))
-        - already_requested_article_names = @requests.map &:article_name
         - content_for :sidebar do
-          = render partial: 'templates', locals: {already_requested_article_names: already_requested_article_names}
+          = render partial: 'templates'
 
       - i = 0
       - @requests.each do |request|
@@ -19,6 +18,7 @@
 
       - if is_editable
         - @group.template_categories.each do |template_category| # FIXME
+          - already_requested_article_names = @requests.map &:article_name
           - template_category.templates.where.not(article_name: already_requested_article_names).each do |template|
             .row.request.hidden{data: {template_id: template.id}}
               - i += 1
@@ -45,12 +45,12 @@
                   %label.col-xs-4.control-label
                     = _('Name of receiver')
                   .col-xs-8
-                    %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :false}
+                    %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :off}
                 .form-group
                   %label.col-xs-4.control-label
                     = _('Point of Delivery')
                   .col-xs-8
-                    %input.form-control{name: "requests[new_#{i}][location_name]", placeholder: _('Point of Delivery'), autocomplete: :false}
+                    %input.form-control{name: "requests[new_#{i}][location_name]", placeholder: _('Point of Delivery'), autocomplete: :off}
                 .form-group
                   %label.col-xs-4.control-label
                     = _('Motivation')
@@ -85,27 +85,27 @@
                     %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
                     .label.label-primary
                       = template.price
-                    -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
+                    -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
                   .col-xs-4
                 .form-group
                   %label.col-xs-4.control-label
                     = _('Requested quantity')
                   .col-xs-4
-                    %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 1, placeholder: _('Requested quantity'), autocomplete: :false, data: {to_be_required: true}}
+                    %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 1, placeholder: _('Requested quantity'), autocomplete: :off, data: {to_be_required: true}}
                   .col-xs-4
                 - if @group.inspectable_by? current_user
                   .form-group
                     %label.col-xs-4.control-label
                       = _('Approved quantity')
                     .col-xs-4
-                      %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :false}
+                      %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
                     .col-xs-4
                 - if @group.inspectable_by? current_user
                   .form-group
                     %label.col-xs-4.control-label
                       = _('Order quantity')
                     .col-xs-4
-                      %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :false}
+                      %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
                     .col-xs-4
                 .form-group
                   %label.col-xs-4.control-label
@@ -149,12 +149,12 @@
               %label.col-xs-4.control-label
                 = _('Name of receiver')
               .col-xs-8
-                %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :false}
+                %input.form-control{name: "requests[new_#{i}][receiver]", placeholder: _('Name of receiver'), autocomplete: :off}
             .form-group
               %label.col-xs-4.control-label
                 = _('Point of Delivery')
               .col-xs-8
-                %input.form-control{name: "requests[new_#{i}][location_name]", placeholder: _('Point of Delivery'), autocomplete: :false}
+                %input.form-control{name: "requests[new_#{i}][location_name]", placeholder: _('Point of Delivery'), autocomplete: :off}
                 %input.form-control{type: :hidden, name: "requests[new_#{i}][location_id]"}
             .form-group
               %label.col-xs-4.control-label
@@ -187,27 +187,27 @@
                 = "%s %s" % [_('Item price'), MoneyRails.default_currency]
                 %span.small=_('incl. VAT')
               .col-xs-4
-                %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
+                %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
               .col-xs-4
             .form-group
               %label.col-xs-4.control-label
                 = _('Requested quantity')
               .col-xs-4
-                %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 1, placeholder: _('Requested quantity'), autocomplete: :false, data: {to_be_required: true}}
+                %input.form-control{name: "requests[new_#{i}][requested_quantity]", type: :number, min: 1, placeholder: _('Requested quantity'), autocomplete: :off, data: {to_be_required: true}}
               .col-xs-4
             - if @group.inspectable_by? current_user
               .form-group
                 %label.col-xs-4.control-label
                   = _('Approved quantity')
                 .col-xs-4
-                  %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :false}
+                  %input.form-control{name: "requests[new_#{i}][approved_quantity]", type: :number, min: 0, placeholder: _('Approved quantity'), autocomplete: :off}
                 .col-xs-4
             - if @group.inspectable_by? current_user
               .form-group
                 %label.col-xs-4.control-label
                   = _('Order quantity')
                 .col-xs-4
-                  %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :false}
+                  %input.form-control{name: "requests[new_#{i}][order_quantity]", type: :number, min: 0, placeholder: _('Order quantity'), autocomplete: :off}
                 .col-xs-4
             .form-group
               %label.col-xs-4.control-label
@@ -253,7 +253,10 @@
         .row
           .col-xs-6{style: 'font-size: 2em'}
             %i.fa.fa-plus-circle
-          .col-xs-6.text-right
+          -#.col-xs-3.bg-danger
+            = _("Check invalid fields")
+          .col-xs-3.text-right
+            -#%button.btn.btn-success{type: :submit, disabled: true}
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check
               = _('Save')
@@ -350,9 +353,10 @@
       $(".big_total_price").html(formatted_big_total)
 
     $("a.show_template").on 'click', ->
-      $(this).hide()
+      #$(this).hide()
       $(this).closest('.dropdown-menu').dropdown('toggle')
       el = $(".row[data-template_id='" + $(this).data('template_id') + "']").removeClass('hidden')
+      # FIXME search el already use
       do zebra_rows
       el.find('input[data-to_be_required]').attr('required', 'true')
       el.find("input[name*='requested_quantity]']").val(1).change()

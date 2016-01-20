@@ -75,6 +75,26 @@ module Procurement
 
     #####################################################
 
+    scope :search, lambda { |query|
+      sql = all
+      return sql if query.blank?
+
+      query.split.each do |q|
+        q = "%#{q}%"
+        sql = sql.where(arel_table[:article_name].matches(q)
+                          .or(arel_table[:article_number].matches(q))
+                          .or(arel_table[:supplier_name].matches(q))
+                          .or(arel_table[:receiver].matches(q))
+                          .or(arel_table[:location_name].matches(q))
+                          .or(arel_table[:motivation].matches(q))
+                          .or(arel_table[:inspection_comment].matches(q))
+        )
+      end
+      sql
+    }
+
+    #####################################################
+
     def self.csv_export(requests, current_user)
       require 'csv'
 

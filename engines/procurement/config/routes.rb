@@ -6,7 +6,7 @@ Procurement::Engine.routes.draw do
 
   resources :requests, only: [] do
     collection do
-      get :filter_overview
+      get :overview
     end
   end
 
@@ -24,13 +24,11 @@ Procurement::Engine.routes.draw do
   end
 
   resources :groups do
-    resources :requests, only: [] do
-      collection do
-        get :overview
-      end
-    end
-    resources :users, only: [] do
-      resources :budget_periods, only: [] do
+    resources :budget_periods, only: [] do
+      resources :users, only: [] do
+        collection do
+          get :choose
+        end
         resources :requests, only: [:index, :create, :destroy] do
           member do
             put :move

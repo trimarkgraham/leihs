@@ -40,7 +40,7 @@
         = _('Name of receiver')
       .col-xs-8
         - if request.editable?(current_user)
-          %input.form-control{name: "requests[#{request.id}][receiver]", value: request.receiver, placeholder: _('Name of receiver'), autocomplete: :false}
+          %input.form-control{name: "requests[#{request.id}][receiver]", value: request.receiver, placeholder: _('Name of receiver'), autocomplete: :off}
         - else
           = request.receiver
 
@@ -49,7 +49,7 @@
         = _('Point of Delivery')
       .col-xs-8
         - if request.editable?(current_user)
-          %input.form-control{name: "requests[#{request.id}][location_name]", value: request.location_name, placeholder: _('Point of Delivery'), autocomplete: :false}
+          %input.form-control{name: "requests[#{request.id}][location_name]", value: request.location_name, placeholder: _('Point of Delivery'), autocomplete: :off}
           %input.form-control{type: :hidden, name: "requests[#{request.id}][location_id]", value: request.location_id}
         - else
           = request.location_name
@@ -96,7 +96,7 @@
         %span.small=_('incl. VAT')
       .col-xs-4
         - if request.editable?(current_user) and not is_template
-          %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :false}
+          %input.form-control{name: "requests[#{request.id}][price]", type: :number, min: 0, value: request.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
         - else
           .label.label-primary
             = money_without_cents_and_with_symbol request.price
@@ -107,7 +107,7 @@
         = _('Requested quantity')
       .col-xs-4
         - if request.editable?(current_user) and request.user_id == current_user.id
-          %input.form-control{name: "requests[#{request.id}][requested_quantity]", type: :number, min: 1, value: request.requested_quantity, placeholder: _('Requested quantity'), autocomplete: :false, required: true}
+          %input.form-control{name: "requests[#{request.id}][requested_quantity]", type: :number, min: 1, value: request.requested_quantity, placeholder: _('Requested quantity'), autocomplete: :off, required: true}
         - else
           .label.label-primary
             = request.requested_quantity
@@ -119,7 +119,7 @@
           = _('Approved quantity')
         .col-xs-4
           - if request.editable?(current_user) and request.group.inspectable_by?(current_user)
-            %input.form-control{name: "requests[#{request.id}][approved_quantity]", type: :number, min: 0, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :false}
+            %input.form-control{name: "requests[#{request.id}][approved_quantity]", type: :number, min: 0, value: request.approved_quantity, placeholder: _('Approved quantity'), autocomplete: :off}
           - else
             - if request.approved_quantity
               :ruby
@@ -134,7 +134,7 @@
           = _('Order quantity')
         .col-xs-4
           - if request.editable?(current_user) and request.group.inspectable_by?(current_user)
-            %input.form-control{name: "requests[#{request.id}][order_quantity]", type: :number, min: 0, value: request.order_quantity, placeholder: _('Order quantity'), autocomplete: :false}
+            %input.form-control{name: "requests[#{request.id}][order_quantity]", type: :number, min: 0, value: request.order_quantity, placeholder: _('Order quantity'), autocomplete: :off}
           - elsif request.approved_quantity and request.order_quantity
             .label{class: label_class}
               = request.order_quantity
@@ -195,7 +195,7 @@
                   = _('Move to another group')
               - Procurement::Group.where.not(id: @group).each do |group|
                 %li
-                  %a{href: move_group_user_budget_period_request_path(@group, @user, @budget_period, request, to_group_id: group.id), data: {method: :put}}
+                  %a{href: move_group_budget_period_user_request_path(@group, @budget_period, @user, request, to_group_id: group.id), data: {method: :put}}
                     %i.fa.fa-arrow-right
                     = group
               %li.divider{role: 'separator'}
@@ -204,11 +204,11 @@
                   = _('Move to another budget period')
               - Procurement::BudgetPeriod.future.where.not(id: @budget_period).each do |budget_period|
                 %li
-                  %a{href: move_group_user_budget_period_request_path(@group, @user, @budget_period, request, to_budget_period_id: budget_period.id), data: {method: :put}}
+                  %a{href: move_group_budget_period_user_request_path(@group, @budget_period, @user, request, to_budget_period_id: budget_period.id), data: {method: :put}}
                     %i.fa.fa-arrow-right
                     = budget_period
               %li.divider{role: 'separator'}
               %li
-                %a{href: group_user_budget_period_request_path(@group, @user, @budget_period, request), data: {method: :delete}}
+                %a{href: group_budget_period_user_request_path(@group, @budget_period, @user, request), data: {method: :delete}}
                   %i.fa.fa-trash
                   = _('Delete')

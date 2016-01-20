@@ -1,116 +1,54 @@
-- if @group
-  .well.well-sm{style: 'padding-left: 15px; padding-right: 15px;'}
-    #column-titles.row
-      %b.col-sm-3
-        %a{href: url_for(params: params.merge(sort_by: :user, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-          = _('Requester')
-          %i.fa.fa-sort
-      %b.col-sm-3
-        %a{href: url_for(params: params.merge(sort_by: :department, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-          = _('Department')
-          %i.fa.fa-sort
-      %b.col-sm-3
-        %a{href: url_for(params: params.merge(sort_by: :organization, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-          = _('Organization')
-          %i.fa.fa-sort
-      %b.col-sm-1
-        = _('Requests')
-      %b.col-sm-2.text-right
-        = "%s %s" % [_('Total'), _('Price')]
+- content_for :sidebar do
+  = render partial: 'procurement/requests/filter_panel'
 
-.panel-group#accordion{role: "tablist"}
+.well.well-sm{style: 'padding-left: 15px; padding-right: 15px;'}
+  #column-titles.row
+    %b.col-sm-2
+      %a{href: '#', data: {sort_by: :article_name}}
+        = _('Article')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: '#', data: {sort_by: :user}}
+        = _('Requester')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: '#', data: {sort_by: :department}}
+        = _('Organization')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: '#', data: {sort_by: :price}}
+        = '%s %s' % [_('Price'), Setting.local_currency_string]
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: '#', data: {sort_by: :requested_quantity}}
+        = _('Quantities')
+        %i.fa.fa-sort
+    %b.col-sm-2
+      %a{href: '#', data: {sort_by: :total_price}}
+        = '%s %s %s' % [_('Total'), _('Price'), Setting.local_currency_string]
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: '#', data: {sort_by: :priority}}
+        = _('Priority')
+        %i.fa.fa-sort
+    %b.col-sm-1
+      %a{href: '#', data: {sort_by: :state}}
+        = _('State')
+        %i.fa.fa-sort
 
-  - @budget_periods.each do |budget_period|
-    -#- next if budget_period.end_date > Date.today and not budget_period.current?
-    - requests = @requests.where(budget_period_id: budget_period)
-
-    .panel{class: "panel-#{header_color(budget_period)}"}
-      .panel-heading{role: "tab"}
-        %div(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{budget_period.id}")
-          = render partial: 'procurement/budget_periods/header', locals: {budget_period: budget_period, requests: requests}
-
-      .list-group(id="collapse_#{budget_period.id}" class="panel-collapse collapse #{budget_period.current? ? 'in' : nil}" role="tabpanel")
-        - unless requests.blank?
-          :ruby
-            csv_path = if @user and @group.nil?
-                user_budget_period_requests_path(@user, budget_period, format: 'csv')
-              elsif @group and @user.nil?
-                group_budget_period_requests_path(@group, budget_period, format: 'csv')
-              else
-                nil
-              end
-          - if csv_path
-            .list-group-item.heading
-              .row
-                .col-xs-3
-                  = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
-                .col-xs-3
-                .col-xs-4
-                .col-xs-2.text-right
-                  %a.btn.btn-default.btn-sm{href: csv_path}
-                    %i.fa.fa-table
-                    = _('CSV Export')
-
-        - if @group
-          :ruby
-            requesters = Procurement::Access.requesters
-            if params[:sort_by] and params[:sort_dir]
-              requesters = requesters.sort do |a, b|
-                case params[:sort_by]
-                  when 'user'
-                    a.user.to_s <=> b.user.to_s
-                  when 'organization'
-                    a.organization.to_s <=> b.organization.to_s
-                  when 'department'
-                    a.organization.parent.to_s <=> b.organization.parent.to_s
-                  else
-                    a.send(params[:sort_by]) <=> b.send(params[:sort_by])
-                end
-              end
-              requesters.reverse! if params[:sort_dir] == 'desc'
-            end
-
-          - requesters.each do |access|
-            - requests = @requests.where(budget_period_id: budget_period, user_id: access.user)
-            -# next if not budget_period.current? and requests.empty?
-            %a.list-group-item{href: group_user_budget_period_requests_path(@group, access.user, budget_period)}
-              .row
-                .col-xs-3
-                  %i.fa.fa-user
-                  = access.user
-                .col-xs-3
-                  = access.organization.parent
-                .col-xs-3
-                  = access.organization
-                .col-xs-1
-                  = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: @group, user: access.user}
-                .col-xs-2.text-right
-                  - unless requests.blank?
-                    .label.label-primary.big_total_price
-                      = money_without_cents_and_with_symbol requests.map {|r| r.total_price(current_user) }.sum
-
-        - else
-          - Procurement::Group.all.each do |group|
-            - requests = @requests.where(budget_period_id: budget_period, group_id: group)
-            -# next if not budget_period.current? and requests.empty?
-            %a.list-group-item{href: group_user_budget_period_requests_path(group, current_user, budget_period)}
-              .row
-                .col-xs-5
-                  %i.fa.fa-shopping-cart
-                  = group
-                .col-xs-5
-                  = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period, group: group, user: current_user}
-                .col-xs-2.text-right
-                  - unless requests.blank?
-                    .label.label-primary.big_total_price
-                      = money_without_cents_and_with_symbol requests.map {|r| r.total_price(current_user) }.sum
-
-:scss
-  .panel-heading > a, .heading {
-    color: black;
-  }
+#filter_target
 
 :coffeescript
   $(document).ready ->
-    $('.list-group-item.heading').each ->
-      $(this).css('background-color', $(this).closest('.panel').find('.panel-heading').css('background-color'))
+    $('#column-titles a').on 'click', ->
+      new_sort_by = $(this).data('sort_by')
+      form = $('form#filter_panel')
+      sort_by_el = form.find("input[name='filter[sort_by]']")
+      sort_dir_el = form.find("input[name='filter[sort_dir]']")
+      if sort_by_el.val() == new_sort_by and sort_dir_el.val() == 'asc'
+        sort_dir_el.val('desc')
+      else
+        sort_dir_el.val('asc')
+      sort_by_el.val(new_sort_by)
+      form.change()
+      false

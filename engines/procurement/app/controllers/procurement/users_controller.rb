@@ -54,5 +54,29 @@ module Procurement
       redirect_to users_path
     end
 
+    def choose
+      @group = Procurement::Group.find(params[:group_id])
+      redirect_to root_path unless @group.inspectable_by?(current_user)
+
+      @budget_period = BudgetPeriod.find(params[:budget_period_id])
+
+      @requester_accesses = Procurement::Access.requesters
+      if params[:sort_by] and params[:sort_dir]
+        @requester_accesses = @requester_accesses.sort do |a, b|
+          case params[:sort_by]
+            when 'user'
+              a.user.to_s <=> b.user.to_s
+            when 'organization'
+              a.organization.to_s <=> b.organization.to_s
+            when 'department'
+              a.organization.parent.to_s <=> b.organization.parent.to_s
+            else
+              a.send(params[:sort_by]) <=> b.send(params[:sort_by])
+          end
+        end
+        @requester_accesses.reverse! if params[:sort_dir] == 'desc'
+      end
+    end
+
   end
 end

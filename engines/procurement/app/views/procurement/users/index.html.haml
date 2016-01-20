@@ -26,22 +26,22 @@
             %td
               %input{type: :hidden, name: 'requesters[][id]', value: requester_access.user_id}
               %input{type: :hidden, name: 'requesters[][_destroy]'}
-              %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false, value: requester_access.user}
+              %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :off, value: requester_access.user}
             %td
-              %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false, value: requester_access.organization.parent}
+              %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :off, value: requester_access.organization.parent}
             %td
-              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false, value: requester_access.organization}
+              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :off, value: requester_access.organization}
             %td.text-right.h3
               %i.fa.fa-minus-circle
         - if @requester_accesses.empty?
           %tr
             %td
               %input{type: :hidden, name: 'requesters[][id]'}
-              %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :false}
+              %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :off}
             %td
-              %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :false}
+              %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :off}
             %td
-              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :false}
+              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :off}
             %td.text-right.h3
               %i.fa.fa-minus-circle
     .panel-footer

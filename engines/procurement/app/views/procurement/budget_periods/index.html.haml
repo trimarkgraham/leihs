@@ -12,22 +12,22 @@
       - if @budget_periods.empty?
         %tr
           %td
-            %input.form-control{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :false, required: true}
+            %input.form-control{name: 'budget_periods[][name]', placeholder: _('Name'), autocomplete: :off, required: true}
           %td
-            %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', placeholder: _('Inspection start date'), autocomplete: :false, required: true}
+            %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', placeholder: _('Inspection start date'), autocomplete: :off, required: true}
           %td
-            %input.form-control.datepicker{name: 'budget_periods[][end_date]', placeholder: _('End date'), autocomplete: :false, required: true}
+            %input.form-control.datepicker{name: 'budget_periods[][end_date]', placeholder: _('End date'), autocomplete: :off, required: true}
           %td
       - else
         - @budget_periods.each do |budget_period|
           %tr{class: header_color(budget_period)}
             %td
               %input{type: :hidden, name: 'budget_periods[][id]', value: budget_period.id}
-              %input.form-control{name: 'budget_periods[][name]', value: budget_period.name, placeholder: _('Name'), autocomplete: :false, required: true}
+              %input.form-control{name: 'budget_periods[][name]', value: budget_period.name, placeholder: _('Name'), autocomplete: :off, required: true}
             %td
-              %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', value: l(budget_period.inspection_start_date, format: I18n.translate('date.formats.default')), placeholder: _('Inspection start date'), autocomplete: :false, required: true}
+              %input.form-control.datepicker{name: 'budget_periods[][inspection_start_date]', value: l(budget_period.inspection_start_date, format: I18n.translate('date.formats.default')), placeholder: _('Inspection start date'), autocomplete: :off, required: true}
             %td
-              %input.form-control.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: I18n.translate('date.formats.default')), placeholder: _('End date'), autocomplete: :false, required: true}
+              %input.form-control.datepicker{name: 'budget_periods[][end_date]', value: l(budget_period.end_date, format: I18n.translate('date.formats.default')), placeholder: _('End date'), autocomplete: :off, required: true}
             %td
               - if budget_period.requests.empty?
                 %a.btn.btn-danger{href: budget_period_path(budget_period), data: {method: :delete, confirm: _("Are you sure you want to delete '%s'?") % budget_period}}

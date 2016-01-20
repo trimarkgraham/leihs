@@ -7,7 +7,7 @@ module Procurement
     def root
       if current_user \
         and Procurement::Group.inspector_of_any_group_or_admin?(current_user)
-        redirect_to filter_overview_requests_path
+        redirect_to overview_requests_path
       elsif procurement_requester?
         redirect_to overview_user_requests_path(current_user)
       end
