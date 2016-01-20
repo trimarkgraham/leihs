@@ -8,13 +8,13 @@ module SmokeTestSteps
                        is_admin: true)
 
     visit '/authenticator/db/login'
-    fill_in 'Benutzername', with: user.login
-    fill_in 'Passwort', with: 'password'
+    fill_in _('User'), with: user.login
+    fill_in _('Password'), with: 'password'
     click_on 'Login'
     expect(page).to have_selector '.dropdown', text: user.short_name
 
     visit '/procurement'
-    expect(page).to have_content 'Budget Perioden'
+    expect(page).to have_content _('Budget periods')
 
   end
 end
