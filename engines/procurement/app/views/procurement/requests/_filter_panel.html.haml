@@ -59,8 +59,9 @@
         = _('Priority')
       %ul
         - ['high', 'normal'].each do |priority|
-          %input{type: :checkbox, name: "filter[priorities][]", value: priority, checked: params[:filter][:priorities].include?(priority)}
-          .label.label-default= _(priority)
+          %label
+            %input{type: :checkbox, name: "filter[priorities][]", value: priority, checked: params[:filter][:priorities].include?(priority)}
+            .label.label-default= _(priority)
 
     .form-group
       %b
@@ -70,8 +71,9 @@
         - Procurement::Request::STATES.each do |state|
           - next if state == :in_inspection
           %li
-            %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
-            .label{class: label_class(state)}= _(state.to_s.humanize)
+            %label
+              %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
+              .label{class: label_class(state)}= _(state.to_s.humanize)
 
   .form-group
     %b

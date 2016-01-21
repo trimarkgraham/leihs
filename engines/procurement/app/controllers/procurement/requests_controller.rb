@@ -97,14 +97,15 @@ module Procurement
           unless params[:filter][:sort_by].blank?
             requests = requests.sort do |a, b|
               case params[:filter][:sort_by]
-              when 'total_price'
+                when 'total_price'
                   a.total_price(current_user) <=> b.total_price(current_user)
-              when 'state'
+                when 'state'
                   a.state(current_user) <=> b.state(current_user)
-              when 'department'
-                  a.organization.parent <=> b.organization.parent
-              else
-                  # FIXME casecmp ?? case insensitive and strip
+                when 'department'
+                  a.organization.parent.to_s.downcase <=> b.organization.parent.to_s.downcase
+                when 'article_name', 'user'
+                  a.send(params[:filter][:sort_by]).to_s.downcase <=> b.send(params[:filter][:sort_by]).to_s.downcase
+                else
                   a.send(params[:filter][:sort_by]) <=> b.send(params[:filter][:sort_by])
               end
             end
