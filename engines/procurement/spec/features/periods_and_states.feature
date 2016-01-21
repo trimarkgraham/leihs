@@ -1,16 +1,24 @@
 Feature: Periods and states
 
 #Final - will not change anymore
-  @personas
-  Scenario: Creating the Periods
+  @js
+  Scenario: Creating a budget period
     Given I am Hans Ueli
-    Then I can create a budget period
-    And to create a budget period the following information is needed
-    |field|value|
-    |name|text|
-    |inspection period|start date|
-    |budget period|end date|
-    And the start date of the inspection period should not be later then the end date of the budget period
+    And there does not exist any budget period yet
+    When I navigate to the budget periods
+    Then there is an empty budget period line for creating a new one
+    When I fill in the name
+    And I fill in the start date of the inspection period
+    And I fill in the end date of the inspection period
+    And I click on save
+    Then I see a success message
+
+    # And to create a budget period the following information is needed
+    #   |field             |value      |
+    #   |name              |text       |
+    #   |inspection period |start date |
+    #   |budget period     |end date   |
+    # And the start date of the inspection period should not be later then the end date of the budget period
 
 # #Final - will not change anymore
 #   Scenario: Sorting of budget periods

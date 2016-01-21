@@ -6,8 +6,12 @@ require 'factory_girl'
 Dir.glob("engines/procurement/spec/steps/**/*steps.rb") { |f| load f, true }
 Dir.glob("engines/procurement/spec/factories/**/*factory.rb") { |f| load f, true }
 
-Capybara.register_driver :selenium_firefox do |app|
+Capybara.register_driver :firefox do |app|
   Capybara::Selenium::Driver.new app, browser: :firefox
+end
+
+Capybara.register_driver :phantomjs do |app|
+  Capybara::Selenium::Driver.new app, browser: :phantomjs
 end
 
 RSpec.configure do |config|
@@ -31,10 +35,18 @@ RSpec.configure do |config|
   end
 
   config.before(browser: true) do
-    Capybara.current_driver = :selenium_firefox
+    Capybara.current_driver = :firefox
   end
 
   config.after(browser: true) do
+    Capybara.current_driver = Capybara.default_driver
+  end
+
+  config.before(js: true) do
+    Capybara.current_driver = :phantomjs
+  end
+
+  config.after(js: true) do
     Capybara.current_driver = Capybara.default_driver
   end
 

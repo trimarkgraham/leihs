@@ -6,6 +6,7 @@ module PersonasSteps
                        user: persona,
                        is_admin: true)
     login_as persona
+    visit '/procurement'
   end
 
   # requester
@@ -13,6 +14,7 @@ module PersonasSteps
     persona = create_persona('Roger')
     Procurement::Access.requesters.create(user: persona)
     login_as persona
+    visit '/procurement'
   end
 
   # inspector
@@ -21,6 +23,7 @@ module PersonasSteps
     FactoryGirl.create(:procurement_group_inspector,
                        user: persona)
     login_as persona
+    visit '/procurement'
   end
 
   # leihs admin
@@ -28,6 +31,7 @@ module PersonasSteps
     persona = create_persona('Gino')
     FactoryGirl.create(:access_right, role: :admin)
     login_as persona
+    visit '/procurement'
   end
 
   private
