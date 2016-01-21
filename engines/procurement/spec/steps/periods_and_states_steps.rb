@@ -81,7 +81,49 @@ module PeriodsAndStatesSteps
     expect(Procurement::BudgetPeriod.find_by_id(@budget_period.id)).not_to be
   end
 
+  step 'I choose a budget period to edit' do
+    @budget_period = Procurement::BudgetPeriod.first
+  end
+
+  step 'I change the name of the budget period' do
+    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
+    @new_name = 'New name'
+    budget_period_line.find("input[name*='name']").set @new_name
+  end
+
+  step 'I change the inspection start date of the budget period' do
+    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
+    @new_inspection_start_date = Date.today + 5.month
+    budget_period_line.find("input[name*='inspection_start_date']").set format_date(@new_inspection_start_date)
+  end
+
+  step 'I change the end date of the budget period' do
+    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
+    @new_end_date = Date.today + 6.month
+    budget_period_line.find("input[name*='end_date']").set format_date(@new_end_date)
+  end
+
+  step 'the budget period line was updated successfully' do
+    within find_budget_period_line_by_name(@new_name) do
+      expect(find("input[name*='name']").value).to be == @new_name
+      expect(find("input[name*='inspection_start_date']").value).to be == format_date(@new_inspection_start_date)
+      expect(find("input[name*='end_date']").value).to be == format_date(@new_end_date)
+    end
+  end
+
+  step 'the data for the budget period was updated successfully in the database' do
+    @budget_period.reload
+    expect(@budget_period.name).to be == @new_name
+    expect(@budget_period.inspection_start_date).to be == @new_inspection_start_date
+    expect(@budget_period.end_date).to be == @new_end_date
+  end
+
   private
+
+  def find_budget_period_line_by_name(name)
+    find("form table tbody tr input[value='#{name}']")
+      .find(:xpath, '../..')
+  end
 
   def format_date(date)
     date.strftime '%d.%m.%Y'

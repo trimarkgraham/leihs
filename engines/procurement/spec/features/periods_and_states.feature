@@ -39,15 +39,20 @@ Feature: Periods and states
     Then this budget period disappears from the list
     And this budget period was deleted from the database
 
-# #Final - will not change anymore
-#   @personas
-#   Scenario: Editing a Budget Period
-#     Given I am Hans Ueli
-#     When I edit a budget period
-#     Then I can edit the following information
-#     |name|
-#     |inspection period|
-#     |budget period|
+#Final - will not change anymore
+  @js
+  Scenario: Editing a Budget Period
+    Given I am Hans Ueli
+    And budget periods exist
+    And I navigate to the budget periods
+    When I choose a budget period to edit
+    And I change the name of the budget period
+    And I change the inspection start date of the budget period
+    And I change the end date of the budget period
+    And I click on save
+    Then I see a success message
+    And the budget period line was updated successfully
+    And the data for the budget period was updated successfully in the database
 
 # #Final - will not change anymore
 #   @personas
