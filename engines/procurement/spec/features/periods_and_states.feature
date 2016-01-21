@@ -29,12 +29,15 @@ Feature: Periods and states
     And I navigate to the budget periods
     Then the budget periods are sorted from 0-10 and a-z
 
-# #Final - will not change anymore
-#   @personas
-#   Scenario: Deleting a Period
-#     Given I am Hans Ueli
-#     When a budget period does not yet have any requests
-#     Then I can delete the budget period
+#Final - will not change anymore
+  @browser
+  Scenario: Deleting a Period
+    Given I am Hans Ueli
+    And a budget period without any requests exists
+    When I navigate to the budget periods
+    And I click on 'delete' on the line for this budget period
+    Then this budget period disappears from the list
+    And this budget period was deleted from the database
 
 # #Final - will not change anymore
 #   @personas

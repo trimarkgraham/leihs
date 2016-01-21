@@ -60,6 +60,27 @@ module PeriodsAndStatesSteps
     expect(names).to be == @budget_periods.map(&:name).sort
   end
 
+  step 'a budget period without any requests exists' do
+    @budget_period = FactoryGirl.create(:procurement_budget_period)
+    expect(@budget_period.requests).to be_empty
+  end
+
+  step 'I click on \'delete\' on the line for this budget period' do
+    accept_alert do
+      find('form table tbody tr td:first-child input', exact: @budget_period.name)
+        .find(:xpath, '../..')
+        .click_on _('Delete')
+    end
+  end
+
+  step 'this budget period disappears from the list' do
+    expect(first('form table tbody tr td:first-child input', text: @budget_period.name)).not_to be
+  end
+
+  step 'this budget period was deleted from the database' do
+    expect(Procurement::BudgetPeriod.find_by_id(@budget_period.id)).not_to be
+  end
+
   private
 
   def format_date(date)
