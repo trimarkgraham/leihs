@@ -9,3 +9,6 @@
 #
 #= require_self
 
+$(document).ready ->
+  $('form').on 'submit', ->
+    $(this).find('.btn-success > i.fa.fa-check').removeClass('fa-check').addClass('fa-circle-o-notch spinner')

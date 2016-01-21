@@ -90,3 +90,12 @@ a.show_template {
   filter:alpha(opacity=50);
   -moz-opacity:0.5;
 }
+
+.spinner {
+  animation: spin 2s infinite linear;
+}
+
+@keyframes spin {
+  from { transform: scale(1) rotate(0deg);}
+  to { transform: scale(1) rotate(360deg);}
+}

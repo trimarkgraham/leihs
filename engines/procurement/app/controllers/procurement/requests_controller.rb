@@ -136,7 +136,7 @@ module Procurement
     def create
       keys = [:article_name, :model_id, :article_number, :price, :supplier_name,
               :supplier_id, :motivation, :receiver, :location_name, :location_id,
-              attachments_attributes: [:file]]
+              :template_id, attachments_attributes: [:file]]
       keys += [:approved_quantity,
                :order_quantity,
                :inspection_comment] if @group.inspectable_by?(current_user)

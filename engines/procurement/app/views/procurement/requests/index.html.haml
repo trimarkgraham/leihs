@@ -17,9 +17,8 @@
         = render partial: 'request', locals: {request: request}
 
       - if is_editable
-        - @group.template_categories.each do |template_category| # FIXME
-          - already_requested_article_names = @requests.map &:article_name
-          - template_category.templates.where.not(article_name: already_requested_article_names).each do |template|
+        - @group.template_categories.each do |template_category|
+          - template_category.templates.where.not(id: @requests.map(&:template_id)).each do |template|
             .row.request.hidden{data: {template_id: template.id}}
               - i += 1
               .col-xs-6
@@ -27,19 +26,20 @@
                   %label.col-xs-4.control-label
                     = _('Article')
                   .col-xs-8
-                    %input{type: 'hidden', name: "requests[new_#{i}][article_name]", value: template.article_name}
+                    %input{type: :hidden, name: "requests[new_#{i}][article_name]", value: template.article_name}
+                    %input{type: :hidden, name: "requests[new_#{i}][template_id]", value: template.id}
                     = template.article_name
                 .form-group
                   %label.col-xs-4.control-label
                     = _('Article nr. / Producer nr.')
                   .col-xs-8
-                    %input{type: 'hidden', name: "requests[new_#{i}][article_number]", value: template.article_number}
+                    %input{type: :hidden, name: "requests[new_#{i}][article_number]", value: template.article_number}
                     = template.article_number
                 .form-group
                   %label.col-xs-4.control-label
                     = _('Supplier')
                   .col-xs-8
-                    %input{type: 'hidden', name: "requests[new_#{i}][supplier_name]", value: template.supplier_name}
+                    %input{type: :hidden, name: "requests[new_#{i}][supplier_name]", value: template.supplier_name}
                     = template.supplier_name
                 .form-group
                   %label.col-xs-4.control-label
@@ -55,26 +55,26 @@
                   %label.col-xs-4.control-label
                     = _('Motivation')
                   .col-xs-8
-                    %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters'), data: {to_be_required: true}}
+                    %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), autocomplete: :off, maxlength: 255, title: _('max 255 characters'), data: {toggle: 'tooltip', to_be_required: true}}
                 .form-group
                   %label.col-xs-4.control-label
                     = _('Priority')
                   .col-xs-8
                     %label
-                      %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
+                      %input{type: :radio, name: "requests[new_#{i}][priority]", value: 'high'}
                       .label.label-default= _('high')
                     %label
-                      %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
+                      %input{type: :radio, name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
                       .label.label-default= _('normal')
                 .form-group
                   %label.col-xs-4.control-label
                     = "%s / %s" % [_('Replacement'), _('New')]
                   .col-xs-8
                     %label
-                      %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 1, checked: true}
+                      %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 1, checked: true}
                       .label.label-default= _('Replacement')
                     %label
-                      %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 0}
+                      %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 0}
                       .label.label-default= _('New')
               .col-xs-6
                 .form-group
@@ -82,7 +82,7 @@
                     = "%s %s" % [_('Item price'), MoneyRails.default_currency]
                     %span.small=_('incl. VAT')
                   .col-xs-4
-                    %input{type: 'hidden', name: "requests[new_#{i}][price]", value: template.price}
+                    %input{type: :hidden, name: "requests[new_#{i}][price]", value: template.price}
                     .label.label-primary
                       = template.price
                     -#%input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, value: template.price.to_i, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
@@ -133,7 +133,7 @@
                 = _('Article')
               .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][article_name]", placeholder: _('Article'), data: {to_be_required: true}}
-                %input.form-control{type: :hidden, name: "requests[new_#{i}][model_id]"}
+                %input{type: :hidden, name: "requests[new_#{i}][model_id]"}
             .form-group
               %label.col-xs-4.control-label
                 = _('Article nr. / Producer nr.')
@@ -144,7 +144,7 @@
                 = _('Supplier')
               .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][supplier_name]", placeholder: _('Supplier')}
-                %input.form-control{type: :hidden, name: "requests[new_#{i}][supplier_id]"}
+                %input{type: :hidden, name: "requests[new_#{i}][supplier_id]"}
             .form-group
               %label.col-xs-4.control-label
                 = _('Name of receiver')
@@ -155,31 +155,31 @@
                 = _('Point of Delivery')
               .col-xs-8
                 %input.form-control{name: "requests[new_#{i}][location_name]", placeholder: _('Point of Delivery'), autocomplete: :off}
-                %input.form-control{type: :hidden, name: "requests[new_#{i}][location_id]"}
+                %input{type: :hidden, name: "requests[new_#{i}][location_id]"}
             .form-group
               %label.col-xs-4.control-label
                 = _('Motivation')
               .col-xs-8
-                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), maxlength: 255, data: {toggle: 'tooltip'}, title: _('max 255 characters'), data: {to_be_required: true}}
+                %input.form-control{name: "requests[new_#{i}][motivation]", placeholder: _('Motivation'), autocomplete: :off, maxlength: 255, title: _('max 255 characters'), data: {toggle: 'tooltip', to_be_required: true}}
             .form-group
               %label.col-xs-4.control-label
                 = _('Priority')
               .col-xs-8
                 %label
-                  %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'high'}
+                  %input{type: :radio, name: "requests[new_#{i}][priority]", value: 'high'}
                   .label.label-default= _('high')
                 %label
-                  %input{type: 'radio', name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
+                  %input{type: :radio, name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
                   .label.label-default= _('normal')
             .form-group
               %label.col-xs-4.control-label
                 = "%s / %s" % [_('Replacement'), _('New')]
               .col-xs-8
                 %label
-                  %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 1, checked: true}
+                  %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 1, checked: true}
                   .label.label-default= _('Replacement')
                 %label
-                  %input{type: 'radio', name: "requests[new_#{i}][replacement]", value: 0}
+                  %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 0}
                   .label.label-default= _('New')
           .col-xs-6
             .form-group
@@ -236,7 +236,7 @@
 
               .col-xs-2.text-right
                 .btn-group
-                  %button.btn.btn-default.btn-sm.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}, aria: {haspopup: true, expanded: false}}
+                  %button.btn.btn-default.btn-sm.dropdown-toggle{type: :button, data: {toggle: 'dropdown'}, aria: {haspopup: true, expanded: false}}
                     %i.fa.fa-gear
                     %span.caret
                   %ul.dropdown-menu.dropdown-menu-right
@@ -288,11 +288,22 @@
   }
 
 :coffeescript
-  $(document).ready ->
-    zebra_rows = ->
-      $('.panel-body > .row.request').css('background-color', 'white')
-      $('.panel-body > .row.request:visible:even').css('background-color', '#e2e2e2')
+  @zebra_rows = ->
+    $('.panel-body > .row.request').css('background-color', 'white')
+    $('.panel-body > .row.request:visible:even').css('background-color', '#e2e2e2')
 
+  @show_template = (template_id)->
+    el = $(".row[data-template_id='" + template_id + "']")
+    el.removeClass('hidden')
+    do zebra_rows
+    el.find('input[data-to_be_required]').attr('required', 'true')
+    el.find("input[name*='requested_quantity]']").val(1).change()
+    $('html, body').animate({
+      scrollTop: el.offset().top - 100
+    }, 200)
+    el.effect( "highlight" )
+
+  $(document).ready ->
     do zebra_rows
 
     $('.panel-footer').on 'click', '.fa-plus-circle', ->
@@ -313,7 +324,7 @@
       false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->
-      location.reload()
+      location.replace $(this).attr('action')
     ).on "ajax:error", (e, xhr, status, error) ->
       errors = ''
       for error in xhr.responseJSON
@@ -351,19 +362,6 @@
           big_total += Number($(this).data('total'))
       formatted_big_total = accounting.formatMoney(big_total, {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
       $(".big_total_price").html(formatted_big_total)
-
-    $("a.show_template").on 'click', ->
-      #$(this).hide()
-      $(this).closest('.dropdown-menu').dropdown('toggle')
-      el = $(".row[data-template_id='" + $(this).data('template_id') + "']").removeClass('hidden')
-      # FIXME search el already use
-      do zebra_rows
-      el.find('input[data-to_be_required]').attr('required', 'true')
-      el.find("input[name*='requested_quantity]']").val(1).change()
-      $('html, body').animate({
-        scrollTop: el.offset().top - 100
-      }, 200)
-      false
 
     $('input[data-toggle="tooltip"]').on 'focus mouseover', -> $(this).tooltip('toggle')
 
@@ -461,3 +459,12 @@
       else
         li.css('text-decoration', 'line-through').find("input[name*='[attachments_delete]']").val('1')
       false
+
+    $("a.show_template").on 'click', ->
+      show_template $(this).data('template_id')
+      false
+
+- if params[:template_id]
+  :coffeescript
+    $(document).ready ->
+      show_template #{params[:template_id]}

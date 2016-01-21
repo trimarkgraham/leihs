@@ -12,7 +12,8 @@ module Procurement
     end
 
     def choose
-      @user = User.not_as_delegations.find(params[:user_id]) if params[:user_id]
+      @user = User.not_as_delegations.find(params[:user_id])
+      @budget_period = BudgetPeriod.find(params[:budget_period_id])
       @template_categories = TemplateCategory.all
     end
 
