@@ -1,10 +1,10 @@
 ---
 tasks:
+- name: engines/procurement/spec/features/periods_and_states.feature:5
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:5
 - name: engines/procurement/spec/features/smoke_test.feature:4
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/smoke_test.feature:4
-- name: engines/procurement/spec/features/smoke_test.feature:9
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/smoke_test.feature:9

@@ -1,30 +1,25 @@
 ---
 tasks:
-- name: periods_and_states
+- name: section_my_requests
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/periods_and_states.feature"
+        --strict "engines/procurement/features/section_my_requests.feature"
 - name: procurement_groups
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "engines/procurement/features/procurement_groups.feature"
+- name: Section_users_and_organisations
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/Section_users_and_organisations.feature"
 - name: csv
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "engines/procurement/features/csv.feature"
-- name: overview_for_requester
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/overview_for_requester.feature"
-- name: Requesters_and_Organisations
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/Requesters_and_Organisations.feature"
 - name: roles
   scripts:
     test:
