@@ -1,5 +1,6 @@
 Feature: requests (state-behaviour described in seperate feature-file)
 
+#can still change!!
   @personas
   Scenario: Create a request
     Given I am Roger
@@ -20,18 +21,21 @@ Feature: requests (state-behaviour described in seperate feature-file)
     |Attachments|
     And I see the status "New"
 
+#Final - will not change anymore
   @personas
   Scenario: Delete a Request
     Given I am Roger
     Given the current date has not yet reached the inspection start date
     Then I can delete my request
 
+#Final - will not change anymore
   @personas
   Scenario: Modify a Request
     Given I am Roger
     Given the current date has not yet reached the inspection start date
     Then I can modify my request
 
+#can still change!!
   @personas
   Scenario: Editable Fields
     Given I am Roger
@@ -50,6 +54,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     |Quantity Requested|
     |Attachment|
 
+#can still change!!
   @personas
   Scenario: Mandatory fields
     Given I am Roger
@@ -58,15 +63,11 @@ Feature: requests (state-behaviour described in seperate feature-file)
     |Article|
     |Motivation|
     |Quantity Requested|
-    And the mandatory fields are marked
+    And the mandatory fields are marked in red
     When I save the request without entering the mandatory information
-    Then I receive an error message
+    Then the fields with missing information are marked in red
 
-  @personas
-  Scenario: Mandatory fields not filled
-    Given I am Roger
-    Given
-
+#Final - will not change anymore
   @personas
   Scenario: Choosing an existing or non existing Model
     Given I am Roger
@@ -76,6 +77,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     When no search result is found
     Then the entered model string is saved
 
+#can still change!!
   @personas
   Scenario: Choose an article from a Template Category
     Given I am Roger
@@ -90,17 +92,20 @@ Feature: requests (state-behaviour described in seperate feature-file)
     |Price|
     And the quantity is set to 1
 
+#Final - will not change anymore
   @personas
   Scenario: Changing the budget period
     Given I am Roger
     Given the current date has not yet reached the inspection start date
     Then I can change the budget period of my request
 
+#Final - will not change anymore
   @personas
   Scenario: Changing the procurement group
     Given I am Roger
     Then I can change the procurement group of my request
 
+#Final - will not change anymore
   @personas
   Scenario: Count the Total on the line
     Given I am Roger
@@ -108,11 +113,13 @@ Feature: requests (state-behaviour described in seperate feature-file)
     And I enter the requested amount
     Then the amount and the price are multiplied and the result is shown
 
+#Final - will not change anymore
   @personas
   Scenario: Count the Total of all my requests
     Given I am Roger
     Then I see the total of my requests of a procurement group
 
+#Final - will not change anymore
   @personas
   Scenario: Priority values
     Given I am Roger
@@ -122,6 +129,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     |Normal|
     And the value "Normal" is set by default
 
+#Final - will not change anymore
   @personas
   Scenario: Prefill field "Replacement / New"
     Given I am Roger
@@ -136,11 +144,13 @@ Feature: requests (state-behaviour described in seperate feature-file)
     Given I am Roger
     Then I can delete an attachment
 
+#Final - will not change anymore
   @personas
   Scenario: Download an attachment
     Given I am Roger
     Then I can download an attachment
 
+#Final - will not change anymore
   @personas
   Scenario: Send an Email
     Given I am Roger
@@ -148,6 +158,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
     Then I see the inspectors of this group
     And I can send a mail to the group
 
+#Final - will not change anymore
   @personas
   Scenario: Additional Fields shown to Roger after budget period has ended
     Given I am Roger

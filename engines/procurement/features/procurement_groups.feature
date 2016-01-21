@@ -1,5 +1,6 @@
 Feature: Procurement Groups
 
+#Final - will not change anymore
   @personas
   Scenario: Creating the Procurement Groups
     Given I am Hans Ueli
@@ -11,9 +12,11 @@ Feature: Procurement Groups
     |Email|text|
     |Budget limits|number|
 
+#Final - will not change anymore
   Scenario: Sorting of Procurement Groups
     The procurement groups are sorted alphabetically (a-z and 0-10)
 
+#Final - will not change anymore
   @personas
   Scenario: Editing a procurement group
     Given I am Hans Ueli
@@ -25,23 +28,26 @@ Feature: Procurement Groups
     And I can change a budget limit
     And I can change the email address
 
+#Final - will not change anymore
   @personas
   Scenario: Deleting a procurement group
     Given I am Hans Ueli
     When a procurement group does not yet have any requests
     Then I can delete the procurement group
 
+#Final - will not change anymore
   Scenario: Overview of the procurement groups
     Given procurement groups exist
     Then the overview shows the names of the procurement groups
     And the overview shows the Inspectors per procurement group
     And the overview shows the email per procurement group
 
+#Final - will not change anymore
   @personas
-  Scenario: Mandatory field
+  Scenario: Mandatory fields
     Given I am Hans Ueli
     When I create a procurement group
     Then the group name is mandatory
-    And the mandatory field is marked
+    And the mandatory field is marked red
     When I save the request without entering the mandatory information
     Then I receive an error message
