@@ -23,7 +23,7 @@ namespace :procurement do
       end
     end
 
-    [1973, 5824, 601, 9103, 10558].each do |user_id|
+    [1973, 5824, 601, 9103, 10558, 7329].each do |user_id|
       Procurement::Access.admins.create user_id: user_id
     end
     { 12 => ['Services', 'PZ'], 3881 => ['Services', 'PZ'],
