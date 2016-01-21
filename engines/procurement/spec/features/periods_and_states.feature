@@ -13,6 +13,7 @@ Feature: Periods and states
     And I click on save
     Then I see a success message
 
+  # Scenario: Budget period required fields
     # And to create a budget period the following information is needed
     #   |field             |value      |
     #   |name              |text       |
@@ -20,10 +21,13 @@ Feature: Periods and states
     #   |budget period     |end date   |
     # And the start date of the inspection period should not be later then the end date of the budget period
 
-# #Final - will not change anymore
-#   Scenario: Sorting of budget periods
-#     Given budget periods exist
-#     Then The budget periods are sorted from 0-10 and a-z
+#Final - will not change anymore
+  @js
+  Scenario: Sorting of budget periods
+    Given I am Hans Ueli
+    And budget periods exist
+    And I navigate to the budget periods
+    Then the budget periods are sorted from 0-10 and a-z
 
 # #Final - will not change anymore
 #   @personas

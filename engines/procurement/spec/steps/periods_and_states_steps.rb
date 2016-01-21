@@ -12,6 +12,7 @@ module PeriodsAndStatesSteps
       click_on _('Admin')
       click_on _('Budget periods')
     end
+    expect(page).to have_selector('h1', text: _('Budget periods'))
   end
 
   step 'there is an empty budget period line for creating a new one' do
@@ -40,6 +41,23 @@ module PeriodsAndStatesSteps
 
   step 'I see a success message' do
     expect(page).to have_content _('Saved')
+  end
+
+  step 'budget periods exist' do
+    current_year = Date.today.year
+    @budget_periods = []
+    (1..3).each do |num|
+      @budget_periods << \
+        FactoryGirl.create(:procurement_budget_period,
+                           name: current_year + num,
+                           inspection_start_date: Date.new(current_year + num, 1, 1),
+                           end_date: Date.new(current_year + num, 1, 2))
+    end
+  end
+
+  step 'the budget periods are sorted from 0-10 and a-z' do
+    names = all('form table tbody tr td:first-child input').map(&:value)
+    expect(names).to be == @budget_periods.map(&:name).sort
   end
 
   private
