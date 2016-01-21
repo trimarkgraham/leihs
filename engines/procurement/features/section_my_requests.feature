@@ -5,7 +5,7 @@ Feature: section "My requests"
     Given I am Roger
     When I enter the section "My requests"
     Then I see all budget periods
-    And the current budget period is marked
+    And the current budget period is marked in green
     And the current budget period is expanded
     And I see the total price of all requests of a budget period
     When I enter a budget period

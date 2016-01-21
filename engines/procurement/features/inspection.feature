@@ -1,5 +1,6 @@
 Feature: Inspection (state-behaviour described in seperate feature-file)
 
+#can still change!!
 @personas
 Scenario: Inspection Overview
   Given I am Barbara
@@ -21,6 +22,7 @@ Scenario: Inspection Overview
   And I see the state of a request
   And I can edit the requests
 
+#can still change!!
 @personas
 Scenario: Filtering Inspection Overview
   Given I am Barbara
@@ -32,6 +34,7 @@ Scenario: Filtering Inspection Overview
   |Priority|
   |State|
 
+#can still change!!
 @personas
 Scenario: Sorting Inspection Overview
   Given I am Barbara
@@ -46,6 +49,7 @@ Scenario: Sorting Inspection Overview
   |Priority|
   |State|
 
+#can still change!!
 @personas
 Scenario: Create a Request
   Given I am Barbara
@@ -67,6 +71,7 @@ Scenario: Create a Request
   |Point of Delivery|
   |Attachment|
 
+#can still change!!
 @personas
 Scenario: Mandatory Fields
   Given I am Barbara
@@ -77,15 +82,17 @@ Scenario: Mandatory Fields
   |Article|
   |Requested Quantity|
   |Motivation|
-  And I see which fields are mandatory
+  And the mandatory fields are marked red
   When I save the request with missing information
-  Then an error msg. is shown
+  Then the fields with missing information are marked in red
 
+#Final - will not change anymore
 @personas
 Scenario: delete a request
   Given I am Barbara
   Then I can delete only my own requests
 
+#can still change!!
 @personas
 Scenario: modify a request
   Given I am Barbara
@@ -103,6 +110,7 @@ Scenario: modify a request
   |Point of Delivery|
   |Attachment|
 
+#Final - will not change anymore
 @personas
 Scenario: Fill Order Size with Approved Quantity
   Given I am Barbara
@@ -110,11 +118,13 @@ Scenario: Fill Order Size with Approved Quantity
   Then the order size is automatically filled with the value of the approved quantity
   And the total is calculated according to the multiplication of price and order size
 
+#Final - will not change anymore
 @personas
 Scenario: Size of the amount fields
   The order amount can be smaller and greater than the approved amount and the requested amount
   The approved amount can be smaller and greater than the requested amount and the ordered amount
 
+#Final - will not change anymore
 @personas
 Scenario: Give Reason when Partially Excepting or Denying
   Given I am Barbara
@@ -126,6 +136,8 @@ Scenario: Give Reason when Partially Excepting or Denying
   When I save without entering the inspection comment
   Then I receive an error msg.
 
+#can still change!!
+#check this nadja - maybe the sum is wished by the admin, not the amount of requests
 @personas
 Scenario: Delete information when moving a request to another group
   Given I am Barbara

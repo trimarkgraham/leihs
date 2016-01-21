@@ -1,11 +1,13 @@
 Feature: Description of roles
 
+#Final - will not change anymore
   @personas
   Scenario: Role Requester
     Given I am Roger
     Then I can manage my requests
     And I can export data
 
+#Final - will not change anymore
   @personas
   Scenario: Role Inspector
     Given I am Barbara
@@ -17,6 +19,7 @@ Feature: Description of roles
     And I can create templates of the procurement groups I am responsible for
     And I can export data
 
+#Final - will not change anymore
   @personas
   Scenario: Role Admin
     Given I am Hans Ueli
@@ -26,6 +29,7 @@ Feature: Description of roles
     And I can manage Admins
     And I can manage organisations
 
+#Final - will not change anymore
   @personas
   Scenario: Role leihs Admin
     Given I am Gino
