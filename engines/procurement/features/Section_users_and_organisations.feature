@@ -9,7 +9,7 @@ Feature: Section Users
     And to each requester I need to add an organisation unit
     And entering a department and an organisation is mandatory
     When the mandatory information is missing
-    I receive an error
+    Then I receive an error
     And the fields with missing information are marked in red
 
 #Final - will not change anymore

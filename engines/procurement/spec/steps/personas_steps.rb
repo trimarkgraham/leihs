@@ -12,7 +12,8 @@ module PersonasSteps
   # requester
   step 'I am Roger' do
     persona = create_persona('Roger')
-    Procurement::Access.requesters.create(user: persona)
+    Procurement::Access.requesters.create(user: persona,
+                                          organization: FactoryGirl.create(:procurement_organization))
     login_as persona
     visit '/procurement'
   end
@@ -32,6 +33,11 @@ module PersonasSteps
     FactoryGirl.create(:access_right, role: :admin)
     login_as persona
     visit '/procurement'
+  end
+
+  step 'a procurement admin exists' do
+    Procurement::Access.admins.exists? \
+      || FactoryGirl.create(:procurement_access, is_admin: true)
   end
 
   private
@@ -55,6 +61,7 @@ module PersonasSteps
   end
 
   def login_as(user)
+    @current_user = user
     visit '/authenticator/db/login'
     fill_in _('Username'), with: user.login
     fill_in _('Password'), with: 'password'

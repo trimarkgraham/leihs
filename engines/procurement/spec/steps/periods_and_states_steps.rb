@@ -118,6 +118,29 @@ module PeriodsAndStatesSteps
     expect(@budget_period.end_date).to be == @new_end_date
   end
 
+  step 'I set the end date of the budget period equal or later than today' do
+    step 'budget periods exist'
+    step 'I navigate to the budget periods'
+    step 'I choose a budget period to edit'
+    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
+    @new_end_date = Date.today + rand(0..500).days
+    budget_period_line.find("input[name*='end_date']").set format_date(@new_end_date)
+  end
+
+  step 'a request exists' do
+    step 'a procurement admin exists'
+    @request = FactoryGirl.create(:procurement_request)
+  end
+
+  step 'the current date is before the inspection date' do
+    expect(Date.today).to be < Procurement::BudgetPeriod.current.inspection_start_date
+  end
+
+  step 'I see the state "New"' do
+    step 'I go to my requests'
+    find(".list-group-item[data-request_id='#{@request.id}'] .col-sm-1", text: _('New'))
+  end
+
   private
 
   def find_budget_period_line_by_name(name)

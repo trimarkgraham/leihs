@@ -55,19 +55,20 @@ Feature: Periods and states
     And the data for the budget period was updated successfully in the database
 
 # #Final - will not change anymore
-#   @personas
-#   Scenario: Freeze budget period
-#     Given I am Hans Ueli
-#     When I set the end date of the budget period equal or later than today
-#     Then requests of this budget period can not be edited by admin, requester or inspector
+#??# not clear: future end_date means should be still editable
+   @js
+   Scenario: Freeze budget period
+     Given I am Hans Ueli
+     When I set the end date of the budget period equal or later than today
+     Then requests of this budget period can not be edited by admin, requester or inspector
 
 # #Final - will not change anymore
-#   @personas
-#   Scenario: State "New" - Request Date before Inspection Date
-#     Given I am Roger
-#     Given a request exists
-#     Given the current date is before the inspection date
-#     Then I see the state "New"
+   @browser
+   Scenario: State "New" - Request Date before Inspection Date
+     Given I am Roger
+     Given a request exists
+     Given the current date is before the inspection date
+     Then I see the state "New"
 
 # #Final - will not change anymore
 #   @personas

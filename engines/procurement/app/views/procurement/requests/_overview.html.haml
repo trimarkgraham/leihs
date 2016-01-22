@@ -46,7 +46,7 @@
               = money_without_cents_and_with_symbol total_price, false
 
         - requests.each do |request|
-          %a.list-group-item.row{href: group_budget_period_user_requests_path(request.group, request.budget_period, request.user)}
+          %a.list-group-item.row{href: group_budget_period_user_requests_path(request.group, request.budget_period, request.user), data: {request_id: request.id}}
             .col-sm-2
               = request.article_name
             .col-sm-2

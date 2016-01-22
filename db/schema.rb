@@ -453,21 +453,21 @@ ActiveRecord::Schema.define(version: 20151013060621) do
     t.integer  "supplier_id",        limit: 4
     t.integer  "location_id",        limit: 4
     t.integer  "template_id",        limit: 4
-    t.string   "article_name",       limit: 255,                 null: false
+    t.string   "article_name",       limit: 255,                    null: false
     t.string   "article_number",     limit: 255
-    t.integer  "requested_quantity", limit: 4,                   null: false
+    t.integer  "requested_quantity", limit: 4,                      null: false
     t.integer  "approved_quantity",  limit: 4
     t.integer  "order_quantity",     limit: 4
-    t.integer  "price_cents",        limit: 4,   default: 0,     null: false
-    t.string   "price_currency",     limit: 255, default: "USD", null: false
-    t.string   "priority",           limit: 6
+    t.integer  "price_cents",        limit: 4,   default: 0,        null: false
+    t.string   "price_currency",     limit: 255, default: "USD",    null: false
+    t.string   "priority",           limit: 6,   default: "normal"
     t.boolean  "replacement",                    default: true
     t.string   "supplier_name",      limit: 255
     t.string   "receiver",           limit: 255
     t.string   "location_name",      limit: 255
     t.string   "motivation",         limit: 255
     t.string   "inspection_comment", limit: 255
-    t.datetime "created_at",                                     null: false
+    t.datetime "created_at",                                        null: false
   end
 
   add_index "procurement_requests", ["budget_period_id"], name: "fk_rails_b6213e1ee9", using: :btree
