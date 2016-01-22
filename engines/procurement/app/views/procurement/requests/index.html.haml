@@ -253,10 +253,7 @@
         .row
           .col-xs-6{style: 'font-size: 2em'}
             %i.fa.fa-plus-circle
-          -#.col-xs-3.bg-danger
-            = _("Check invalid fields")
-          .col-xs-3.text-right
-            -#%button.btn.btn-success{type: :submit, disabled: true}
+          .col-xs-6.text-right
             %button.btn.btn-success{type: :submit}
               %i.fa.fa-check
               = _('Save')
@@ -292,16 +289,19 @@
     $('.panel-body > .row.request').css('background-color', 'white')
     $('.panel-body > .row.request:visible:even').css('background-color', '#e2e2e2')
 
+  @scroll_to = (el)->
+    $('html, body').animate({
+      scrollTop: el.offset().top - 100
+    }, 200)
+    el.effect( "highlight" )
+
   @show_template = (template_id)->
     el = $(".row[data-template_id='" + template_id + "']")
     el.removeClass('hidden')
     do zebra_rows
     el.find('input[data-to_be_required]').attr('required', 'true')
     el.find("input[name*='requested_quantity]']").val(1).change()
-    $('html, body').animate({
-      scrollTop: el.offset().top - 100
-    }, 200)
-    el.effect( "highlight" )
+    scroll_to(el)
 
   $(document).ready ->
     do zebra_rows
@@ -322,18 +322,6 @@
       $('#new_request').addClass('hidden').find('input').val('')
       do zebra_rows
       false
-
-    $("form").on("ajax:success", (e, data, status, xhr) ->
-      location.replace $(this).attr('action')
-    ).on "ajax:error", (e, xhr, status, error) ->
-      errors = ''
-      for error in xhr.responseJSON
-        errors += '<li>' + error + '</li>'
-      el = $(".flash")
-      el.html('<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>').show()
-      $('html, body').animate({
-        scrollTop: el.offset().top - 100
-      }, 200)
 
     $("input[name*='[approved_quantity]']").on 'change', ->
       order_quantity_el = $(this).closest('.request').find("input[name*='[order_quantity]']")
@@ -444,8 +432,25 @@
       $(this).data('ui-autocomplete')._renderItem = ( ul, item )->
         $( "<li>" ).append( "<a>" + item.to_s + "</a>" ).appendTo( ul )
 
-    $('form').on 'change', ->
+    $("form button[type='submit']").on 'click', ->
+      if $('form :invalid').length
+        scroll_to $('form :invalid').first().closest('.request')
+        false
+
+    $('form').on('change', ->
+      #has_invalid_fields = false
       $('.flash').hide()
+    ).on('ajax:success', (e, data, status, xhr) ->
+      location.replace $(this).attr('action')
+    ).on 'ajax:error', (e, xhr, status, error) ->
+      errors = ''
+      for error in xhr.responseJSON
+        errors += '<li>' + error + '</li>'
+      el = $(".flash")
+      el.html('<ul class="alert alert-danger" style="padding-left: 2em;">' + errors + '</ul>').show()
+      $('html, body').animate({
+        scrollTop: el.offset().top - 100
+      }, 200)
 
     $('form input').keypress (e)->
       charCode = e.charCode || e.keyCode || e.which
