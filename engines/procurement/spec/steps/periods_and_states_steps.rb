@@ -207,7 +207,9 @@ module PeriodsAndStatesSteps
   end
 
   step 'I can not create any request for the budget period which has ended' do
-    path = procurement.choose_user_budget_period_templates_path(@current_user, @request.budget_period)
+    path = \
+      procurement.choose_user_budget_period_templates_path(@current_user,
+                                                           @request.budget_period)
     visit path
     expect(current_path).to_not eq path
 
@@ -243,7 +245,9 @@ module PeriodsAndStatesSteps
   end
 
   step 'I can not move a request of a budget period which has ended to another procurement group' do
-    request = Procurement::BudgetPeriod.all.select{|bp| bp.past? and bp.requests.exists? }.sample.requests.sample
+    request = Procurement::BudgetPeriod.all
+                  .select{|bp| bp.past? and bp.requests.exists? }
+                  .sample.requests.sample
     visit_request(request)
     group = Procurement::Group.where.not(id: request.group).sample
     expect(has_no_selector?(".btn-group a", text: group)).to be true

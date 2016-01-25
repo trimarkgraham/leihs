@@ -8,7 +8,9 @@ module NavigationSteps
   end
 
   def visit_request(request)
-    visit procurement.group_budget_period_user_requests_path(request.group, request.budget_period, request.user)
+    visit procurement.group_budget_period_user_requests_path(request.group,
+                                                             request.budget_period,
+                                                             request.user)
   end
 end
 
