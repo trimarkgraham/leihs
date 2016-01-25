@@ -35,11 +35,17 @@ Feature: Section Users
       | requester name | organization | department     |
       | department     | organization | requester name |
 
-# #Final - will not change anymore
-#   @personas
-#   Scenario: Delete a Requester
-#     Given I am Hans Ueli
-#     Then I can delete a requester
+#Final - will not change anymore
+  @browser
+  Scenario: Delete a requester
+    Given I am Hans Ueli
+    And there exists a requester
+    When I navigate to the users page
+    And I click on the minus button on the requester line
+    And the requester line is marked for deletion
+    When I click on save
+    Then the requester disappears from the list
+    And the requester was successfully deleted from the database
 
 # #Final - will not change anymore
 #   @personas

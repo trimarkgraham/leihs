@@ -62,6 +62,30 @@ module UsersAndOrganisationsSteps
     requester = Procurement::Access.requesters.find_by_user_id @user.id
     expect(requester).not_to be
   end
+
+  step 'there exists a requester' do
+    @user = create_user(Faker::Name.first_name)
+    FactoryGirl.create(:procurement_access, user_id: @user.id)
+  end
+
+  step 'I click on the minus button on the requester line' do
+    find('form table tbody tr td:first-child input', exact: @user.name)
+      .find(:xpath, '../..')
+      .find('.fa-minus-circle')
+      .click
+  end
+
+  step 'the requester line is marked for deletion' do
+    find('form table tbody tr.bg-danger td:first-child input', exact: @user.name)
+  end
+
+  step 'the requester disappears from the list' do
+    expect(first('form table tbody tr td:first-child input', text: @user.name)).not_to be
+  end
+
+  step 'the requester was successfully deleted from the database' do
+    expect(Procurement::Access.find_by_user_id(@user.id)).not_to be
+  end
 end
 
 RSpec.configure { |c| c.include UsersAndOrganisationsSteps }
