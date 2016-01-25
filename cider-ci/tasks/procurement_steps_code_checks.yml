@@ -1,0 +1,22 @@
+---
+tasks:
+- name: users_and_organisations_steps.rb
+  scripts:
+    test:
+      body: bx rubocop -c engines/procurement/.rubocop.yml engines/procurement/spec/steps/users_and_organisations_steps.rb
+- name: periods_and_states_steps.rb
+  scripts:
+    test:
+      body: bx rubocop -c engines/procurement/.rubocop.yml engines/procurement/spec/steps/periods_and_states_steps.rb
+- name: smoke_test_steps.rb
+  scripts:
+    test:
+      body: bx rubocop -c engines/procurement/.rubocop.yml engines/procurement/spec/steps/smoke_test_steps.rb
+- name: navigation_steps.rb
+  scripts:
+    test:
+      body: bx rubocop -c engines/procurement/.rubocop.yml engines/procurement/spec/steps/navigation_steps.rb
+- name: personas_steps.rb
+  scripts:
+    test:
+      body: bx rubocop -c engines/procurement/.rubocop.yml engines/procurement/spec/steps/personas_steps.rb
