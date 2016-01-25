@@ -15,18 +15,39 @@ module Procurement
 
     monetize :price_cents, allow_nil: true
 
-    before_validation do
+    #################################################################
+
+    # NOTE defining 'on:' to not execute calling just 'valid?' on past requests
+    before_validation on: [:create, :update] do
       self.price ||= 0
 
       self.order_quantity ||= approved_quantity
       self.approved_quantity ||= order_quantity
 
-      self.organization_id ||= Access.requesters.find_by(user_id: user_id).organization_id
+      validates_budget_period
+    end
+
+    before_validation on: :create do
+      access = Access.requesters.find_by(user_id: user_id)
+      if access
+        self.organization_id ||= access.organization_id
+      else
+        errors.add(:user, _('must be a requester'))
+      end
     end
 
     validates_presence_of :user, :organization, :article_name, :motivation
     validates_presence_of :inspection_comment, if: proc { |r| r.approved_quantity and r.approved_quantity < r.requested_quantity }
     validates :requested_quantity, presence: true, numericality: { greater_than: 0 }
+
+    before_destroy do
+      validates_budget_period
+      errors.empty?
+    end
+
+    def validates_budget_period
+      errors.add(:budget_period, _('is over')) if budget_period.past?
+    end
 
     #################################################################
 

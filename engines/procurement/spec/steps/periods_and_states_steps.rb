@@ -162,6 +162,10 @@ module PeriodsAndStatesSteps
     expect(Time.zone.today).to be > @request.budget_period.end_date
   end
 
+  step 'the budget period has ended' do
+    step 'the current date is after the budget period end date'
+  end
+
   step 'I inspect all groups' do
     el = find('.form-group', text: _('Groups')).find('.btn-group')
     el.find('button.multiselect').click
@@ -180,9 +184,9 @@ module PeriodsAndStatesSteps
   end
 
   step 'I can not modify the request' do
-    @el.click
+    @el.click if @el
     expect(has_no_selector?("form [type='submit']")).to be true
-    expect(@request.reload.editable?(@current_user)).to be false
+    expect(@request.editable?(@current_user)).to be false
   end
 
   step 'the approved quantity is :unquoted_string' do |unquoted_string|
@@ -200,6 +204,53 @@ module PeriodsAndStatesSteps
       end
     @request.update_attributes approved_quantity: new_quantity,
                                inspection_comment: new_comment
+  end
+
+  step 'I can not create any request for the budget period which has ended' do
+    path = procurement.choose_user_budget_period_templates_path(@current_user, @request.budget_period)
+    visit path
+    expect(current_path).to_not eq path
+
+    expect {
+      FactoryGirl.create :procurement_request,
+                         user: @current_user,
+                         budget_period: @request.budget_period
+
+    }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  step 'I can not modify any request for the budget period which has ended' do
+    visit_request(@request)
+    step 'I can not modify the request'
+  end
+
+  step 'I can not delete any requests for the budget period which has ended' do
+    visit_request(@request)
+    expect(has_no_selector?(".btn-group a", text: _('Delete'))).to be true
+
+    @request.destroy
+    expect(@request.destroyed?).to be false
+  end
+
+  step 'I can not move a request to a budget period which has ended' do
+    visit_request(@request)
+    budget_period = Procurement::BudgetPeriod.all.select(&:past?).sample
+    expect(has_no_selector?(".btn-group a", text: budget_period)).to be true
+
+    @request.update_attributes budget_period: budget_period
+    expect(@request).to_not be_valid
+    expect(@request.reload.budget_period).to_not be budget_period
+  end
+
+  step 'I can not move a request of a budget period which has ended to another procurement group' do
+    request = Procurement::BudgetPeriod.all.select{|bp| bp.past? and bp.requests.exists? }.sample.requests.sample
+    visit_request(request)
+    group = Procurement::Group.where.not(id: request.group).sample
+    expect(has_no_selector?(".btn-group a", text: group)).to be true
+
+    request.update_attributes group: group
+    expect(request).to_not be_valid
+    expect(request.reload.group).to_not be group
   end
 
   private

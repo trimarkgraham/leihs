@@ -113,21 +113,21 @@ Feature: Periods and states
      Then I see the state "Denied"
 
 # #Final - will not change anymore
-#   @personas
-#   Scenario Outline: No Modification or Deletion after Budget End Period date
-#     Given I am <username>
-#     Given a request exists
-#     When the budget period has ended
-#     Then I can not create any request for the budget period which has ended
-#     And I can not modify any request for the budget period which has ended
-#     And I can not delete any requests for the budget period which has ended
-#     And I can not move a request to a budget period which has ended
-#     And I can not move a request of a budget period which has ended to another procurement group
-#     Examples:
-#     |username|
-#     |Barbara|
-#     |Hans Ueli|
-#     |Roger|
+   @js
+   Scenario Outline: No Modification or Deletion after Budget End Period date
+     Given I am <username>
+     Given a request exists
+     When the budget period has ended
+     Then I can not create any request for the budget period which has ended
+     And I can not modify any request for the budget period which has ended
+     And I can not delete any requests for the budget period which has ended
+     And I can not move a request to a budget period which has ended
+     And I can not move a request of a budget period which has ended to another procurement group
+     Examples:
+     |username|
+     |Barbara|
+     |Hans Ueli|
+     |Roger|
 
 # #Final - will not change anymore
 #   Scenario: Overview of Budget Periods

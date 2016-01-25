@@ -12,8 +12,10 @@ module Procurement
     end
 
     def choose
-      @user = User.not_as_delegations.find(params[:user_id])
       @budget_period = BudgetPeriod.find(params[:budget_period_id])
+      redirect_to root_path if @budget_period.past?
+
+      @user = User.not_as_delegations.find(params[:user_id])
       @template_categories = TemplateCategory.all
     end
 
