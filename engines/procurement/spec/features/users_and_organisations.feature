@@ -1,7 +1,7 @@
 Feature: Section Users
 
 #Final - will not change anymore
-  @browser
+  @js
   Scenario: Add a requester
     Given I am Hans Ueli
     And there does not exist any requester yet
@@ -15,13 +15,25 @@ Feature: Section Users
     Then I see a success message
     And the new requester was created in the database
 
-  # Scenario: Requester required fields
-  #   And to each requester I need to add a department
-  #   And to each requester I need to add an organisation unit
-  #   And entering a department and an organisation is mandatory
-  #   When the mandatory information is missing
-  #   I receive an error
-  #   And the fields with missing information are marked in red
+#Final - will not change anymore
+  @js
+  Scenario Outline: Requester required fields
+    Given I am Hans Ueli
+    And there does not exist any requester yet
+    But there exists a user to become a requester
+    When I navigate to the users page
+    Then there is an empty requester line for creating a new one
+    When I fill in the <1st field>
+    And I fill in the <2nd field>
+    And I click on save
+    And the "<3rd field>" is marked red
+    And the new requester has not been created
+
+    Examples:
+      | 1st field                | 2nd field    | 3rd field                |
+      | potential requester name | department   | organization             |
+      | potential requester name | organization | department               |
+      | department               | organization | potential requester name |
 
 # #Final - will not change anymore
 #   @personas
