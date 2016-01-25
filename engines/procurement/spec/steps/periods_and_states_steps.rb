@@ -135,7 +135,7 @@ module PeriodsAndStatesSteps
     step 'I navigate to the budget periods'
     step 'I choose a budget period to edit'
     budget_period_line = find_budget_period_line_by_name(@budget_period.name)
-    @new_end_date = Time.zone.today + rand(0..500).days
+    @new_end_date = Time.zone.today + 100.days
     budget_period_line.find("input[name*='end_date']")
       .set format_date(@new_end_date)
   end
@@ -152,9 +152,9 @@ module PeriodsAndStatesSteps
 
   step 'the current date is between the inspection date ' \
        'and the budget period end date' do
-    Dataset.back_to_date \
-      rand(@request.budget_period.inspection_start_date..\
-           @request.budget_period.end_date)
+    diff = @request.budget_period.end_date - \
+           @request.budget_period.inspection_start_date
+    Dataset.back_to_date(diff - 1)
     expect(Time.zone.today).to be > @request.budget_period.inspection_start_date
     expect(Time.zone.today).to be < @request.budget_period.end_date
   end
@@ -195,7 +195,8 @@ module PeriodsAndStatesSteps
       when 'equal to the requested quantity'
         [@request.requested_quantity, nil]
       when 'smaller than the requested quantity, not equal 0'
-        [rand(1..(@request.requested_quantity - 1)), 'inspection comment']
+        raise if @request.requested_quantity == 1
+        [@request.requested_quantity - 1, 'inspection comment']
       when 'equal 0'
         [0, 'inspection comment']
       end
