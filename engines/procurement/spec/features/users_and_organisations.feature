@@ -36,7 +36,7 @@ Feature: Section Users
       | department     | organization | requester name |
 
 #Final - will not change anymore
-  @browser
+  @js
   Scenario: Delete a requester
     Given I am Hans Ueli
     And there exists a requester
@@ -47,14 +47,19 @@ Feature: Section Users
     Then the requester disappears from the list
     And the requester was successfully deleted from the database
 
-# #Final - will not change anymore
-#   @personas
-#   Scenario: Modify a Requester
-#     Given I am Hans Ueli
-#     Given a requester exists
-#     Then I can modify the user name
-#     And I can modify the department
-#     And I can modify the organisation unit
+  @js
+  Scenario: Modify a requester
+    Given I am Hans Ueli
+    And there exists a requester
+    And there exists an extra user
+    And I navigate to the users page
+    When I modify the requester name to be that of the extra user
+    And I modify the department
+    And I modify the organization
+    And I click on save
+    Then I see a success message
+    And I see the successful changes on the page
+    And the requester information was changed successfully in the database
 
 # #Final - will not change anymore
 #   Scenario: Sorting of requester
