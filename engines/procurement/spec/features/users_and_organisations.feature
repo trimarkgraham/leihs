@@ -8,7 +8,7 @@ Feature: Section Users
     But there exists a user to become a requester
     When I navigate to the users page
     Then there is an empty requester line for creating a new one
-    When I fill in the potential requester name
+    When I fill in the requester name
     And I fill in the department
     And I fill in the organization
     And I click on save
@@ -30,10 +30,10 @@ Feature: Section Users
     And the new requester has not been created
 
     Examples:
-      | 1st field                | 2nd field    | 3rd field                |
-      | potential requester name | department   | organization             |
-      | potential requester name | organization | department               |
-      | department               | organization | potential requester name |
+      | 1st field      | 2nd field    | 3rd field      |
+      | requester name | department   | organization   |
+      | requester name | organization | department     |
+      | department     | organization | requester name |
 
 # #Final - will not change anymore
 #   @personas

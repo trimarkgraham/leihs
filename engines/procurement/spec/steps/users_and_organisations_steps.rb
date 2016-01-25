@@ -24,7 +24,7 @@ module UsersAndOrganisationsSteps
     @user = create_user(Faker::Name.first_name)
   end
 
-  step 'I fill in the potential requester name' do
+  step 'I fill in the requester name' do
     line = find('table tbody tr')
     line.find("input[name*='name']").set(@user.name)
     find('.ui-autocomplete .ui-menu-item a').click
@@ -48,7 +48,7 @@ module UsersAndOrganisationsSteps
   step 'the :field is marked red' do |field|
     line = find('form table tbody tr')
     input_field = case field
-                  when 'potential requester name'
+                  when 'requester name'
                     line.find("input[name*='name']")
                   when 'department'
                     line.find("input[name*='department']")
