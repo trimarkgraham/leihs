@@ -4,9 +4,7 @@ FactoryGirl.define do
     shortname { Faker::Company.suffix }
 
     trait :with_parent do
-      before :create do |organization|
-        organization.parent = FactoryGirl.create(:procurement_organization)
-      end
+      association :parent, factory: :procurement_organization
     end
   end
 end
