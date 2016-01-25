@@ -2,9 +2,7 @@ module PersonasSteps
   # procurement admin
   step 'I am Hans Ueli' do
     persona = create_persona('Hans Ueli')
-    FactoryGirl.create(:procurement_access,
-                       user: persona,
-                       is_admin: true)
+    FactoryGirl.create(:procurement_access, :admin, user: persona)
     login_as persona
     visit '/procurement'
   end
@@ -12,8 +10,7 @@ module PersonasSteps
   # requester
   step 'I am Roger' do
     persona = create_persona('Roger')
-    Procurement::Access.requesters.create(user: persona,
-                                          organization: FactoryGirl.create(:procurement_organization, :with_parent))
+    FactoryGirl.create(:procurement_access, :requester, user: persona)
     login_as persona
     visit '/procurement'
   end
@@ -37,7 +34,7 @@ module PersonasSteps
 
   step 'a procurement admin exists' do
     Procurement::Access.admins.exists? \
-      || FactoryGirl.create(:procurement_access, is_admin: true)
+      || FactoryGirl.create(:procurement_access, :admin)
   end
 
   def create_user(firstname)

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :procurement_request, class: Procurement::Request do
     user { r = Procurement::Access.requesters.order('RAND()').first \
-                || FactoryGirl.create(:procurement_access)
+                || FactoryGirl.create(:procurement_access, :requester)
            r.user
           }
     association :budget_period, factory: :procurement_budget_period
