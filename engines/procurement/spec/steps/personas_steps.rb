@@ -48,7 +48,7 @@ module PersonasSteps
   private
 
   def set_locale(user)
-    FastGettext.locale = user.language.locale_name.gsub(/-/, '_')
+    FastGettext.locale = user.language.locale_name.tr('-', '_')
   end
 
   def create_persona(firstname)

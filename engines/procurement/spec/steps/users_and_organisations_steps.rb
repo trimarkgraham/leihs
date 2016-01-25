@@ -1,4 +1,4 @@
-require_relative "personas_steps"
+require_relative 'personas_steps'
 
 module UsersAndOrganisationsSteps
   include PersonasSteps
@@ -80,7 +80,8 @@ module UsersAndOrganisationsSteps
   end
 
   step 'the requester disappears from the list' do
-    expect(first('form table tbody tr td:first-child input', text: @user.name)).not_to be
+    expect(first('form table tbody tr td:first-child input', text: @user.name))
+      .not_to be
   end
 
   step 'the requester was successfully deleted from the database' do
@@ -110,21 +111,24 @@ module UsersAndOrganisationsSteps
   end
 
   step 'I see the successful changes on the page' do
-    expect { find_requester_line(@user.name) }.to raise_error Capybara::ElementNotFound
+    expect { find_requester_line(@user.name) }
+      .to raise_error Capybara::ElementNotFound
     line = find_requester_line(@extra_user.name)
-    expect(line.find("input[name*='department']").value).to be == @new_department
-    expect(line.find("input[name*='organization']").value).to be == @new_organization
+    expect(line.find("input[name*='department']").value)
+      .to be == @new_department
+    expect(line.find("input[name*='organization']").value)
+      .to be == @new_organization
   end
 
-    step 'the requester information was changed successfully in the database' do
-      expect(Procurement::Access.find_by_user_id(@user.id)).not_to be
-      access = Procurement::Access.find_by_user_id(@extra_user.id)
-      expect(access.organization.name).to be == @new_organization
-      dep = Procurement::Organization.find_by_name(@new_department)
-      expect(dep).to be
-      expect(dep.children).to \
-        include Procurement::Organization.find_by_name(@new_organization)
-    end
+  step 'the requester information was changed successfully in the database' do
+    expect(Procurement::Access.find_by_user_id(@user.id)).not_to be
+    access = Procurement::Access.find_by_user_id(@extra_user.id)
+    expect(access.organization.name).to be == @new_organization
+    dep = Procurement::Organization.find_by_name(@new_department)
+    expect(dep).to be
+    expect(dep.children).to \
+      include Procurement::Organization.find_by_name(@new_organization)
+  end
 
   private
 
