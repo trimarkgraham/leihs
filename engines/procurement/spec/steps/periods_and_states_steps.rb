@@ -1,4 +1,5 @@
 require_relative "personas_steps"
+require File.join(Rails.root, 'features/support/dataset.rb')
 
 module PeriodsAndStatesSteps
   include PersonasSteps
@@ -133,12 +134,56 @@ module PeriodsAndStatesSteps
   end
 
   step 'the current date is before the inspection date' do
-    expect(Date.today).to be < Procurement::BudgetPeriod.current.inspection_start_date
+    Dataset.back_to_date @request.budget_period.inspection_start_date - 1.day
+    expect(Date.today).to be < @request.budget_period.inspection_start_date
   end
 
-  step 'I see the state "New"' do
-    step 'I go to my requests'
-    find(".list-group-item[data-request_id='#{@request.id}'] .col-sm-1", text: _('New'))
+  step 'the current date is between the inspection date and the budget period end date' do
+    Dataset.back_to_date rand(@request.budget_period.inspection_start_date..@request.budget_period.end_date)
+    expect(Date.today).to be > @request.budget_period.inspection_start_date
+    expect(Date.today).to be < @request.budget_period.end_date
+  end
+
+  step 'the current date is after the budget period end date' do
+    Dataset.back_to_date @request.budget_period.end_date + 1.day
+    expect(Date.today).to be > @request.budget_period.end_date
+  end
+
+  step 'I inspect all groups' do
+    el = find('.form-group', text: _('Groups')).find('.btn-group')
+    el.find('button.multiselect').click
+    el.all(:checkbox).each {|x| x.set true}
+  end
+
+  step 'I see the state :state' do |state|
+    if @request.user_id == @current_user.id
+      step 'I go to my requests'
+    else
+      step 'I go to the inspection overview'
+      step 'I inspect all groups'
+    end
+    @el = find(".list-group-item[data-request_id='#{@request.id}'] .col-sm-1", text: _(state))
+  end
+
+  step 'I can not modify the request' do
+    @el.click
+    expect(has_no_selector?("form [type='submit']")).to be true
+    expect(@request.reload.editable?(@current_user)).to be false
+  end
+
+  step 'the approved quantity is :unquoted_string' do |unquoted_string|
+    new_quantity, new_comment = case unquoted_string
+                     when 'empty'
+                       [nil, nil]
+                     when 'equal to the requested quantity'
+                       [@request.requested_quantity, nil]
+                     when 'smaller than the requested quantity, not equal 0'
+                       [rand(1..(@request.requested_quantity-1)), 'inspection comment']
+                     when 'equal 0'
+                       [0, 'inspection comment']
+                   end
+    @request.update_attributes approved_quantity: new_quantity,
+                               inspection_comment: new_comment
   end
 
   private
@@ -150,6 +195,12 @@ module PeriodsAndStatesSteps
 
   def format_date(date)
     date.strftime '%d.%m.%Y'
+  end
+end
+
+placeholder :unquoted_string do
+  match /.*/ do |s|
+    s
   end
 end
 

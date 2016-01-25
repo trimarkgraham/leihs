@@ -16,15 +16,35 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:44
-- name: engines/procurement/spec/features/periods_and_states.feature:60
+- name: engines/procurement/spec/features/periods_and_states.feature:59
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:60
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:59
 - name: engines/procurement/spec/features/periods_and_states.feature:67
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:67
+- name: engines/procurement/spec/features/periods_and_states.feature:75
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:75
+- name: engines/procurement/spec/features/periods_and_states.feature:85
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:85
+- name: engines/procurement/spec/features/periods_and_states.feature:103
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:103
 - name: engines/procurement/spec/features/smoke_test.feature:4
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/smoke_test.feature:4
+- name: engines/procurement/spec/features/users_and_organisations.feature:5
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:5
+- name: engines/procurement/spec/features/users_and_organisations.feature:20
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:20

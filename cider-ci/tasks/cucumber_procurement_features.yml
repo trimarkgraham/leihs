@@ -30,11 +30,6 @@ tasks:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "engines/procurement/features/section_my_requests.feature"
-- name: section_users_and_organisations
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/section_users_and_organisations.feature"
 - name: templates
   scripts:
     test:

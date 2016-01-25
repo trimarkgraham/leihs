@@ -55,15 +55,15 @@ Feature: Periods and states
     And the data for the budget period was updated successfully in the database
 
 # #Final - will not change anymore
-#??# not clear: future end_date means should be still editable
    @js
    Scenario: Freeze budget period
      Given I am Hans Ueli
      When I set the end date of the budget period equal or later than today
+#??# not clear: future end_date means should be still editable
      Then requests of this budget period can not be edited by admin, requester or inspector
 
 # #Final - will not change anymore
-   @browser
+   @js
    Scenario: State "New" - Request Date before Inspection Date
      Given I am Roger
      Given a request exists
@@ -71,44 +71,46 @@ Feature: Periods and states
      Then I see the state "New"
 
 # #Final - will not change anymore
-#   @personas
-#   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
-#     Given I am Roger
-#     Given a request exists
-#     When the current date is between the Inspection Date and the Budget Period End Date
-#     Then I see the state "Inspection"
-#     And I can not modify the request
+   @js
+   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
+     Given I am Roger
+     Given a request exists
+     When the current date is between the inspection date and the budget period end date
+     Then I see the state "In inspection"
+     And I can not modify the request
 
 # #Final - will not change anymore
-#   @personas
-#   Scenario: State "Inspection", "Accepted", "Denied" "Partially Accepted" for requester when budget period has ended
-#     Given I am Roger
-#     Given a request exists
-#     When the current date is after the Budget Period End Date
-#     And the approved quantity is empty
-#     Then I see the state "Inspection"
-#     When the approved quantity is equal to the requested quantity
-#     Then I see the state "Accepted"
-#     When the approved quantity is smaller than the requested quantity
-#     And the approved quantity is not equal 0
-#     Then I see the state "Partially Accepted"
-#     When the approved quantity is equal 0
-#     Then I see the state "Denied"
+#??# Accepted or Approved ?
+   @browser
+   Scenario: State "In inspection", "Accepted", "Denied" "Partially Accepted" for requester when budget period has ended
+     Given I am Roger
+     Given a request exists
+     When the current date is after the budget period end date
+     And the approved quantity is empty
+#??# if the budget inspection phase is over, we display normal states (as before the inspection phase)
+     Then I see the state "In inspection"
+     When the approved quantity is equal to the requested quantity
+     Then I see the state "Approved"
+     When the approved quantity is smaller than the requested quantity
+     And the approved quantity is not equal 0
+     Then I see the state "Partially approved"
+     When the approved quantity is equal 0
+     Then I see the state "Denied"
 
 # #Final - will not change anymore
-#   @personas
-#   Scenario: State "New", "Accepted", "Denied" "Partially Accepted" for inspector
-#     Given I am Barbara
-#     Given a request exists
-#     When the approved quantity is empty
-#     Then I see the state "New"
-#     When the approved quantity is equal to the requested quantity
-#     Then I see the state "Accepted"
-#     When the approved quantity is smaller than the requested quantity
-#     And the approved quantity is not equal 0
-#     Then I see the state "Partially Accepted"
-#     When the approved quantity is equal 0
-#     Then I see the state "Denied"
+#??# Accepted or Approved ?
+   @js
+   Scenario: State "New", "Accepted", "Denied" "Partially Accepted" for inspector
+     Given I am Barbara
+     Given a request exists
+     When the approved quantity is empty
+     Then I see the state "New"
+     When the approved quantity is equal to the requested quantity
+     Then I see the state "Approved"
+     When the approved quantity is smaller than the requested quantity, not equal 0
+     Then I see the state "Partially approved"
+     When the approved quantity is equal 0
+     Then I see the state "Denied"
 
 # #Final - will not change anymore
 #   @personas
