@@ -40,18 +40,18 @@ module PersonasSteps
       || FactoryGirl.create(:procurement_access, is_admin: true)
   end
 
-  private
-
-  def set_locale(user)
-    FastGettext.locale = user.language.locale_name.gsub(/-/, '_')
-  end
-
   def create_user(firstname)
     user = FactoryGirl.create(:user, firstname: firstname)
     FactoryGirl.create(:access_right,
                        user: user,
                        inventory_pool: FactoryGirl.create(:inventory_pool))
     user
+  end
+
+  private
+
+  def set_locale(user)
+    FastGettext.locale = user.language.locale_name.gsub(/-/, '_')
   end
 
   def create_persona(firstname)
