@@ -36,10 +36,6 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:103
-- name: engines/procurement/spec/features/smoke_test.feature:4
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/smoke_test.feature:4
 - name: engines/procurement/spec/features/users_and_organisations.feature:5
   scripts:
     test:
