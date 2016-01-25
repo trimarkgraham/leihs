@@ -48,3 +48,11 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:20
+- name: engines/procurement/spec/features/users_and_organisations.feature:40
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:40
+- name: engines/procurement/spec/features/users_and_organisations.feature:51
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:51
