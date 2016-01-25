@@ -122,7 +122,7 @@ end
 
 def task_for_rubocop_step_file(file_path, _timeout = 200)
   name = file_path.match(/\.*\/steps\/(.*)/).captures.first
-  exec = "bx rubocop -c engines/procurement/.rubocop.yml #{file_path}"
+  exec = "bundle exec rubocop -c engines/procurement/.rubocop.yml #{file_path}"
   task_hash(name, exec)
 end
 
