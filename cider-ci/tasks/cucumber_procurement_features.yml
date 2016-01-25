@@ -1,37 +1,37 @@
 ---
 tasks:
-- name: section_my_requests
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/section_my_requests.feature"
-- name: procurement_groups
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/procurement_groups.feature"
 - name: csv
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "engines/procurement/features/csv.feature"
-- name: roles
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/roles.feature"
-- name: templates
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/templates.feature"
 - name: inspection
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "engines/procurement/features/inspection.feature"
+- name: procurement_groups
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/procurement_groups.feature"
 - name: requests
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "engines/procurement/features/requests.feature"
+- name: roles
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/roles.feature"
+- name: section_my_requests
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/section_my_requests.feature"
+- name: templates
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
+        --strict "engines/procurement/features/templates.feature"
