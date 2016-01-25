@@ -13,7 +13,7 @@ module PersonasSteps
   step 'I am Roger' do
     persona = create_persona('Roger')
     Procurement::Access.requesters.create(user: persona,
-                                          organization: FactoryGirl.create(:procurement_organization))
+                                          organization: FactoryGirl.create(:procurement_organization, :with_parent))
     login_as persona
     visit '/procurement'
   end
