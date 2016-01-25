@@ -152,9 +152,7 @@ module PeriodsAndStatesSteps
 
   step 'the current date is between the inspection date ' \
        'and the budget period end date' do
-    diff = @request.budget_period.end_date - \
-           @request.budget_period.inspection_start_date
-    Dataset.back_to_date(diff - 1)
+    Dataset.back_to_date(@request.budget_period.end_date - 1.day)
     expect(Time.zone.today).to be > @request.budget_period.inspection_start_date
     expect(Time.zone.today).to be < @request.budget_period.end_date
   end
