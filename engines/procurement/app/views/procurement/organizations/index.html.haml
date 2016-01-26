@@ -1,13 +1,6 @@
 %h1= _('Organizations of the requesters')
 
-- Procurement::Organization.walk_tree do |organization, level|
-  -#= link_to "#{'-'*level}#{organization.name}", organization_path(organization)
-  %div{style: "margin-left: #{level}em; #{level.zero? ? 'font-size: 1.4em; border-top: 1px dashed black;' : nil}"}
-    %b= organization
-    - if organization.accesses
-      %ul
-        - organization.accesses.each do |access|
-          %li= access.user
+= render partial: 'index', locals: {organizations: @organizations}
 
 -#.text-right
   %a.btn.btn-success{href: new_organization_path}
