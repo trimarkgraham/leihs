@@ -17,9 +17,13 @@ Feature: Procurement Groups
     And the new group appears in the list
     And the new group was created in the database
 
-# #Final - will not change anymore
-#   Scenario: Sorting of Procurement Groups
-#     The procurement groups are sorted alphabetically (a-z and 0-10)
+#Final - will not change anymore
+  @procurement_groups @js
+  Scenario: Sorting of Procurement Groups
+    Given I am Hans Ueli
+    And 3 procurement groups exist
+    And I navigate to the groups page
+    Then the procurement groups are sorted alphabetically
 
 # #Final - will not change anymore
 #   @personas
