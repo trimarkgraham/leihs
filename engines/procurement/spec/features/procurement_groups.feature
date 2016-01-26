@@ -1,7 +1,7 @@
 Feature: Procurement Groups
 
 #Final - will not change anymore
-  @browser @procurement_groups
+  @procurement_groups @browser
   Scenario: Creating the procurement groups
     Given I am Hans Ueli
     And budget periods exist

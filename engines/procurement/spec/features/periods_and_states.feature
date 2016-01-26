@@ -1,7 +1,7 @@
 Feature: Periods and states
 
 #Final - will not change anymore
-  @js
+  @periods_and_states @js
   Scenario: Creating a budget period
     Given I am Hans Ueli
     And there does not exist any budget period yet
@@ -22,7 +22,7 @@ Feature: Periods and states
     # And the start date of the inspection period should not be later then the end date of the budget period
 
 #Final - will not change anymore
-  @js
+  @periods_and_states @js
   Scenario: Sorting of budget periods
     Given I am Hans Ueli
     And budget periods exist
@@ -30,7 +30,7 @@ Feature: Periods and states
     Then the budget periods are sorted from 0-10 and a-z
 
 #Final - will not change anymore
-  @browser
+  @periods_and_states @browser
   Scenario: Deleting a Period
     Given I am Hans Ueli
     And a budget period without any requests exists
@@ -40,7 +40,7 @@ Feature: Periods and states
     And this budget period was deleted from the database
 
 #Final - will not change anymore
-  @js
+  @periods_and_states @js
   Scenario: Editing a Budget Period
     Given I am Hans Ueli
     And budget periods exist
@@ -55,7 +55,7 @@ Feature: Periods and states
     And the data for the budget period was updated successfully in the database
 
 #Final - will not change anymore
-  @js
+  @periods_and_states @js
   Scenario: Freeze budget period
     Given I am Hans Ueli
     When I set the end date of the budget period equal or later than today
@@ -63,7 +63,7 @@ Feature: Periods and states
 #     Then requests of this budget period can not be edited by admin, requester or inspector
 
 #Final - will not change anymore
-  @js
+  @periods_and_states @js
   Scenario: State "New" - Request Date before Inspection Date
     Given I am Roger
     Given a request exists
@@ -71,7 +71,7 @@ Feature: Periods and states
     Then I see the state "New"
 
 #Final - will not change anymore
-  @js
+  @periods_and_states @js
   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
     Given I am Roger
     Given a request exists
@@ -81,7 +81,7 @@ Feature: Periods and states
 
 #Final - will not change anymore
 #??# Accepted or Approved ?
-  @js
+  @periods_and_states @js
   Scenario: State "In inspection", "Accepted", "Denied" "Partially Accepted" for requester when budget period has ended
     Given I am Roger
     Given a request exists
@@ -99,7 +99,7 @@ Feature: Periods and states
 
 #Final - will not change anymore
 #??# Accepted or Approved ?
-  @js
+  @periods_and_states @js
   Scenario Outline: State "New", "Accepted", "Denied" "Partially Accepted" for inspector
     Given I am Barbara
     Given a request exists
@@ -113,7 +113,7 @@ Feature: Periods and states
       | equal 0                                          | Denied             |
 
 #Final - will not change anymore
-  @js
+  @periods_and_states @js
   Scenario Outline: No Modification or Deletion after Budget End Period date
     Given I am <username>
     Given a request exists
@@ -131,7 +131,7 @@ Feature: Periods and states
 
 #Final - will not change anymore
 #??# merge with Scenario: Sorting of budget periods
-  @js
+  @periods_and_states @js
   Scenario: Overview of Budget Periods
     Given I am Hans Ueli
     Given budget periods exist

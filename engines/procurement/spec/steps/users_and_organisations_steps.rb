@@ -172,4 +172,6 @@ module UsersAndOrganisationsSteps
   end
 end
 
-RSpec.configure { |c| c.include UsersAndOrganisationsSteps }
+RSpec.configure do |c|
+  c.include UsersAndOrganisationsSteps, users_and_organisations: true
+end

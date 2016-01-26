@@ -1,7 +1,7 @@
 Feature: Section Users
 
 #Final - will not change anymore
-  @js
+  @users_and_organisations @js
   Scenario: Add a requester
     Given I am Hans Ueli
     And there does not exist any requester yet
@@ -16,7 +16,7 @@ Feature: Section Users
     And the new requester was created in the database
 
 #Final - will not change anymore
-  @js
+  @users_and_organisations @js
   Scenario Outline: Requester required fields
     Given I am Hans Ueli
     And there does not exist any requester yet
@@ -36,7 +36,7 @@ Feature: Section Users
       | department     | organization | requester name |
 
 #Final - will not change anymore
-  @js
+  @users_and_organisations @js
   Scenario: Delete a requester
     Given I am Hans Ueli
     And there exists a requester
@@ -47,7 +47,7 @@ Feature: Section Users
     Then the requester disappears from the list
     And the requester was successfully deleted from the database
 
-  @js
+  @users_and_organisations @js
   Scenario: Modify a requester
     Given I am Hans Ueli
     And there exists a requester
@@ -62,27 +62,27 @@ Feature: Section Users
     And the requester information was changed successfully in the database
 
 #Final - will not change anymore
-  @js
+  @users_and_organisations @js
   Scenario: Sorting of requester
 #??# who? where?
 #    Given requesters exist
 #    Then the requesters are sorted 0-10 and a-z
 
 #Final - will not change anymore
-  @js
+  @users_and_organisations @js
   Scenario: Add an Admin
     Given I am Hans Ueli
     Then I can add an admin
     And the admins are sorted alphabetically from a-z
 
 #Final - will not change anymore
-  @js
+  @users_and_organisations @js
   Scenario: Delete an Admin
     Given I am Hans Ueli
     Then I can delete an admin
 
 #Final - will not change anymore
-  @browser
+  @users_and_organisations @browser
   Scenario: View the Organisation Tree
     Given I am Hans Ueli
     Then I can view the organisation tree according to the organisations assigned to requester
