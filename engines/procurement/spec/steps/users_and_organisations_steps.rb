@@ -135,7 +135,8 @@ module UsersAndOrganisationsSteps
     admin_ids = Procurement::Access.admins.pluck(:user_id)
     user = User.not_as_delegations.where.not(id: admin_ids).order('RAND()').first \
             || FactoryGirl.create(:user)
-    find('.token-input-list .token-input-input-token input#token-input-').set user.name
+    find('.token-input-list .token-input-input-token input#token-input-')
+      .set user.name
     find('.token-input-dropdown li', text: user.name).click
     step 'I click on save'
     expect(Procurement::Access.admins.exists?(user.id)).to be true
@@ -156,13 +157,18 @@ module UsersAndOrganisationsSteps
     expect(Procurement::Access.admins.exists?(user.id)).to be false
   end
 
-  step 'I can view the organisation tree according to the organisations assigned to requester' do
+  step 'I can view the organisation tree according ' \
+       'to the organisations assigned to requester' do
     step 'there exist 10 requesters'
     step 'I go to the organizations list'
     pending
     # Procurement::Access.requesters.each do |requester|
     #   find('li', text: requester.user.name).find(:xpath, "ancestor::li")
     # end
+  end
+
+  step 'I click on save' do
+    click_on _('Save')
   end
 
   private
