@@ -44,6 +44,10 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:135
+- name: engines/procurement/spec/features/procurement_groups.feature:5
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/procurement_groups.feature:5
 - name: engines/procurement/spec/features/users_and_organisations.feature:5
   scripts:
     test:

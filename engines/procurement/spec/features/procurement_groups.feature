@@ -4,7 +4,7 @@ Feature: Procurement Groups
   @procurement_groups @browser
   Scenario: Creating the procurement groups
     Given I am Hans Ueli
-    And budget periods exist
+    And a budget period exist
     And there exists 2 users to become the inspectors
     And I navigate to the groups page
     When I click on the add button
@@ -13,7 +13,8 @@ Feature: Procurement Groups
     And I fill in the email
     And I fill in the budget limit
     And I click on save
-    Then I see a success message
+    Then I am redirected to the groups index page
+    And the new group appears in the list
     And the new group was created in the database
 
 # #Final - will not change anymore

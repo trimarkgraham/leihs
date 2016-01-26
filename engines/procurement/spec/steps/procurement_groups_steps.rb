@@ -23,7 +23,8 @@ steps_for :procurement_groups do
   end
 
   step 'I fill in the name' do
-    find("input[name='group[name]']").set Faker::Lorem.word
+    @name = Faker::Lorem.word
+    find("input[name='group[name]']").set @name
   end
 
   step 'I fill in the inspectors\' names' do
@@ -34,16 +35,41 @@ steps_for :procurement_groups do
   end
 
   step 'I fill in the email' do
-    find("input[name='group[email]']").set Faker::Internet.email
+    @email = Faker::Internet.email
+    find("input[name='group[email]']").set @email
   end
 
   step 'I fill in the budget limit' do
-    binding.pry
+    @limit = 1000
+    find('.row', text: @budget_period.name)
+      .find("input[name*='amount']")
+      .set @limit
   end
 
-  private
+  step 'a budget period exist' do
+    @budget_period = FactoryGirl.create(:procurement_budget_period)
+  end
 
-  # def find_requester_line(name)
-  #   find(:xpath, "//input[@value='#{name}']/ancestor::tr")
-  # end
+  step 'I click on save' do
+    click_on _('Save')
+  end
+
+  step 'I am redirected to the groups index page' do
+    expect(current_path).to be == '/procurement/groups'
+  end
+
+  step 'the new group appears in the list' do
+    find('table').find('tr', text: @name)
+  end
+
+  step 'the new group was created in the database' do
+    group = Procurement::Group.find_by_name(@name)
+    expect(group).to be
+    expect(group.name).to be == @name
+    expect(group.email).to be == @email
+    @inspectors.each do |inspector|
+      expect(group.inspectors).to include inspector
+    end
+    expect(group.budget_limits.first.amount_cents).to be == @limit*100
+  end
 end
