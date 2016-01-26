@@ -37,6 +37,12 @@ module PersonasSteps
       || FactoryGirl.create(:procurement_access, :admin)
   end
 
+  step 'there exist :count requesters' do |count|
+    count.to_i.times do
+      FactoryGirl.create(:procurement_access, :requester)
+    end
+  end
+
   def create_user(firstname)
     user = FactoryGirl.create(:user, firstname: firstname)
     FactoryGirl.create(:access_right,

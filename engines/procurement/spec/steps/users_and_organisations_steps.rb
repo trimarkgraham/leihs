@@ -130,6 +130,41 @@ module UsersAndOrganisationsSteps
       include Procurement::Organization.find_by_name(@new_organization)
   end
 
+  step 'I can add an admin' do
+    step 'I go to the users list'
+    admin_ids = Procurement::Access.admins.pluck(:user_id)
+    user = User.not_as_delegations.where.not(id: admin_ids).order('RAND()').first \
+            || FactoryGirl.create(:user)
+    find('.token-input-list .token-input-input-token input#token-input-').set user.name
+    find('.token-input-dropdown li', text: user.name).click
+    step 'I click on save'
+    expect(Procurement::Access.admins.exists?(user.id)).to be true
+  end
+
+  step 'the admins are sorted alphabetically from a-z' do
+    texts = all('.token-input-list .token-input-token').map &:text
+    expect(texts).to be == texts.sort
+    expect(texts.count).to be Procurement::Access.admins.count
+  end
+
+  step 'I can delete an admin' do
+    step 'I go to the users list'
+    user = Procurement::Access.admins.order('RAND()').first.user
+    find('.token-input-list .token-input-token', text: user.name) \
+      .find('.token-input-delete-token').click
+    step 'I click on save'
+    expect(Procurement::Access.admins.exists?(user.id)).to be false
+  end
+
+  step 'I can view the organisation tree according to the organisations assigned to requester' do
+    step 'there exist 10 requesters'
+    step 'I go to the organizations list'
+    pending
+    # Procurement::Access.requesters.each do |requester|
+    #   find('li', text: requester.user.name).find(:xpath, "ancestor::li")
+    # end
+  end
+
   private
 
   def find_requester_line(name)
