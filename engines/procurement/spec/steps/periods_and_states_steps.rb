@@ -1,4 +1,5 @@
 require_relative 'personas_steps'
+require_relative 'placeholders'
 require File.join(Rails.root, 'features/support/dataset.rb')
 
 module PeriodsAndStatesSteps
@@ -172,7 +173,7 @@ module PeriodsAndStatesSteps
     el.all(:checkbox).each { |x| x.set true }
   end
 
-  step 'I see the state :state' do |state|
+  step 'I see the state :string_with_spaces' do |string_with_spaces|
     if @request.user_id == @current_user.id
       step 'I go to my requests'
     else
@@ -180,7 +181,7 @@ module PeriodsAndStatesSteps
       step 'I inspect all groups'
     end
     @el = find(".list-group-item[data-request_id='#{@request.id}'] .col-sm-1",
-               text: _(state))
+               text: _(string_with_spaces))
   end
 
   step 'I can not modify the request' do
@@ -189,9 +190,9 @@ module PeriodsAndStatesSteps
     expect(@request.editable?(@current_user)).to be false
   end
 
-  step 'the approved quantity is :unquoted_string' do |unquoted_string|
+  step 'the approved quantity is :string_with_spaces' do |string_with_spaces|
     new_quantity, new_comment = \
-      case unquoted_string
+      case string_with_spaces
       when 'empty'
         [nil, nil]
       when 'equal to the requested quantity'
@@ -266,12 +267,6 @@ module PeriodsAndStatesSteps
 
   def format_date(date)
     date.strftime '%d.%m.%Y'
-  end
-end
-
-placeholder :unquoted_string do
-  match /.*/ do |s|
-    s
   end
 end
 

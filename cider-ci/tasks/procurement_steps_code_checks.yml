@@ -15,6 +15,11 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/personas_steps.rb
+- name: placeholders.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/placeholders.rb
 - name: users_and_organisations_steps.rb
   scripts:
     test:
