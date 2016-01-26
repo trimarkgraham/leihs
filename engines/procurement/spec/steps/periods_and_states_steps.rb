@@ -270,4 +270,6 @@ module PeriodsAndStatesSteps
   end
 end
 
-RSpec.configure { |c| c.include PeriodsAndStatesSteps }
+RSpec.configure do |c|
+  c.include PeriodsAndStatesSteps, periods_and_states: true
+end

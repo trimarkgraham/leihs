@@ -3,7 +3,7 @@ require 'turnip/capybara'
 require 'rails_helper'
 require 'factory_girl'
 
-Dir.glob("engines/procurement/spec/steps/**/*steps.rb") { |f| load f, true }
+Dir.glob("engines/procurement/spec/steps/**/*.rb") { |f| load f, true }
 Dir.glob("engines/procurement/spec/factories/**/*factory.rb") { |f| load f, true }
 
 Capybara.register_driver :firefox do |app|
