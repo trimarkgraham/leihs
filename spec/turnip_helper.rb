@@ -16,6 +16,8 @@ end
 
 RSpec.configure do |config|
 
+  config.raise_error_for_unimplemented_steps = true
+
   unless ENV['CIDER_CI_TRIAL_ID'].present?
     require 'database_cleaner'
     DatabaseCleaner.strategy = :truncation
