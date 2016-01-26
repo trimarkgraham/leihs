@@ -171,6 +171,10 @@ steps_for :users_and_organisations do
     click_on _('Save')
   end
 
+  step 'I see a success message' do
+    expect(page).to have_content _('Saved')
+  end
+
   private
 
   def find_requester_line(name)

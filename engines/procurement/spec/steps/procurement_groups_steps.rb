@@ -70,6 +70,6 @@ steps_for :procurement_groups do
     @inspectors.each do |inspector|
       expect(group.inspectors).to include inspector
     end
-    expect(group.budget_limits.first.amount_cents).to be == @limit*100
+    expect(group.budget_limits.first.amount_cents).to be == (@limit * 100)
   end
 end
