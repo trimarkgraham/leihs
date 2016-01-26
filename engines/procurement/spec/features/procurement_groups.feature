@@ -25,17 +25,22 @@ Feature: Procurement Groups
     And I navigate to the groups page
     Then the procurement groups are sorted alphabetically
 
-# #Final - will not change anymore
-#   @personas
-#   Scenario: Editing a procurement group
-#     Given I am Hans Ueli
-#     When I edit a procurement group
-#     Then I can delete an inspector
-#     And I can add an inspector
-#     And I can delete a budget limit
-#     And I can add a budget limit
-#     And I can change a budget limit
-#     And I can change the email address
+#Final - will not change anymore
+  @procurement_groups @js
+  Scenario: Editing a procurement group
+    Given I am Hans Ueli
+    And there exists a procurement group
+    And there exists 3 budget limits for the procurement group
+    And the procurement group has 3 inspectors
+    # When I navigate to the group's edit page
+    # And I modify the name
+    # And I delete an inspector
+    # And I add an inspector
+    # And I modify the email address
+    # And I delete a budget limit
+    # And I add a budget limit
+    # And I modify a budget limit
+    # And I click on save
 
 # #Final - will not change anymore
 #   @personas

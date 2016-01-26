@@ -84,4 +84,22 @@ steps_for :procurement_groups do
     names = all('table tbody tr td:first-child').map(&:text)
     expect(names).to be == @groups.map(&:name).sort
   end
+
+  step 'there exists a procurement group' do
+    @group = FactoryGirl.create(:procurement_group)
+  end
+
+  step 'there exists :count budget limits for the procurement group' do |count|
+    @group.budget_limits.delete_all
+    count.to_i.times do
+      @group.budget_limits << FactoryGirl.create(:procurement_budget_limit)
+    end
+  end
+
+  step 'the procurement group has :count inspectors' do |count|
+    @group.inspectors.delete_all
+    count.to_i.times do
+      @group.inspectors << create_user(Faker::Name.first_name)
+    end
+  end
 end
