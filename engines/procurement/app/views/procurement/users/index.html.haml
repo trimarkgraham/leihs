@@ -5,8 +5,10 @@
     .panel-heading
       %i.fa.fa-user-md
       = _('Admins')
-    .panel-body
-      %input{name: 'admin_ids', multiple: true, placeholder: _('Name of the admins')}
+    .panel-body.row
+      .col-sm-4
+        %input{name: 'admin_ids', multiple: true, placeholder: _('Name of the admins')}
+      .col-sm-8
 
   .panel.panel-default
     .panel-heading

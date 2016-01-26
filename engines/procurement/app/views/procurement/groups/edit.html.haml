@@ -8,13 +8,14 @@
         .col-sm-4
           = _('Name')
         .col-sm-4
-          = f.text_field :name, placeholder: _('Name'), class: 'form-control', required: true
+          = f.text_field :name, placeholder: _('Name'), class: 'form-control', required: true, autofocus: true
         .col-sm-4
       .row
         .col-sm-4
           = _('Inspectors')
-        .col-sm-8
+        .col-sm-4
           %input{name: 'group[inspector_ids]', multiple: true, placeholder: _("Name of the inspector"), autocomplete: :off}
+        .col-sm-4
       .row
         .col-sm-4
           = _('Email')
