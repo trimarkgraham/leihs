@@ -1,6 +1,6 @@
 require_relative 'personas_steps'
 
-module UsersAndOrganisationsSteps
+steps_for :users_and_organisations do
   include PersonasSteps
 
   step 'I navigate to the users page' do
@@ -176,8 +176,4 @@ module UsersAndOrganisationsSteps
   def find_requester_line(name)
     find(:xpath, "//input[@value='#{name}']/ancestor::tr")
   end
-end
-
-RSpec.configure do |c|
-  c.include UsersAndOrganisationsSteps, users_and_organisations: true
 end

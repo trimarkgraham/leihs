@@ -1,6 +1,6 @@
 require_relative 'personas_steps'
 
-module ProcurementGroupsSteps
+steps_for :procurement_groups do
   include PersonasSteps
 
   step 'I navigate to the groups page' do
@@ -46,8 +46,4 @@ module ProcurementGroupsSteps
   # def find_requester_line(name)
   #   find(:xpath, "//input[@value='#{name}']/ancestor::tr")
   # end
-end
-
-RSpec.configure do |c|
-  c.include ProcurementGroupsSteps, procurement_groups: true
 end

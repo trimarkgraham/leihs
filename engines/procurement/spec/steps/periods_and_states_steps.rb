@@ -2,7 +2,7 @@ require_relative 'personas_steps'
 require_relative 'placeholders'
 require File.join(Rails.root, 'features/support/dataset.rb')
 
-module PeriodsAndStatesSteps
+steps_for :periods_and_states do
   include PersonasSteps
 
   step 'there does not exist any budget period yet' do
@@ -268,8 +268,4 @@ module PeriodsAndStatesSteps
   def format_date(date)
     date.strftime '%d.%m.%Y'
   end
-end
-
-RSpec.configure do |c|
-  c.include PeriodsAndStatesSteps, periods_and_states: true
 end
