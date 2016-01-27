@@ -14,6 +14,8 @@ module Procurement
 
     scope :departments, -> { where(parent_id: nil) }
 
+    default_scope -> { order(:name) }
+
     def to_s
       name
     end

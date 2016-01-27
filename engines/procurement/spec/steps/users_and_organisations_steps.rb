@@ -161,10 +161,34 @@ steps_for :users_and_organisations do
        'to the organisations assigned to requester' do
     step 'there exist 10 requesters'
     step 'I go to the organizations list'
-    pending
-    # Procurement::Access.requesters.each do |requester|
-    #   find('li', text: requester.user.name).find(:xpath, "ancestor::li")
-    # end
+    Procurement::Access.requesters.each do |requester|
+      find('li', text: requester.organization.parent.name) \
+        .find('li', text: requester.organization.name) \
+        .find('li', text: requester.user.name)
+    end
+  end
+
+  step 'the organisation tree shows the departments with its organisation units' do
+    Procurement::Organization.roots.each do |organization|
+      within('li', text: organization.name) do
+        organization.children.each do |child|
+          find('li', text: child.name)
+        end
+      end
+    end
+  end
+
+  step 'the organisations are sorted from 0-10 and a-z' do
+    @roots = all('article .container-fluid > ul > li')
+    texts = @roots.map {|x| x.find(:xpath, './b').text }
+    expect(texts).to be == texts.sort
+  end
+
+  step 'inside the organisations the departments are sorted from 0-10 and a-z' do
+    @roots.each do |root|
+      texts = root.all(:xpath, './ul/li/b').map &:text
+      expect(texts).to be == texts.sort
+    end
   end
 
   step 'I click on save' do

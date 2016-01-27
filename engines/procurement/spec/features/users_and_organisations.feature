@@ -82,10 +82,12 @@ Feature: Section Users
     Then I can delete an admin
 
 #Final - will not change anymore
-  @users_and_organisations @browser
+  @users_and_organisations @js
   Scenario: View the Organisation Tree
     Given I am Hans Ueli
     Then I can view the organisation tree according to the organisations assigned to requester
     And the organisation tree shows the departments with its organisation units
+#??# the departments...
     And the organisations are sorted from 0-10 and a-z
+#??# inside the departments...
     And inside the organisations the departments are sorted from 0-10 and a-z
