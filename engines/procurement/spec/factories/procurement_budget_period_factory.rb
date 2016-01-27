@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :procurement_budget_period, class: Procurement::BudgetPeriod do
-    name { Faker::Lorem.word }
+    name { Faker::Lorem.words(2).join(' ') }
 
     inspection_start_date do
       last_budget_period = Procurement::BudgetPeriod.order(:end_date).last

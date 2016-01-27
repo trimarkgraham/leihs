@@ -111,6 +111,7 @@ steps_for :procurement_groups do
 
   step 'I delete an inspector' do
     @deleted_inspector = @group.inspectors.first
+    @rest_inspectors = (@group.inspectors - [@deleted_inspector])
     find('.row', text: _('Inspectors'))
       .find('.token-input-token', text: @deleted_inspector.name)
       .find('.token-input-delete-token')
@@ -128,8 +129,8 @@ steps_for :procurement_groups do
   end
 
   step 'I delete a budget limit' do
-    @delete_limit = @group.budget_limits.first
-    set_budget_limit @delete_limit.budget_period.name, 0
+    @deleted_budget_limit = @group.budget_limits.first
+    set_budget_limit @deleted_budget_limit.budget_period.name, 0
   end
 
   step 'I add a budget limit' do
@@ -139,15 +140,57 @@ steps_for :procurement_groups do
 
   step 'I modify a budget limit' do
     @modified_limit = 3000
-    set_budget_limit @group.budget_limits.last.budget_period.name,
-                     @modified_limit
+    @modified_budget_limit = @group.budget_limits.last
+    set_budget_limit @modified_budget_limit.budget_period.name, @modified_limit
   end
 
   step 'there exists an extra budget period' do
     @extra_budget_period = FactoryGirl.create(:procurement_budget_period)
   end
 
-  step 'I see that the all the information of the procurement group was updated correctly' do
+  step 'I see that the all the information ' \
+       'of the procurement group was updated correctly' do
+    group_line = find('table tr', text: @new_name)
+    expect(group_line.text).to have_content @new_inspector.name
+    expect(group_line.text).not_to have_content @deleted_inspector.name
+    @rest_inspectors.each do |r_inspector|
+      expect(group_line.text).to have_content r_inspector.name
+    end
+    expect(group_line.text).to have_content @new_email
+  end
+
+  step 'all the information of the procurement group ' \
+       'was successfully updated in the database' do
+    @group.reload
+    expect(@group.name).to be == @new_name
+    expect(@group.inspectors.map(&:name)).to include @new_inspector.name
+    expect(@group.inspectors.map(&:name)).not_to include @deleted_inspector.name
+    @rest_inspectors.each do |r_inspector|
+      expect(@group.inspectors.map(&:name)).to include r_inspector.name
+    end
+    expect(@group.email).to be == @new_email
+    expect(@group.budget_limits.count).to be == 3
+    expect(
+      @group
+      .budget_limits
+      .find_by_budget_period_id(@extra_budget_period.id)
+      .amount_cents
+    )
+      .to be == (@new_limit * 100)
+    expect(
+      @group
+      .budget_limits
+      .find_by_budget_period_id(@modified_budget_limit.budget_period_id)
+      .amount_cents
+    )
+      .to be == (@modified_limit * 100)
+    expect(
+      @group
+      .budget_limits
+      .find_by_budget_period_id(@deleted_budget_limit.budget_period_id)
+      .amount_cents
+    )
+      .to be == 0
   end
 
   private
