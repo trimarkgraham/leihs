@@ -23,14 +23,6 @@ Feature: Periods and states
 
 #Final - will not change anymore
   @periods_and_states @browser
-  Scenario: Sorting of budget periods
-    Given I am Hans Ueli
-    And budget periods exist
-    And I navigate to the budget periods
-    Then the budget periods are sorted from 0-10 and a-z
-
-#Final - will not change anymore
-  @periods_and_states @browser
   Scenario: Deleting a Period
     Given I am Hans Ueli
     And a budget period without any requests exists
@@ -56,14 +48,6 @@ Feature: Periods and states
 
 #Final - will not change anymore
   @periods_and_states @browser
-  Scenario: Freeze budget period
-    Given I am Hans Ueli
-    When I set the end date of the budget period equal or later than today
-#??# not clear: future end_date means should be still editable
-#     Then requests of this budget period can not be edited by admin, requester or inspector
-
-#Final - will not change anymore
-  @periods_and_states @browser
   Scenario: State "New" - Request Date before Inspection Date
     Given I am Roger
     Given a request exists
@@ -80,27 +64,24 @@ Feature: Periods and states
     And I can not modify the request
 
 #Final - will not change anymore
-#??# Accepted or Approved ?
   @periods_and_states @browser
-  Scenario: State "In inspection", "Accepted", "Denied" "Partially Accepted" for requester when budget period has ended
+  Scenario: State "In inspection", "Approved", "Denied" "Partially approved" for requester when budget period has ended
     Given I am Roger
     Given a request exists
     When the current date is after the budget period end date
     And the approved quantity is empty
-#??# if the budget inspection phase is over, we display normal states (as before the inspection phase)
-#     Then I see the state "In inspection"
-#     When the approved quantity is equal to the requested quantity
-#     Then I see the state "Approved"
-#     When the approved quantity is smaller than the requested quantity
-#     And the approved quantity is not equal 0
-#     Then I see the state "Partially approved"
-#     When the approved quantity is equal 0
-#     Then I see the state "Denied"
+    Then I see the state "New"
+    When the approved quantity is equal to the requested quantity
+    Then I see the state "Approved"
+    When the approved quantity is smaller than the requested quantity
+    And the approved quantity is not equal 0
+    Then I see the state "Partially approved"
+    When the approved quantity is equal 0
+    Then I see the state "Denied"
 
 #Final - will not change anymore
-#??# Accepted or Approved ?
   @periods_and_states @browser
-  Scenario Outline: State "New", "Accepted", "Denied" "Partially Accepted" for inspector
+  Scenario Outline: State "New", "Approved", "Denied" "Partially approved" for inspector
     Given I am Barbara
     Given a request exists
     When the approved quantity is <quantity>
@@ -130,12 +111,10 @@ Feature: Periods and states
       | Roger     |
 
 #Final - will not change anymore
-#??# merge with Scenario: Sorting of budget periods
   @periods_and_states @browser
   Scenario: Overview of Budget Periods
     Given I am Hans Ueli
     Given budget periods exist
-#!!# missing required step
     And I navigate to the budget periods
     Then the budget periods are sorted from 0-10 and a-z
 #??# total required costs instead?

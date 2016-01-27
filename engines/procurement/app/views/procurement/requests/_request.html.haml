@@ -1,4 +1,4 @@
-.row.request{data: {template_id: request.template_id}}
+.row.request{data: {request_id: request.id, template_id: request.template_id}}
   .col-xs-6
     - if request.editable?(current_user)
       %input{type: :hidden, name: "requests[#{request.id}][id]", value: request.id}

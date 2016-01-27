@@ -1,8 +1,10 @@
+require_relative 'helpers'
 require_relative 'personas_steps'
 require_relative 'placeholders'
 require File.join(Rails.root, 'features/support/dataset.rb')
 
 steps_for :periods_and_states do
+  include Helpers
   include PersonasSteps
 
   step 'there does not exist any budget period yet' do
@@ -147,19 +149,19 @@ steps_for :periods_and_states do
   end
 
   step 'the current date is before the inspection date' do
-    Dataset.back_to_date @request.budget_period.inspection_start_date - 1.day
+    back_to_date @request.budget_period.inspection_start_date - 1.day
     expect(Time.zone.today).to be < @request.budget_period.inspection_start_date
   end
 
   step 'the current date is between the inspection date ' \
        'and the budget period end date' do
-    Dataset.back_to_date(@request.budget_period.end_date - 1.day)
+    back_to_date(@request.budget_period.end_date - 1.day)
     expect(Time.zone.today).to be > @request.budget_period.inspection_start_date
     expect(Time.zone.today).to be < @request.budget_period.end_date
   end
 
   step 'the current date is after the budget period end date' do
-    Dataset.back_to_date @request.budget_period.end_date + 1.day
+    back_to_date @request.budget_period.end_date + 1.day
     expect(Time.zone.today).to be > @request.budget_period.end_date
   end
 
@@ -175,9 +177,9 @@ steps_for :periods_and_states do
 
   step 'I see the state :state' do |state|
     if @request.user_id == @current_user.id
-      step 'I go to my requests'
+      step 'I navigate to my requests'
     else
-      step 'I go to the inspection overview'
+      step 'I navigate to the inspection overview'
       step 'I inspect all groups'
     end
     step 'page has been loaded'

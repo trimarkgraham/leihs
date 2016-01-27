@@ -64,9 +64,10 @@ Feature: Section Users
 #Final - will not change anymore
   @users_and_organisations @browser
   Scenario: Sorting of requester
-#??# who? where?
-#    Given requesters exist
-#    Then the requesters are sorted 0-10 and a-z
+    Given I am Hans Ueli
+    Given requesters exist
+    When I navigate to the users list
+    Then the requesters are sorted 0-10 and a-z
 
 #Final - will not change anymore
   @users_and_organisations @browser
@@ -87,7 +88,5 @@ Feature: Section Users
     Given I am Hans Ueli
     Then I can view the organisation tree according to the organisations assigned to requester
     And the organisation tree shows the departments with its organisation units
-#??# the departments...
-    And the organisations are sorted from 0-10 and a-z
-#??# inside the departments...
-    And inside the organisations the departments are sorted from 0-10 and a-z
+    And the departments are sorted from 0-10 and a-z
+    And inside the departments the organisations are sorted from 0-10 and a-z

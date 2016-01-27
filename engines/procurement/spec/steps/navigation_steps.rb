@@ -1,17 +1,17 @@
 module NavigationSteps
-  step 'I go to my requests' do
+  step 'I navigate to my requests' do
     visit procurement.overview_user_requests_path(@current_user)
   end
 
-  step 'I go to the inspection overview' do
+  step 'I navigate to the inspection overview' do
     visit procurement.overview_requests_path
   end
 
-  step 'I go to the users list' do
+  step 'I navigate to the users list' do
     visit procurement.users_path
   end
 
-  step 'I go to the organizations list' do
+  step 'I navigate to the organizations list' do
     visit procurement.organizations_path
   end
 
@@ -24,6 +24,18 @@ module NavigationSteps
                                                              request.budget_period,
                                                              request.user)
   end
+
+  ############################################
+  # TODO refactor to a CommonSteps module?
+
+  step 'I click on save' do
+    click_on _('Save')
+  end
+
+  step 'I see a success message' do
+    expect(page).to have_content _('Saved')
+  end
+
 end
 
 RSpec.configure { |c| c.include NavigationSteps }

@@ -47,10 +47,6 @@ steps_for :procurement_groups do
     @budget_period = FactoryGirl.create(:procurement_budget_period)
   end
 
-  step 'I click on save' do
-    click_on _('Save')
-  end
-
   step 'I am redirected to the groups index page' do
     expect(current_path).to be == '/procurement/groups'
   end

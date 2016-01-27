@@ -11,6 +11,10 @@ module PersonasSteps
   step 'I am Roger' do
     persona = create_persona('Roger')
     FactoryGirl.create(:procurement_access, :requester, user: persona)
+    3.times do
+      FactoryGirl.create :procurement_request, user: persona
+    end
+    step 'a procurement admin exists'
     login_as persona
     visit '/procurement'
   end

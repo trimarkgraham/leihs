@@ -131,7 +131,7 @@ steps_for :users_and_organisations do
   end
 
   step 'I can add an admin' do
-    step 'I go to the users list'
+    step 'I navigate to the users list'
     admin_ids = Procurement::Access.admins.pluck(:user_id)
     user = User.not_as_delegations.where.not(id: admin_ids).order('RAND()').first \
             || FactoryGirl.create(:user)
@@ -142,6 +142,18 @@ steps_for :users_and_organisations do
     expect(Procurement::Access.admins.exists?(user.id)).to be true
   end
 
+  step 'requesters exist' do
+    step 'there exist 10 requesters'
+  end
+
+  step 'the requesters are sorted 0-10 and a-z' do
+    within '.panel', text: _('Requesters') do
+      texts = all('input[name="requesters[][name]"]').map &:value
+      expect(texts).to be == texts.sort
+      expect(texts.count).to be Procurement::Access.requesters.count
+    end
+  end
+
   step 'the admins are sorted alphabetically from a-z' do
     texts = all('.token-input-list .token-input-token').map &:text
     expect(texts).to be == texts.sort
@@ -149,7 +161,7 @@ steps_for :users_and_organisations do
   end
 
   step 'I can delete an admin' do
-    step 'I go to the users list'
+    step 'I navigate to the users list'
     user = Procurement::Access.admins.order('RAND()').first.user
     find('.token-input-list .token-input-token', text: user.name) \
       .find('.token-input-delete-token').click
@@ -160,7 +172,7 @@ steps_for :users_and_organisations do
   step 'I can view the organisation tree according ' \
        'to the organisations assigned to requester' do
     step 'there exist 10 requesters'
-    step 'I go to the organizations list'
+    step 'I navigate to the organizations list'
     Procurement::Access.requesters.each do |requester|
       find('li', text: requester.organization.parent.name) \
         .find('li', text: requester.organization.name) \
@@ -178,25 +190,17 @@ steps_for :users_and_organisations do
     end
   end
 
-  step 'the organisations are sorted from 0-10 and a-z' do
+  step 'the departments are sorted from 0-10 and a-z' do
     @roots = all('article .container-fluid > ul > li')
     texts = @roots.map {|x| x.find(:xpath, './b').text }
     expect(texts).to be == texts.sort
   end
 
-  step 'inside the organisations the departments are sorted from 0-10 and a-z' do
+  step 'inside the departments the organisations are sorted from 0-10 and a-z' do
     @roots.each do |root|
       texts = root.all(:xpath, './ul/li/b').map &:text
       expect(texts).to be == texts.sort
     end
-  end
-
-  step 'I click on save' do
-    click_on _('Save')
-  end
-
-  step 'I see a success message' do
-    expect(page).to have_content _('Saved')
   end
 
   private
