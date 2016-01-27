@@ -15,7 +15,7 @@ steps_for :procurement_groups do
     click_on _('Add')
   end
 
-  step 'there exists :count users to become the inspectors' do |count|
+  step 'there exist(s) :count user(s) to become the inspector(s)' do |count|
     @inspectors = []
     count.to_i.times do
       @inspectors << create_user(Faker::Name.first_name)
@@ -226,7 +226,23 @@ steps_for :procurement_groups do
 
   step 'the group line contains the email of the group' do
     group_line = find('table tbody tr', text: @group.email)
-    expect(group_line).to have_content @group.email
+    expect(group_line).to have_content @group.name
+  end
+
+  step 'there does not exist any procurement group yet' do
+    expect(Procurement::Group.exists?).to be false
+  end
+
+  step 'I leave the name empty' do
+    expect(find("input[name='group[name]']").value).to be_empty
+  end
+
+  step 'the name is marked red' do
+    expect(find("input[name='group[name]']")['required']).to be == 'true' # ;-)
+  end
+
+  step 'the new group has not been created' do
+    expect(Procurement::Group.exists?).to be false
   end
 
   private

@@ -65,12 +65,17 @@ Feature: Procurement Groups
     And the group line contains the name of the group's inspectors
     And the group line contains the email of the group
 
-# #Final - will not change anymore
-#   @personas
-#   Scenario: Mandatory fields
-#     Given I am Hans Ueli
-#     When I create a procurement group
-#     Then the group name is mandatory
-#     And the mandatory field is marked red
-#     When I save the request without entering the mandatory information
-#     Then I receive an error message
+#Final - will not change anymore
+  @procurement_groups @browser
+  Scenario: Procurement group required fields
+    Given I am Hans Ueli
+    And there does not exist any procurement group yet
+    And there exist 1 user to become the inspector
+    When I navigate to the groups page
+    And I click on the add button
+    And I fill in the inspectors' names
+    And I fill in the email
+    And I leave the name empty
+    And I click on save
+    Then the name is marked red
+    And the new group has not been created

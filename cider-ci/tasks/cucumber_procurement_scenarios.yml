@@ -64,6 +64,10 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/procurement_groups.feature:60
+- name: engines/procurement/spec/features/procurement_groups.feature:70
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/procurement_groups.feature:70
 - name: engines/procurement/spec/features/users_and_organisations.feature:5
   scripts:
     test:
