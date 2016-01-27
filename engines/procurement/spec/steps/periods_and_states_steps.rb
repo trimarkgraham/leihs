@@ -180,7 +180,8 @@ steps_for :periods_and_states do
       step 'I go to the inspection overview'
       step 'I inspect all groups'
     end
-    @el = find(".list-group-item[data-request_id='#{@request.id}'] .col-sm-1",
+    step 'page has been loaded'
+    @el = find(".list-group-item[data-request_id='#{@request.id}'] .label",
                text: _(state))
   end
 

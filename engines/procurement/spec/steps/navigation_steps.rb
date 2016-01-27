@@ -15,6 +15,10 @@ module NavigationSteps
     visit procurement.organizations_path
   end
 
+  step 'page has been loaded' do
+    expect(has_no_selector?(".spinner")).to be true
+  end
+
   def visit_request(request)
     visit procurement.group_budget_period_user_requests_path(request.group,
                                                              request.budget_period,
