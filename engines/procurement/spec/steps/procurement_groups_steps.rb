@@ -212,6 +212,23 @@ steps_for :procurement_groups do
     expect { @group.reload }.to raise_error ActiveRecord::RecordNotFound
   end
 
+  step 'the group line contains the name of the group' do
+    group_line = find('table tbody tr', text: @group.name)
+    expect(group_line).to have_content @group.name
+  end
+
+  step 'the group line contains the name of the group\'s inspectors' do
+    group_line = find('table tbody tr', text: @group.name)
+    @group.inspectors.each do |inspector|
+      expect(group_line).to have_content inspector.name
+    end
+  end
+
+  step 'the group line contains the email of the group' do
+    group_line = find('table tbody tr', text: @group.email)
+    expect(group_line).to have_content @group.email
+  end
+
   private
 
   def add_to_inspectors_field(name)

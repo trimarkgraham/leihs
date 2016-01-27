@@ -55,12 +55,15 @@ Feature: Procurement Groups
     Then the group disappears from the list
     And the group was successfully deleted from the database
 
-# #Final - will not change anymore
-#   Scenario: Overview of the procurement groups
-#     Given procurement groups exist
-#     Then the overview shows the names of the procurement groups
-#     And the overview shows the Inspectors per procurement group
-#     And the overview shows the email per procurement group
+#Final - will not change anymore
+  @procurement_groups @browser
+  Scenario: Overview of the procurement groups
+    Given I am Hans Ueli
+    And there exists a procurement group
+    When I navigate to the groups page
+    Then the group line contains the name of the group
+    And the group line contains the name of the group's inspectors
+    And the group line contains the email of the group
 
 # #Final - will not change anymore
 #   @personas
