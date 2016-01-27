@@ -18,6 +18,8 @@ RSpec.configure do |config|
 
   config.raise_error_for_unimplemented_steps = true
 
+  config.include Rails.application.routes.url_helpers
+
   unless ENV['CIDER_CI_TRIAL_ID'].present?
     require 'database_cleaner'
     DatabaseCleaner.strategy = :truncation

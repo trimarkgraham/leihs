@@ -26,21 +26,24 @@ Feature: Procurement Groups
     Then the procurement groups are sorted alphabetically
 
 #Final - will not change anymore
-  @procurement_groups @js
+  @procurement_groups @browser
   Scenario: Editing a procurement group
     Given I am Hans Ueli
     And there exists a procurement group
-    And there exists 3 budget limits for the procurement group
-    And the procurement group has 3 inspectors
-    # When I navigate to the group's edit page
-    # And I modify the name
-    # And I delete an inspector
-    # And I add an inspector
-    # And I modify the email address
-    # And I delete a budget limit
-    # And I add a budget limit
-    # And I modify a budget limit
-    # And I click on save
+    And there exists 2 budget limits for the procurement group
+    And the procurement group has 2 inspectors
+    And there exists an extra budget period
+    When I navigate to the group's edit page
+    And I modify the name
+    And I delete an inspector
+    And I add an inspector
+    And I modify the email address
+    And I delete a budget limit
+    And I add a budget limit
+    And I modify a budget limit
+    And I click on save
+    Then I see that the all the information of the procurement group was updated correctly
+    And all the information of the procurement group was successfully updated in the database
 
 # #Final - will not change anymore
 #   @personas

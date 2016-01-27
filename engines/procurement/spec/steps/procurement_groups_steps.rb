@@ -29,8 +29,7 @@ steps_for :procurement_groups do
 
   step 'I fill in the inspectors\' names' do
     @inspectors.each do |inspector|
-      find('.row', text: _('Inspectors')).find('input').set inspector.name
-      find('.token-input-dropdown', text: inspector.name).click
+      add_to_inspectors_field inspector.name
     end
   end
 
@@ -41,9 +40,7 @@ steps_for :procurement_groups do
 
   step 'I fill in the budget limit' do
     @limit = 1000
-    find('.row', text: @budget_period.name)
-      .find("input[name*='amount']")
-      .set @limit
+    set_budget_limit @budget_period.name, @limit
   end
 
   step 'a budget period exist' do
@@ -101,5 +98,68 @@ steps_for :procurement_groups do
     count.to_i.times do
       @group.inspectors << create_user(Faker::Name.first_name)
     end
+  end
+
+  step 'I navigate to the group\'s edit page' do
+    visit procurement.edit_group_path(@group)
+  end
+
+  step 'I modify the name' do
+    @new_name = Faker::Lorem.word
+    find("input[name='group[name]']").set @new_name
+  end
+
+  step 'I delete an inspector' do
+    @deleted_inspector = @group.inspectors.first
+    find('.row', text: _('Inspectors'))
+      .find('.token-input-token', text: @deleted_inspector.name)
+      .find('.token-input-delete-token')
+      .click
+  end
+
+  step 'I add an inspector' do
+    @new_inspector = create_user(Faker::Name.first_name)
+    add_to_inspectors_field @new_inspector.name
+  end
+
+  step 'I modify the email address' do
+    @new_email = Faker::Internet.email
+    find("input[name='group[email]']").set @new_email
+  end
+
+  step 'I delete a budget limit' do
+    @delete_limit = @group.budget_limits.first
+    set_budget_limit @delete_limit.budget_period.name, 0
+  end
+
+  step 'I add a budget limit' do
+    @new_limit = 2000
+    set_budget_limit @extra_budget_period.name, @new_limit
+  end
+
+  step 'I modify a budget limit' do
+    @modified_limit = 3000
+    set_budget_limit @group.budget_limits.last.budget_period.name,
+                     @modified_limit
+  end
+
+  step 'there exists an extra budget period' do
+    @extra_budget_period = FactoryGirl.create(:procurement_budget_period)
+  end
+
+  step 'I see that the all the information of the procurement group was updated correctly' do
+  end
+
+  private
+
+  def add_to_inspectors_field(name)
+    find('.row', text: _('Inspectors')).find('input').set name
+    find('.token-input-dropdown', text: name).click
+  end
+
+  def set_budget_limit(name, limit)
+    find('.row', text: name)
+      .find("input[name*='amount']")
+      .set limit
   end
 end
