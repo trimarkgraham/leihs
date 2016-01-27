@@ -18,7 +18,7 @@ Feature: Procurement Groups
     And the new group was created in the database
 
 #Final - will not change anymore
-  @procurement_groups @js
+  @procurement_groups @browser
   Scenario: Sorting of Procurement Groups
     Given I am Hans Ueli
     And 3 procurement groups exist
