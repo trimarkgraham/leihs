@@ -104,7 +104,7 @@ Feature: Periods and states
     Given I am Barbara
     Given a request exists
     When the approved quantity is <quantity>
-    Then I see the state <state>
+    Then I see the state "<state>"
     Examples:
       | quantity                                         | state              |
       | empty                                            | New                |

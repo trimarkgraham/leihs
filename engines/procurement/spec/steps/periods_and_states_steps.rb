@@ -173,7 +173,7 @@ steps_for :periods_and_states do
     el.all(:checkbox).each { |x| x.set true }
   end
 
-  step 'I see the state :string_with_spaces' do |string_with_spaces|
+  step 'I see the state :state' do |state|
     if @request.user_id == @current_user.id
       step 'I go to my requests'
     else
@@ -181,7 +181,7 @@ steps_for :periods_and_states do
       step 'I inspect all groups'
     end
     @el = find(".list-group-item[data-request_id='#{@request.id}'] .col-sm-1",
-               text: _(string_with_spaces))
+               text: _(state))
   end
 
   step 'I can not modify the request' do
