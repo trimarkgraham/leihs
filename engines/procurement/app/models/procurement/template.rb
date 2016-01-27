@@ -11,7 +11,7 @@ module Procurement
     validates_presence_of :article_name
 
     def to_s
-      '%s - %s %s' % [article_name, price.currency, price.to_i]
+      article_name
     end
 
   end

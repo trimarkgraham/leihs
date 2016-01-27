@@ -134,6 +134,13 @@ module Procurement
       end
     end
 
+    def new
+      redirect_to root_path if @budget_period.past?
+
+      @template_categories = TemplateCategory.all
+      @groups = Procurement::Group.all
+    end
+
     def create
       keys = [:article_name, :model_id, :article_number, :price, :supplier_name,
               :supplier_id, :motivation, :receiver, :location_name, :location_id,

@@ -5,14 +5,4 @@
     .label.label-info= @group.templates.count
   %br
 
-%h4
-  = _('Custom articles')
-.panel-group(id="accordion")
-  - @group.template_categories.each do |template_category|
-    .panel.panel-info
-      .panel-heading(role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_#{template_category.id}")
-        = template_category
-      .list-group(id="collapse_#{template_category.id}" class="panel-collapse collapse")
-        - template_category.templates.each do |template|
-          %a.list-group-item.show_template{href: '#', data: {template_id: template.id}}
-            = template
+= render partial: 'procurement/templates/categories', locals: {template_categories: @group.template_categories}

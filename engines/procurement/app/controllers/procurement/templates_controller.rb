@@ -3,20 +3,12 @@ require_dependency 'procurement/application_controller'
 module Procurement
   class TemplatesController < ApplicationController
 
-    before_action except: :choose do
+    before_action do
       @group = Procurement::Group.find(params[:group_id])
 
       unless @group.inspectable_by?(current_user)
         redirect_to root_path
       end
-    end
-
-    def choose
-      @budget_period = BudgetPeriod.find(params[:budget_period_id])
-      redirect_to root_path if @budget_period.past?
-
-      @user = User.not_as_delegations.find(params[:user_id])
-      @template_categories = TemplateCategory.all
     end
 
     def index

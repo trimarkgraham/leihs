@@ -8,7 +8,7 @@
           %i.fa.fa-calendar
           = budget_period
           - if @user and not budget_period.past?
-            %a{href: choose_user_budget_period_templates_path(@user, budget_period)}
+            %a{href: new_user_budget_period_request_path(@user, budget_period)}
               %i.fa.fa-plus-circle
         .col-sm-6
           = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}

@@ -212,7 +212,7 @@ steps_for :periods_and_states do
 
   step 'I can not create any request for the budget period which has ended' do
     path = \
-      procurement.choose_user_budget_period_templates_path(@current_user,
+      procurement.new_user_budget_period_request_path(@current_user,
                                                            @request.budget_period)
     visit path
     expect(current_path).to_not eq path
