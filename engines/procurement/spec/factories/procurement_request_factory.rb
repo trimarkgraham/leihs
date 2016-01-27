@@ -8,6 +8,6 @@ FactoryGirl.define do
     association :group, factory: :procurement_group
     article_name { Faker::Lorem.sentence }
     motivation { Faker::Lorem.sentence }
-    requested_quantity { rand(0..20) }
+    requested_quantity { rand(1..20) }
   end
 end
