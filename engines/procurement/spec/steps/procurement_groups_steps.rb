@@ -193,6 +193,25 @@ steps_for :procurement_groups do
       .to be == 0
   end
 
+  step 'there exists a procurement group without any requests' do
+    @group = FactoryGirl.create(:procurement_group)
+    expect(@group.requests).to be_empty
+  end
+
+  step 'I delete the group' do
+    group_line = find('table tbody tr', text: @group.name)
+    group_line.find('.dropdown-toggle').click
+    accept_alert { group_line.click_on _('Delete') }
+  end
+
+  step 'the group disappears from the list' do
+    expect(find('table')).not_to have_content @group.name
+  end
+
+  step 'the group was successfully deleted from the database' do
+    expect { @group.reload }.to raise_error ActiveRecord::RecordNotFound
+  end
+
   private
 
   def add_to_inspectors_field(name)

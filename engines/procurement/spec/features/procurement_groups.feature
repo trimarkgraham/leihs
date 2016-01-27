@@ -45,12 +45,15 @@ Feature: Procurement Groups
     Then I see that the all the information of the procurement group was updated correctly
     And all the information of the procurement group was successfully updated in the database
 
-# #Final - will not change anymore
-#   @personas
-#   Scenario: Deleting a procurement group
-#     Given I am Hans Ueli
-#     When a procurement group does not yet have any requests
-#     Then I can delete the procurement group
+#Final - will not change anymore
+  @procurement_groups @browser
+  Scenario: Deleting a procurement group
+    Given I am Hans Ueli
+    And there exists a procurement group without any requests
+    When I navigate to the groups page
+    And I delete the group
+    Then the group disappears from the list
+    And the group was successfully deleted from the database
 
 # #Final - will not change anymore
 #   Scenario: Overview of the procurement groups
