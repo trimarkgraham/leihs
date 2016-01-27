@@ -10,10 +10,6 @@ Capybara.register_driver :firefox do |app|
   Capybara::Selenium::Driver.new app, browser: :firefox
 end
 
-Capybara.register_driver :phantomjs do |app|
-  Capybara::Selenium::Driver.new app, browser: :phantomjs
-end
-
 RSpec.configure do |config|
 
   config.raise_error_for_unimplemented_steps = true
@@ -45,13 +41,4 @@ RSpec.configure do |config|
   config.after(browser: true) do
     Capybara.current_driver = Capybara.default_driver
   end
-
-  config.before(js: true) do
-    Capybara.current_driver = :phantomjs
-  end
-
-  config.after(js: true) do
-    Capybara.current_driver = Capybara.default_driver
-  end
-
 end
