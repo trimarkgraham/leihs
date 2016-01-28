@@ -51,5 +51,11 @@ module Procurement
         scope
       end
     end
+
+    private
+
+    def admin?
+      Access.admin?(user)
+    end
   end
 end

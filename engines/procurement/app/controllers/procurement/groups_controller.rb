@@ -3,7 +3,13 @@ require_dependency 'procurement/application_controller'
 module Procurement
   class GroupsController < ApplicationController
 
-    before_action :require_admin_role
+    before_action do
+      authorize Group
+    end
+
+    rescue_from Pundit::NotAuthorizedError do
+      redirect_to root_path
+    end
 
     before_action only: [:create, :update] do
       params[:group][:inspector_ids] = \
