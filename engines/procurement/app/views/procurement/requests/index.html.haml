@@ -80,7 +80,7 @@
                 .form-group
                   %label.col-xs-4.control-label
                     = "%s %s" % [_('Item price'), MoneyRails.default_currency]
-                    %span.small=_('incl. VAT')
+                    %span.small= _('incl. VAT')
                   .col-xs-4
                     %input{type: :hidden, name: "requests[new_#{i}][price]", value: template.price}
                     .label.label-primary
@@ -185,7 +185,7 @@
             .form-group
               %label.col-xs-4.control-label
                 = "%s %s" % [_('Item price'), MoneyRails.default_currency]
-                %span.small=_('incl. VAT')
+                %span.small= _('incl. VAT')
               .col-xs-4
                 %input.form-control{name: "requests[new_#{i}][price]", type: :number, min: 0, placeholder: ("%s %s" % [_('Item price'), _('incl. VAT')]), autocomplete: :off}
               .col-xs-4
