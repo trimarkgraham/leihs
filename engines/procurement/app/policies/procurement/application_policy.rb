@@ -2,6 +2,8 @@ module Procurement
   class ApplicationPolicy
     attr_reader :user, :record
 
+    ############# PUNDIT DEFAULTS ##################
+
     def initialize(user, record)
       @user = user
       @record = record
@@ -51,6 +53,8 @@ module Procurement
         scope
       end
     end
+
+    ################################################
 
     private
 

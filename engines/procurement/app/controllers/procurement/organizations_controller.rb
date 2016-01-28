@@ -3,7 +3,13 @@ require_dependency 'procurement/application_controller'
 module Procurement
   class OrganizationsController < ApplicationController
 
-    before_action :require_admin_role
+    before_action do
+      authorize Organization
+    end
+
+    rescue_from Pundit::NotAuthorizedError do
+      redirect_to root_path
+    end
 
     def index
       @organizations = Organization.roots
