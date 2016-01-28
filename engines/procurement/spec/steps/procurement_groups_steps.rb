@@ -48,7 +48,7 @@ steps_for :procurement_groups do
   end
 
   step 'I am redirected to the groups index page' do
-    expect(current_path).to be == '/procurement/groups'
+    expect(current_path).to eq '/procurement/groups'
   end
 
   step 'the new group appears in the list' do
@@ -58,12 +58,12 @@ steps_for :procurement_groups do
   step 'the new group was created in the database' do
     group = Procurement::Group.find_by_name(@name)
     expect(group).to be
-    expect(group.name).to be == @name
-    expect(group.email).to be == @email
+    expect(group.name).to eq @name
+    expect(group.email).to eq @email
     @inspectors.each do |inspector|
       expect(group.inspectors).to include inspector
     end
-    expect(group.budget_limits.first.amount_cents).to be == (@limit * 100)
+    expect(group.budget_limits.first.amount_cents).to eq (@limit * 100)
   end
 
   step ':count procurement groups exist' do |count|
@@ -75,7 +75,7 @@ steps_for :procurement_groups do
 
   step 'the procurement groups are sorted alphabetically' do
     names = all('table tbody tr td:first-child').map(&:text)
-    expect(names).to be == @groups.map(&:name).sort
+    expect(names).to eq @groups.map(&:name).sort
   end
 
   step 'there exists a procurement group' do
@@ -158,35 +158,35 @@ steps_for :procurement_groups do
   step 'all the information of the procurement group ' \
        'was successfully updated in the database' do
     @group.reload
-    expect(@group.name).to be == @new_name
+    expect(@group.name).to eq @new_name
     expect(@group.inspectors.map(&:name)).to include @new_inspector.name
     expect(@group.inspectors.map(&:name)).not_to include @deleted_inspector.name
     @rest_inspectors.each do |r_inspector|
       expect(@group.inspectors.map(&:name)).to include r_inspector.name
     end
-    expect(@group.email).to be == @new_email
-    expect(@group.budget_limits.count).to be == 3
+    expect(@group.email).to eq @new_email
+    expect(@group.budget_limits.count).to eq 3
     expect(
       @group
       .budget_limits
       .find_by_budget_period_id(@extra_budget_period.id)
       .amount_cents
     )
-      .to be == (@new_limit * 100)
+      .to eq (@new_limit * 100)
     expect(
       @group
       .budget_limits
       .find_by_budget_period_id(@modified_budget_limit.budget_period_id)
       .amount_cents
     )
-      .to be == (@modified_limit * 100)
+      .to eq (@modified_limit * 100)
     expect(
       @group
       .budget_limits
       .find_by_budget_period_id(@deleted_budget_limit.budget_period_id)
       .amount_cents
     )
-      .to be == 0
+      .to eq 0
   end
 
   step 'there exists a procurement group without any requests' do
@@ -234,7 +234,7 @@ steps_for :procurement_groups do
   end
 
   step 'the name is marked red' do
-    expect(find("input[name='group[name]']")['required']).to be == 'true' # ;-)
+    expect(find("input[name='group[name]']")['required']).to eq 'true' # ;-)
   end
 
   step 'the new group has not been created' do

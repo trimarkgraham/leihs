@@ -8,7 +8,7 @@ steps_for :periods_and_states do
   include PersonasSteps
 
   step 'there does not exist any budget period yet' do
-    expect(Procurement::BudgetPeriod.count).to be == 0
+    expect(Procurement::BudgetPeriod.count).to eq 0
   end
 
   step 'I navigate to the budget periods' do
@@ -65,7 +65,7 @@ steps_for :periods_and_states do
 
   step 'the budget periods are sorted from 0-10 and a-z' do
     names = all('form table tbody tr td:first-child input').map(&:value)
-    expect(names).to be == @budget_periods.map(&:name).sort
+    expect(names).to eq @budget_periods.map(&:name).sort
   end
 
   step 'a budget period without any requests exists' do
@@ -117,20 +117,20 @@ steps_for :periods_and_states do
 
   step 'the budget period line was updated successfully' do
     within find_budget_period_line_by_name(@new_name) do
-      expect(find("input[name*='name']").value).to be == @new_name
+      expect(find("input[name*='name']").value).to eq @new_name
       expect(find("input[name*='inspection_start_date']").value)
-        .to be == format_date(@new_inspection_start_date)
+        .to eq format_date(@new_inspection_start_date)
       expect(find("input[name*='end_date']").value)
-        .to be == format_date(@new_end_date)
+        .to eq format_date(@new_end_date)
     end
   end
 
   step 'the data for the budget period was updated successfully in the database' do
     @budget_period.reload
-    expect(@budget_period.name).to be == @new_name
+    expect(@budget_period.name).to eq @new_name
     expect(@budget_period.inspection_start_date)
-      .to be == @new_inspection_start_date
-    expect(@budget_period.end_date).to be == @new_end_date
+      .to eq @new_inspection_start_date
+    expect(@budget_period.end_date).to eq @new_end_date
   end
 
   step 'I set the end date of the budget period equal or later than today' do

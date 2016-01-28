@@ -12,7 +12,7 @@ steps_for :users_and_organisations do
   end
 
   step 'there does not exist any requester yet' do
-    expect(Procurement::Access.requesters.count).to be == 0
+    expect(Procurement::Access.requesters.count).to eq 0
   end
 
   step 'there is an empty requester line for creating a new one' do
@@ -55,7 +55,7 @@ steps_for :users_and_organisations do
                   when 'organization'
                     line.find("input[name*='organization']")
                   end
-    expect(input_field['required']).to be == 'true' # ;-)
+    expect(input_field['required']).to eq 'true' # ;-)
   end
 
   step 'the new requester has not been created' do
@@ -115,15 +115,15 @@ steps_for :users_and_organisations do
       .to raise_error Capybara::ElementNotFound
     line = find_requester_line(@extra_user.name)
     expect(line.find("input[name*='department']").value)
-      .to be == @new_department
+      .to eq @new_department
     expect(line.find("input[name*='organization']").value)
-      .to be == @new_organization
+      .to eq @new_organization
   end
 
   step 'the requester information was changed successfully in the database' do
     expect(Procurement::Access.find_by_user_id(@user.id)).not_to be
     access = Procurement::Access.find_by_user_id(@extra_user.id)
-    expect(access.organization.name).to be == @new_organization
+    expect(access.organization.name).to eq @new_organization
     dep = Procurement::Organization.find_by_name(@new_department)
     expect(dep).to be
     expect(dep.children).to \
@@ -149,14 +149,14 @@ steps_for :users_and_organisations do
   step 'the requesters are sorted 0-10 and a-z' do
     within '.panel', text: _('Requesters') do
       texts = all('input[name="requesters[][name]"]').map &:value
-      expect(texts).to be == texts.sort
+      expect(texts).to eq texts.sort
       expect(texts.count).to be Procurement::Access.requesters.count
     end
   end
 
   step 'the admins are sorted alphabetically from a-z' do
     texts = all('.token-input-list .token-input-token').map &:text
-    expect(texts).to be == texts.sort
+    expect(texts).to eq texts.sort
     expect(texts.count).to be Procurement::Access.admins.count
   end
 
@@ -193,13 +193,13 @@ steps_for :users_and_organisations do
   step 'the departments are sorted from 0-10 and a-z' do
     @roots = all('article .container-fluid > ul > li')
     texts = @roots.map {|x| x.find(:xpath, './b').text }
-    expect(texts).to be == texts.sort
+    expect(texts).to eq texts.sort
   end
 
   step 'inside the departments the organisations are sorted from 0-10 and a-z' do
     @roots.each do |root|
       texts = root.all(:xpath, './ul/li/b').map &:text
-      expect(texts).to be == texts.sort
+      expect(texts).to eq texts.sort
     end
   end
 

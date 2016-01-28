@@ -35,7 +35,7 @@ steps_for :requests do
 
     step 'I click on save'
     step 'I see a success message'
-    expect(request.reload.motivation).to be == text
+    expect(request.reload.motivation).to eq text
   end
 
   step 'I can change the budget period of my request' do
