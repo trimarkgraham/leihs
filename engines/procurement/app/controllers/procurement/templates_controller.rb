@@ -2,13 +2,17 @@ require_dependency 'procurement/application_controller'
 
 module Procurement
   class TemplatesController < ApplicationController
+    def self.policy_class
+      GroupPolicy
+    end
 
     before_action do
       @group = Procurement::Group.find(params[:group_id])
+      authorize @group, :inspectable_by_user?
+    end
 
-      unless @group.inspectable_by?(current_user)
-        redirect_to root_path
-      end
+    rescue_from Pundit::NotAuthorizedError do
+      redirect_to root_path
     end
 
     def index

@@ -23,5 +23,9 @@ module Procurement
     def destroy?
       admin?
     end
+
+    def inspectable_by_user?
+      record.inspectable_by?(user)
+    end
   end
 end
