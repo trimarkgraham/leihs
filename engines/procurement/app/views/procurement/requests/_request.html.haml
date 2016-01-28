@@ -65,9 +65,9 @@
         = _('Priority')
       .col-xs-8
         - if request.editable?(current_user) and request.user_id == current_user.id
-          - ['high', 'normal'].each do |priority|
+          - ['High', 'Normal'].each do |priority|
             %label
-              %input{type: :radio, name: "requests[#{request.id}][priority]", value: priority, checked: request.priority == priority}
+              %input{type: :radio, name: "requests[#{request.id}][priority]", value: priority.downcase, checked: request.priority == priority.downcase}
               .label.label-default= _(priority)
         - else
           .label.label-default= _(request.priority)

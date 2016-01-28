@@ -3052,10 +3052,10 @@ msgstr ""
 msgid "Request moved"
 msgstr ""
 
-msgid "high"
+msgid "High"
 msgstr ""
 
-msgid "normal"
+msgid "Normal"
 msgstr ""
 
 msgid "Are you sure you want to delete '%s'?"

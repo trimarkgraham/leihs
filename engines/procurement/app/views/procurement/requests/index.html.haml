@@ -60,12 +60,10 @@
                   %label.col-xs-4.control-label
                     = _('Priority')
                   .col-xs-8
-                    %label
-                      %input{type: :radio, name: "requests[new_#{i}][priority]", value: 'high'}
-                      .label.label-default= _('high')
-                    %label
-                      %input{type: :radio, name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
-                      .label.label-default= _('normal')
+                    - ['High', 'Normal'].each do |priority|
+                      %label
+                        %input{type: :radio, name: "requests[new_#{i}][priority]", value: priority.downcase, checked: 'normal' == priority.downcase}
+                        .label.label-default= _(priority)
                 .form-group
                   %label.col-xs-4.control-label
                     = "%s / %s" % [_('Replacement'), _('New')]
@@ -165,12 +163,10 @@
               %label.col-xs-4.control-label
                 = _('Priority')
               .col-xs-8
-                %label
-                  %input{type: :radio, name: "requests[new_#{i}][priority]", value: 'high'}
-                  .label.label-default= _('high')
-                %label
-                  %input{type: :radio, name: "requests[new_#{i}][priority]", value: 'normal', checked: true}
-                  .label.label-default= _('normal')
+                - ['High', 'Normal'].each do |priority|
+                  %label
+                    %input{type: :radio, name: "requests[new_#{i}][priority]", value: priority.downcase, checked: 'normal' == priority.downcase}
+                    .label.label-default= _(priority)
             .form-group
               %label.col-xs-4.control-label
                 = "%s / %s" % [_('Replacement'), _('New')]

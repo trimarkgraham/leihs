@@ -118,27 +118,27 @@ Feature: requests (state-behaviour described in seperate feature-file)
 #  Scenario: Count the Total of all my requests
 #    Given I am Roger
 #    Then I see the total of my requests of a procurement group
-#
-##Final - will not change anymore
-#  @requests @browser
-#  Scenario: Priority values
-#    Given I am Roger
-#    When I create a request
-#    Then I can choose the following priority-values
-#    |High|
-#    |Normal|
-#    And the value "Normal" is set by default
-#
-##Final - will not change anymore
-#  @requests @browser
-#  Scenario: Prefill field "Replacement / New"
-#    Given I am Roger
-#    When I create a request
-#    Then I can choose the following priority-values
-#    |Replacement|
-#    |New|
-#    And the value "Replacement" is set by default
-#
+
+#Final - will not change anymore
+  @requests @browser
+  Scenario: Priority values
+    Given I am Roger
+    When I create a request
+    Then the priority value "Normal" is set by default
+    And I can choose the following priority values
+      | High   |
+      | Normal |
+
+#Final - will not change anymore
+  @requests @browser
+  Scenario: Prefill field "Replacement / New"
+    Given I am Roger
+    When I create a request
+    Then the replacement value "Replacement" is set by default
+    And I can choose the following replacement values
+      | Replacement |
+      | New         |
+
 #  @requests @browser
 #  Scenario: Delete an attachment
 #    Given I am Roger

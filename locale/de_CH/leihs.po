@@ -3149,10 +3149,10 @@ msgstr "Artikel auswählen"
 msgid "Request moved"
 msgstr "Antrag Verschoben"
 
-msgid "high"
+msgid "High"
 msgstr "hoch"
 
-msgid "normal"
+msgid "Normal"
 msgstr "normal"
 
 msgid "Are you sure you want to delete '%s'?"

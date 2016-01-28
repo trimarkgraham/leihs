@@ -58,9 +58,9 @@
         %i.fa.fa-sort-amount-asc
         = _('Priority')
       %ul
-        - ['high', 'normal'].each do |priority|
+        - ['High', 'Normal'].each do |priority|
           %label
-            %input{type: :checkbox, name: "filter[priorities][]", value: priority, checked: params[:filter][:priorities].include?(priority)}
+            %input{type: :checkbox, name: "filter[priorities][]", value: priority.downcase, checked: params[:filter][:priorities].include?(priority.downcase)}
             .label.label-default= _(priority)
 
     .form-group

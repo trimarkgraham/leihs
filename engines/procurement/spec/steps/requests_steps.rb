@@ -105,6 +105,38 @@ steps_for :requests do
     end
   end
 
+  step 'the :field value :value is set by default' do |field, value|
+    within "#new_request" do
+      label = case field
+                when 'priority'
+                  _('Priority')
+                when 'replacement'
+                  "%s / %s" % [_('Replacement'), _('New')]
+              end
+      within '.form-group', text: label do
+        within 'label', text: /^#{_(value)}$/ do
+          find("input[type='radio']:checked")
+        end
+      end
+    end
+  end
+
+  step 'I can choose the following :field values' do |field, table|
+    within "#new_request" do
+      label = case field
+                when 'priority'
+                  _('Priority')
+                when 'replacement'
+                  "%s / %s" % [_('Replacement'), _('New')]
+              end
+      within '.form-group', text: label do
+        table.raw.flatten.each do |value|
+          choose _(value)
+        end
+      end
+    end
+  end
+
   private
 
   def get_current_request(user)
