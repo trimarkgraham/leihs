@@ -17,16 +17,13 @@ module Procurement
       @budget_period = \
         BudgetPeriod.find(params[:budget_period_id]) if params[:budget_period_id]
 
-      if @user != current_user and \
-        not Procurement::Group.inspector_of_any_group_or_admin?(current_user)
-        redirect_to root_path
+      if not RequestPolicy.new(current_user, request_user: @user).allowed?
+        raise Pundit::NotAuthorizedError
       end
     end
 
-    before_action only: :index do
-      @requests = Request.all
-      @requests = @requests.where(user_id: @user) if @user
-      @requests = @requests.where(group_id: @group) if @group
+    rescue_from Pundit::NotAuthorizedError do
+      redirect_to root_path
     end
 
     before_action only: [:move, :destroy] do
@@ -36,6 +33,9 @@ module Procurement
     end
 
     def index
+      @requests = Request.all
+      @requests = @requests.where(user_id: @user) if @user
+      @requests = @requests.where(group_id: @group) if @group
       @requests = @requests.where(budget_period_id: @budget_period)
 
       respond_to do |format|
@@ -246,6 +246,5 @@ module Procurement
         session[:requests_filter] = params[:filter]
       end
     end
-
   end
 end
