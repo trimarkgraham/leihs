@@ -1,30 +1,15 @@
 ---
 tasks:
-- name: helpers.rb
+- name: users_and_organisations_steps.rb
   scripts:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/helpers.rb
-- name: navigation_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/navigation_steps.rb
+        engines/procurement/spec/steps/users_and_organisations_steps.rb
 - name: periods_and_states_steps.rb
   scripts:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/periods_and_states_steps.rb
-- name: personas_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/personas_steps.rb
-- name: placeholders.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/placeholders.rb
 - name: procurement_groups_steps.rb
   scripts:
     test:
@@ -35,8 +20,28 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/requests_steps.rb
-- name: users_and_organisations_steps.rb
+- name: navigation_steps.rb
   scripts:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/users_and_organisations_steps.rb
+        engines/procurement/spec/steps/navigation_steps.rb
+- name: roles_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/roles_steps.rb
+- name: helpers.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/helpers.rb
+- name: personas_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/personas_steps.rb
+- name: placeholders.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/placeholders.rb
