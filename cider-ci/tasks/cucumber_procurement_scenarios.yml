@@ -80,6 +80,14 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/requests.feature:110
+- name: engines/procurement/spec/features/requests.feature:124
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/requests.feature:124
+- name: engines/procurement/spec/features/requests.feature:134
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/requests.feature:134
 - name: engines/procurement/spec/features/roles.feature:5
   scripts:
     test:
