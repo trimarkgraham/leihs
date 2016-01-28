@@ -6,7 +6,7 @@ steps_for :requests do
   include PersonasSteps
 
   step 'the current date has not yet reached the inspection start date' do
-    back_to_date Procurement::BudgetPeriod.current.inspection_start_date - 1.day
+    travel_to_date Procurement::BudgetPeriod.current.inspection_start_date - 1.day
     expect(Time.zone.today).to be < \
       Procurement::BudgetPeriod.current.inspection_start_date
   end
@@ -20,7 +20,7 @@ steps_for :requests do
       click_on _('Delete')
     end
 
-    expect(page).to h9ave_content _('Deleted')
+    expect(page).to have_content _('Deleted')
     expect{request.reload}.to raise_error ActiveRecord::RecordNotFound
   end
 

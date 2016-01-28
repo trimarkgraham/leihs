@@ -145,23 +145,27 @@ steps_for :periods_and_states do
 
   step 'a request exists' do
     step 'a procurement admin exists'
-    @request = FactoryGirl.create(:procurement_request, user: @current_user)
+    @request = if Procurement::Access.requesters.find_by(user_id: @current_user.id)
+                 FactoryGirl.create(:procurement_request, user: @current_user)
+               else
+                 FactoryGirl.create(:procurement_request)
+               end
   end
 
   step 'the current date is before the inspection date' do
-    back_to_date @request.budget_period.inspection_start_date - 1.day
+    travel_to_date @request.budget_period.inspection_start_date - 1.day
     expect(Time.zone.today).to be < @request.budget_period.inspection_start_date
   end
 
   step 'the current date is between the inspection date ' \
        'and the budget period end date' do
-    back_to_date(@request.budget_period.end_date - 1.day)
+    travel_to_date(@request.budget_period.end_date - 1.day)
     expect(Time.zone.today).to be > @request.budget_period.inspection_start_date
     expect(Time.zone.today).to be < @request.budget_period.end_date
   end
 
   step 'the current date is after the budget period end date' do
-    back_to_date @request.budget_period.end_date + 1.day
+    travel_to_date @request.budget_period.end_date + 1.day
     expect(Time.zone.today).to be > @request.budget_period.end_date
   end
 

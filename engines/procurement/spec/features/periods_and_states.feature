@@ -65,19 +65,18 @@ Feature: Periods and states
 
 #Final - will not change anymore
   @periods_and_states @browser
-  Scenario: State "In inspection", "Approved", "Denied" "Partially approved" for requester when budget period has ended
+  Scenario Outline: State "In inspection", "Approved", "Denied" "Partially approved" for requester when budget period has ended
     Given I am Roger
     Given a request exists
-    When the current date is after the budget period end date
-    And the approved quantity is empty
-    Then I see the state "New"
-    When the approved quantity is equal to the requested quantity
-    Then I see the state "Approved"
-    When the approved quantity is smaller than the requested quantity
-    And the approved quantity is not equal 0
-    Then I see the state "Partially approved"
-    When the approved quantity is equal 0
-    Then I see the state "Denied"
+    When the approved quantity is <quantity>
+    And the current date is after the budget period end date
+    Then I see the state "<state>"
+    Examples:
+      | quantity                                         | state              |
+      | empty                                            | New                |
+      | equal to the requested quantity                  | Approved           |
+      | smaller than the requested quantity, not equal 0 | Partially approved |
+      | equal 0                                          | Denied             |
 
 #Final - will not change anymore
   @periods_and_states @browser

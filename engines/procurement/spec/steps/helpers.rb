@@ -1,6 +1,6 @@
 module Helpers
 
-  def back_to_date(datetime = nil)
+  def travel_to_date(datetime = nil)
     if datetime
       Timecop.travel datetime
     else
