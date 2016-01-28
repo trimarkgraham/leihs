@@ -1,6 +1,7 @@
 module Procurement
   class ApplicationController < ActionController::Base
     include MainHelpers
+    include Pundit
 
     before_action :require_login, :require_admins, except: :root
 
