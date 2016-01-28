@@ -145,7 +145,7 @@ steps_for :periods_and_states do
 
   step 'a request exists' do
     step 'a procurement admin exists'
-    @request = FactoryGirl.create(:procurement_request)
+    @request = FactoryGirl.create(:procurement_request, user: @current_user)
   end
 
   step 'the current date is before the inspection date' do
@@ -169,10 +169,18 @@ steps_for :periods_and_states do
     step 'the current date is after the budget period end date'
   end
 
-  step 'I inspect all groups' do
-    el = find('.form-group', text: _('Groups')).find('.btn-group')
-    el.find('button.multiselect').click
-    el.all(:checkbox).each { |x| x.set true }
+  step 'I select all :string_with_spaces' do |string_with_spaces|
+    text = case string_with_spaces
+             when 'groups'
+               _('Groups')
+             when 'budget periods'
+               _('Budget periods')
+           end
+    within find('.form-group', text: text).find('.btn-group') do
+      find('button.multiselect').click
+      all(:checkbox).each { |x| x.set true }
+      find('button.multiselect').click
+    end
   end
 
   step 'I see the state :state' do |state|
@@ -180,11 +188,12 @@ steps_for :periods_and_states do
       step 'I navigate to my requests'
     else
       step 'I navigate to the inspection overview'
-      step 'I inspect all groups'
     end
+    step 'I select all budget periods'
+    step 'I select all groups'
     step 'page has been loaded'
-    @el = find(".list-group-item[data-request_id='#{@request.id}'] .label",
-               text: _(state))
+    @el = find(".list-group-item[data-request_id='#{@request.id}']")
+    @el.find(".label", text: _(state))
   end
 
   step 'I can not modify the request' do
