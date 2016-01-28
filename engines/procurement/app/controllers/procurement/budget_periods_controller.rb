@@ -3,7 +3,13 @@ require_dependency 'procurement/application_controller'
 module Procurement
   class BudgetPeriodsController < ApplicationController
 
-    before_action :require_admin_role
+    before_action do
+      authorize BudgetPeriod
+    end
+
+    rescue_from Pundit::NotAuthorizedError do
+      redirect_to root_path
+    end
 
     def index
       @budget_periods = BudgetPeriod.order(end_date: :asc)
