@@ -56,8 +56,6 @@ module Procurement
 
     ################################################
 
-    private
-
     def admin?
       Access.admin?(user)
     end
