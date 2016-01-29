@@ -14,12 +14,6 @@ module Procurement
       end
     end
 
-    before_action only: [:move, :destroy] do
-      @request = Request.where(user_id: @user,
-                               group_id: @group,
-                               budget_period_id: @budget_period).find(params[:id])
-    end
-
     def index
       @requests = Request.all
       @requests = @requests.where(user_id: @user) if @user
@@ -168,6 +162,9 @@ module Procurement
     end
 
     def move
+      @request = Request.where(user_id: @user,
+                               group_id: @group,
+                               budget_period_id: @budget_period).find(params[:id])
       h = { inspection_comment: nil, approved_quantity: nil, order_quantity: nil }
       if params[:to_group_id]
         @request.update_attributes \
@@ -184,6 +181,9 @@ module Procurement
     end
 
     def destroy
+      @request = Request.where(user_id: @user,
+                               group_id: @group,
+                               budget_period_id: @budget_period).find(params[:id])
       @request.destroy
 
       flash[:success] = _('Deleted')
