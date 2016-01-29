@@ -1,5 +1,5 @@
 module Procurement
-  class BudgetPeriodPolicy < ApplicationPolicy
+  class BudgetPeriodPolicy < DefaultPolicy
     def index?
       admin?
     end

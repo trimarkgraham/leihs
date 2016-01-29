@@ -1,5 +1,5 @@
 module Procurement
-  class RequestPolicy < ApplicationPolicy
+  class RequestPolicy < DefaultPolicy
     attr_reader :request_user
 
     def initialize(user, request_user: nil)
