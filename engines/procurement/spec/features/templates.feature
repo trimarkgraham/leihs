@@ -33,13 +33,14 @@ Feature: Templates
     Then I can delete an article of a category
 
 ##will not change anymore
-#  @templates @browser
-#  Scenario: Deleting information
-#    Given I am Barbara
+  @templates @browser
+  Scenario: Deleting information
+    Given I am Barbara
+#??# All together is not possible. If either one, then has to be Scenario Outline
 #    Then I can delete existing information of the fields
-#    |Article nr./Manufacturer nr|
-#    |Price|
-#    |Supplier|
+#      | Article nr./Manufacturer nr |
+#      | Price                       |
+#      | Supplier                    |
 
 ##can still change!!
 #  @templates @browser

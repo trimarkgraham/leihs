@@ -26,7 +26,7 @@ steps_for :templates do
     expect{ template_to_delete.reload }.to raise_error ActiveRecord::RecordNotFound
   end
 
-  step 'I can delete existing information of the fields' do
+  step 'I can delete existing information of the fields' do |table|
     step 'I navigate to edit templates of an inspectable group'
     pending
   end
