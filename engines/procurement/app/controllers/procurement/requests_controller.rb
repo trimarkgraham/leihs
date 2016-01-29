@@ -17,15 +17,8 @@ module Procurement
       @budget_period = \
         BudgetPeriod.find(params[:budget_period_id]) if params[:budget_period_id]
 
-      unless @user.nil? or @user == current_user \
-        or @group.nil? or @group.inspectable_or_readable_by?(current_user)
-        redirect_to root_path
-      end
-    end
-
-    before_action only: :overview do
-      if not Procurement::Group.inspector_of_any_group_or_admin?(current_user) \
-        and @user != current_user
+      if @user != current_user and \
+        not Procurement::Group.inspector_of_any_group_or_admin?(current_user)
         redirect_to root_path
       end
     end
