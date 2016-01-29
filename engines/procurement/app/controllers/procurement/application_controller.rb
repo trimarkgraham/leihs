@@ -28,12 +28,11 @@ module Procurement
     helper_method :procurement_admin?, :procurement_requester?
 
     def procurement_admin?
-      current_user and (Access.admin?(current_user) \
-        or (Access.admins.empty? and admin?))
+      DefaultPolicy.new(current_user).procurement_admin?
     end
 
     def procurement_requester?
-      current_user and Access.requesters.where(user_id: current_user).exists?
+      DefaultPolicy.new(current_user).procurement_requester?
     end
 
     private
