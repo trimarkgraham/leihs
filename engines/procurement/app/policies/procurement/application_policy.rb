@@ -13,5 +13,9 @@ module Procurement
     def admins_defined?
       Access.admins.exists?
     end
+
+    def current_budget_period_defined?
+      BudgetPeriod.current
+    end
   end
 end

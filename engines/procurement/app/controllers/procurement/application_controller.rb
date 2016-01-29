@@ -10,11 +10,11 @@ module Procurement
     before_action :authorize_if_admins_exist, except: :root
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
     def root
-      if not BudgetPeriod.current
-        flash.now[:error] = _('Current budget period not defined yet')
-        redirect_to budget_periods_path if procurement_admin?
-      elsif current_user \
+      authorize 'procurement/application'.to_sym, :current_budget_period_defined?
+
+      if current_user \
         and Procurement::Group.inspector_of_any_group_or_admin?(current_user)
         redirect_to overview_requests_path
       elsif procurement_requester?
@@ -43,12 +43,19 @@ module Procurement
 
     def user_not_authorized(exception)
       case exception.query
+
       when :authenticated?
         flash[:error] = _('You are not logged in')
         redirect_to root_path
+
       when :admins_defined?
         flash[:error] = _('No admins defined yet')
         redirect_to (procurement_admin? ? users_path : root_path)
+
+      when :current_budget_period_defined?
+        flash.now[:error] = _('Current budget period not defined yet')
+        redirect_to budget_periods_path if procurement_admin?
+
       end
     end
   end
