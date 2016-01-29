@@ -4,14 +4,6 @@ module Procurement
   class RequestsController < ApplicationController
 
     before_action do
-      unless BudgetPeriod.current
-        if procurement_admin?
-          redirect_to budget_periods_path
-        else
-          redirect_to root_path
-        end
-      end
-
       @user = User.not_as_delegations.find(params[:user_id]) if params[:user_id]
       @group = Procurement::Group.find(params[:group_id]) if params[:group_id]
       @budget_period = \

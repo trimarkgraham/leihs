@@ -14,11 +14,12 @@ module Procurement
     def root
       authorize 'procurement/application'.to_sym, :current_budget_period_defined?
 
-      if current_user \
-        and Procurement::Group.inspector_of_any_group_or_admin?(current_user)
-        redirect_to overview_requests_path
-      elsif procurement_requester?
-        redirect_to overview_user_requests_path(current_user)
+      if current_user
+        if Procurement::Group.inspector_of_any_group_or_admin?(current_user)
+          redirect_to overview_requests_path
+        else procurement_requester?
+          redirect_to overview_user_requests_path(current_user)
+        end
       end
     end
 
@@ -46,17 +47,23 @@ module Procurement
 
       when :authenticated?
         flash[:error] = _('You are not logged in')
-        redirect_to root_path
+        redirect_to root_path and return
 
       when :admins_defined?
         flash[:error] = _('No admins defined yet')
-        redirect_to (procurement_admin? ? users_path : root_path)
+        if procurement_admin?
+          redirect_to users_path and return
+        end
 
       when :current_budget_period_defined?
         flash.now[:error] = _('Current budget period not defined yet')
-        redirect_to budget_periods_path if procurement_admin?
+        if procurement_admin?
+          redirect_to budget_periods_path and return
+        end
 
       end
+
+      redirect_to root_path # default
     end
   end
 end
