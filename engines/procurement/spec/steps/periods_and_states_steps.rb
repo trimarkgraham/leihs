@@ -179,6 +179,8 @@ steps_for :periods_and_states do
                _('Groups')
              when 'budget periods'
                _('Budget periods')
+             else
+               raise
            end
     within find('.form-group', text: text).find('.btn-group') do
       find('button.multiselect').click
@@ -218,6 +220,8 @@ steps_for :periods_and_states do
         [@request.requested_quantity - 1, 'inspection comment']
       when 'equal 0'
         [0, 'inspection comment']
+      else
+        raise
       end
     @request.update_attributes approved_quantity: new_quantity,
                                inspection_comment: new_comment

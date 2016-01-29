@@ -19,6 +19,15 @@ module NavigationSteps
     expect(has_no_selector?(".spinner")).to be true
   end
 
+  step 'I enter the section :section' do |section|
+    case section
+      when 'My requests'
+        step 'I navigate to my requests'
+      else
+        raise
+    end
+  end
+
   def visit_request(request)
     visit procurement.group_budget_period_user_requests_path(request.group,
                                                              request.budget_period,

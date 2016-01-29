@@ -5,6 +5,11 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/helpers.rb
+- name: inspection_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/inspection_steps.rb
 - name: navigation_steps.rb
   scripts:
     test:
@@ -40,6 +45,16 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/roles_steps.rb
+- name: section_my_requests_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/section_my_requests_steps.rb
+- name: templates_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/templates_steps.rb
 - name: users_and_organisations_steps.rb
   scripts:
     test:

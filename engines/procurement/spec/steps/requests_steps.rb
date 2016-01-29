@@ -112,6 +112,8 @@ steps_for :requests do
                   _('Priority')
                 when 'replacement'
                   "%s / %s" % [_('Replacement'), _('New')]
+                else
+                  raise
               end
       within '.form-group', text: label do
         within 'label', text: /^#{_(value)}$/ do
@@ -128,6 +130,8 @@ steps_for :requests do
                   _('Priority')
                 when 'replacement'
                   "%s / %s" % [_('Replacement'), _('New')]
+                else
+                  raise
               end
       within '.form-group', text: label do
         table.raw.flatten.each do |value|

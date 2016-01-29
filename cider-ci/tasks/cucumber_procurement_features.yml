@@ -5,23 +5,8 @@ tasks:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "engines/procurement/features/csv.feature"
-- name: inspection
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/inspection.feature"
 - name: roles
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
         --strict "engines/procurement/features/roles.feature"
-- name: section_my_requests
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/section_my_requests.feature"
-- name: templates
-  scripts:
-    test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec cucumber -p default -f json -o log/cucumber_report.json
-        --strict "engines/procurement/features/templates.feature"
