@@ -4,12 +4,11 @@ module Procurement
     include Pundit
 
     before_action except: :root do
-      ApplicationPolicy.new current_user
+      authorize 'procurement/application'.to_sym, :authenticated?
+      authorize 'procurement/application'.to_sym, :admins_defined?
     end
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-
-    before_action :require_admins, except: :root
 
     def root
       if not BudgetPeriod.current
@@ -39,18 +38,13 @@ module Procurement
     private
 
     def user_not_authorized(exception)
-      flash[:error] = _(exception.message)
-      redirect_to root_path
-    end
-
-    def require_admins
-      if Access.admins.empty?
+      case exception.query
+      when :authenticated?
+        flash[:error] = _('You are not logged in')
+        redirect_to root_path
+      when :admins_defined?
         flash[:error] = _('No admins defined yet')
-        if procurement_admin?
-          redirect_to users_path
-        else
-          redirect_to root_path
-        end
+        redirect_to (procurement_admin? ? users_path : root_path)
       end
     end
   end
