@@ -7,10 +7,6 @@ module Procurement
       authorize Organization
     end
 
-    rescue_from Pundit::NotAuthorizedError do
-      redirect_to root_path
-    end
-
     def index
       @organizations = Organization.roots
     end

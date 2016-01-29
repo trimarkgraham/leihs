@@ -7,10 +7,6 @@ module Procurement
       authorize Group
     end
 
-    rescue_from Pundit::NotAuthorizedError do
-      redirect_to root_path
-    end
-
     before_action only: [:create, :update] do
       params[:group][:inspector_ids] = \
         params[:group][:inspector_ids].split(',').map &:to_i

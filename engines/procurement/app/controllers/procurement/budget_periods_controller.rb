@@ -7,10 +7,6 @@ module Procurement
       authorize BudgetPeriod
     end
 
-    rescue_from Pundit::NotAuthorizedError do
-      redirect_to root_path
-    end
-
     def index
       @budget_periods = BudgetPeriod.order(end_date: :asc)
 

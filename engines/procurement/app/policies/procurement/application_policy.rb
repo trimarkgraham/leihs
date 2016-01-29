@@ -4,7 +4,8 @@ module Procurement
 
     ############# PUNDIT DEFAULTS ##################
 
-    def initialize(user, record)
+    def initialize(user, record = nil)
+      raise Pundit::NotAuthorizedError, 'You are not logged in' unless user
       @user = user
       @record = record
     end

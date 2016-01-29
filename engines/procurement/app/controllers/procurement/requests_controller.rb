@@ -22,10 +22,6 @@ module Procurement
       end
     end
 
-    rescue_from Pundit::NotAuthorizedError do
-      redirect_to root_path
-    end
-
     before_action only: [:move, :destroy] do
       @request = Request.where(user_id: @user,
                                group_id: @group,
@@ -128,8 +124,7 @@ module Procurement
     end
 
     def new
-      redirect_to root_path if @budget_period.past?
-
+      authorize @budget_period, :not_past?
       @template_categories = TemplateCategory.all
       @groups = Procurement::Group.all
     end

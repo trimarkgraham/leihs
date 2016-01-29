@@ -11,10 +11,6 @@ module Procurement
       authorize @group, :inspectable_by_user?
     end
 
-    rescue_from Pundit::NotAuthorizedError do
-      redirect_to root_path
-    end
-
     def index
       @template_categories = @group.template_categories
     end

@@ -3,7 +3,13 @@ module Procurement
     include MainHelpers
     include Pundit
 
-    before_action :require_login, :require_admins, except: :root
+    before_action except: :root do
+      ApplicationPolicy.new current_user
+    end
+
+    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+    before_action :require_admins, except: :root
 
     def root
       if not BudgetPeriod.current
@@ -32,11 +38,9 @@ module Procurement
 
     private
 
-    def require_login
-      unless current_user
-        flash[:error] = _('You are not logged in')
-        redirect_to root_path
-      end
+    def user_not_authorized(exception)
+      flash[:error] = _(exception.message)
+      redirect_to root_path
     end
 
     def require_admins
@@ -49,10 +53,5 @@ module Procurement
         end
       end
     end
-
-    def require_admin_role
-      redirect_to root_path unless Access.admin?(current_user)
-    end
-
   end
 end
