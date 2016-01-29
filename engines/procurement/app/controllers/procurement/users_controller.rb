@@ -3,7 +3,7 @@ require_dependency 'procurement/application_controller'
 module Procurement
   class UsersController < ApplicationController
 
-    skip_before_action :require_admins
+    skip_before_action :authorize_if_admins_exist
     # TODO: ?? before_action :require_admin_role if admins empty ??
 
     def index

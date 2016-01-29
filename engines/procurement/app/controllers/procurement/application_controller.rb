@@ -5,11 +5,11 @@ module Procurement
 
     before_action except: :root do
       authorize 'procurement/application'.to_sym, :authenticated?
-      authorize 'procurement/application'.to_sym, :admins_defined?
     end
 
-    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+    before_action :authorize_if_admins_exist, except: :root
 
+    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
     def root
       if not BudgetPeriod.current
         flash.now[:error] = _('Current budget period not defined yet')
@@ -36,6 +36,10 @@ module Procurement
     end
 
     private
+
+    def authorize_if_admins_exist
+      authorize 'procurement/application'.to_sym, :admins_defined?
+    end
 
     def user_not_authorized(exception)
       case exception.query
