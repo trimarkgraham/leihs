@@ -19,7 +19,7 @@
     - if current_user
       .page-content-wrapper.container-fluid
         %ul.nav.navbar-nav.h4
-          - if procurement_admin?
+          - if policy('procurement/application'.to_sym).procurement_admin?
             %li.dropdown{class: opened_menu == :admin ? 'active' : nil}
               %a.dropdown-toggle{href: "#", data: {toggle: "dropdown"}}
                 %i.fa.fa-gear
@@ -51,7 +51,7 @@
                     - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
                       %i.fa.fa-warning.text-danger
 
-          - if procurement_requester?
+          - if policy('procurement/application'.to_sym).procurement_requester?
             %li{class: opened_menu == :request ? 'active' : nil}
               %a{href: overview_user_requests_path(current_user)}
                 %i.fa.fa-tasks

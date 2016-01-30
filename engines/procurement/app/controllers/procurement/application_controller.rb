@@ -23,19 +23,16 @@ module Procurement
       end
     end
 
-    protected
-
-    helper_method :procurement_admin?, :procurement_requester?
+    private
 
     def procurement_admin?
-      DefaultPolicy.new(current_user).procurement_admin?
+      ApplicationPolicy.new(current_user).procurement_admin?
     end
 
     def procurement_requester?
-      DefaultPolicy.new(current_user).procurement_requester?
+      ApplicationPolicy.new(current_user).procurement_requester?
     end
 
-    private
 
     def authorize_if_admins_exist
       authorize 'procurement/application'.to_sym, :admins_defined?

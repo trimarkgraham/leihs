@@ -2,7 +2,10 @@ module Procurement
   class ApplicationPolicy
     attr_reader :user
 
-    def initialize(user, application)
+    # application is a dummy argument in order to
+    # make headless policies work in pundit due to
+    # the argument arity
+    def initialize(user, application = nil)
       @user = user
     end
 
