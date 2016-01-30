@@ -7,6 +7,8 @@ module Procurement
       authorize 'procurement/application'.to_sym, :authenticated?
     end
 
+    # defined in a separate before_action as it is skiped in
+    # another controller
     before_action :authorize_if_admins_exist, except: :root
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -24,15 +26,6 @@ module Procurement
     end
 
     private
-
-    def procurement_admin?
-      ApplicationPolicy.new(current_user).procurement_admin?
-    end
-
-    def procurement_requester?
-      ApplicationPolicy.new(current_user).procurement_requester?
-    end
-
 
     def authorize_if_admins_exist
       authorize 'procurement/application'.to_sym, :admins_defined?
@@ -61,5 +54,14 @@ module Procurement
 
       redirect_to root_path # default
     end
+
+    def procurement_admin?
+      ApplicationPolicy.new(current_user).procurement_admin?
+    end
+
+    def procurement_requester?
+      ApplicationPolicy.new(current_user).procurement_requester?
+    end
+
   end
 end
