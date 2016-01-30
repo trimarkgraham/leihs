@@ -1,15 +1,15 @@
 module Procurement
-  class RequestPolicy < ApplicationPolicy
-    attr_reader :current_user, :request_user
+  class RequestPolicy < DefaultPolicy
+    attr_reader :request_user
 
-    def initialize(current_user, request_user: nil)
-      @current_user = current_user
+    def initialize(user, request_user: nil)
+      super(user)
       @request_user = request_user
     end
 
     def allowed?
-      request_user == current_user or
-        Procurement::Group.inspector_of_any_group_or_admin?(current_user)
+      request_user == user or
+        Procurement::Group.inspector_of_any_group_or_admin?(user)
     end
   end
 end

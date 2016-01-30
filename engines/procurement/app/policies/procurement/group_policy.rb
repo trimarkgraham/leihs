@@ -1,5 +1,5 @@
 module Procurement
-  class GroupPolicy < ApplicationPolicy
+  class GroupPolicy < DefaultPolicy
     def index?
       admin?
     end

@@ -4,54 +4,64 @@ module Procurement
     include Pundit
 
     before_action except: :root do
-      ApplicationPolicy.new current_user
+      authorize 'procurement/application'.to_sym, :authenticated?
     end
+
+    # defined in a separate before_action as it is skiped in
+    # another controller
+    before_action :authorize_if_admins_exist, except: :root
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-    before_action :require_admins, except: :root
-
     def root
-      if not BudgetPeriod.current
-        flash.now[:error] = _('Current budget period not defined yet')
-        redirect_to budget_periods_path if procurement_admin?
-      elsif current_user \
-        and Procurement::Group.inspector_of_any_group_or_admin?(current_user)
-        redirect_to overview_requests_path
-      elsif procurement_requester?
-        redirect_to overview_user_requests_path(current_user)
+      authorize 'procurement/application'.to_sym, :current_budget_period_defined?
+
+      if current_user
+        if Procurement::Group.inspector_of_any_group_or_admin?(current_user)
+          redirect_to overview_requests_path
+        else procurement_requester?
+          redirect_to overview_user_requests_path(current_user)
+        end
       end
-    end
-
-    protected
-
-    helper_method :procurement_admin?, :procurement_requester?
-
-    def procurement_admin?
-      current_user and (Access.admin?(current_user) \
-        or (Access.admins.empty? and admin?))
-    end
-
-    def procurement_requester?
-      current_user and Access.requesters.where(user_id: current_user).exists?
     end
 
     private
 
-    def user_not_authorized(exception)
-      flash[:error] = _(exception.message)
-      redirect_to root_path
+    def authorize_if_admins_exist
+      authorize 'procurement/application'.to_sym, :admins_defined?
     end
 
-    def require_admins
-      if Access.admins.empty?
+    def user_not_authorized(exception)
+      case exception.query
+
+      when :authenticated?
+        flash[:error] = _('You are not logged in')
+        redirect_to root_path and return
+
+      when :admins_defined?
         flash[:error] = _('No admins defined yet')
         if procurement_admin?
-          redirect_to users_path
-        else
-          redirect_to root_path
+          redirect_to users_path and return
         end
+
+      when :current_budget_period_defined?
+        flash.now[:error] = _('Current budget period not defined yet')
+        if procurement_admin?
+          redirect_to budget_periods_path and return
+        end
+
       end
+
+      redirect_to root_path # default
     end
+
+    def procurement_admin?
+      ApplicationPolicy.new(current_user).procurement_admin?
+    end
+
+    def procurement_requester?
+      ApplicationPolicy.new(current_user).procurement_requester?
+    end
+
   end
 end

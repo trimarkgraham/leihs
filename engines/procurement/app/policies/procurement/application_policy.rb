@@ -1,66 +1,41 @@
 module Procurement
   class ApplicationPolicy
-    attr_reader :user, :record
+    attr_reader :user
 
-    ############# PUNDIT DEFAULTS ##################
-
-    def initialize(user, record = nil)
-      raise Pundit::NotAuthorizedError, 'You are not logged in' unless user
+    # application is a dummy argument in order to
+    # make headless policies work in pundit due to
+    # the argument arity
+    def initialize(user, application = nil)
       @user = user
-      @record = record
     end
 
-    def index?
-      false
+    def authenticated?
+      not user.nil?
     end
 
-    def show?
-      scope.where(:id => record.id).exists?
+    def admins_defined?
+      Access.admins.exists?
     end
 
-    def create?
-      false
+    def current_budget_period_defined?
+      BudgetPeriod.current
     end
-
-    def new?
-      create?
-    end
-
-    def update?
-      false
-    end
-
-    def edit?
-      update?
-    end
-
-    def destroy?
-      false
-    end
-
-    def scope
-      Pundit.policy_scope!(user, record.class)
-    end
-
-    class Scope
-      attr_reader :user, :scope
-
-      def initialize(user, scope)
-        @user = user
-        @scope = scope
-      end
-
-      def resolve
-        scope
-      end
-    end
-
-    ################################################
-
-    private
 
     def admin?
       Access.admin?(user)
+    end
+
+    def procurement_admin?
+      admin? \
+        or (Access.admins.empty? and leihs_admin?)
+    end
+
+    def procurement_requester?
+      Access.requesters.where(user_id: user).exists?
+    end
+
+    def leihs_admin?
+      user.has_role? :admin
     end
   end
 end

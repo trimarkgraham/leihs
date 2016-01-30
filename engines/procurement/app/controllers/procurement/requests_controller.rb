@@ -4,14 +4,6 @@ module Procurement
   class RequestsController < ApplicationController
 
     before_action do
-      unless BudgetPeriod.current
-        if procurement_admin?
-          redirect_to budget_periods_path
-        else
-          redirect_to root_path
-        end
-      end
-
       @user = User.not_as_delegations.find(params[:user_id]) if params[:user_id]
       @group = Procurement::Group.find(params[:group_id]) if params[:group_id]
       @budget_period = \
@@ -20,12 +12,6 @@ module Procurement
       if not RequestPolicy.new(current_user, request_user: @user).allowed?
         raise Pundit::NotAuthorizedError
       end
-    end
-
-    before_action only: [:move, :destroy] do
-      @request = Request.where(user_id: @user,
-                               group_id: @group,
-                               budget_period_id: @budget_period).find(params[:id])
     end
 
     def index
@@ -176,6 +162,9 @@ module Procurement
     end
 
     def move
+      @request = Request.where(user_id: @user,
+                               group_id: @group,
+                               budget_period_id: @budget_period).find(params[:id])
       h = { inspection_comment: nil, approved_quantity: nil, order_quantity: nil }
       if params[:to_group_id]
         @request.update_attributes \
@@ -192,6 +181,9 @@ module Procurement
     end
 
     def destroy
+      @request = Request.where(user_id: @user,
+                               group_id: @group,
+                               budget_period_id: @budget_period).find(params[:id])
       @request.destroy
 
       flash[:success] = _('Deleted')
