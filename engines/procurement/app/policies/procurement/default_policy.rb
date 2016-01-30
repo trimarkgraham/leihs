@@ -58,20 +58,23 @@ module Procurement
     ################################################
 
     def admin?
-      Access.admin?(user)
+      Pundit.policy!(user, 'procurement/application'.to_sym)
+        .admin?
     end
 
     def procurement_admin?
-      admin? \
-        or (Access.admins.empty? and leihs_admin?)
+      Pundit.policy!(user, 'procurement/application'.to_sym)
+        .procurement_admin?
     end
 
     def procurement_requester?
-      Access.requesters.where(user_id: current_user).exists?
+      Pundit.policy!(user, 'procurement/application'.to_sym)
+        .procurement_requester?
     end
 
     def leihs_admin?
-      user.has_role? :admin
+      Pundit.policy!(user, 'procurement/application'.to_sym)
+        .leihs_admin?
     end
   end
 end
