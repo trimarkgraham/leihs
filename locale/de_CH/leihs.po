@@ -3000,16 +3000,16 @@ msgid "Search category"
 msgstr "Kategorie suchen"
 
 msgid "Budget limits"
-msgstr "Budget Limiten"
+msgstr "Budget-Limiten"
 
 msgid "Budget period"
-msgstr "Budget Periode"
+msgstr "Budget-Periode"
 
 msgid "Budget periods"
-msgstr "Budget Perioden"
+msgstr "Budget-Perioden"
 
 msgid "Budget period end date"
-msgstr "Enddatum der Budget Periode"
+msgstr "Enddatum der Budget-Periode"
 
 msgid "requesting phase until %s"
 msgstr "Antragsphase bis %s"
@@ -3120,7 +3120,7 @@ msgid "Move to another group"
 msgstr "Gruppe ändern"
 
 msgid "Move to another budget period"
-msgstr "Budget Periode ändern"
+msgstr "Budget-Periode ändern"
 
 msgid "Point of Delivery"
 msgstr "Lieferort"
