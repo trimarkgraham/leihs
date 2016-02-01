@@ -3175,3 +3175,6 @@ msgstr "Es existieren ungültige Felder"
 
 msgid "Name of the requester"
 msgstr "Name des Antragstellers"
+
+msgid "Create request for specific group"
+msgstr "Antrag für spezifische Gruppe erstellen"

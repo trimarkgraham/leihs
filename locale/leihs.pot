@@ -3078,3 +3078,6 @@ msgstr ""
 
 msgid "Name of the requester"
 msgstr ""
+
+msgid "Create request for specific group"
+msgstr ""

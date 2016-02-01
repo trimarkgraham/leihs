@@ -62,9 +62,9 @@ module Procurement
         .admin?
     end
 
-    def procurement_admin?
+    def procurement_or_leihs_admin?
       Pundit.policy!(user, 'procurement/application'.to_sym)
-        .procurement_admin?
+        .procurement_or_leihs_admin?
     end
 
     def procurement_requester?

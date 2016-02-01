@@ -25,7 +25,7 @@ module Procurement
       Access.admin?(user)
     end
 
-    def procurement_admin?
+    def procurement_or_leihs_admin?
       admin? \
         or (Access.admins.empty? and leihs_admin?)
     end

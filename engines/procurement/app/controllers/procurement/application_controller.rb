@@ -40,13 +40,13 @@ module Procurement
 
       when :admins_defined?
         flash[:error] = _('No admins defined yet')
-        if procurement_admin?
+        if procurement_or_leihs_admin?
           redirect_to users_path and return
         end
 
       when :current_budget_period_defined?
         flash.now[:error] = _('Current budget period not defined yet')
-        if procurement_admin?
+        if procurement_or_leihs_admin?
           redirect_to budget_periods_path and return
         end
 
@@ -55,8 +55,8 @@ module Procurement
       redirect_to root_path # default
     end
 
-    def procurement_admin?
-      ApplicationPolicy.new(current_user).procurement_admin?
+    def procurement_or_leihs_admin?
+      ApplicationPolicy.new(current_user).procurement_or_leihs_admin?
     end
 
     def procurement_requester?
