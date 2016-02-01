@@ -3083,8 +3083,8 @@ msgstr "Organisationen"
 msgid "Organization unit"
 msgstr "Organisationseinheiten"
 
-msgid "Organizations of the requesters"
-msgstr "Organisationen der Antragsteller"
+msgid "Organizations according to requester list"
+msgstr "Organisationen gemäss Antragstellerliste"
 
 msgid "Department"
 msgstr "Departemente"
