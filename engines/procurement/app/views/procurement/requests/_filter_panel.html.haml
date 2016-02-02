@@ -1,7 +1,6 @@
 %form#filter_panel
-  - unless @user
-    %input{type: :hidden, name: 'filter[sort_by]', value: params[:filter][:sort_by]}
-    %input{type: :hidden, name: 'filter[sort_dir]', value: params[:filter][:sort_dir]}
+  %input{type: :hidden, name: 'filter[sort_by]', value: params[:filter][:sort_by]}
+  %input{type: :hidden, name: 'filter[sort_dir]', value: params[:filter][:sort_dir]}
 
   .form-group
     %b

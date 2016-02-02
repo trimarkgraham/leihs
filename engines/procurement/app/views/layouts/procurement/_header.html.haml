@@ -33,12 +33,6 @@
                     - unless Procurement::BudgetPeriod.current
                       %i.fa.fa-warning.text-danger
                 %li
-                  %a{href: organizations_path}
-                    %i.fa.fa-sitemap
-                    = _('Organizations')
-                    - unless Procurement::Organization.exists?
-                      %i.fa.fa-warning.text-danger
-                %li
                   %a{href: groups_path}
                     %i.fa.fa-shopping-cart
                     = _('Groups')
@@ -49,6 +43,12 @@
                     %i.fa.fa-user
                     = _('Users')
                     - if Procurement::Access.admins.empty? or Procurement::Access.requesters.empty?
+                      %i.fa.fa-warning.text-danger
+                %li
+                  %a{href: organizations_path}
+                    %i.fa.fa-sitemap
+                    = _('Organizations')
+                    - unless Procurement::Organization.exists?
                       %i.fa.fa-warning.text-danger
 
           - if policy('procurement/application'.to_sym).procurement_requester?

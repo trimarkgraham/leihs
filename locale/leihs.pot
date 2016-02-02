@@ -132,6 +132,9 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
+msgid "Administrators"
+msgstr ""
+
 msgid "All"
 msgstr ""
 

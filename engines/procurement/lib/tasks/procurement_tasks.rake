@@ -118,7 +118,6 @@ namespace :procurement do
      {"budget_period_id" => 4, "group_id" => 6, "user_id" => 1363, "model_id" => nil, "supplier_id" => nil, "location_id" => nil, "article_name" => "Beamer lichtstark", "article_number" => nil, "requested_quantity" => 1, "approved_quantity" => nil, "order_quantity" => nil, "price_cents" => 120000, "price_currency" => "CHF", "priority" => "normal", "replacement" => true, "supplier_name" => "AVS", "receiver" => nil, "location_name" => nil, "motivation" => "darum", "inspection_comment" => nil},
      {"budget_period_id" => 4, "group_id" => 6, "user_id" => 350, "model_id" => nil, "supplier_id" => nil, "location_id" => nil, "article_name" => "doof", "article_number" => nil, "requested_quantity" => 1, "approved_quantity" => nil, "order_quantity" => nil, "price_cents" => 600, "price_currency" => "CHF", "priority" => "normal", "replacement" => true, "supplier_name" => nil, "receiver" => nil, "location_name" => nil, "motivation" => "dieso", "inspection_comment" => nil}
     ].each do |h|
-      puts h["user_id"]
       h["organization_id"]= Procurement::Access.requesters.find_by(user_id: h["user_id"]).organization_id
       r = Procurement::Request.new h
       r.save(validate: false) # skip "Budget period is over" validation
@@ -147,7 +146,7 @@ namespace :procurement do
       x[:templates].each { |y| tc.templates.create! y }
     end
 
-    if false #Rails.env.development?
+    if Rails.env.development?
       Procurement::BudgetPeriod.create! name: '2015',
                                         inspection_start_date: '2014-10-01',
                                         end_date: '2014-11-30'
@@ -157,27 +156,27 @@ namespace :procurement do
 
       user_id = 1973
 
-      {user_id => ['Services', 'ITZ']}.each_pair do |user_id, organization_names|
-        parent = Procurement::Organization.find_by(name: organization_names.first)
-        organization = parent.children.find_by(name: organization_names.last)
-        Procurement::Access.requesters.find_or_create_by! user_id: user_id,
-                                                          organization: organization
-      end
+      parent = Procurement::Organization.find_or_create_by!(name: 'Services')
+      organization = parent.children.find_or_create_by!(name: 'ITZ')
+      Procurement::Access.requesters.find_or_create_by! user_id: user_id,
+                                                        organization: organization
 
       50.times do
-        Procurement::Request.create! budget_period: Procurement::BudgetPeriod.order('RAND()').first,
+        r = Procurement::Request.new budget_period: Procurement::BudgetPeriod.order('RAND()').first,
                                      group: Procurement::Group.order('RAND()').first,
-                                     user_id: rand(0..1) == 0 ? user_id : Procurement::Access.requesters.order('RAND()').first.user_id,
+                                     user_id: user_id,
+                                     organization_id: organization.id,
                                      article_name: Faker::Lorem.sentence,
                                      requested_quantity: (requested_quantity = rand(1..120)),
                                      approved_quantity: (approved_quantity = rand(0..1) == 0 ? rand(1..requested_quantity) : nil),
                                      price: rand(10..5000),
                                      supplier_name: Faker::Lorem.sentence,
-                                     priority: rand(0..1) == 1 ? 'high' : 'normal',
+                                     priority: ['high', 'normal'].sample,
                                      motivation: Faker::Lorem.sentence,
                                      inspection_comment: approved_quantity ? Faker::Lorem.sentence : nil,
                                      receiver: Faker::Lorem.sentence,
                                      location_name: Faker::Lorem.sentence
+        r.save(validate: false) # skip "Budget period is over" validation
       end
 
       { 'Facility Management' => [user_id],
@@ -188,14 +187,14 @@ namespace :procurement do
         group.save!
       end
 
-      Procurement::Group.all.each do |group|
-        attrs = {}
-        Procurement::BudgetPeriod.all.each do |bp|
-          attrs[bp.id] = { budget_period_id: bp.id,
-                           amount: rand(200000..1_200_000) }
-        end
-        group.update_attributes!(budget_limits_attributes: attrs)
-      end
+      # Procurement::Group.all.each do |group|
+      #   attrs = {}
+      #   Procurement::BudgetPeriod.all.each do |bp|
+      #     attrs[bp.id] = { budget_period_id: bp.id,
+      #                      amount: rand(200000..1_200_000) }
+      #   end
+      #   group.update_attributes!(budget_limits_attributes: attrs)
+      # end
 
     end
 

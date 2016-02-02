@@ -34,7 +34,7 @@
                   %i.fa.fa-trash-o
                   = _('Delete')
               - else
-                = render partial: 'layouts/procurement/counts', locals: {budget_period: budget_period}
+                = render partial: 'totals', locals: {budget_period: budget_period}
     %tfoot
       %tr
         %td.h1{colspan: 3}

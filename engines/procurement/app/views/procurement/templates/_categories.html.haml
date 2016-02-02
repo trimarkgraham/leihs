@@ -7,7 +7,7 @@
     .panel.panel-info
       .panel-heading(role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_#{category.id}")
         = category
-        %span.badge.pull-right
+        -#%span.badge.pull-right
           = category.templates.count
       .list-group(id="collapse_#{category.id}" class="panel-collapse collapse")
         - category.templates.each do |template|

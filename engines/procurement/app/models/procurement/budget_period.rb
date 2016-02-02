@@ -2,6 +2,7 @@ module Procurement
   class BudgetPeriod < ActiveRecord::Base
 
     has_many :requests
+    has_many :budget_limits, dependent: :delete_all
 
     validates_presence_of :name, :inspection_start_date, :end_date
     validates_uniqueness_of :name, :inspection_start_date, :end_date
@@ -25,28 +26,6 @@ module Procurement
 
     def in_inspection_phase?
       inspection_start_date <= Date.today and Date.today <= end_date
-    end
-
-    def state_counts(args)
-      requests = self.requests
-      requests = requests.where(user_id: args[:user]) if args[:user]
-      requests = requests.where(group_id: args[:group]) if args[:group]
-
-      if past? or (args[:group] \
-        and args[:group].inspectable_or_readable_by?(args[:current_user]))
-        {
-          new: requests.where(approved_quantity: nil).count,
-          denied: requests.where(approved_quantity: 0).count,
-          partially_approved: requests.where('0 < approved_quantity AND approved_quantity < requested_quantity').count,
-          approved: requests.where('approved_quantity >= requested_quantity').count
-        }
-      else
-        if in_inspection_phase?
-          { in_inspection: requests.count }
-        else
-          { new: requests.count }
-        end
-      end
     end
 
     def previous

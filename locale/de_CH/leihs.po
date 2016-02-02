@@ -140,6 +140,9 @@ msgstr "Adresse"
 msgid "Admin"
 msgstr "Admin"
 
+msgid "Administrators"
+msgstr "Administratoren"
+
 msgid "All"
 msgstr "Alle"
 
@@ -3150,10 +3153,10 @@ msgid "Request moved"
 msgstr "Antrag Verschoben"
 
 msgid "High"
-msgstr "hoch"
+msgstr "Hoch"
 
 msgid "Normal"
-msgstr "normal"
+msgstr "Normal"
 
 msgid "Are you sure you want to delete '%s'?"
 msgstr "Sind Sie sicher, dass Sie '%s' löschen möchten?"
