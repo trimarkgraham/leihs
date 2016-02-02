@@ -56,12 +56,17 @@
     $('tfoot').on 'click', '.fa-plus-circle', ->
       target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
       cloned_el = target_el.clone()
-      cloned_el.find('td:last').html('')
+      cloned_el.find('td:last').html("<h4><i class='fa fa-minus-circle'></i></h4>")
       cloned_el.find('input').val('')
       cloned_el.find(".datepicker").removeClass('hasDatepicker').removeAttr('id').datepicker({
         dateFormat: i18n.datepicker.L
       })
       cloned_el.insertAfter(target_el)
+      false
+
+    $('tbody').on 'click', '.fa-minus-circle', ->
+      row_el = $(this).closest('tr')
+      row_el.remove()
       false
 
     $("form").on("ajax:success", (e, data, status, xhr) ->

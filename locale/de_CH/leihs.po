@@ -3181,3 +3181,6 @@ msgstr "Name des Antragstellers"
 
 msgid "Create request for specific group"
 msgstr "Antrag für spezifische Gruppe erstellen"
+
+msgid "You have unsaved data. Would you like to delete the data?"
+msgstr "Sie haben nicht gespeicherte Daten. Möchten Sie diese löschen?"

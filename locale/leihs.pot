@@ -3084,3 +3084,6 @@ msgstr ""
 
 msgid "Create request for specific group"
 msgstr ""
+
+msgid "You have unsaved data. Would you like to delete the data?"
+msgstr ""

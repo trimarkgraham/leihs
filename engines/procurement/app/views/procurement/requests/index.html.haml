@@ -433,10 +433,13 @@
         scroll_to $('form :invalid').first().closest('.request')
         false
 
+
     $('form').on('change', ->
       #has_invalid_fields = false
       $('.flash').hide()
+      window.onbeforeunload = -> return "#{_('You have unsaved data. Would you like to delete the data?')}"
     ).on('ajax:success', (e, data, status, xhr) ->
+      window.onbeforeunload = null
       location.replace $(this).attr('action')
     ).on 'ajax:error', (e, xhr, status, error) ->
       errors = ''
