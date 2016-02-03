@@ -19,31 +19,31 @@
         %tr
           %th.col-xs-4= _('Name')
           %th.col-xs-4= _('Department')
-          %th.col-xs-3= _('Organization unit')
+          %th.col-xs-3= _('Organization')
           %th.col-xs-1
 
       %tbody
         - @requester_accesses.each do |requester_access|
-          %tr
+          %tr{data: {access_id: requester_access.id}}
             %td
-              %input{type: :hidden, name: 'requesters[][id]', value: requester_access.user_id}
+              %input{type: :hidden, name: 'requesters[][user_id]', value: requester_access.user_id}
               %input{type: :hidden, name: 'requesters[][_destroy]'}
               %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :off, value: requester_access.user}
             %td
               %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :off, value: requester_access.organization.parent}
             %td
-              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :off, value: requester_access.organization}
+              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization'), autocomplete: :off, value: requester_access.organization}
             %td.text-right.h3
               %i.fa.fa-minus-circle
         - if @requester_accesses.empty?
           %tr
             %td
-              %input{type: :hidden, name: 'requesters[][id]'}
+              %input{type: :hidden, name: 'requesters[][user_id]'}
               %input.form-control{name: 'requesters[][name]', placeholder: _('Name of the requester'), autocomplete: :off}
             %td
               %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :off}
             %td
-              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization unit'), autocomplete: :off}
+              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization'), autocomplete: :off}
             %td.text-right.h3
               %i.fa.fa-minus-circle
     .panel-footer
@@ -92,7 +92,7 @@
               #response($.map data, (item)->
               #  {label: item.firstname + ' ' + item.lastname, value: item.id})
         select: ( event, ui )->
-          $(this).closest('tr').find("input[name='requesters[][id]']").val( ui.item.id )
+          $(this).closest('tr').find("input[name='requesters[][user_id]']").val( ui.item.id )
           $(this).val( ui.item.firstname + " " + ui.item.lastname )
           false
       .each ->
@@ -105,13 +105,15 @@
       target_el = $(this).closest('.panel').find('tbody > tr:last-child')
       cloned_el = target_el.clone()
       cloned_el.find('input').val('')
+      cloned_el.removeClass('bg-danger')
+      cloned_el.removeAttr('data-access_id').removeData('access_id')
       cloned_el.insertAfter(target_el)
       do initAutocompletes
       false
 
     $('tbody').on 'click', '.fa-minus-circle', ->
       row_el = $(this).closest('tr')
-      if row_el.find("input[type='hidden'][name*='[id]']").val().length
+      if row_el.data('access_id')
         target_el = row_el.find("input[name*='[_destroy]']")
         if row_el.hasClass('bg-danger')
           target_el.val('0').change()
@@ -123,7 +125,7 @@
         row_el.remove()
       false
 
-    $('tbody tr td input').on 'keyup change', ->
+    $('tbody').on 'keyup change', 'tr td input', ->
       inputs = $(this).closest('tr').find('input:not([type="hidden"])')
       values = ''
       inputs.each ->

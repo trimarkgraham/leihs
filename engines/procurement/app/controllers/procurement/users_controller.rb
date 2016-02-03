@@ -26,7 +26,7 @@ module Procurement
       Access.requesters.delete_all
       params[:requesters].each do |param|
         next if param[:name].blank? or param[:_destroy] == '1'
-        access = Access.requesters.find_or_initialize_by(user_id: param[:id])
+        access = Access.requesters.find_or_initialize_by(user_id: param[:user_id])
         parent = Organization.find_or_create_by(name: param[:department])
         organization = parent.children.find_or_create_by(name: param[:organization])
         access.update_attributes(organization: organization)
@@ -56,7 +56,7 @@ module Procurement
 
     def choose
       @group = Procurement::Group.find(params[:group_id])
-      redirect_to root_path unless @group.inspectable_by?(current_user)
+      authorize @group, :inspectable_by_user?
 
       @budget_period = BudgetPeriod.find(params[:budget_period_id])
 
