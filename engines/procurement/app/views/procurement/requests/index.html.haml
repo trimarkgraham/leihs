@@ -316,6 +316,7 @@
     $("#new_request a[data-method='delete']").on 'click', ->
       $('#new_request input[data-to_be_required]').removeAttr('required')
       $('#new_request').addClass('hidden').find('input').val('')
+      $('.panel-footer .fa-plus-circle').show()
       do zebra_rows
       false
 

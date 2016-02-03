@@ -32,8 +32,9 @@
             = group
             - unless budget_period.past?
               - if @user
-                %a{href: group_budget_period_user_requests_path(group, budget_period, @user)}
-                  %i.fa.fa-plus-circle
+                - if budget_period.in_requesting_phase?
+                  %a{href: group_budget_period_user_requests_path(group, budget_period, @user)}
+                    %i.fa.fa-plus-circle
               - elsif group.inspectable_by? current_user
                 %a{href: choose_group_budget_period_users_path(group, budget_period)}
                   %i.fa.fa-user-plus
