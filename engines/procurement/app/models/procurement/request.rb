@@ -102,6 +102,7 @@ module Procurement
       return sql if query.blank?
 
       query.split.each do |q|
+        next if q.blank?
         q = "%#{q}%"
         sql = sql.where(arel_table[:article_name].matches(q)
                           .or(arel_table[:article_number].matches(q))
@@ -110,9 +111,11 @@ module Procurement
                           .or(arel_table[:location_name].matches(q))
                           .or(arel_table[:motivation].matches(q))
                           .or(arel_table[:inspection_comment].matches(q))
+                          .or(User.arel_table[:firstname].matches(q))
+                          .or(User.arel_table[:lastname].matches(q))
         )
       end
-      sql
+      sql.joins(:user)
     }
 
     #####################################################

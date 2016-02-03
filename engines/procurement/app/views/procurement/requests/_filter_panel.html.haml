@@ -89,16 +89,27 @@
 
 :coffeescript
   $(document).ready ->
-    $('form#filter_panel').on('ajax:beforeSend', ->
+    currentRequest = null
+    timeoutId = null
+    $('form#filter_panel').on('ajax:beforeSend', (e, xhr, settings)->
       $('#filter_target').addClass('transparency')
+      currentRequest.abort() if (currentRequest)
+      currentRequest = xhr
     ).on('ajax:complete', (e, data, status, xhr) ->
       $(this).removeAttr("data-remote").removeData('remote')
       $('#filter_target').html(data.responseText).removeClass('transparency')
-    ).on('keypress', (event)->
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout =>
-        $(this).data('remote', true).submit()
-      , 400
+    ).keydown((e)->
+      charCode = e.charCode || e.keyCode || e.which
+      if charCode == 13
+        return false
+      else if (charCode >= 65 and charCode <= 90) or
+        (charCode >= 48 and charCode <= 57) or
+        (charCode >= 96 and charCode <= 111) or
+         charCode == 8
+        clearTimeout(timeoutId) if timeoutId
+        timeoutId = setTimeout =>
+          $(this).data('remote', true).submit()
+        , 400
     ).on('change', (event)->
       unless event.target.name == 'filter[search]'
         $(this).data('remote', true).submit()

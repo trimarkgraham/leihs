@@ -36,31 +36,12 @@ module Procurement
         h = {}
         Procurement::BudgetPeriod.order(end_date: :desc) \
           .find(params[:filter][:budget_period_ids]).each do |budget_period|
-          # h[budget_period] = {}
-          # Procurement::Group.find(params[:filter][:group_ids]).each do |group|
-          #   h[budget_period][group] = {}
-          #   h[budget_period][group][:budget_limit_amount] = group.budget_limits.find_by(budget_period_id: budget_period).try(:amount)
-          #
-          #   h[budget_period][group][:departments] = {}
-          #   Procurement::Organization.departments.find(params[:filter][:department_ids]).each do |parent_organization|
-          #     h[budget_period][group][:departments][parent_organization] = {}
-          #     parent_organization.children.each do |organization_unit|
-          #       requests = organization_unit.requests.where(budget_period_id: budget_period, group_id: group, priority: params[:filter][:priorities]).
-          #                   select {|r| params[:filter][:states].map(&:to_sym).include? r.state(current_user)}
-          #       h[budget_period][group][:departments][parent_organization][organization_unit] = {
-          #           requests: requests,
-          #           total_price: requests.map{|r| r.total_price(current_user)}.sum
-          #       }
-          #     end
-          #   end
-          # end
 
           requests = budget_period.requests.search(params[:filter][:search]) \
                       .where(group_id: params[:filter][:group_ids],
                              priority: params[:filter][:priorities])
           requests = requests.where(user_id: @user) if @user
           if params[:filter][:organization_id]
-            # where(procurement_organizations: {parent_id: params[:filter][:organization_id]})
             requests = requests.joins(:organization)
                            .where(['organization_id = :id OR procurement_organizations.parent_id = :id', { id: params[:filter][:organization_id] }])
           end
@@ -196,7 +177,9 @@ module Procurement
 
     def default_filters
       params[:filter] ||= unless @user
-                            session[:requests_filter] || {}
+                            r = session[:requests_filter] || {}
+                            r.delete('search') # NOTE reset on each request
+                            r
                           else
                             {}
                           end
