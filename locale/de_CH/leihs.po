@@ -3150,7 +3150,7 @@ msgid "Custom articles"
 msgstr "Artikel auswählen"
 
 msgid "Request moved"
-msgstr "Antrag Verschoben"
+msgstr "Antrag verschoben"
 
 msgid "High"
 msgstr "Hoch"
