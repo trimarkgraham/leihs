@@ -7,9 +7,10 @@
         .col-sm-2.h4
           %i.fa.fa-calendar
           = budget_period
-          - if @user and not budget_period.past?
-            %a{href: new_user_budget_period_request_path(@user, budget_period)}
-              %i.fa.fa-plus-circle
+          - unless budget_period.past?
+            - if @user
+              %a{href: new_user_budget_period_request_path(@user, budget_period)}
+                %i.fa.fa-plus-circle
         .col-sm-6
           = render partial: 'procurement/budget_periods/phases', locals: {budget_period: budget_period}
         .col-sm-4
@@ -19,17 +20,23 @@
             = money_without_cents_and_with_symbol total_price, false
 
     .panel-body
-      - requests.group_by(&:group).each_pair do |group, requests|
+      :ruby
+        groups = requests.group_by(&:group)
+        selected_groups = Procurement::Group.all.select { |group| params[:filter][:group_ids].map(&:to_i).include?(group.id) }
+        selected_groups.each {|group| groups[group] ||= [] }
+
+      - groups.each_pair do |group, requests|
         .row{style: 'line-height: 2.5em; background-color: #f5f5f5;'}
           .col-sm-7.h4
             %i.fa.fa-shopping-cart
             = group
-            - if @user and not budget_period.past?
-              %a{href: group_budget_period_user_requests_path(group, budget_period, @user)}
-                %i.fa.fa-plus-circle
-            - elsif group.inspectable_by? current_user
-              %a{href: choose_group_budget_period_users_path(group, budget_period)}
-                %i.fa.fa-user-plus
+            - unless budget_period.past?
+              - if @user
+                %a{href: group_budget_period_user_requests_path(group, budget_period, @user)}
+                  %i.fa.fa-plus-circle
+              - elsif group.inspectable_by? current_user
+                %a{href: choose_group_budget_period_users_path(group, budget_period)}
+                  %i.fa.fa-user-plus
           .col-sm-1
             - total_price = requests.map {|r| r.total_price(current_user) }.sum
             - if @user.nil? and group.inspectable_by? current_user
@@ -86,7 +93,7 @@
                 %i.fa.fa-shopping-cart
                 = money_without_cents_and_with_symbol request.total_price(current_user), false
             .col-sm-1
-              .label.label-default= _(request.priority)
+              .label.label-default= _(request.priority.capitalize)
             .col-sm-1
               :ruby
                 state, label_class = state_label(request)

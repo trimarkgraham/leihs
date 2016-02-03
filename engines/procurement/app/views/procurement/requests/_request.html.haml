@@ -70,7 +70,7 @@
               %input{type: :radio, name: "requests[#{request.id}][priority]", value: priority.downcase, checked: request.priority == priority.downcase}
               .label.label-default= _(priority)
         - else
-          .label.label-default= _(request.priority)
+          .label.label-default= _(request.priority.capitalize)
 
     .form-group
       %label.col-xs-4.control-label
