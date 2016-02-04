@@ -51,17 +51,10 @@
                     - unless Procurement::Organization.exists?
                       %i.fa.fa-warning.text-danger
 
-          - if policy('procurement/application'.to_sym).procurement_requester?
-            %li{class: opened_menu == :request ? 'active' : nil}
-              %a{href: overview_user_requests_path(current_user)}
-                %i.fa.fa-tasks
-                = _('My requests')
-
-          - if Procurement::Group.inspector_of_any_group_or_admin?(current_user)
-            %li{class: opened_menu == :inspect ? 'active' : nil}
-              %a{href: overview_requests_path}
-                %i.fa.fa-eye
-                = _('Inspection')
+          %li{class: opened_menu == :request ? 'active' : nil}
+            %a{href: overview_requests_path}
+              %i.fa.fa-tasks
+              = _('Requests')
 
         %ul.nav.navbar-nav.navbar-right
           = render partial: 'layouts/procurement/navigation'

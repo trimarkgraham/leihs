@@ -11,7 +11,7 @@
         - Procurement::BudgetPeriod.order(end_date: :desc).each do |budget_period|
           %option{value: budget_period.id, selected: params[:filter][:budget_period_ids].map(&:to_i).include?(budget_period.id)}= budget_period
 
-  - unless @user
+  - if Procurement::Group.inspector_of_any_group?(current_user)
     .form-group
       :ruby
         my_groups, other_groups = Procurement::Group.all.partition { |group| group.inspectable_by?(current_user) }
@@ -36,7 +36,7 @@
           - Procurement::Group.all.each do |group|
             %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
 
-  - unless @user
+  - if procurement_inspector_or_admin?
     .form-group
       %b
         %i.fa.fa-sitemap
@@ -52,27 +52,27 @@
                 &nbsp;&nbsp;&nbsp;
                 = organization_unit
 
-    .form-group
-      %b
-        %i.fa.fa-sort-amount-asc
-        = _('Priority')
-      %ul
-        - ['High', 'Normal'].each do |priority|
-          %label
-            %input{type: :checkbox, name: "filter[priorities][]", value: priority.downcase, checked: params[:filter][:priorities].include?(priority.downcase)}
-            .label.label-default= _(priority)
+  .form-group
+    %b
+      %i.fa.fa-sort-amount-asc
+      = _('Priority')
+    %ul
+      - ['High', 'Normal'].each do |priority|
+        %label
+          %input{type: :checkbox, name: "filter[priorities][]", value: priority.downcase, checked: params[:filter][:priorities].include?(priority.downcase)}
+          .label.label-default= _(priority)
 
-    .form-group
-      %b
-        %i.fa.fa-code-fork
-        = _('State of Request')
-      %ul
-        - Procurement::Request::STATES.each do |state|
-          - next if state == :in_inspection
-          %li
-            %label
-              %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
-              .label{class: label_class(state)}= _(state.to_s.humanize)
+  .form-group
+    %b
+      %i.fa.fa-code-fork
+      = _('State of Request')
+    %ul
+      - Procurement::Request::STATES.each do |state|
+        - next if state == :in_inspection and procurement_inspector_or_admin?
+        %li
+          %label
+            %input{type: :checkbox, name: "filter[states][]", value: state, checked: params[:filter][:states].map(&:to_sym).include?(state)}
+            .label{class: label_class(state)}= _(state.to_s.humanize)
 
   .form-group
     %b
@@ -80,6 +80,16 @@
       = _('Search')
     %ul
       %input.form-control{name: 'filter[search]', placeholder: _('Search'), value: params[:filter][:search], autocomplete: :off}
+
+  - if procurement_requester? and procurement_inspector_or_admin?
+    .form-group
+      %b
+        %i.fa.fa-tasks
+        = _('Requests')
+      %ul
+        %label
+          %input{type: :checkbox, name: "user_id", value: current_user.id, checked: @user == current_user}
+          .label.label-default= _('Only show my own requests')
 
 %br
 %button.btn.btn-primary{type: :submit, name: 'format', value: 'csv', form: 'filter_panel'}
@@ -115,4 +125,7 @@
         $(this).data('remote', true).submit()
     ).change()
 
-    $("#filter_panel select").multiselect()
+    $("#filter_panel select").multiselect(
+      includeSelectAllOption: true
+      preventInputChangeEvent: true
+    )

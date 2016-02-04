@@ -1,10 +1,14 @@
 module NavigationSteps
-  step 'I navigate to my requests' do
-    visit procurement.overview_user_requests_path(@current_user)
-  end
-
-  step 'I navigate to the inspection overview' do
+  step 'I navigate to the requests' do
     visit procurement.overview_requests_path
+  end
+  # TODO merge
+  step 'I navigate to my requests' do
+    step 'I navigate to the requests'
+  end
+  # TODO merge
+  step 'I navigate to the inspection overview' do
+    step 'I navigate to the requests'
   end
 
   step 'I navigate to the users list' do

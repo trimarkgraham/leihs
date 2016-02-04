@@ -4,7 +4,12 @@ module Procurement
   class RequestsController < ApplicationController
 
     before_action do
-      @user = User.not_as_delegations.find(params[:user_id]) if params[:user_id]
+      if Procurement::Group.inspector_of_any_group_or_admin?(current_user)
+        @user = User.not_as_delegations.find(params[:user_id]) if params[:user_id]
+      else # only requester
+        @user = current_user
+      end
+
       @group = Procurement::Group.find(params[:group_id]) if params[:group_id]
       @budget_period = \
         BudgetPeriod.find(params[:budget_period_id]) if params[:budget_period_id]
@@ -175,30 +180,22 @@ module Procurement
     private
 
     def default_filters
-      params[:filter] ||= unless @user
+      params[:filter] ||=   begin
                             r = session[:requests_filter] || {}
                             r.delete('search') # NOTE reset on each request
                             r
-                          else
-                            {}
                           end
       params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
-      params[:filter][:group_ids] ||= unless @user
-                                        if (not Procurement::Group.inspector_of_any_group?(current_user) and Procurement::Access.admin?(current_user))
-                                          Procurement::Group.pluck(:id)
-                                        else
-                                          Procurement::Group.all.select do |group|
-                                            group.inspectable_by?(current_user)
-                                          end.map(&:id)
-                                        end
+      params[:filter][:group_ids] ||= if Procurement::Group.inspector_of_any_group?(current_user)
+                                        Procurement::Group.all.select do |group|
+                                          group.inspectable_by?(current_user)
+                                        end.map(&:id)
                                       else
                                         Procurement::Group.pluck(:id)
                                       end
-      unless @user
-        # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
-        params[:filter][:priorities] ||= ['high', 'normal']
-        params[:filter][:states] ||= Procurement::Request::STATES
-      end
+      # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
+      params[:filter][:priorities] ||= ['high', 'normal']
+      params[:filter][:states] ||= Procurement::Request::STATES
 
       params[:filter][:sort_by] ||= 'state'
       params[:filter][:sort_dir] ||= 'asc'
@@ -206,16 +203,13 @@ module Procurement
 
     def fallback_filters
       params[:filter][:budget_period_ids] ||= []
+      params[:filter][:budget_period_ids].delete('multiselect-all')
+
       params[:filter][:group_ids] ||= []
-      if @user
-        params[:filter][:priorities] = ['high', 'normal']
-        params[:filter][:states] = Procurement::Request::STATES
-      else
-        params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
-        params[:filter][:priorities] ||= []
-        params[:filter][:states] ||= []
-        session[:requests_filter] = params[:filter]
-      end
+      params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
+      params[:filter][:priorities] ||= []
+      params[:filter][:states] ||= []
+      session[:requests_filter] = params[:filter]
     end
   end
 end

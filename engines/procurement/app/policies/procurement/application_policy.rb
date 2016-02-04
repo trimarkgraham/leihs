@@ -34,6 +34,10 @@ module Procurement
       Access.requesters.where(user_id: user).exists?
     end
 
+    def procurement_inspector_or_admin?
+      Procurement::Group.inspector_of_any_group_or_admin?(user)
+    end
+
     def leihs_admin?
       user.has_role? :admin
     end

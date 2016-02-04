@@ -3184,3 +3184,6 @@ msgstr "Antrag für spezifische Gruppe erstellen"
 
 msgid "You have unsaved data. Would you like to delete the data?"
 msgstr "Sie haben nicht gespeicherte Daten. Möchten Sie diese löschen?"
+
+msgid "Only show my own requests"
+msgstr "Nur meine eigenen Anträge anzeigen"

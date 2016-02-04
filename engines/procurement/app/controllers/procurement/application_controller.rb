@@ -3,6 +3,8 @@ module Procurement
     include MainHelpers
     include Pundit
 
+    helper_method :procurement_requester?, :procurement_inspector_or_admin?
+
     before_action except: :root do
       authorize 'procurement/application'.to_sym, :authenticated?
     end
@@ -16,13 +18,7 @@ module Procurement
     def root
       authorize 'procurement/application'.to_sym, :current_budget_period_defined?
 
-      if current_user
-        if Procurement::Group.inspector_of_any_group_or_admin?(current_user)
-          redirect_to overview_requests_path
-        else procurement_requester?
-          redirect_to overview_user_requests_path(current_user)
-        end
-      end
+      redirect_to overview_requests_path if current_user
     end
 
     private
@@ -61,6 +57,10 @@ module Procurement
 
     def procurement_requester?
       ApplicationPolicy.new(current_user).procurement_requester?
+    end
+
+    def procurement_inspector_or_admin?
+      ApplicationPolicy.new(current_user).procurement_inspector_or_admin?
     end
 
   end
