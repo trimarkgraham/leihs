@@ -50,23 +50,22 @@ module Procurement
                         .map(&:to_sym).include? r.state(current_user)
           end
 
-          unless params[:filter][:sort_by].blank?
-            requests = requests.sort do |a, b|
-              case params[:filter][:sort_by]
-                when 'total_price'
-                  a.total_price(current_user) <=> b.total_price(current_user)
-                when 'state'
-                  a.state(current_user) <=> b.state(current_user)
-                when 'department'
-                  a.organization.parent.to_s.downcase <=> b.organization.parent.to_s.downcase
-                when 'article_name', 'user'
-                  a.send(params[:filter][:sort_by]).to_s.downcase <=> b.send(params[:filter][:sort_by]).to_s.downcase
-                else
-                  a.send(params[:filter][:sort_by]) <=> b.send(params[:filter][:sort_by])
-              end
+          requests = requests.sort do |a, b|
+            case params[:filter][:sort_by]
+              when 'total_price'
+                a.total_price(current_user) <=> b.total_price(current_user)
+              when 'state'
+                Request::STATES.index(a.state(current_user)) <=> Request::STATES.index(b.state(current_user))
+              when 'department'
+                a.organization.parent.to_s.downcase <=> b.organization.parent.to_s.downcase
+              when 'article_name', 'user'
+                a.send(params[:filter][:sort_by]).to_s.downcase <=> b.send(params[:filter][:sort_by]).to_s.downcase
+              else
+                a.send(params[:filter][:sort_by]) <=> b.send(params[:filter][:sort_by])
             end
-            requests.reverse! if params[:filter][:sort_dir] == 'desc'
           end
+          requests.reverse! if params[:filter][:sort_dir] == 'desc'
+
           h[budget_period] = requests
         end
         h
@@ -199,8 +198,10 @@ module Procurement
         # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
         params[:filter][:priorities] ||= ['high', 'normal']
         params[:filter][:states] ||= Procurement::Request::STATES
-        params[:filter][:sort_dir] ||= 'asc'
       end
+
+      params[:filter][:sort_by] ||= 'state'
+      params[:filter][:sort_dir] ||= 'asc'
     end
 
     def fallback_filters

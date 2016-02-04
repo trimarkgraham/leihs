@@ -61,7 +61,8 @@ module Procurement
           )
     end
 
-    STATES = [:new, :in_inspection, :denied, :partially_approved, :approved]
+    # NOTE keep this order for the sorting
+    STATES = [:new, :approved, :partially_approved, :denied, :in_inspection]
 
     def state(user)
       if budget_period.past? or group.inspectable_or_readable_by?(user)
