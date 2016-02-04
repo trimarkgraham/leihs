@@ -197,8 +197,8 @@ module Procurement
       params[:filter][:priorities] ||= ['high', 'normal']
       params[:filter][:states] ||= Procurement::Request::STATES
 
-      params[:filter][:sort_by] ||= 'state'
-      params[:filter][:sort_dir] ||= 'asc'
+      params[:filter][:sort_by] = 'state' if params[:filter][:sort_by].blank?
+      params[:filter][:sort_dir] = 'asc' if params[:filter][:sort_dir].blank?
     end
 
     def fallback_filters
