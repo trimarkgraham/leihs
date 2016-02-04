@@ -299,6 +299,10 @@
     el.find("input[name*='requested_quantity]']").val(1).change()
     scroll_to(el)
 
+  @show_request = (request_id)->
+    el = $(".row[data-request_id='" + request_id + "']")
+    scroll_to(el)
+
   $(document).ready ->
     do zebra_rows
 
@@ -347,8 +351,6 @@
           big_total += Number($(this).data('total'))
       formatted_big_total = accounting.formatMoney(big_total, {symbol: 'CHF', format: "%s %v", precision: 0, thousand: "'"})
       $(".big_total_price").html(formatted_big_total)
-
-    $('input[data-toggle="tooltip"]').on 'focus mouseover', -> $(this).tooltip('toggle')
 
     $("input[name*='[article_name]']").on('keypress', ->
       $(this).closest('.form-group').find("input[name*='[model_id]']").val('')
@@ -473,3 +475,8 @@
   :coffeescript
     $(document).ready ->
       show_template #{params[:template_id]}
+
+- if params[:request_id]
+  :coffeescript
+    $(document).ready ->
+      show_request #{params[:request_id]}

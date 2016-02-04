@@ -3187,3 +3187,12 @@ msgstr "Sie haben nicht gespeicherte Daten. Möchten Sie diese löschen?"
 
 msgid "Only show my own requests"
 msgstr "Nur meine eigenen Anträge anzeigen"
+
+msgid "Create request"
+msgstr "Antrag erstellen"
+
+msgid "Create request for this group"
+msgstr "Antrag für Gruppe erstellen"
+
+msgid "Create request for another user"
+msgstr "Antrag für einen anderen Benutzer erstellen"
