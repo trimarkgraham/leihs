@@ -1,11 +1,7 @@
 :ruby
   opened_menu = if %w{requests templates}.include? controller.controller_name \
                   or controller.action_name == 'choose'
-      if @user and @user == current_user
-        :request
-      else
-        :inspect
-      end
+      :request
     else
       :admin
   end
