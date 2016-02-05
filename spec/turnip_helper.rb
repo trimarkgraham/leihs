@@ -39,6 +39,7 @@ RSpec.configure do |config|
   end
 
   config.after(browser: true) do
+    page.driver.quit # OPTIMIZE force close browser popups
     Capybara.current_driver = Capybara.default_driver
   end
 end
