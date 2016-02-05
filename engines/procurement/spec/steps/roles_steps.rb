@@ -8,6 +8,8 @@ steps_for :roles do
   end
 
   step 'I can manage my requests' do
-    click_on _('My requests')
+    within 'header' do
+      click_on _('Requests')
+    end
   end
 end

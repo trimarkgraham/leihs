@@ -95,7 +95,6 @@ steps_for :requests do
   step 'the amount and the price are multiplied and the result is shown' do
     within '.request[data-request_id="new_request"]' do
       el = find '.label.label-primary.total_price'
-      el.click # NOTE to trigger input change
       total = @price * @quantity
       expect(el.text).to eq \
        ActionController::Base.helpers.number_to_currency(
