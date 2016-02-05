@@ -123,7 +123,7 @@
                   .col-xs-8
                     %input{type: :file, name: "requests[new_#{i}][attachments_attributes][][file]", multiple: true, style: "color:transparent;", onchange: "this.style.color = 'black';"}
 
-        .row.request#new_request.hidden
+        .row.request.hidden{data: {request_id: 'new_request'}}
           - i += 1
           .col-xs-6
             .form-group
@@ -300,6 +300,7 @@
     scroll_to(el)
 
   @show_request = (request_id)->
+    $('.panel-footer .fa-plus-circle').trigger('click') if request_id == 'new_request'
     el = $(".row[data-request_id='" + request_id + "']")
     scroll_to(el)
 
@@ -312,14 +313,14 @@
       #cloned_el.find('input').val('')
       #cloned_el.insertAfter(target_el)
       $(this).hide()
-      $('#new_request input[data-to_be_required]').attr('required', 'true')
-      $('#new_request').removeClass('hidden').closest('form').change()
+      $('.request[data-request_id="new_request"] input[data-to_be_required]').attr('required', 'true')
+      $('.request[data-request_id="new_request"]').removeClass('hidden').closest('form').change()
       do zebra_rows
       false
 
-    $("#new_request a[data-method='delete']").on 'click', ->
-      $('#new_request input[data-to_be_required]').removeAttr('required')
-      $('#new_request').addClass('hidden').find('input').val('')
+    $('.request[data-request_id="new_request"] a[data-method="delete"]').on 'click', ->
+      $('.request[data-request_id="new_request"] input[data-to_be_required]').removeAttr('required')
+      $('.request[data-request_id="new_request"]').addClass('hidden').find('input').val('')
       $('.panel-footer .fa-plus-circle').show()
       do zebra_rows
       false
@@ -474,9 +475,9 @@
 - if params[:template_id]
   :coffeescript
     $(document).ready ->
-      show_template #{params[:template_id]}
+      show_template '#{params[:template_id]}'
 
 - if params[:request_id]
   :coffeescript
     $(document).ready ->
-      show_request #{params[:request_id]}
+      show_request '#{params[:request_id]}'

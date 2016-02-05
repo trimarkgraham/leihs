@@ -33,7 +33,7 @@
             - unless budget_period.past?
               - if @user
                 - if budget_period.in_requesting_phase?
-                  %a{href: group_budget_period_user_requests_path(group, budget_period, @user), title: _('Create request for this group'), data: {toggle: 'tooltip'}}
+                  %a{href: group_budget_period_user_requests_path(group, budget_period, @user, request_id: 'new_request'), title: _('Create request for this group'), data: {toggle: 'tooltip'}}
                     %i.fa.fa-plus-circle
               - elsif group.inspectable_by? current_user
                 %a{href: choose_group_budget_period_users_path(group, budget_period), title: _('Create request for another user'), data: {toggle: 'tooltip'}}

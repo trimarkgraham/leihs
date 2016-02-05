@@ -82,7 +82,7 @@ steps_for :requests do
   end
 
   step 'I enter the requested amount' do
-    within "#new_request" do
+    within '.request[data-request_id="new_request"]' do
       @price = Faker::Number.number(4).to_i
       @quantity = Faker::Number.number(2).to_i
       within '.form-group', text: _('Item price') do
@@ -93,7 +93,7 @@ steps_for :requests do
   end
 
   step 'the amount and the price are multiplied and the result is shown' do
-    within "#new_request" do
+    within '.request[data-request_id="new_request"]' do
       el = find '.label.label-primary.total_price'
       el.click # NOTE to trigger input change
       total = @price * @quantity
@@ -106,7 +106,7 @@ steps_for :requests do
   end
 
   step 'the :field value :value is set by default' do |field, value|
-    within "#new_request" do
+    within '.request[data-request_id="new_request"]' do
       label = case field
                 when 'priority'
                   _('Priority')
@@ -124,7 +124,7 @@ steps_for :requests do
   end
 
   step 'I can choose the following :field values' do |field, table|
-    within "#new_request" do
+    within '.request[data-request_id="new_request"]' do
       label = case field
                 when 'priority'
                   _('Priority')
