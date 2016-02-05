@@ -36,11 +36,13 @@ Feature: Templates
   @templates @browser
   Scenario: Deleting information
     Given I am Barbara
-#??# All together is not possible. If either one, then has to be Scenario Outline
-#    Then I can delete existing information of the fields
-#      | Article nr./Manufacturer nr |
-#      | Price                       |
-#      | Supplier                    |
+    When the article name is filled out
+    Then I can delete existing information of the fields
+      #??# instead of: | Article nr./Manufacturer nr |
+      | Article nr. / Producer nr.  |
+      #??# should be the price stored as zero ??
+      | Price                       |
+      | Supplier                    |
 
 ##can still change!!
 #  @templates @browser

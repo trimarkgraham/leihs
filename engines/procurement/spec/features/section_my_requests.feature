@@ -4,7 +4,7 @@ Feature: section "My requests"
 #  Scenario: What to see in section "My requests"
 #    Given I am Roger
 #    When I enter the section "My requests"
-##??# per default it's displayed only the current budget period
+#    When I select all budget periods
 #    Then I see all budget periods
 #    And the current budget period is marked in green
 #    And the current budget period is expanded
@@ -15,7 +15,7 @@ Feature: section "My requests"
 #    And for each procurement group I see the total price of all requests of a procurement group
 #    When I enter a procurement group
 #    Then I see all my requests of this specific group
-#
+
 #  @section_my_requests @browser
 #  Scenario: CSV Export
 #    Given I am Roger

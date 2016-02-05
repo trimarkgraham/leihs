@@ -42,7 +42,7 @@ module NavigationSteps
   # TODO refactor to a CommonSteps module?
 
   step 'I click on save' do
-    click_on _('Save')
+    click_on _('Save'), match: :first
   end
 
   step 'I see a success message' do

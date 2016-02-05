@@ -41,14 +41,6 @@ steps_for :periods_and_states do
       .set format_date(Time.zone.today + 1.month)
   end
 
-  step 'I click on save' do
-    click_on _('Save')
-  end
-
-  step 'I see a success message' do
-    expect(page).to have_content _('Saved')
-  end
-
   step 'budget periods exist' do
     current_year = Time.zone.today.year
     @budget_periods = []

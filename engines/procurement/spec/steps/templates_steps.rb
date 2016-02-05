@@ -12,22 +12,53 @@ steps_for :templates do
   step 'I can delete an article of a category' do
     step 'I navigate to edit templates of an inspectable group'
 
-    template_to_delete = @group.templates.first
-
-    find("input[value='#{template_to_delete.template_category.name}']").click
+    template = @group.templates.first
+    expand_category template.template_category.name
     within '.panel-collapse.in' do
-      within(:xpath, "//input[@value='#{template_to_delete.article_name}']/ancestor::tr") do
+      within(:xpath, "//input[@value='#{template.article_name}']/ancestor::tr") do
         find('i.fa-minus-circle').click
       end
     end
 
     step 'I click on save'
     step 'I see a success message'
-    expect{ template_to_delete.reload }.to raise_error ActiveRecord::RecordNotFound
+    expect{ template.reload }.to raise_error ActiveRecord::RecordNotFound
+  end
+
+  step 'the article name is filled out' do
+    step 'I navigate to edit templates of an inspectable group'
+
+    @template = @group.templates.first
+    expand_category @template.template_category.name
+    within '.panel-collapse.in' do
+      within(:xpath, "//input[@value='#{@template.article_name}']/ancestor::tr") do
+        fill_in _('Article'), with: Faker::Lorem.sentence
+      end
+    end
   end
 
   step 'I can delete existing information of the fields' do |table|
-    step 'I navigate to edit templates of an inspectable group'
-    pending
+    within '.panel-collapse.in' do
+      within(:xpath, "//input[@value='#{@template.article_name}']/ancestor::tr") do
+        table.raw.flatten.each do |value|
+          case value
+            when 'Price'
+              find("input[name*='[price]']").set ''
+            else
+              fill_in _(value), with: ''
+          end
+        end
+      end
+    end
+
+    step 'I click on save'
+    step 'I see a success message'
   end
+
+  private
+
+  def expand_category(name)
+    find("input[value='#{name}']").click
+  end
+
 end

@@ -73,7 +73,7 @@ steps_for :requests do
            text: Procurement::BudgetPeriod.current.name do
       find('i.fa-plus-circle').click
     end
-    within '.panel-body .col-sm-6', text: _('Groups') do
+    within '.panel-body .col-sm-6', text: _('Create request for specific group') do
       find('a', text: Procurement::Group.first.name).click
     end
     within '.panel-footer' do
