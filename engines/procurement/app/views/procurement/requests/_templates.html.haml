@@ -1,8 +1,0 @@
-- if @group.inspectable_by?(current_user)
-  %a.btn.btn-primary.btn-sm{href: group_templates_path(@group)}
-    %i.fa.fa-cube
-    = _('Edit templates')
-    .label.label-info= @group.templates.count
-  %br
-
-= render partial: 'procurement/templates/categories', locals: {template_categories: @group.template_categories}

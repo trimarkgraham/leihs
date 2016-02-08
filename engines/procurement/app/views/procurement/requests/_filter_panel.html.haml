@@ -126,6 +126,10 @@
     ).change()
 
     $("#filter_panel select").multiselect(
-      includeSelectAllOption: true
       preventInputChangeEvent: true
+      includeSelectAllOption: true
+      selectAllText: "#{_('Select all')}"
+      nonSelectedText: "#{_('None selected')}"
+      allSelectedText: "#{_('All selected')}"
+      nSelectedText: " #{_('selected')}"
     )

@@ -3186,7 +3186,7 @@ msgid "You have unsaved data. Would you like to delete the data?"
 msgstr "Sie haben nicht gespeicherte Daten. Möchten Sie diese löschen?"
 
 msgid "Only show my own requests"
-msgstr "Nur meine eigenen Anträge anzeigen"
+msgstr "Nur eigene Anträge anzeigen"
 
 msgid "Create request"
 msgstr "Antrag erstellen"
@@ -3196,3 +3196,15 @@ msgstr "Antrag für Gruppe erstellen"
 
 msgid "Create request for another user"
 msgstr "Antrag für einen anderen Benutzer erstellen"
+
+msgid "Select all"
+msgstr "Alle auswählen"
+
+msgid "None selected"
+msgstr "Keine ausgewählt"
+
+msgid "All selected"
+msgstr "Alle ausgewählt"
+
+msgid "selected"
+msgstr "selektiert"

@@ -3099,3 +3099,15 @@ msgstr "Antrag für Gruppe erstellen"
 
 msgid "Create request for another user"
 msgstr "Antrag für einen anderen Benutzer erstellen"
+
+msgid "Select all"
+msgstr ""
+
+msgid "None selected"
+msgstr ""
+
+msgid "All selected"
+msgstr ""
+
+msgid "selected"
+msgstr ""
