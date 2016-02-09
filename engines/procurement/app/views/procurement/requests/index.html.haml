@@ -9,7 +9,7 @@
       - if is_editable
         .row
           .col-xs-12.text-right
-            %button.btn.btn-success{type: :submit}
+            %button.btn.btn-success{type: :submit, disabled: true}
               %i.fa.fa-check
               = _('Save')
 
@@ -70,7 +70,7 @@
               .col-xs-8
                 - ['High', 'Normal'].each do |priority|
                   %label
-                    %input{type: :radio, name: "requests[new_#{i}][priority]", value: priority.downcase, checked: 'normal' == priority.downcase}
+                    %input{type: :radio, name: "requests[new_#{i}][priority]", value: priority.downcase}
                     .label.label-default= _(priority)
             .form-group
               %label.col-xs-4.control-label
@@ -155,7 +155,7 @@
           .col-xs-6{style: 'font-size: 2em'}
             %i.fa.fa-plus-circle
           .col-xs-6.text-right
-            %button.btn.btn-success{type: :submit}
+            %button.btn.btn-success{type: :submit, disabled: true}
               %i.fa.fa-check
               = _('Save')
 
@@ -218,14 +218,19 @@
       #cloned_el.find('input').val('')
       #cloned_el.insertAfter(target_el)
       $(this).hide()
-      $('.request[data-request_id="new_request"] input[data-to_be_required]').attr('required', 'true')
-      $('.request[data-request_id="new_request"]').removeClass('hidden').closest('form').change()
+      el = $('.request[data-request_id="new_request"]')
+      el.find('input[data-to_be_required]').attr('required', 'true')
+      el.find("input:radio[name*='[priority]'][value='normal']").prop('checked', 'true')
+      el.removeClass('hidden').closest('form').change()
       do zebra_rows
       false
 
     $('.request[data-request_id="new_request"] a[data-method="delete"]').on 'click', ->
-      $('.request[data-request_id="new_request"] input[data-to_be_required]').removeAttr('required')
-      $('.request[data-request_id="new_request"]').addClass('hidden').find('input').val('')
+      el = $('.request[data-request_id="new_request"]')
+      el.find('input[data-to_be_required]').removeAttr('required')
+      el.find('input:not(:radio):not(:checkbox)').val('')
+      el.find('input:radio, input:checkbox').prop('checked', '')
+      el.addClass('hidden').closest('form').change()
       $('.panel-footer .fa-plus-circle').show()
       do zebra_rows
       false
@@ -342,11 +347,17 @@
         scroll_to $('form :invalid').first().closest('.request')
         false
 
+    form_data_before_chnages = $('form').serialize()
 
-    $('form').on('change', ->
-      #has_invalid_fields = false
-      $('.flash').hide()
-      window.onbeforeunload = -> return "#{_('You have unsaved data. Would you like to delete the data?')}"
+    $('form').on('change keyup', ->
+      if form_data_before_chnages != $('form').serialize()
+        $('.flash').hide()
+        $("form button[type='submit']").removeAttr('disabled')
+        window.onbeforeunload = -> return "#{_('You have unsaved data. Would you like to delete the data?')}"
+      else
+        $('.flash').show()
+        $("form button[type='submit']").attr('disabled', 'true')
+        window.onbeforeunload = null
     ).on('ajax:success', (e, data, status, xhr) ->
       window.onbeforeunload = null
       location.replace $(this).attr('action')
