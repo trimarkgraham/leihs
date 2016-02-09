@@ -1,7 +1,9 @@
 :ruby
-  opened_menu = if %w{requests templates}.include? controller.controller_name \
+  opened_menu = if %w{requests}.include? controller.controller_name \
                   or controller.action_name == 'choose'
       :request
+    elsif %w{templates}.include? controller.controller_name
+      :template
     else
       :admin
   end

@@ -27,7 +27,7 @@
 
       - groups.each_pair do |group, requests|
         .row{style: 'line-height: 2.5em; background-color: #f5f5f5;'}
-          .col-sm-7.h4
+          .col-sm-2.h4
             %i.fa.fa-shopping-cart
             = group
             - if budget_period.in_requesting_phase? and procurement_requester?
@@ -36,13 +36,17 @@
             - if not budget_period.past? and group.inspectable_by? current_user
               %a{href: choose_group_budget_period_users_path(group, budget_period), title: _('Create request for another user'), data: {toggle: 'tooltip'}}
                 %i.fa.fa-user-plus
+          .col-sm-5.h4
+            - if @user
+              %i.fa.fa-user
+              = @user
           .col-sm-1
             - total_price = requests.map {|r| r.total_price(current_user) }.sum
-            - if @user.nil? and group.inspectable_by? current_user
+            - if @user.nil? and group.inspectable_or_readable_by? current_user
               - budget_limit_amount = group.budget_limits.find_by(budget_period_id: budget_period.id).try(:amount)
               = render partial: 'procurement/requests/progress_radial', locals: {used: total_price.to_i, max: budget_limit_amount.to_i}
           .col-sm-4
-            - if @user.nil? and group.inspectable_by? current_user
+            - if @user.nil? and group.inspectable_or_readable_by? current_user
               .label.label-default.budget_limit
                 %i.fa.fa-pie-chart
                 = money_without_cents_and_with_symbol budget_limit_amount, false
