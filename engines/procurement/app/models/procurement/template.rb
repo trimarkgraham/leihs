@@ -6,7 +6,11 @@ module Procurement
     belongs_to :supplier  # from parent application
     has_many :requests, dependent: :nullify
 
-    monetize :price_cents
+    monetize :price_cents, allow_nil: true
+
+    before_validation do
+      self.price ||= 0
+    end
 
     validates_presence_of :article_name
 

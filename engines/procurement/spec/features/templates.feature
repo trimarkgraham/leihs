@@ -40,7 +40,6 @@ Feature: Templates
     Then I can delete existing information of the fields
       #??# instead of: | Article nr./Manufacturer nr |
       | Article nr. / Producer nr.  |
-      #??# should be the price stored as zero ??
       | Price                       |
       | Supplier                    |
 
