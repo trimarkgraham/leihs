@@ -3137,8 +3137,8 @@ msgstr "Artikel"
 msgid "Procurement"
 msgstr "Bedarfsermittlung"
 
-msgid "Procurement request"
-msgstr "Beschaffungsantrag"
+msgid "Inquiry to procurement request"
+msgstr "Frage zum Beschaffungsantrag"
 
 msgid "Article nr. / Producer nr."
 msgstr "Artikelnr. / Herstellernr."

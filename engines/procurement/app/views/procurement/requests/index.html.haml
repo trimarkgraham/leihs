@@ -77,7 +77,7 @@
                 = "%s / %s" % [_('Replacement'), _('New')]
               .col-xs-8
                 %label
-                  %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 1, checked: true}
+                  %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 1, data: {to_be_required: true}}
                   .label.label-default= _('Replacement')
                 %label
                   %input{type: :radio, name: "requests[new_#{i}][replacement]", value: 0}

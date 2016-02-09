@@ -61,6 +61,13 @@ div[data-toggle] {
 
 input[required]:invalid {
   background-color: #f2dede !important;
+  border: 1px solid #F37373;
+}
+
+input[type='radio']:invalid + .label {
+  color: #777777;
+  background-color: #f2dede !important;
+  border: 1px solid #F37373;
 }
 
 .progress-radial {

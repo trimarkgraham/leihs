@@ -3040,7 +3040,7 @@ msgstr ""
 msgid "Procurement"
 msgstr ""
 
-msgid "Procurement request"
+msgid "Inquiry to procurement request"
 msgstr ""
 
 msgid "Article nr. / Producer nr."

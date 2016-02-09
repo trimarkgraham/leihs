@@ -16,7 +16,7 @@
         = @group
       - if @user
         - if @group.email
-          %a{href: "mailto:#{@group.email}?subject=leihs #{_('Procurement request')}"}
+          %a{href: "mailto:#{@group.email}?subject=#{_('Inquiry to procurement request')} (#{@group.name})"}
             %b
               = succeed ':' do
                 %i.fa.fa-envelope
