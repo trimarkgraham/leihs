@@ -73,20 +73,36 @@ Feature: Section Users
   @users_and_organisations @browser
   Scenario: Add an Admin
     Given I am Hans Ueli
+    When I navigate to the users page
     Then I can add an admin
-    And the admins are sorted alphabetically from a-z
+    When I click on save
+    Then I see a success message
+    And the new admin was created in the database
+
+  Scenario: Sorting of Admins
+    Given I am Hans Ueli
+    Given admins exist
+    When I navigate to the users list
+    Then the admins are sorted alphabetically from a-z
 
 #Final - will not change anymore
   @users_and_organisations @browser
   Scenario: Delete an Admin
     Given I am Hans Ueli
-    Then I can delete an admin
+    And a admin user exists
+    When I navigate to the users page
+    Then I can delete the admin
+    When I click on save
+    Then I see a success messagae
+    And the admin is deleted from the database
 
 #Final - will not change anymore
   @users_and_organisations @browser
   Scenario: View the Organisation Tree
     Given I am Hans Ueli
-    Then I can view the organisation tree according to the organisations assigned to requester
+    And organisations exist
+    When I navigate to the organisation tree page
+    Then I see the organisation tree according to the organisations assigned to requester
     And the organisation tree shows the departments with its organisation units
     And the departments are sorted from 0-10 and a-z
     And inside the departments the organisations are sorted from 0-10 and a-z

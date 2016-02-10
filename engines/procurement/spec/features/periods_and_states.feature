@@ -9,17 +9,9 @@ Feature: Periods and states
     Then there is an empty budget period line for creating a new one
     When I fill in the name
     And I fill in the start date of the inspection period
-    And I fill in the end date of the inspection period
+    And I fill in the end date of the budget period
     And I click on save
     Then I see a success message
-
-  # Scenario: Budget period required fields
-    # And to create a budget period the following information is needed
-    #   |field             |value      |
-    #   |name              |text       |
-    #   |inspection period |start date |
-    #   |budget period     |end date   |
-    # And the start date of the inspection period should not be later then the end date of the budget period
 
 #Final - will not change anymore
   @periods_and_states @browser
@@ -46,6 +38,38 @@ Feature: Periods and states
     And the budget period line was updated successfully
     And the data for the budget period was updated successfully in the database
 
+  Scenario: Budget Period End Date earlyer than Inspection Start Date
+    Given I am Hans Ueli
+    And budget periods exist
+    And I navigate to the budget periods
+    When I edit a budget period
+    And I set the end date of the budget period earlyer than the inspection start date
+    And I click on save
+    Then I see an error message
+    And the data for the budget period was not saved to the database
+
+  Scenario: Mandatory Fields of a Budget Period
+    Given I am Hans Ueli
+    When I navigate to the budget periods
+    And I add a new line
+    Then I see which fields are mandatory
+    When I have not filled the mandatory fields
+    Then I can not save the data
+
+  Scenario: Delete an unsaved Budget Period
+    Given I am Hans Ueli
+    When I navigate to the budget periods
+    And I add a new line
+    When I have not saved the data yet
+    Then I can delete the line
+
+  Scenario: Show Totals of each Budget Period
+    Given I am Hans Ueli
+    And budget periods exist
+    When I navigate to the budget periods
+    Then for every budget period I see the total of all requested articles with status "New"
+    And for every budget period I see the total of the order amount of all requests with status "Approved"
+
 #Final - will not change anymore
   @periods_and_states @browser
   Scenario: State "New" - Request Date before Inspection Date
@@ -62,6 +86,16 @@ Feature: Periods and states
     When the current date is between the inspection date and the budget period end date
     Then I see the state "In inspection"
     And I can not modify the request
+
+#Final - will not change anymore
+    @periods_and_states @browser
+    Scenario: Overview of Budget Periods
+      Given I am Hans Ueli
+      Given budget periods exist
+      And I navigate to the budget periods
+      Then the budget periods are sorted from 0-10 and a-z
+  #??# total required costs instead?
+  #    And the amount of requests per budget period is shown
 
 #Final - will not change anymore
   @periods_and_states @browser
@@ -108,13 +142,3 @@ Feature: Periods and states
       | Barbara   |
       | Hans Ueli |
       | Roger     |
-
-#Final - will not change anymore
-  @periods_and_states @browser
-  Scenario: Overview of Budget Periods
-    Given I am Hans Ueli
-    Given budget periods exist
-    And I navigate to the budget periods
-    Then the budget periods are sorted from 0-10 and a-z
-#??# total required costs instead?
-#    And the amount of requests per budget period is shown

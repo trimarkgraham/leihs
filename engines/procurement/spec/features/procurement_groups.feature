@@ -6,8 +6,8 @@ Feature: Procurement Groups
     Given I am Hans Ueli
     And a budget period exist
     And there exists 2 users to become the inspectors
-    And I navigate to the groups page
-    When I click on the add button
+    When I navigate to the groups page
+    And I click on the add button
     And I fill in the name
     And I fill in the inspectors' names
     And I fill in the email
@@ -23,7 +23,7 @@ Feature: Procurement Groups
     Given I am Hans Ueli
     And 3 procurement groups exist
     And I navigate to the groups page
-    Then the procurement groups are sorted alphabetically
+    Then the procurement groups are sorted  0-10 and a-z
 
 #Final - will not change anymore
   @procurement_groups @browser
@@ -42,7 +42,8 @@ Feature: Procurement Groups
     And I add a budget limit
     And I modify a budget limit
     And I click on save
-    Then I see that the all the information of the procurement group was updated correctly
+    Then I am redirected to the groups index page
+    And I see a sucess message
     And all the information of the procurement group was successfully updated in the database
 
 #Final - will not change anymore
@@ -73,9 +74,10 @@ Feature: Procurement Groups
     And there exist 1 user to become the inspector
     When I navigate to the groups page
     And I click on the add button
-    And I fill in the inspectors' names
+    Then I see the name field marked red
+    And I fill in the inspectors' name
     And I fill in the email
     And I leave the name empty
     And I click on save
-    Then the name is marked red
+    Then the name is still marked red
     And the new group has not been created
