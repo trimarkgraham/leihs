@@ -3077,16 +3077,16 @@ msgstr "Priorität"
 msgid "Name of receiver"
 msgstr "Name des Empfängers"
 
-msgid "Organization"
+msgid "Organisation"
 msgstr "Organisation"
 
-msgid "Organizations"
+msgid "Organisations"
 msgstr "Organisationen"
 
-msgid "Organization unit"
+msgid "Organisation unit"
 msgstr "Organisationseinheiten"
 
-msgid "Organizations according to requester list"
+msgid "Organisations according to requester list"
 msgstr "Organisationen gemäss Antragstellerliste"
 
 msgid "Department"

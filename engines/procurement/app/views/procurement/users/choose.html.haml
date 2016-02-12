@@ -10,7 +10,7 @@
         %i.fa.fa-sort
     %b.col-sm-6
       %a{href: url_for(params: params.merge(sort_by: :organization, sort_dir: params[:sort_dir] == 'asc' ? :desc : :asc ))}
-        = _('Organization')
+        = _('Organisation')
         %i.fa.fa-sort
 
 .panel{class: "panel-#{header_color(@budget_period)}"}

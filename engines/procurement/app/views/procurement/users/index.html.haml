@@ -25,7 +25,7 @@
         %tr
           %th.col-xs-4= _('Name')
           %th.col-xs-4= _('Department')
-          %th.col-xs-3= _('Organization')
+          %th.col-xs-3= _('Organisation')
           %th.col-xs-1
 
       %tbody
@@ -38,7 +38,7 @@
             %td
               %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :off, value: requester_access.organization.parent}
             %td
-              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization'), autocomplete: :off, value: requester_access.organization}
+              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organisation'), autocomplete: :off, value: requester_access.organization}
             %td.text-right.h3
               %i.fa.fa-minus-circle
         - if @requester_accesses.empty?
@@ -49,7 +49,7 @@
             %td
               %input.form-control{name: 'requesters[][department]', placeholder: _('Department'), autocomplete: :off}
             %td
-              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organization'), autocomplete: :off}
+              %input.form-control{name: 'requesters[][organization]', placeholder: _('Organisation'), autocomplete: :off}
             %td.text-right.h3
               %i.fa.fa-minus-circle
     .panel-footer

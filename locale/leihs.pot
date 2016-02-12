@@ -2980,16 +2980,16 @@ msgstr ""
 msgid "Name of receiver"
 msgstr ""
 
-msgid "Organization"
+msgid "Organisation"
 msgstr ""
 
-msgid "Organizations"
+msgid "Organisations"
 msgstr ""
 
-msgid "Organization unit"
+msgid "Organisation unit"
 msgstr ""
 
-msgid "Organizations of the requesters"
+msgid "Organisations of the requesters"
 msgstr ""
 
 msgid "Department"
