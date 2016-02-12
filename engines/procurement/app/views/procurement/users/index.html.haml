@@ -1,6 +1,12 @@
 %h1= _('Users')
 
 = form_tag users_path do
+  .text-right
+    %button.btn.btn-success{type: :submit}
+      %i.fa.fa-check
+      = _('Save')
+  %br
+
   .panel.panel-default
     .panel-heading
       %i.fa.fa-user-md

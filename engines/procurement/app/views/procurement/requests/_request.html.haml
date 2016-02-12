@@ -192,7 +192,7 @@
                   = _('Move to another group')
               - Procurement::Group.where.not(id: @group).each do |group|
                 %li
-                  %a{href: move_group_budget_period_user_request_path(@group, @budget_period, @user, request, to_group_id: group.id), data: {method: :put}}
+                  %a{href: move_group_budget_period_user_request_path(@group, @budget_period, @user, request, to_group_id: group.id), data: {remote: true, method: :put}}
                     %i.fa.fa-arrow-right
                     = group
               %li.divider{role: 'separator'}
@@ -201,11 +201,11 @@
                   = _('Move to another budget period')
               - Procurement::BudgetPeriod.future.where.not(id: @budget_period).each do |budget_period|
                 %li
-                  %a{href: move_group_budget_period_user_request_path(@group, @budget_period, @user, request, to_budget_period_id: budget_period.id), data: {method: :put}}
+                  %a{href: move_group_budget_period_user_request_path(@group, @budget_period, @user, request, to_budget_period_id: budget_period.id), data: {remote: true, method: :put}}
                     %i.fa.fa-arrow-right
                     = budget_period
               %li.divider{role: 'separator'}
               %li
-                %a{href: group_budget_period_user_request_path(@group, @budget_period, @user, request), data: {method: :delete, confirm: _("Are you sure you want to delete '%s'?") % request.article_name }}
+                %a{href: group_budget_period_user_request_path(@group, @budget_period, @user, request), data: {remote: true, method: :delete, confirm: _("Are you sure you want to delete '%s'?") % request.article_name }}
                   %i.fa.fa-trash
                   = _('Delete')

@@ -226,13 +226,18 @@
       false
 
     $('.request[data-request_id="new_request"] a[data-method="delete"]').on 'click', ->
-      el = $('.request[data-request_id="new_request"]')
+      el = $(this).closest('.request')
       el.find('input[data-to_be_required]').removeAttr('required')
       el.find('input:not(:radio):not(:checkbox)').val('')
       el.find('input:radio, input:checkbox').prop('checked', '')
       el.addClass('hidden').closest('form').change()
       $('.panel-footer .fa-plus-circle').show()
       do zebra_rows
+      false
+
+    $('.request .btn-group a').on 'ajax:success', (e, data, status, xhr) ->
+      el = $(this).closest('.request')
+      el.html data
       false
 
     $("input[name*='[approved_quantity]']").on 'change', ->

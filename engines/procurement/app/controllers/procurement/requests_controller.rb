@@ -152,29 +152,31 @@ module Procurement
                                budget_period_id: @budget_period).find(params[:id])
       h = { inspection_comment: nil, approved_quantity: nil, order_quantity: nil }
       if params[:to_group_id]
-        @request.update_attributes \
-          h.merge(group: Procurement::Group.find(params[:to_group_id]))
+        h.merge!(group: Procurement::Group.find(params[:to_group_id]))
       elsif params[:to_budget_period_id]
-        @request.update_attributes \
-          h.merge(budget_period: BudgetPeriod.find(params[:to_budget_period_id]))
+        h.merge!(budget_period: BudgetPeriod.find(params[:to_budget_period_id]))
       end
 
-      flash[:success] = _('Request moved')
-      redirect_to group_budget_period_user_requests_path(@group,
-                                                         @budget_period,
-                                                         @user)
+      if @request.update_attributes h
+        render partial: 'layouts/procurement/flash',
+               locals: {flash: {success: _('Request moved')}}
+      else
+        render status: :bad_request
+      end
     end
 
     def destroy
-      @request = Request.where(user_id: @user,
-                               group_id: @group,
-                               budget_period_id: @budget_period).find(params[:id])
-      @request.destroy
-
-      flash[:success] = _('Deleted')
-      redirect_to group_budget_period_user_requests_path(@group,
-                                                         @budget_period,
-                                                         @user)
+      request = Request.where(user_id: @user,
+                              group_id: @group,
+                              budget_period_id: @budget_period) \
+                       .find(params[:id])
+      request.destroy
+      if request.destroyed?
+        render partial: 'layouts/procurement/flash',
+               locals: {flash: {success: _('Deleted')}}
+      else
+        render status: :bad_request
+      end
     end
 
     private
