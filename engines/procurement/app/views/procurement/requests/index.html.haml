@@ -219,11 +219,23 @@
       #cloned_el.insertAfter(target_el)
       $(this).hide()
       el = $('.request[data-request_id="new_request"]')
-      el.find('input[data-to_be_required]').attr('required', 'true')
+      #el.find('input[data-to_be_required]').attr('required', 'true')
       el.find("input:radio[name*='[priority]'][value='normal']").prop('checked', 'true')
       el.removeClass('hidden').closest('form').change()
       do zebra_rows
       false
+
+    $('.request[data-request_id="new_request"] input:text').on 'keyup change', ->
+      el = $(this).closest('.request')
+      inputs = el.find('input:text')
+      required_inputs = el.find('input[data-to_be_required]')
+      values = ''
+      inputs.each ->
+        values += $.trim($(this).val());
+      if values.length
+        required_inputs.attr('required', 'true')
+      else
+        required_inputs.removeAttr('required')
 
     $('.request[data-request_id="new_request"] a[data-method="delete"]').on 'click', ->
       el = $(this).closest('.request')
