@@ -60,13 +60,17 @@ module Procurement
               when 'total_price'
                 a.total_price(current_user) <=> b.total_price(current_user)
               when 'state'
-                Request::STATES.index(a.state(current_user)) <=> Request::STATES.index(b.state(current_user))
+                Request::STATES.index(a.state(current_user)) <=> \
+                Request::STATES.index(b.state(current_user))
               when 'department'
-                a.organization.parent.to_s.downcase <=> b.organization.parent.to_s.downcase
+                a.organization.parent.to_s.downcase <=> \
+                b.organization.parent.to_s.downcase
               when 'article_name', 'user'
-                a.send(params[:filter][:sort_by]).to_s.downcase <=> b.send(params[:filter][:sort_by]).to_s.downcase
+                a.send(params[:filter][:sort_by]).to_s.downcase <=> \
+                b.send(params[:filter][:sort_by]).to_s.downcase
               else
-                a.send(params[:filter][:sort_by]) <=> b.send(params[:filter][:sort_by])
+                a.send(params[:filter][:sort_by]) <=> \
+                b.send(params[:filter][:sort_by])
             end
           end
           requests.reverse! if params[:filter][:sort_dir] == 'desc'
@@ -85,7 +89,6 @@ module Procurement
           render partial: 'overview'
         end
         format.csv do
-          # requests = get_requests.values.flat_map(&:values).flat_map{|x| x[:departments].values.flat_map(&:values)}.flat_map{|x| x[:requests]}
           requests = get_requests.values.flatten
           send_data Request.csv_export(requests, current_user),
                     type: 'text/csv; charset=utf-8; header=present',
@@ -182,20 +185,18 @@ module Procurement
     private
 
     def default_filters
-      params[:filter] ||=   begin
-                            r = session[:requests_filter] || {}
-                            r.delete('search') # NOTE reset on each request
-                            r
-                          end
-      params[:filter][:budget_period_ids] ||= [Procurement::BudgetPeriod.current.id]
-      params[:filter][:group_ids] ||= if Procurement::Group.inspector_of_any_group?(current_user)
-                                        Procurement::Group.all.select do |group|
-                                          group.inspectable_by?(current_user)
-                                        end.map(&:id)
-                                      else
-                                        Procurement::Group.pluck(:id)
-                                      end
-      # params[:filter][:department_ids] ||= Procurement::Organization.departments.pluck(:id)
+      params[:filter] ||= begin
+        r = session[:requests_filter] || {}
+        r.delete('search') # NOTE reset on each request
+        r
+      end
+      params[:filter][:budget_period_ids] ||= \
+                                      [Procurement::BudgetPeriod.current.id]
+      params[:filter][:group_ids] ||= begin
+        r = Procurement::GroupInspector.where(user_id: user).pluck(:group_id)
+        r = Procurement::Group.pluck(:id) if r.empty?
+        r
+      end
       params[:filter][:priorities] ||= ['high', 'normal']
       params[:filter][:states] ||= Procurement::Request::STATES
 
@@ -208,7 +209,9 @@ module Procurement
       params[:filter][:budget_period_ids].delete('multiselect-all')
 
       params[:filter][:group_ids] ||= []
-      params[:filter][:organization_id] = nil if params[:filter][:organization_id].blank?
+      if params[:filter][:organization_id].blank?
+        params[:filter][:organization_id] = nil
+      end
       params[:filter][:priorities] ||= []
       params[:filter][:states] ||= []
       session[:requests_filter] = params[:filter]

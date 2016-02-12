@@ -37,8 +37,12 @@ module Procurement
     end
 
     validates_presence_of :user, :organization, :article_name, :motivation
-    validates_presence_of :inspection_comment, if: proc { |r| r.approved_quantity and r.approved_quantity < r.requested_quantity }
-    validates :requested_quantity, presence: true, numericality: { greater_than: 0 }
+    validates_presence_of :inspection_comment,
+                          if: proc { |r| r.approved_quantity \
+                                  and r.approved_quantity < r.requested_quantity }
+    validates :requested_quantity,
+              presence: true,
+              numericality: { greater_than: 0 }
 
     before_destroy do
       validates_budget_period
@@ -139,11 +143,16 @@ module Procurement
           _('Approved quantity') => (show_all ? request.approved_quantity : nil),
           _('Order quantity') => (show_all ? request.order_quantity : nil),
           ('%s %s' % [_('Price'), _('incl. VAT')]) => request.price,
-          ('%s %s' % [_('Total'), _('incl. VAT')]) => request.total_price(current_user),
+          ('%s %s' % [_('Total'), _('incl. VAT')]) => \
+                                              request.total_price(current_user),
           _('State') => _(request.state(current_user).to_s.humanize),
           _('Priority') => request.priority,
           _('Article nr. / Producer nr.') => request.article_number,
-          '%s / %s' % [_('Replacement'), _('New')] => (request.replacement ? _('Replacement') : _('New')),
+          '%s / %s' % [_('Replacement'), _('New')] => if request.replacement
+                                                        _('Replacement')
+                                                      else
+                                                        _('New')
+                                                      end,
           _('Point of Delivery') => request.location_name,
           _('Motivation') => request.motivation,
           _('Inspection comment') => (show_all ? request.inspection_comment : nil)

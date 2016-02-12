@@ -11,29 +11,23 @@
         - Procurement::BudgetPeriod.order(end_date: :desc).each do |budget_period|
           %option{value: budget_period.id, selected: params[:filter][:budget_period_ids].map(&:to_i).include?(budget_period.id)}= budget_period
 
-  - if Procurement::Group.inspector_of_any_group?(current_user)
-    .form-group
-      :ruby
-        my_groups, other_groups = Procurement::Group.all.partition { |group| group.inspectable_by?(current_user) }
-      %b
-        %i.fa.fa-shopping-cart
-        = _('Groups')
-      %ul
-        %select{name: 'filter[group_ids][]', multiple: true}
+  .form-group
+    %b
+      %i.fa.fa-shopping-cart
+      = _('Groups')
+    %ul
+      %select{name: 'filter[group_ids][]', multiple: true}
+        :ruby
+          my_groups, other_groups = Procurement::Group.all.partition { |group| group.inspectable_by?(current_user) }
+        - unless my_groups.blank?
           %optgroup{label: _('My groups')}
             - my_groups.each do |group|
               %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
           %optgroup{label: _('Other groups')}
             - other_groups.each do |group|
               %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
-  - else
-    .form-group
-      %b
-        %i.fa.fa-shopping-cart
-        = _('Groups')
-      %ul
-        %select{name: 'filter[group_ids][]', multiple: true}
-          - Procurement::Group.all.each do |group|
+        - else
+          - other_groups.each do |group|
             %option{value: group.id, selected: params[:filter][:group_ids].map(&:to_i).include?(group.id)}= group
 
   - if procurement_inspector_or_admin?

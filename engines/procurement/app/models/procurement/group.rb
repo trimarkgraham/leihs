@@ -22,7 +22,7 @@ module Procurement
     end
 
     def inspectable_by?(user)
-      inspectors.include?(user)
+      group_inspectors.where(user_id: user).exists?
     end
 
     def inspectable_or_readable_by?(user)

@@ -7,7 +7,10 @@ module Procurement
     validates_presence_of :name, :inspection_start_date, :end_date
     validates_uniqueness_of :name, :inspection_start_date, :end_date
     validate do
-      errors.add(:end_date, _('must be greater or equal to the inspection start date')) if end_date < inspection_start_date
+      if end_date < inspection_start_date
+        errors.add(:end_date,
+                   _('must be greater or equal to the inspection start date'))
+      end
     end
 
     ####################################################
