@@ -193,7 +193,7 @@ module Procurement
       params[:filter][:budget_period_ids] ||= \
                                       [Procurement::BudgetPeriod.current.id]
       params[:filter][:group_ids] ||= begin
-        r = Procurement::GroupInspector.where(user_id: user).pluck(:group_id)
+        r = Procurement::GroupInspector.where(user_id: current_user).pluck(:group_id)
         r = Procurement::Group.pluck(:id) if r.empty?
         r
       end
