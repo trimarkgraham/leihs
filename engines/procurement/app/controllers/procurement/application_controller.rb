@@ -32,23 +32,23 @@ module Procurement
 
       when :authenticated?
         flash[:error] = _('You are not logged in')
-        redirect_to root_path and return
+        redirect_to root_path
 
       when :admins_defined?
         flash[:error] = _('No admins defined yet')
         if procurement_or_leihs_admin?
-          redirect_to users_path and return
+          redirect_to users_path
         end
 
       when :current_budget_period_defined?
         flash.now[:error] = _('Current budget period not defined yet')
         if procurement_or_leihs_admin?
-          redirect_to budget_periods_path and return
+          redirect_to budget_periods_path
         end
 
+      else
+        redirect_to root_path
       end
-
-      redirect_to root_path # default
     end
 
     def procurement_or_leihs_admin?

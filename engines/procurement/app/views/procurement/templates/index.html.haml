@@ -123,15 +123,23 @@
     $('.panel-heading').on 'click', '.fa-minus-circle', ->
       panel_el = $(this).closest('.panel')
       target_el = panel_el.find(".panel-heading input[name*='[_destroy]']")
-      target_el.val('1').change()
-      panel_el.removeClass('panel-default').addClass('panel-danger')
+      if target_el.val() == '1'
+        target_el.val('').change()
+        panel_el.removeClass('panel-danger').addClass('panel-default')
+      else
+        target_el.val('1').change()
+        panel_el.removeClass('panel-default').addClass('panel-danger')
       false
 
     $('tbody').on 'click', '.fa-minus-circle', ->
       row_el = $(this).closest('tr')
       target_el = row_el.find("input[name*='[_destroy]']")
-      target_el.val('1').change()
-      row_el.addClass('bg-danger')
+      if target_el.val() == '1'
+        target_el.val('').change()
+        row_el.removeClass('bg-danger')
+      else
+        target_el.val('1').change()
+        row_el.addClass('bg-danger')
       false
 
     $('.panel').on('click', '.panel-heading:not(.collapsed) input', (e)->
