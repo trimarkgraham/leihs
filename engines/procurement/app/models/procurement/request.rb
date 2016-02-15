@@ -24,6 +24,12 @@ module Procurement
       self.order_quantity ||= approved_quantity
       self.approved_quantity ||= order_quantity
 
+      if template and (template.article_name != article_name or \
+                        (template.article_number != article_number and \
+                         not template.article_number.blank?))
+        self.template_id = nil
+      end
+
       validates_budget_period
     end
 

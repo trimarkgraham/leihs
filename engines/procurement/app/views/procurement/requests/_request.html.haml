@@ -17,7 +17,7 @@
       %label.col-xs-4.control-label
         = _('Article nr. / Producer nr.')
       .col-xs-8
-        - if request.editable?(current_user) and request.template_id.nil?
+        - if request.editable?(current_user) and (request.template_id.nil? or request.group.inspectable_by?(current_user))
           %input.form-control{name: "requests[#{request.id}][article_number]", placeholder: _('Article nr. / Producer nr.'), value: request.article_number}
         - else
           = request.article_number
@@ -26,7 +26,7 @@
       %label.col-xs-4.control-label
         = _('Supplier')
       .col-xs-8
-        - if request.editable?(current_user) and request.template_id.nil?
+        - if request.editable?(current_user) and (request.template_id.nil? or request.group.inspectable_by?(current_user))
           %input.form-control{name: "requests[#{request.id}][supplier_name]", placeholder: _('Supplier'), value: request.supplier_name}
           %input{type: :hidden, name: "requests[#{request.id}][supplier_id]", value: request.supplier_id}
         - else

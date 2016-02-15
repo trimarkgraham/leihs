@@ -153,7 +153,7 @@
             = render partial: 'layouts/procurement/flash', :locals => {:flash => flash}
         .row
           .col-xs-6{style: 'font-size: 2em'}
-            %i.fa.fa-plus-circle
+            -#%i.fa.fa-plus-circle
           .col-xs-6.text-right
             %button.btn.btn-success{type: :submit, disabled: true}
               %i.fa.fa-check
@@ -205,24 +205,27 @@
     scroll_to(el)
 
   @show_request = (request_id)->
-    $('.panel-footer .fa-plus-circle').trigger('click') if request_id == 'new_request'
+    #$('.panel-footer .fa-plus-circle').trigger('click') if request_id == 'new_request'
+    $('.sidebar-wrapper .fa-plus-circle').trigger('click') if request_id == 'new_request'
     el = $(".row[data-request_id='" + request_id + "']")
     scroll_to(el)
 
   $(document).ready ->
     do zebra_rows
 
-    $('.panel-footer').on 'click', '.fa-plus-circle', ->
+    #$('.panel-footer').on 'click', '.fa-plus-circle', ->
+    $('.sidebar-wrapper').on 'click', '.fa-plus-circle', ->
       #target_el = $(this).closest('tfoot').prev('tbody').find('tr:last-child')
       #cloned_el = target_el.clone()
       #cloned_el.find('input').val('')
       #cloned_el.insertAfter(target_el)
-      $(this).hide()
+      #$(this).hide()
       el = $('.request[data-request_id="new_request"]')
       #el.find('input[data-to_be_required]').attr('required', 'true')
       el.find("input:radio[name*='[priority]'][value='normal']").prop('checked', 'true')
       el.removeClass('hidden').closest('form').change()
       do zebra_rows
+      scroll_to(el)
       false
 
     $('.request[data-request_id="new_request"] input:text').on 'keyup change', ->
@@ -243,11 +246,13 @@
       el.find('input:not(:radio):not(:checkbox)').val('')
       el.find('input:radio, input:checkbox').prop('checked', '')
       el.addClass('hidden').closest('form').change()
-      $('.panel-footer .fa-plus-circle').show()
+      #$('.panel-footer .fa-plus-circle').show()
+      $('.sidebar-wrapper .fa-plus-circle').show()
       do zebra_rows
       false
 
     $('.request .btn-group a').on 'ajax:success', (e, data, status, xhr) ->
+      $('.flash').hide()
       el = $(this).closest('.request')
       el.html data
       false

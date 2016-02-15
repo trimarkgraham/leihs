@@ -2,6 +2,16 @@
   %input{type: :hidden, name: 'filter[sort_by]', value: params[:filter][:sort_by]}
   %input{type: :hidden, name: 'filter[sort_dir]', value: params[:filter][:sort_dir]}
 
+  - if procurement_requester? and procurement_inspector_or_admin?
+    .form-group
+      %b
+        %i.fa.fa-tasks
+        = _('Requests')
+      %ul
+        %label
+          %input{type: :checkbox, name: "user_id", value: current_user.id, checked: @user == current_user}
+          .label.label-default= _('Only show my own requests')
+
   .form-group
     %b
       %i.fa.fa-calendar
@@ -34,7 +44,7 @@
     .form-group
       %b
         %i.fa.fa-sitemap
-        = _('Organisation')
+        = _('Organisations')
       %ul
         %select{name: 'filter[organization_id]'}
           %option{value: ''}= _('All')
@@ -74,16 +84,6 @@
       = _('Search')
     %ul
       %input.form-control{name: 'filter[search]', placeholder: _('Search'), value: params[:filter][:search], autocomplete: :off}
-
-  - if procurement_requester? and procurement_inspector_or_admin?
-    .form-group
-      %b
-        %i.fa.fa-tasks
-        = _('Requests')
-      %ul
-        %label
-          %input{type: :checkbox, name: "user_id", value: current_user.id, checked: @user == current_user}
-          .label.label-default= _('Only show my own requests')
 
 %br
 %button.btn.btn-primary{type: :submit, name: 'format', value: 'csv', form: 'filter_panel'}

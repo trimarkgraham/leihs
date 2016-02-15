@@ -13,9 +13,9 @@
     .panel.panel-default
       .panel-heading.collapsed(data-toggle="collapse" data-parent="#accordion" href="#collapse_#{template_category.id}")
         .row
-          .col-xs-1
-            %i.fa.fa-caret-right
-          .col-xs-10
+          .col-xs-11
+            %span.toggler
+              %i.fa.fa-caret-right
             %i.fa.fa-cube
             - if template_category.id
               %input{type: :hidden, name: "template_categories[#{template_category.object_id}][id]", value: template_category.id}
@@ -145,9 +145,9 @@
     $('.panel').on('click', '.panel-heading:not(.collapsed) input', (e)->
       e.stopPropagation()
     ).on('show.bs.collapse', '.panel-collapse', ()->
-      $(this).closest('.panel').find('.panel-heading .row .col-xs-1:first').html('<i class="fa fa-caret-down"></i>')
+      $(this).closest('.panel').find('.panel-heading .toggler').html('<i class="fa fa-caret-down"></i>')
     ).on('hidden.bs.collapse', '.panel-collapse', ()->
-      $(this).closest('.panel').find('.panel-heading .row .col-xs-1:first').html('<i class="fa fa-caret-right"></i>')
+      $(this).closest('.panel').find('.panel-heading .toggler').html('<i class="fa fa-caret-right"></i>')
     )
 
     $('form').on('ajax:success', (e, data, status, xhr) ->

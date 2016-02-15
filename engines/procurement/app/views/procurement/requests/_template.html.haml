@@ -14,14 +14,20 @@
       %label.col-xs-4.control-label
         = _('Article nr. / Producer nr.')
       .col-xs-8
-        %input{type: :hidden, name: "requests[new_#{i}][article_number]", value: template.article_number}
-        = template.article_number
+        - if @group.inspectable_by? current_user
+          %input.form-control{name: "requests[new_#{i}][article_number]", value: template.article_number, placeholder: _('Article nr. / Producer nr.'), autocomplete: :off}
+        - else
+          %input{type: :hidden, name: "requests[new_#{i}][article_number]", value: template.article_number}
+          = template.article_number
     .form-group
       %label.col-xs-4.control-label
         = _('Supplier')
       .col-xs-8
-        %input{type: :hidden, name: "requests[new_#{i}][supplier_name]", value: template.supplier_name}
-        = template.supplier_name
+        - if @group.inspectable_by? current_user
+          %input.form-control{name: "requests[new_#{i}][supplier_name]", value: template.supplier_name, placeholder: _('Supplier'), autocomplete: :off}
+        - else
+          %input{type: :hidden, name: "requests[new_#{i}][supplier_name]", value: template.supplier_name}
+          = template.supplier_name
     .form-group
       %label.col-xs-4.control-label
         = _('Name of receiver')
