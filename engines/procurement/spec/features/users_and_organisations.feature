@@ -79,6 +79,7 @@ Feature: Section Users
     Then I see a success message
     And the new admin was created in the database
 
+  @users_and_organisations @browser
   Scenario: Sorting of Admins
     Given I am Hans Ueli
     Given admins exist

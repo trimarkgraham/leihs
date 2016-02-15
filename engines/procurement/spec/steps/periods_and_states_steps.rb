@@ -35,7 +35,7 @@ steps_for :periods_and_states do
       .set format_date(Time.zone.today + 1)
   end
 
-  step 'I fill in the end date of the inspection period' do
+  step 'I fill in the end date of the budget period' do
     line = find('form table tbody tr')
     line.find("input[name*='end_date']")
       .set format_date(Time.zone.today + 1.month)

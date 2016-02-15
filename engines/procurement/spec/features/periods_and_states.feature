@@ -38,6 +38,7 @@ Feature: Periods and states
     And the budget period line was updated successfully
     And the data for the budget period was updated successfully in the database
 
+  @periods_and_states @browser
   Scenario: Budget Period End Date earlyer than Inspection Start Date
     Given I am Hans Ueli
     And budget periods exist
@@ -48,6 +49,7 @@ Feature: Periods and states
     Then I see an error message
     And the data for the budget period was not saved to the database
 
+  @periods_and_states @browser
   Scenario: Mandatory Fields of a Budget Period
     Given I am Hans Ueli
     When I navigate to the budget periods
@@ -56,6 +58,7 @@ Feature: Periods and states
     When I have not filled the mandatory fields
     Then I can not save the data
 
+  @periods_and_states @browser
   Scenario: Delete an unsaved Budget Period
     Given I am Hans Ueli
     When I navigate to the budget periods
@@ -63,6 +66,7 @@ Feature: Periods and states
     When I have not saved the data yet
     Then I can delete the line
 
+  @periods_and_states @browser
   Scenario: Show Totals of each Budget Period
     Given I am Hans Ueli
     And budget periods exist
