@@ -8,8 +8,16 @@ module Procurement
 
     monetize :price_cents, allow_nil: true
 
-    before_validation do
+    # NOTE not executing on unchanged existing records
+    before_validation on: [:create, :update] do
       self.price ||= 0
+    end
+
+    before_save on: :update do
+      if article_name_changed? and \
+        (article_number.blank? or article_number_changed?)
+        requests.update_all(template_id: nil)
+      end
     end
 
     validates_presence_of :article_name

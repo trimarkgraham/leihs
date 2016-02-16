@@ -17,7 +17,7 @@ module Procurement
 
     #################################################################
 
-    # NOTE defining 'on:' to not execute calling just 'valid?' on past requests
+    # NOTE not executing on unchanged existing records
     before_validation on: [:create, :update] do
       self.price ||= 0
 
