@@ -23,7 +23,7 @@
     .panel-body
       :ruby
         groups = requests.group_by(&:group)
-        selected_groups = Procurement::Group.all.select { |group| params[:filter][:group_ids].map(&:to_i).include?(group.id) }
+        selected_groups = Procurement::Group.all.select { |group| @filter['group_ids'].map(&:to_i).include?(group.id) }
         selected_groups.each {|group| groups[group] ||= [] }
 
       - groups.each_pair do |group, requests|

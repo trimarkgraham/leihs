@@ -40,23 +40,23 @@ module Procurement
         fallback_filters
         h = {}
         Procurement::BudgetPeriod.order(end_date: :desc) \
-          .find(params[:filter][:budget_period_ids]).each do |budget_period|
+          .find(@filter['budget_period_ids']).each do |budget_period|
 
-          requests = budget_period.requests.search(params[:filter][:search]) \
-                      .where(group_id: params[:filter][:group_ids],
-                             priority: params[:filter][:priorities])
+          requests = budget_period.requests.search(@filter['search']) \
+                      .where(group_id: @filter['group_ids'],
+                             priority: @filter['priorities'])
           requests = requests.where(user_id: @user) if @user
-          if params[:filter][:organization_id]
+          if @filter['organization_id']
             requests = requests.joins(:organization)
-                           .where(['organization_id = :id OR procurement_organizations.parent_id = :id', { id: params[:filter][:organization_id] }])
+                           .where(['organization_id = :id OR procurement_organizations.parent_id = :id', { id: @filter['organization_id'] }])
           end
           requests = requests.select do |r|
-                       params[:filter][:states] \
+                       @filter['states'] \
                         .map(&:to_sym).include? r.state(current_user)
           end
 
           requests = requests.sort do |a, b|
-            case params[:filter][:sort_by]
+            case @filter['sort_by']
               when 'total_price'
                 a.total_price(current_user) <=> b.total_price(current_user)
               when 'state'
@@ -66,14 +66,14 @@ module Procurement
                 a.organization.parent.to_s.downcase <=> \
                 b.organization.parent.to_s.downcase
               when 'article_name', 'user'
-                a.send(params[:filter][:sort_by]).to_s.downcase <=> \
-                b.send(params[:filter][:sort_by]).to_s.downcase
+                a.send(@filter['sort_by']).to_s.downcase <=> \
+                b.send(@filter['sort_by']).to_s.downcase
               else
-                a.send(params[:filter][:sort_by]) <=> \
-                b.send(params[:filter][:sort_by])
+                a.send(@filter['sort_by']) <=> \
+                b.send(@filter['sort_by'])
             end
           end
-          requests.reverse! if params[:filter][:sort_dir] == 'desc'
+          requests.reverse! if @filter['sort_dir'] == 'desc'
 
           h[budget_period] = requests
         end
@@ -185,36 +185,38 @@ module Procurement
     private
 
     def default_filters
-      params[:filter] ||= begin
+      @filter = params[:filter] || begin
         r = session[:requests_filter] || {}
         r.delete('search') # NOTE reset on each request
         r
       end
-      params[:filter][:budget_period_ids] ||= \
-                                      [Procurement::BudgetPeriod.current.id]
-      params[:filter][:group_ids] ||= begin
-        r = Procurement::GroupInspector.where(user_id: current_user).pluck(:group_id)
+      @filter['budget_period_ids'] ||= [Procurement::BudgetPeriod.current.id]
+      @filter['group_ids'] ||= begin
+        r = Procurement::GroupInspector.where(user_id: current_user) \
+            .pluck(:group_id)
         r = Procurement::Group.pluck(:id) if r.empty?
         r
       end
-      params[:filter][:priorities] ||= ['high', 'normal']
-      params[:filter][:states] ||= Procurement::Request::STATES
+      @filter['priorities'] ||= ['high', 'normal']
+      @filter['states'] ||= Procurement::Request::STATES
 
-      params[:filter][:sort_by] = 'state' if params[:filter][:sort_by].blank?
-      params[:filter][:sort_dir] = 'asc' if params[:filter][:sort_dir].blank?
+      @filter['sort_by'] = 'state' if @filter['sort_by'].blank?
+      @filter['sort_dir'] = 'asc' if @filter['sort_dir'].blank?
     end
 
     def fallback_filters
-      params[:filter][:budget_period_ids] ||= []
-      params[:filter][:budget_period_ids].delete('multiselect-all')
+      @filter = params[:filter]
 
-      params[:filter][:group_ids] ||= []
-      if params[:filter][:organization_id].blank?
-        params[:filter][:organization_id] = nil
+      @filter['budget_period_ids'] ||= []
+      @filter['budget_period_ids'].delete('multiselect-all')
+
+      @filter['group_ids'] ||= []
+      if @filter['organization_id'].blank?
+        @filter['organization_id'] = nil
       end
-      params[:filter][:priorities] ||= []
-      params[:filter][:states] ||= []
-      session[:requests_filter] = params[:filter]
+      @filter['priorities'] ||= []
+      @filter['states'] ||= []
+      session[:requests_filter] = @filter
     end
   end
 end
