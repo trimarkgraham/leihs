@@ -1,6 +1,6 @@
 Feature: section "Managing Requests"
 
-Scenario: What to see in section "Requests" as Roger
+  Scenario: What to see in section "Requests" as Roger
     Given I am Roger
     And no requests exist
     When I navigate to the requests page
@@ -20,8 +20,8 @@ Scenario: What to see in section "Requests" as Roger
     And both priorities are selected
     And all states are selected
     And the search field is empty
-    
-Scenario: Using the filters as Roger
+
+  Scenario: Using the filters as Roger
     Given I am Roger
     When I navigate to the requests page
     Then I do not see the filter "only show my own requests"
@@ -33,8 +33,8 @@ Scenario: Using the filters as Roger
     And I enter a search string
     Then the list of requests is adjusted immediately according to the filters chosen
     And the amount of requests found is shown
-    
-Scenario: What to see in section "Requests" as Barbara
+
+  Scenario: What to see in section "Requests" as Barbara
     Given I am Barbara
     And no requests exist
     When I navigate to the requests page
@@ -57,8 +57,8 @@ Scenario: What to see in section "Requests" as Barbara
     And both priorities are selected
     And all states are selected
     And the search field is empty
-    
-Scenario: Using the filters as Barbara
+
+  Scenario: Using the filters as Barbara
     Given I am Barbara
     And three requests exist from the current budget period
     And two requests have been created by myself
@@ -74,8 +74,8 @@ Scenario: Using the filters as Barbara
     Then the list of requests is adjusted immediately
     And I see both my requests
     And the amount of requests found is shown as 2
-    
-Scenario: Creating a request for a group
+
+  Scenario Outline: Creating a request for a group
     Given I am <username>
     When I navigate the requests page
     And I press on the plus icon of a group
@@ -87,11 +87,11 @@ Scenario: Creating a request for a group
     Then I see a success message
     And the request with all given information was created successfully in the database
     Examples:
-      | username  |
-      | Barbara   |
-      | Roger     |
-  
-Scenario: Creating a request through a budget period selecting a template article
+      | username |
+      | Barbara  |
+      | Roger    |
+
+  Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
     When I navigate to the requests page
     And I press on the plus icon of the budget period
@@ -109,11 +109,11 @@ Scenario: Creating a request through a budget period selecting a template articl
     Then I see a success message
     And the request with all given information was created successfully in the database
     Examples:
-      | username  |
-      | Barbara   |
-      | Roger     |
-    
-Scenario: Creating a request through a budget period selecting a group
+      | username |
+      | Barbara  |
+      | Roger    |
+
+  Scenario Outline: Creating a request through a budget period selecting a group
     Given I am <username>
     When I navigate to the requests page
     And I press on the plus icon of the budget period
@@ -126,11 +126,11 @@ Scenario: Creating a request through a budget period selecting a group
     Then I see a success message
     And the request with all given information was created successfully in the database
     Examples:
-      | username  |
-      | Barbara   |
-      | Roger     |
-    
-Scenario: Creating a freetext request inside the new request page 
+      | username |
+      | Barbara  |
+      | Roger    |
+
+  Scenario Outline: Creating a freetext request inside the new request page
     Given I am <username>
     When I am navigated to the new requests page
     And I press on the plus icon
@@ -140,11 +140,11 @@ Scenario: Creating a freetext request inside the new request page
     Then I see a success message
     And the request with all given information was created successfully in the database
     Examples:
-      | username  |
-      | Barbara   |
-      | Roger     |
-    
-Scenario: Creating a request from a group template inside the new request page
+      | username |
+      | Barbara  |
+      | Roger    |
+
+  Scenario Outline: Creating a request from a group template inside the new request page
     Given I am <username>
     And a template article exists
     And the template article contains a articlenr/suppliernr
@@ -164,11 +164,11 @@ Scenario: Creating a request from a group template inside the new request page
     Then I see a success message
     And the request with all given information was created successfully in the database
     Examples:
-      | username  |
-      | Barbara   |
-      | Roger     |
+      | username |
+      | Barbara  |
+      | Roger    |
 
-Scenario: Mandatory fields
+  Scenario Outline: Mandatory fields
     Given I am <username>
     When I navigate the requests page
     And I press on the plus icon of a group
@@ -186,18 +186,19 @@ Scenario: Mandatory fields
     Then the line is deleted
     And no information is saved to the database
     Examples:
-      | username  |
-      | Barbara   |
-      | Roger     |
-      
-Scenario: sorting requests
+      | username |
+      | Barbara  |
+      | Roger    |
+
+  Scenario: sorting requests
     Given I am <username>
     When I navigate the requests page
-    And I can sort the requests by article name
-    And I can sort the requests by requester
-    And I can sort the requests by organisation
-    And I can sort the requests by price
-    And I can sort the requests by quantity
-    And I can sort the requests by the total amount
-    And I can sort the requests by priority
-    And I can sort the requests by state
+    And I can sort the requests by
+      | article name     |
+      | requester        |
+      | organisation     |
+      | price            |
+      | quantity         |
+      | the total amount |
+      | priority         |
+      | state            |
