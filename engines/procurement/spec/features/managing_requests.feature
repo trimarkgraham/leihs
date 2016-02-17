@@ -43,8 +43,10 @@ Scenario: What to see in section "Requests" as Barbara
     And I see the current budget period
     And I see the requested amount per budget period
     And I see the requested amount per group of each budget period
-    And I see the budget limits
-    And I see the percentage signs
+    And I see the budget limits of all groups
+    And I see the total of all ordered amounts of each groups
+    And I see the total of all ordered amounts of a budget period
+    And I see the percentage of budget used compared to the budget limit of my group
     And I see when the requesting phase of this budget period ends
     And I see when the inspection phase of this budget period ends
     And I see all procurement groups
@@ -191,13 +193,11 @@ Scenario: Mandatory fields
 Scenario: sorting requests
     Given I am <username>
     When I navigate the requests page
-    Then I can sort the requests by name
-    And I can sort the requests by name
-     And I can sort the requests by name
-      And I can sort the requests by name
-    
-    And I sort the 
-    Then I am navigated to the new request page
-    
-
-    
+    And I can sort the requests by article name
+    And I can sort the requests by requester
+    And I can sort the requests by organisation
+    And I can sort the requests by price
+    And I can sort the requests by quantity
+    And I can sort the requests by the total amount
+    And I can sort the requests by priority
+    And I can sort the requests by state
