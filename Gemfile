@@ -81,7 +81,7 @@ group :development, :test do
   gem 'binding_of_caller'
   gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'cider_ci-support'
-  gem 'cucumber-rails', '~> 1.3', require: false # it already includes capybara
+  gem 'cucumber-rails', '1.4.2', require: false # it already includes capybara # NOTE '~> 1.4' doesn't work beacause 'gherkin'
   gem 'database_cleaner'
   gem 'factory_girl_rails', '~> 4.1'
   gem 'faker', '1.3.0' # NOTE '~> 1.4' doesn't work beacause "I18n::InvalidLocale" error, see note for config.i18n in config/application.rb
