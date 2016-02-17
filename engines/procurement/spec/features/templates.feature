@@ -13,7 +13,7 @@ Feature: Templates
     And the category is saved to the database
 
   @templates @browser
-    Scenario: Create an Template Article
+    Scenario: Create a Template Article
       Given I am Barbara
       And a template category exists
       When I navigate to the templates page
@@ -49,7 +49,7 @@ Feature: Templates
       Then the article of the category is marked red
       When I click on save
       Then I see a success message
-      And the category articles are deleted from the database
+      And the category article is deleted from the database
 
   @templates @browser
     Scenario: Editing a Template
