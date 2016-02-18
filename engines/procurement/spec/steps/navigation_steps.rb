@@ -17,8 +17,12 @@ module NavigationSteps
     expect(page).to have_selector('h1', text: _('Users'))
   end
 
-  step 'I navigate to the organizations list' do
-    visit procurement.organizations_path
+  step 'I navigate to the organisation tree page' do
+    within '.navbar' do
+      click_on _('Admin')
+      click_on _('Organisations')
+    end
+    expect(page).to have_selector('h1', text: _('Organisations of the requesters'))
   end
 
   step 'page has been loaded' do

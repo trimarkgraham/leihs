@@ -1,5 +1,81 @@
 ---
 tasks:
+- name: engines/procurement/spec/features/managing_requests.feature:3
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:3
+- name: engines/procurement/spec/features/managing_requests.feature:24
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:24
+- name: engines/procurement/spec/features/managing_requests.feature:37
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:37
+- name: engines/procurement/spec/features/managing_requests.feature:61
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:61
+- name: engines/procurement/spec/features/managing_requests.feature:78
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:78
+- name: engines/procurement/spec/features/managing_requests.feature:101
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:101
+- name: engines/procurement/spec/features/managing_requests.feature:117
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:117
+- name: engines/procurement/spec/features/managing_requests.feature:139
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:139
+- name: engines/procurement/spec/features/managing_requests.feature:156
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:156
+- name: engines/procurement/spec/features/managing_requests.feature:170
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:170
+- name: engines/procurement/spec/features/managing_requests.feature:194
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:194
+- name: engines/procurement/spec/features/managing_requests.feature:216
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:216
+- name: engines/procurement/spec/features/managing_requests.feature:230
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:230
+- name: engines/procurement/spec/features/managing_requests.feature:248
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:248
+- name: engines/procurement/spec/features/managing_requests.feature:259
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:259
+- name: engines/procurement/spec/features/managing_requests.feature:268
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:268
+- name: engines/procurement/spec/features/managing_requests.feature:279
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:279
+- name: engines/procurement/spec/features/managing_requests.feature:290
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:290
+- name: engines/procurement/spec/features/managing_requests.feature:299
+  scripts:
+    test:
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/managing_requests.feature:299
 - name: engines/procurement/spec/features/periods_and_states.feature:5
   scripts:
     test:
@@ -168,7 +244,7 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:91
-- name: engines/procurement/spec/features/users_and_organisations.feature:102
+- name: engines/procurement/spec/features/users_and_organisations.feature:103
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:102
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/users_and_organisations.feature:103

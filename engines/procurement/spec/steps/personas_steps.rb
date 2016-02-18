@@ -46,6 +46,11 @@ module PersonasSteps
       || FactoryGirl.create(:procurement_access, :admin)
   end
 
+  step 'admins exist' do
+    Procurement::Access.admins.count >= 3 \
+      || 3.times { FactoryGirl.create(:procurement_access, :admin) }
+  end
+
   step 'there exist :count requesters' do |count|
     count.to_i.times do
       FactoryGirl.create(:procurement_access, :requester)

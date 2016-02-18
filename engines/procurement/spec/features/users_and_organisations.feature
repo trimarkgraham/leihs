@@ -90,11 +90,12 @@ Feature: Section Users
   @users_and_organisations @browser
   Scenario: Delete an Admin
     Given I am Hans Ueli
+#??# do you mean 'another admin user exists' ?
     And a admin user exists
     When I navigate to the users page
     Then I can delete the admin
     When I click on save
-    Then I see a success messagae
+    Then I see a success message
     And the admin is deleted from the database
 
 #Final - will not change anymore

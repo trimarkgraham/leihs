@@ -123,15 +123,16 @@ steps_for :users_and_organisations do
   end
 
   step 'I can add an admin' do
-    step 'I navigate to the users page'
     admin_ids = Procurement::Access.admins.pluck(:user_id)
-    user = User.not_as_delegations.where.not(id: admin_ids).order('RAND()').first \
+    @user = User.not_as_delegations.where.not(id: admin_ids).order('RAND()').first \
             || FactoryGirl.create(:user)
     find('.token-input-list .token-input-input-token input#token-input-')
-      .set user.name
-    find('.token-input-dropdown li', text: user.name).click
-    step 'I click on save'
-    expect(Procurement::Access.admins.exists?(user.id)).to be true
+      .set @user.name
+    find('.token-input-dropdown li', text: @user.name).click
+  end
+
+  step 'the new admin was created in the database' do
+    expect(Procurement::Access.admins.exists?(@user.id)).to be true
   end
 
   step 'requesters exist' do
@@ -153,22 +154,29 @@ steps_for :users_and_organisations do
   end
 
   step 'a admin user exists' do
-    step 'a procurement admin exists'
-    @admin = Procurement::Access.admins.where.not(user_id: @current_user) \
+    # FactoryGirl.create(:procurement_access, :admin)
+
+    @admin = Procurement::Access.admins \
+      # .where.not(user_id: @current_user) \
       .order('RAND()').first.user
   end
 
   step 'I can delete the admin' do
     find('.token-input-list .token-input-token', text: @admin.name) \
       .find('.token-input-delete-token').click
-    step 'I click on save'
+  end
+
+  step 'the admin is deleted from the database' do
     expect(Procurement::Access.admins.exists?(@admin.id)).to be false
   end
 
-  step 'I can view the organisation tree according ' \
-       'to the organisations assigned to requester' do
+  step 'organisations exist' do
     step 'there exist 10 requesters'
-    step 'I navigate to the organizations list'
+    expect(Procurement::Organization.exists?).to be true
+  end
+
+  step 'I see the organisation tree according ' \
+       'to the organisations assigned to requester' do
     Procurement::Access.requesters.each do |requester|
       find('li', text: requester.organization.parent.name) \
         .find('li', text: requester.organization.name) \
