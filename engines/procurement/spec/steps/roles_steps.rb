@@ -1,7 +1,7 @@
-require_relative 'personas_steps'
+# require_relative 'personas_steps'
 
 steps_for :roles do
-  include PersonasSteps
+  # include PersonasSteps
 
   step 'there exists a request' do
     FactoryGirl.create(:procurement_request)

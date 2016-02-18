@@ -1,11 +1,11 @@
 require_relative 'helpers'
-require_relative 'personas_steps'
+# require_relative 'personas_steps'
 require_relative 'placeholders'
 require File.join(Rails.root, 'features/support/dataset.rb')
 
 steps_for :periods_and_states do
   include Helpers
-  include PersonasSteps
+  # include PersonasSteps
 
   step 'there does not exist any budget period yet' do
     expect(Procurement::BudgetPeriod.count).to eq 0
@@ -182,11 +182,7 @@ steps_for :periods_and_states do
   end
 
   step 'I see the state :state' do |state|
-    if @request.user_id == @current_user.id
-      step 'I navigate to my requests'
-    else
-      step 'I navigate to the inspection overview'
-    end
+    step 'I navigate to the requests page'
     step 'I select all budget periods'
     step 'I select all groups'
     step 'page has been loaded'

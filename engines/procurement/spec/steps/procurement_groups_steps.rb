@@ -1,7 +1,7 @@
-require_relative 'personas_steps'
+# require_relative 'personas_steps'
 
 steps_for :procurement_groups do
-  include PersonasSteps
+  # include PersonasSteps
 
   step 'I navigate to the groups page' do
     within '.navbar' do

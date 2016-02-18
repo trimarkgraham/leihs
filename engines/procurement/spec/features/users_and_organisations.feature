@@ -66,7 +66,7 @@ Feature: Section Users
   Scenario: Sorting of requester
     Given I am Hans Ueli
     Given requesters exist
-    When I navigate to the users list
+    When I navigate to the users page
     Then the requesters are sorted 0-10 and a-z
 
 #Final - will not change anymore
@@ -83,7 +83,7 @@ Feature: Section Users
   Scenario: Sorting of Admins
     Given I am Hans Ueli
     Given admins exist
-    When I navigate to the users list
+    When I navigate to the users page
     Then the admins are sorted alphabetically from a-z
 
 #Final - will not change anymore

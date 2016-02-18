@@ -1,18 +1,20 @@
 module NavigationSteps
-  step 'I navigate to the requests' do
+  step 'I navigate to the requests page' do
     visit procurement.overview_requests_path
   end
-  # TODO merge
-  step 'I navigate to my requests' do
-    step 'I navigate to the requests'
-  end
-  # TODO merge
-  step 'I navigate to the inspection overview' do
-    step 'I navigate to the requests'
+  step 'I navigate to the requests overview page' do
+    visit procurement.overview_requests_path
   end
 
-  step 'I navigate to the users list' do
-    visit procurement.users_path
+  # step 'I navigate to the users list' do
+  #   visit procurement.users_path
+  # end
+  step 'I navigate to the users page' do
+    within '.navbar' do
+      click_on _('Admin')
+      click_on _('Users')
+    end
+    expect(page).to have_selector('h1', text: _('Users'))
   end
 
   step 'I navigate to the organizations list' do
@@ -26,7 +28,7 @@ module NavigationSteps
   step 'I enter the section :section' do |section|
     case section
       when 'My requests'
-        step 'I navigate to my requests'
+        step 'I navigate to the requests page'
       else
         raise
     end

@@ -1,15 +1,7 @@
-require_relative 'personas_steps'
+# require_relative 'personas_steps'
 
 steps_for :users_and_organisations do
-  include PersonasSteps
-
-  step 'I navigate to the users page' do
-    within '.navbar' do
-      click_on _('Admin')
-      click_on _('Users')
-    end
-    expect(page).to have_selector('h1', text: _('Users'))
-  end
+  # include PersonasSteps
 
   step 'there does not exist any requester yet' do
     expect(Procurement::Access.requesters.count).to eq 0
@@ -131,7 +123,7 @@ steps_for :users_and_organisations do
   end
 
   step 'I can add an admin' do
-    step 'I navigate to the users list'
+    step 'I navigate to the users page'
     admin_ids = Procurement::Access.admins.pluck(:user_id)
     user = User.not_as_delegations.where.not(id: admin_ids).order('RAND()').first \
             || FactoryGirl.create(:user)
@@ -160,13 +152,17 @@ steps_for :users_and_organisations do
     expect(texts.count).to be Procurement::Access.admins.count
   end
 
-  step 'I can delete an admin' do
-    step 'I navigate to the users list'
-    user = Procurement::Access.admins.order('RAND()').first.user
-    find('.token-input-list .token-input-token', text: user.name) \
+  step 'a admin user exists' do
+    step 'a procurement admin exists'
+    @admin = Procurement::Access.admins.where.not(user_id: @current_user) \
+      .order('RAND()').first.user
+  end
+
+  step 'I can delete the admin' do
+    find('.token-input-list .token-input-token', text: @admin.name) \
       .find('.token-input-delete-token').click
     step 'I click on save'
-    expect(Procurement::Access.admins.exists?(user.id)).to be false
+    expect(Procurement::Access.admins.exists?(@admin.id)).to be false
   end
 
   step 'I can view the organisation tree according ' \

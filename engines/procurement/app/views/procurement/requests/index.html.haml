@@ -14,9 +14,14 @@
               = _('Save')
 
     .panel-body
-      - if is_editable and (@group.template_categories.exists? or @group.inspectable_by?(current_user))
+      - if is_editable
         - content_for :sidebar do
-          = render partial: 'procurement/templates/categories', locals: {template_categories: @group.template_categories}
+          %h4
+            %i.fa.fa-plus-circle
+            = _('Create request')
+          - if @group.template_categories.exists?
+            %hr
+            = render partial: 'procurement/templates/categories', locals: {template_categories: @group.template_categories}
 
       - i = 0
       - @requests.each do |request|

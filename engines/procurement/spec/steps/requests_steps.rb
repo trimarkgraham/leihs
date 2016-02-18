@@ -1,9 +1,9 @@
 require_relative 'helpers'
-require_relative 'personas_steps'
+# require_relative 'personas_steps'
 
 steps_for :requests do
   include Helpers
-  include PersonasSteps
+  # include PersonasSteps
 
   step 'the current date has not yet reached the inspection start date' do
     travel_to_date Procurement::BudgetPeriod.current.inspection_start_date - 1.day
@@ -17,7 +17,7 @@ steps_for :requests do
 
     within ".request[data-request_id='#{request.id}']" do
       find(".btn-group button.dropdown-toggle").click
-      click_on _('Delete')
+      accept_alert { click_on _('Delete') }
     end
 
     expect(page).to have_content _('Deleted')
@@ -68,7 +68,7 @@ steps_for :requests do
   end
 
   step 'I create a request' do
-    step 'I navigate to my requests'
+    step 'I navigate to the requests page'
     within '.panel-success .panel-heading',
            text: Procurement::BudgetPeriod.current.name do
       find('i.fa-plus-circle').click
@@ -76,7 +76,7 @@ steps_for :requests do
     within '.panel-body .col-sm-6', text: _('Create request for specific group') do
       find('a', text: Procurement::Group.first.name).click
     end
-    within '.panel-footer' do
+    within '.sidebar-wrapper' do
       find('i.fa-plus-circle').click
     end
   end
