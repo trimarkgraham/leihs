@@ -2,8 +2,9 @@ module NavigationSteps
   step 'I navigate to the requests page' do
     visit procurement.overview_requests_path
   end
+
   step 'I navigate to the requests overview page' do
-    visit procurement.overview_requests_path
+    step 'I navigate to the requests page'
   end
 
   # step 'I navigate to the users list' do
@@ -53,6 +54,26 @@ module NavigationSteps
 
   step 'I see a success message' do
     expect(page).to have_content _('Saved')
+  end
+
+  step 'I select all :string_with_spaces' do |string_with_spaces|
+    text = case string_with_spaces
+             when 'groups'
+               _('Groups')
+             when 'budget periods'
+               _('Budget periods')
+             else
+               raise
+           end
+    within find('.form-group', text: text).find('.btn-group') do
+      find('button.multiselect').click
+      all(:checkbox).each { |x| x.set true }
+      find('button.multiselect').click
+    end
+  end
+
+  step 'the current budget period exist' do
+    FactoryGirl.create(:procurement_budget_period)
   end
 
 end

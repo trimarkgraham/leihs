@@ -165,22 +165,6 @@ steps_for :periods_and_states do
     step 'the current date is after the budget period end date'
   end
 
-  step 'I select all :string_with_spaces' do |string_with_spaces|
-    text = case string_with_spaces
-             when 'groups'
-               _('Groups')
-             when 'budget periods'
-               _('Budget periods')
-             else
-               raise
-           end
-    within find('.form-group', text: text).find('.btn-group') do
-      find('button.multiselect').click
-      all(:checkbox).each { |x| x.set true }
-      find('button.multiselect').click
-    end
-  end
-
   step 'I see the state :state' do |state|
     step 'I navigate to the requests page'
     step 'I select all budget periods'

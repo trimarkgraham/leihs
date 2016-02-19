@@ -10,6 +10,11 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/inspection_steps.rb
+- name: managing_requests_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/managing_requests_steps.rb
 - name: navigation_steps.rb
   scripts:
     test:

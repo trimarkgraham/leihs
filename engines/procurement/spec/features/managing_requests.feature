@@ -1,5 +1,10 @@
 Feature: section "Managing Requests"
 
+#!!# we should define a world
+  Background:
+    Given the current budget period exist
+
+  @managing_requests @browser
   Scenario: What to see in section "Requests" as Roger
     Given I am Roger
     And no requests exist
@@ -21,6 +26,7 @@ Feature: section "Managing Requests"
     And all states are selected
     And the search field is empty
 
+  @managing_requests @browser
   Scenario: Using the filters as Roger
     Given I am Roger
     When I navigate to the requests overview page
@@ -34,10 +40,11 @@ Feature: section "Managing Requests"
     Then the list of requests is adjusted immediately according to the filters chosen
     And the amount of requests found is shown
 
+  @managing_requests @browser
   Scenario: What to see in section "Requests" as Barbara
     Given I am Barbara
     And no requests exist
-    When I navigate to the requests overview  page
+    When I navigate to the requests overview page
     Then I see the headers of the colums of the overview
     And I see the amount of requests which are listed is 0
     And I see the current budget period
@@ -58,12 +65,13 @@ Feature: section "Managing Requests"
     And all states are selected
     And the search field is empty
 
+  @managing_requests @browser
   Scenario: Using the filters as Barbara
     Given I am Barbara
     And three requests exist from the current budget period
     And two requests have been created by myself
     And one request has been created by Roger
-    When I navigate to the requests overview  page
+    When I navigate to the requests overview page
     And I select "only show my own requests"
     And I select the current budget period
     And I select all groups
@@ -74,7 +82,8 @@ Feature: section "Managing Requests"
     Then the list of requests is adjusted immediately
     And I see both my requests
     And the amount of requests found is shown as 2
-    
+
+  @managing_requests @browser
   Scenario: Creating a request as Roger
     Given I am Roger
     And a receiver exists
@@ -98,6 +107,7 @@ Feature: section "Managing Requests"
     Then I see a success message
     And the request with all given information was created successfully in the database
 
+  @managing_requests @browser
   Scenario Outline: Creating a request for a group
     Given I am <username>
     When I navigate to the requests overview page
@@ -114,6 +124,7 @@ Feature: section "Managing Requests"
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
     When I navigate to the requests overview page
@@ -136,6 +147,7 @@ Feature: section "Managing Requests"
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: Creating a request through a budget period selecting a group
     Given I am <username>
     When I navigate to the requests overview page
@@ -153,6 +165,7 @@ Feature: section "Managing Requests"
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: Creating a freetext request inside the new request page
     Given I am <username>
     When I am navigated to the new requests page
@@ -167,6 +180,7 @@ Feature: section "Managing Requests"
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: Creating a request from a group template inside the new request page
     Given I am <username>
     And a template article exists
@@ -191,6 +205,7 @@ Feature: section "Managing Requests"
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: Request deleted because no information entered
     Given I am <username>
     When I navigate the requests overview page
@@ -213,6 +228,7 @@ Feature: section "Managing Requests"
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario: sorting requests
     Given I am <username>
     When I navigate to the requests overview page
@@ -231,16 +247,27 @@ Feature: section "Managing Requests"
     Given I am <username>
     And a request exists created by myself
     And the current date has not yet reached the inspection start date
-    When I am navigated to the requests page
-    And I delete my request
+    When I navigate to the requests page
+#!!# this is needed
+    And I select all budget periods
+#!!# this is needed
+    And I select all groups
+#!!# this is needed
+    And I open the request
+#!!# just referring to the mentioned request
+#    And I delete my request
+    And I delete the request
     Then I receive a message asking me if I am sure I want to delete the data
+#!!# this is not possible, either this
     When I click on "yes"
     Then I the request is successfully deleted in the database
+#!!# or this. in alternative we have to write it as outline
     When I click on "no"
     Then I am redirected to the requests page
     And the request is not deleted in the database
     Examples:
       | username |
+#??# Barbara is not defined as a requester. should it be?
       | Barbara  |
       | Roger    |
 
@@ -252,6 +279,7 @@ Feature: section "Managing Requests"
     Then I can modify my request
     Examples:
       | username |
+#??# Barbara is not defined as a requester. should it be?
       | Barbara  |
       | Roger    |
 

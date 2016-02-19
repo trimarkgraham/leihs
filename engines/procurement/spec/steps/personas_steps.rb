@@ -21,11 +21,11 @@ module PersonasSteps
     visit '/procurement'
   end
 
-  # inspector
+  # inspector and requester
   step 'I am Barbara' do
     persona = create_persona('Barbara')
-    FactoryGirl.create(:procurement_group_inspector,
-                       user: persona)
+    FactoryGirl.create(:procurement_group_inspector, user: persona)
+    FactoryGirl.create(:procurement_access, :requester, user: persona)
 
     step 'a procurement admin exists'
 

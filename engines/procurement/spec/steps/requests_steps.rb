@@ -5,23 +5,39 @@ steps_for :requests do
   include Helpers
   # include PersonasSteps
 
+  step 'a request exists created by myself' do
+    @request = FactoryGirl.create(:procurement_request, user: @current_user)
+  end
+
   step 'the current date has not yet reached the inspection start date' do
     travel_to_date Procurement::BudgetPeriod.current.inspection_start_date - 1.day
     expect(Time.zone.today).to be < \
       Procurement::BudgetPeriod.current.inspection_start_date
   end
 
+  step 'I open the request' do
+    find(".list-group-item[data-request_id='#{@request.id}']").click
+  end
+
+  step 'I delete the request' do
+    within ".request[data-request_id='#{@request.id}']" do
+      find(".btn-group button.dropdown-toggle").click
+      click_on _('Delete')
+    end
+  end
+
+  step 'I receive a message asking me if I am sure I want to delete the data' do
+    # page.driver.browser.switch_to.alert.accept
+  end
+
   step 'I can delete my request' do
-    request = get_current_request @current_user
+    @request = get_current_request @current_user
     visit_request(request)
 
-    within ".request[data-request_id='#{request.id}']" do
-      find(".btn-group button.dropdown-toggle").click
-      accept_alert { click_on _('Delete') }
-    end
+    step 'I delete the request'
 
     expect(page).to have_content _('Deleted')
-    expect{request.reload}.to raise_error ActiveRecord::RecordNotFound
+    expect{@request.reload}.to raise_error ActiveRecord::RecordNotFound
   end
 
   step 'I can modify my request' do
