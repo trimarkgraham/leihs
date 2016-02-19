@@ -26,6 +26,14 @@ module NavigationSteps
     expect(page).to have_selector('h1', text: _('Organisations of the requesters'))
   end
 
+  step 'I navigate to the templates page' do
+    within '.navbar' do
+      click_on _('Templates')
+      click_on @group.name
+    end
+    expect(page).to have_selector('h1', text: _('Templates'))
+  end
+
   step 'page has been loaded' do
     expect(has_no_selector?(".spinner")).to be true
   end
@@ -53,7 +61,8 @@ module NavigationSteps
   end
 
   step 'I see a success message' do
-    expect(page).to have_content _('Saved')
+    #expect(page).to have_content _('Saved')
+    find '.flash .alert-success', match: :first
   end
 
   step 'I select all :string_with_spaces' do |string_with_spaces|

@@ -134,6 +134,7 @@ Feature: requests (state-behaviour described in seperate feature-file)
   Scenario: Prefill field "Replacement / New"
     Given I am Roger
     When I create a request
+#!!# this behaviour has been changed through the google doc
     Then the replacement value "Replacement" is set by default
     And I can choose the following replacement values
       | Replacement |

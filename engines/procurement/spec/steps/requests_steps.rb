@@ -32,7 +32,7 @@ steps_for :requests do
 
   step 'I can delete my request' do
     @request = get_current_request @current_user
-    visit_request(request)
+    visit_request(@request)
 
     step 'I delete the request'
 

@@ -73,9 +73,12 @@ steps_for :procurement_groups do
     end
   end
 
-  step 'the procurement groups are sorted alphabetically' do
+  step 'the procurement groups are sorted 0-10 and a-z' do
     names = all('table tbody tr td:first-child').map(&:text)
-    expect(names).to eq @groups.map(&:name).sort
+    sorted_numbers_strings = @groups.map(&:name) \
+              .partition { |x| not x.is_a? String } \
+              .map(&:sort).flatten
+    expect(names).to eq sorted_numbers_strings
   end
 
   step 'there exists a procurement group' do
@@ -233,8 +236,12 @@ steps_for :procurement_groups do
     expect(find("input[name='group[name]']").value).to be_empty
   end
 
-  step 'the name is marked red' do
+  step 'I see the name field marked red' do
     expect(find("input[name='group[name]']")['required']).to eq 'true' # ;-)
+  end
+
+  step 'the name is still marked red' do
+    step 'I see the name field marked red'
   end
 
   step 'the new group has not been created' do

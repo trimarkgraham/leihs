@@ -46,6 +46,7 @@ module Procurement
 
     def update
       @group.update_attributes(params[:group])
+      flash[:success] = _('Saved')
       redirect_to groups_path
     end
 

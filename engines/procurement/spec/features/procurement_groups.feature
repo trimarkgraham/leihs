@@ -23,7 +23,7 @@ Feature: Procurement Groups
     Given I am Hans Ueli
     And 3 procurement groups exist
     And I navigate to the groups page
-    Then the procurement groups are sorted  0-10 and a-z
+    Then the procurement groups are sorted 0-10 and a-z
 
 #Final - will not change anymore
   @procurement_groups @browser
@@ -43,7 +43,7 @@ Feature: Procurement Groups
     And I modify a budget limit
     And I click on save
     Then I am redirected to the groups index page
-    And I see a sucess message
+    And I see a success message
     And all the information of the procurement group was successfully updated in the database
 
 #Final - will not change anymore
@@ -75,7 +75,7 @@ Feature: Procurement Groups
     When I navigate to the groups page
     And I click on the add button
     Then I see the name field marked red
-    And I fill in the inspectors' name
+    And I fill in the inspectors' names
     And I fill in the email
     And I leave the name empty
     And I click on save

@@ -57,6 +57,13 @@ module PersonasSteps
     end
   end
 
+  step 'I am responsible for one group' do
+    @group = Procurement::Group.all.detect {|g| g.inspectable_by?(@current_user) }
+    expect(@group).not_to be_nil
+    # OPTIMIZE just refreshing the header menu
+    visit '/procurement'
+  end
+
   def create_user(firstname)
     user = FactoryGirl.create(:user, firstname: firstname)
     FactoryGirl.create(:access_right,
