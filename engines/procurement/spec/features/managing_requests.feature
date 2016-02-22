@@ -238,7 +238,6 @@ Feature: section Managing Requests
     And the request is not deleted in the database
     Examples:
       | username |
-#??# Barbara is not defined as a requester. should it be?
       | Barbara  |
       | Roger    |
 

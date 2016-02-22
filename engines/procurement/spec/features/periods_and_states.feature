@@ -26,7 +26,7 @@ Feature: Periods and states
     Given I am Hans Ueli
     And budget periods exist
     When I navigate to the budget periods
-    And I choose a budget period to edit
+    And I edit a budget period
     And I change the name of the budget period
     And I change the inspection start date of the budget period
     And I change the end date of the budget period
@@ -41,7 +41,7 @@ Feature: Periods and states
     And budget periods exist
     And I navigate to the budget periods
     When I edit a budget period
-    And I set the end date of the budget period earlyer than the inspection start date
+    And I set the end date of the budget period earlier than the inspection start date
     And I click on save
     Then I see an error message
     And the data for the budget period was not saved to the database
@@ -63,13 +63,14 @@ Feature: Periods and states
     When I have not saved the data yet
     Then I can delete the line
 
-  @periods_and_states @browser
-  Scenario: Show Totals of each Budget Period
-    Given I am Hans Ueli
-    And budget periods exist
-    When I navigate to the budget periods
-    Then for every budget period I see the total of all requested articles with status "New"
-    And for every budget period I see the total of the order amount of all requests with status "Approved"
+#!!# already covered by the "Overview of Budget Periods" scenario
+#  @periods_and_states @browser
+#  Scenario: Show Totals of each Budget Period
+#    Given I am Hans Ueli
+#    And budget periods exist
+#    When I navigate to the budget periods
+#    Then for every budget period I see the total of all requested articles with status "New"
+#    And for every budget period I see the total of the order amount of all requests with status "Approved"
 
   @periods_and_states @browser
   Scenario: State "New" - Request Date before Inspection Date
@@ -96,17 +97,17 @@ Feature: Periods and states
     And I can not modify the request
     And I can not delete the request
 
-    @periods_and_states @browser
-    Scenario: Overview of Budget Periods
-      Given I am Hans Ueli
-      And budget periods exist
-      And requests with status "New" exist
-      And requests with status "Approved" exist
-      And requests with status "Partially approved" exist
-      When I navigate to the budget periods
-      Then the budget periods are sorted from 0-10 and a-z
-      And I see the total of all requested amounts with status "New"
-      And I see the total of all ordered amounts with status "Approved" or "Partially approved"
+  @periods_and_states @browser
+  Scenario: Overview of Budget Periods
+    Given I am Hans Ueli
+    And budget periods exist
+    And requests with status "New" exist
+    And requests with status "Approved" exist
+    And requests with status "Partially approved" exist
+    When I navigate to the budget periods
+    Then the budget periods are sorted from 0-10 and a-z
+    And for every budget period I see the total of all requested amounts with status "New"
+    And for every budget period I see the total of all ordered amounts with status "Approved" or "Partially approved"
 
   @periods_and_states @browser
   Scenario Outline: State "In inspection", "Approved", "Denied" "Partially approved" for requester when budget period has ended

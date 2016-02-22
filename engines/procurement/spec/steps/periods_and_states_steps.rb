@@ -83,7 +83,7 @@ steps_for :periods_and_states do
     expect(Procurement::BudgetPeriod.find_by_id(@budget_period.id)).not_to be
   end
 
-  step 'I choose a budget period to edit' do
+  step 'I edit a budget period' do
     @budget_period = Procurement::BudgetPeriod.first
   end
 
@@ -125,14 +125,83 @@ steps_for :periods_and_states do
     expect(@budget_period.end_date).to eq @new_end_date
   end
 
-  step 'I set the end date of the budget period equal or later than today' do
-    step 'budget periods exist'
-    step 'I navigate to the budget periods'
-    step 'I choose a budget period to edit'
+  step 'I set the end date of the budget period ' \
+       'earlier than the inspection start date' do
     budget_period_line = find_budget_period_line_by_name(@budget_period.name)
-    @new_end_date = Time.zone.today + 100.days
+    @old_end_date = @budget_period.end_date
+    @new_end_date = @budget_period.inspection_start_date - 1.day
     budget_period_line.find("input[name*='end_date']")
-      .set format_date(@new_end_date)
+        .set format_date(@new_end_date)
+  end
+
+  # step 'I set the end date of the budget period equal or later than today' do
+  #   budget_period_line = find_budget_period_line_by_name(@budget_period.name)
+  #   @new_end_date = Time.zone.today + 100.days
+  #   budget_period_line.find("input[name*='end_date']")
+  #     .set format_date(@new_end_date)
+  # end
+
+  step 'the data for the budget period was not saved to the database' do
+    expect(@budget_period.reload.end_date).to eq @old_end_date
+  end
+
+  step 'requests with status :status exist' do |status|
+    5.times do |i|
+      case status
+        when "New"
+          FactoryGirl.create :procurement_request,
+                             budget_period: Procurement::BudgetPeriod.current,
+                             requested_quantity: i+1,
+                             approved_quantity: nil
+        when "Approved"
+          FactoryGirl.create :procurement_request,
+                             budget_period: Procurement::BudgetPeriod.current,
+                             requested_quantity: i+1,
+                             approved_quantity: i+1
+        when "Partially approved"
+          FactoryGirl.create :procurement_request,
+                             budget_period: Procurement::BudgetPeriod.current,
+                             requested_quantity: i+1,
+                             approved_quantity: (i/2).to_i,
+                             inspection_comment: 'just a test'
+        else
+          raise
+      end
+    end
+  end
+
+  step 'for every budget period I see the total of all requested amounts ' \
+       'with status "New"' do
+    Procurement::BudgetPeriod.all.each do |budget_period|
+      next if budget_period.requests.empty?
+      within(:xpath, "//input[@value='#{budget_period.name}']/ancestor::tr") do
+        total = budget_period.requests \
+                .where(approved_quantity: nil)
+                     .map {|r| r.total_price(@current_user) }.sum
+        formatted_string = ActionController::Base.helpers.number_to_currency(
+                            total,
+                            unit: Setting.local_currency_string,
+                            precision: 0)
+        find('.label-info', text: formatted_string)
+      end
+    end
+  end
+
+  step 'for every budget period I see the total of all ordered amounts ' \
+       'with status "Approved" or "Partially approved"' do
+    Procurement::BudgetPeriod.all.each do |budget_period|
+      next if budget_period.requests.empty?
+      within(:xpath, "//input[@value='#{budget_period.name}']/ancestor::tr") do
+        total = budget_period.requests \
+                .where.not(approved_quantity: nil)
+                     .map {|r| r.total_price(@current_user) }.sum
+        formatted_string = ActionController::Base.helpers.number_to_currency(
+            total,
+            unit: Setting.local_currency_string,
+            precision: 0)
+        find('.label-success', text: formatted_string)
+      end
+    end
   end
 
   step 'a request exists' do

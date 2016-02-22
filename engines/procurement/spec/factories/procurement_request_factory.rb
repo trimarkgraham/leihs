@@ -5,6 +5,8 @@ FactoryGirl.define do
     association :group, factory: :procurement_group
     article_name { Faker::Lorem.sentence }
     motivation { Faker::Lorem.sentence }
+    price { 123 }
     requested_quantity { 5 }
+    approved_quantity { nil }
   end
 end

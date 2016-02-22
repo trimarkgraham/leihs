@@ -53,6 +53,7 @@ Scenario: Using the filters as inspector
   And I see both my requests
   And the amount of requests found is shown as 2
 
+#??# Roger is a requester, not an inspector
   Scenario: Creating a request as inspector
     Given I am Roger
     And a receiver exists

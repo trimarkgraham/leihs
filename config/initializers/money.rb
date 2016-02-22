@@ -5,9 +5,11 @@ MoneyRails.configure do |config|
   # To set the default currency
   #
   # config.default_currency = :usd
-  if ActiveRecord::Base.connection.tables.include?("settings") and Setting.local_currency_string
-    config.default_currency = Setting.local_currency_string.downcase.to_sym
-  end
+  config.default_currency = begin
+                              Setting.local_currency_string.downcase.to_sym
+                            rescue
+                              :chf
+                            end
 
   # Set default bank object
   #
@@ -54,6 +56,18 @@ MoneyRails.configure do |config|
   #                            null: false,
   #                            default: 'USD'
   #                          }
+  config.currency_column = { prefix: '',
+                             postfix: '_currency',
+                             column_name: nil,
+                             type: :string,
+                             present: true,
+                             null: false,
+                             default: begin
+                               Setting.local_currency_string
+                             rescue
+                               'CHF'
+                             end
+                           }
 
   # Register a custom currency
   #

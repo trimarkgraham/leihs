@@ -408,7 +408,7 @@ ActiveRecord::Schema.define(version: 20151013060621) do
     t.integer "budget_period_id", limit: 4
     t.integer "group_id",         limit: 4
     t.integer "amount_cents",     limit: 4,   default: 0,     null: false
-    t.string  "amount_currency",  limit: 255, default: "USD", null: false
+    t.string  "amount_currency",  limit: 255, default: "CHF", null: false
   end
 
   add_index "procurement_budget_limits", ["budget_period_id", "group_id"], name: "index_procurement_budget_limits_on_budget_period_id_and_group_id", unique: true, using: :btree
@@ -459,7 +459,7 @@ ActiveRecord::Schema.define(version: 20151013060621) do
     t.integer  "approved_quantity",  limit: 4
     t.integer  "order_quantity",     limit: 4
     t.integer  "price_cents",        limit: 4,   default: 0,        null: false
-    t.string   "price_currency",     limit: 255, default: "USD",    null: false
+    t.string   "price_currency",     limit: 255, default: "CHF",    null: false
     t.string   "priority",           limit: 6,   default: "normal"
     t.boolean  "replacement",                    default: true
     t.string   "supplier_name",      limit: 255
@@ -493,7 +493,7 @@ ActiveRecord::Schema.define(version: 20151013060621) do
     t.string  "article_name",         limit: 255,                 null: false
     t.string  "article_number",       limit: 255
     t.integer "price_cents",          limit: 4,   default: 0,     null: false
-    t.string  "price_currency",       limit: 255, default: "USD", null: false
+    t.string  "price_currency",       limit: 255, default: "CHF", null: false
     t.string  "supplier_name",        limit: 255
   end
 

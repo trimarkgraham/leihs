@@ -65,6 +65,10 @@ module NavigationSteps
     find '.flash .alert-success', match: :first
   end
 
+  step 'I see an error message' do
+    find '.flash .alert-danger', match: :first
+  end
+
   step 'I select all :string_with_spaces' do |string_with_spaces|
     text = case string_with_spaces
              when 'groups'
