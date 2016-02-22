@@ -62,7 +62,7 @@ Feature: Description of roles
     And I can not not create requests for another person
     And I can not manage templates of groups
 
-   @roles
-   Scenario: Role leihs Admin
-     Given I am Gino
-     Then I can assign the first Admin of the procurement
+  @roles @browser
+  Scenario: Role leihs Admin
+    Given I am Gino
+    Then I can assign the first Admin of the procurement

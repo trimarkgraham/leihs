@@ -4,35 +4,36 @@ Feature: section Managing Requests
   Background:
     Given the current budget period exist
 
-    Scenario: What to see in section "Requests" as requester only
-      Given I am Roger
-      And one request exists
-      When I navigate to the requests overview page
-      Then I see the headers of the colums of the overview
-      And I see the amount of requests which are listed is 1
-      And I see the current budget period
-      And I see the requested amount per budget period
-      And I see the requested amount per group of each budget period
-      And I see when the requesting phase of this budget period ends
-      And I see when the inspection phase of this budget period ends
-      And I see all procurement groups
-      And only my requests are shown
-      And I see the following request information
-      | article name |
-      | name of the requester  |
-      | department    |
-      | organisation    |
-      | price    |
-      | requested amount    |
-      | total amount    |
-      | priority    |
-      | state    |
-      And the filter current budget period is selected
-      And filter all groups are selected
-      And filter all organisations are selected
-      And filter both priorities are selected
-      And filter all states are selected
-      And the search field is empty
+  @managing_requests @browser
+  Scenario: What to see in section "Requests" as requester only
+    Given I am Roger
+    And one request exists
+    When I navigate to the requests overview page
+    Then I see the headers of the colums of the overview
+    And I see the amount of requests which are listed is 1
+    And I see the current budget period
+    And I see the requested amount per budget period
+    And I see the requested amount per group of each budget period
+    And I see when the requesting phase of this budget period ends
+    And I see when the inspection phase of this budget period ends
+    And I see all procurement groups
+    And only my requests are shown
+    And I see the following request information
+    | article name |
+    | name of the requester  |
+    | department    |
+    | organisation    |
+    | price    |
+    | requested amount    |
+    | total amount    |
+    | priority    |
+    | state    |
+    And the filter current budget period is selected
+    And filter all groups are selected
+    And filter all organisations are selected
+    And filter both priorities are selected
+    And filter all states are selected
+    And the search field is empty
 
   @managing_requests @browser
   Scenario: Using the filters as requester only
@@ -213,7 +214,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @requests @browser
+  @managing_requests @browser
   Scenario Outline: Delete a Request
     Given I am <username>
     And a request exists created by myself
@@ -241,7 +242,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @requests @browser
+  @managing_requests @browser
   Scenario Outline: Modify a Request
     Given I am <username>
     And a request exists created by myself
@@ -252,7 +253,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @requests @browser
+  @managing_requests @browser
   Scenario Outline: Choosing an existing or non existing Model
     Given I am <username>
     When I am navigated to the new request page
@@ -265,7 +266,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @requests @browser
+  @managing_requests @browser
   Scenario: Moving request to another budget period as requester only
     Given I am Roger
     And two budget periods exist
@@ -276,7 +277,7 @@ Feature: section Managing Requests
     And I see a success message
     And the changes are saved successfully to the database
 
-  @requests @browser
+  @managing_requests @browser
   Scenario: Moving request to another group as requester only
     Given I am Roger
     And two groups exist
@@ -287,7 +288,7 @@ Feature: section Managing Requests
     Then I see a success message
     And the changes are saved successfully to the database
 
-  @requests @browser
+  @managing_requests @browser
   Scenario Outline: Priority values
     Given I am <username>
     When I create a request
@@ -300,6 +301,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   @requests @browser
   Scenario Outline: Prefill field "Replacement / New"
     Given I am <username>
@@ -313,6 +315,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: Delete an attachment
     Given I am <username>
     And a request created by myself exists
@@ -328,6 +331,7 @@ Feature: section Managing Requests
       | Roger    |
 
   #This scenario does not work yet! Save button is not enabled after uploading a file
+  @managing_requests @browser
   Scenario Outline: Download an attachment
     Given I am <username>
     And a request created by myself exists
@@ -342,6 +346,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: View an attachment .jpg
     Given I am <username>
     And a request created by myself exists
@@ -354,6 +359,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: View an attachment .pdf
     Given I am <username>
     And a request created by myself exists
@@ -366,6 +372,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario Outline: Send an email to a group
     Given I am <username>
     And an email for a group exists
@@ -380,6 +387,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
+  @managing_requests @browser
   Scenario: Additional Fields shown to requester only after budget period has ended
     Given I am Roger
     And the budget period has ended

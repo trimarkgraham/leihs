@@ -40,11 +40,6 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/procurement_groups_steps.rb
-- name: requests_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/requests_steps.rb
 - name: roles_steps.rb
   scripts:
     test:
