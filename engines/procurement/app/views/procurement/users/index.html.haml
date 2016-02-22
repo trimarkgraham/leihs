@@ -133,9 +133,7 @@
 
     $('tbody').on 'keyup change', 'tr td input', ->
       inputs = $(this).closest('tr').find('input:not([type="hidden"])')
-      values = ''
-      inputs.each ->
-        values += $.trim($(this).val());
+      values = inputs.map(-> $.trim($(this).val()) ).get().join('')
       if values.length
         inputs.attr('required', 'true')
       else
