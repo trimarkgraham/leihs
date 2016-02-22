@@ -115,12 +115,11 @@ Scenario: Give Reason when Partially Excepting or Denying
   And the status is set to "Partially Approved"
   And the request with all given information was saved successfully in the database
 
-  @requests @browser
   Scenario: Moving request to another budget period as Barbara
     Given I am Barbara
     And two budget periods exist
     And a request for my inspection group exists
-    And the current date has not yet reached the inspection start date
+    And the current date has not yet reached the budget end date
     When I am navigated to the requests page
     And I move the request to the other budget period
     And I am not the inspector of the budget period the request has been moved to
@@ -130,3 +129,13 @@ Scenario: Give Reason when Partially Excepting or Denying
     | Inspection comment    |
     And I see a success message
     And the changes are saved successfully to the database
+
+    Scenario: Moving request to another group as Barbara
+      Given I am Barbara
+      And two groups exist
+      And a request created by myself exists
+      And the current date has not yet reached the budget end date
+      When I navigate to the requests page
+      Then I can move the request to the other group
+      And I see a success message
+      And the changes are saved successfully to the database

@@ -269,14 +269,14 @@ Feature: section Managing Requests
     And the changes are saved successfully to the database
 
   @requests @browser
-  Scenario: Moving request to another group
+  Scenario: Moving request to another group as Roger
     Given I am Roger
     And two groups exist
     And a request created by myself exists
     And the current date has not yet reached the inspection start date
     When I navigate to the requests page
-    Then I can move the request to the other group
-    And I see a success message
+    And I move the request to the other group
+    Then I see a success message
     And the changes are saved successfully to the database
 
   @requests @browser
@@ -296,3 +296,63 @@ Feature: section Managing Requests
     And I can choose the following replacement values
       | Replacement |
       | New         |
+
+  Scenario: Delete an attachment
+    Given I am Roger
+    And a request created by myself exists
+    And the request includes an attachment
+    When I am navigated to the request page
+    And I delete the attachment
+    And I click on save
+    Then I see a success message
+    And the attachment is deleted successfully from the database
+
+  #This scenario does not work yet! Save button is not enabled after uploading a file
+  Scenario: Download an attachment
+    Given I am Roger
+    And a request created by myself exists
+    And the request includes an attachment
+    When I am navigated to the request page
+    And I download the attachment
+    Then The file is downloaded
+    Then I see a success message
+    And the attachment is deleted successfully from the database
+
+  Scenario: View an attachment .jpg
+    Given I am Roger
+    And a request created by myself exists
+    And the request includes an attachment with the attribute .jpg
+    When I am navigated to the request page
+    And I click on the attachment
+    Then The content of the file is shown in a viewer
+
+  Scenario: View an attachment .pdf
+    Given I am Roger
+    And a request created by myself exists
+    And the request includes an attachment with the attribute .pdf
+    When I am navigated to the request page
+    And I click on the attachment
+    Then The content of the file is shown in a viewer
+
+  Scenario: Send an email to a group
+    Given I am Roger
+    And an email for a group exists
+    When I am navigated to the request page
+    And I click on the email icon
+    Then the email program is opened
+    And the receiver of the email is the email of the group
+    And the subject of the email is "Frage zum Beschaffungsantrag"
+    And the group name is placed in () at the end of the subject
+
+  Scenario: Additional Fields shown to Roger after budget period has ended
+    Given I am Roger
+    And the budget period has ended
+    And a request created by myself exists
+    And the inspector has approved the request
+    And the inspector has entered an inspection comment
+    When I navigate to the requests overview page
+    Then I see the requested quantity
+    And I see the approved quantity
+    When I edit the request
+    Then I see the approved quantity
+    And I see the inspection comment
