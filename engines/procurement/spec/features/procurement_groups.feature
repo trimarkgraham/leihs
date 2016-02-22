@@ -1,6 +1,5 @@
 Feature: Procurement Groups
 
-#Final - will not change anymore
   @procurement_groups @browser
   Scenario: Creating the procurement groups
     Given I am Hans Ueli
@@ -17,7 +16,6 @@ Feature: Procurement Groups
     And the new group appears in the list
     And the new group was created in the database
 
-#Final - will not change anymore
   @procurement_groups @browser
   Scenario: Sorting of Procurement Groups
     Given I am Hans Ueli
@@ -25,7 +23,6 @@ Feature: Procurement Groups
     And I navigate to the groups page
     Then the procurement groups are sorted 0-10 and a-z
 
-#Final - will not change anymore
   @procurement_groups @browser
   Scenario: Editing a procurement group
     Given I am Hans Ueli
@@ -46,7 +43,6 @@ Feature: Procurement Groups
     And I see a success message
     And all the information of the procurement group was successfully updated in the database
 
-#Final - will not change anymore
   @procurement_groups @browser
   Scenario: Deleting a procurement group
     Given I am Hans Ueli
@@ -56,7 +52,6 @@ Feature: Procurement Groups
     Then the group disappears from the list
     And the group was successfully deleted from the database
 
-#Final - will not change anymore
   @procurement_groups @browser
   Scenario: Overview of the procurement groups
     Given I am Hans Ueli
@@ -66,7 +61,6 @@ Feature: Procurement Groups
     And the group line contains the name of the group's inspectors
     And the group line contains the email of the group
 
-#Final - will not change anymore
   @procurement_groups @browser
   Scenario: Procurement group required fields
     Given I am Hans Ueli

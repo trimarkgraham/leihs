@@ -1,30 +1,38 @@
-Feature: section "Managing Requests"
+Feature: section Managing Requests
 
 #!!# we should define a world
   Background:
     Given the current budget period exist
 
-  @managing_requests @browser
-  Scenario: What to see in section "Requests" as Roger
-    Given I am Roger
-    And no requests exist
-    When I navigate to the requests overview page
-    Then I see the headers of the colums of the overview
-    And I see the amount of requests which are listed is 0
-    And I see the current budget period
-    And I see the requested amount per budget period
-    And I see the requested amount per group of each budget period
-    And I do not see the budget limits
-    And I do not see the percentage signs
-    And I see when the requesting phase of this budget period ends
-    And I see when the inspection phase of this budget period ends
-    And I see all procurement groups
-    And the current budget period is selected
-    And all groups are selected
-    And all organisations are selected
-    And both priorities are selected
-    And all states are selected
-    And the search field is empty
+    Scenario: What to see in section "Requests" as Roger
+      Given I am Roger
+      And one request exists
+      When I navigate to the requests overview page
+      Then I see the headers of the colums of the overview
+      And I see the amount of requests which are listed is 1
+      And I see the current budget period
+      And I see the requested amount per budget period
+      And I see the requested amount per group of each budget period
+      And I see when the requesting phase of this budget period ends
+      And I see when the inspection phase of this budget period ends
+      And I see all procurement groups
+      And only my requests are shown
+      And I see the following request information
+      | article name |
+      | name of the requester  |
+      | department    |
+      | organisation    |
+      | price    |
+      | requested amount    |
+      | total amount    |
+      | priority    |
+      | state    |
+      And the filter current budget period is selected
+      And filter all groups are selected
+      And filter all organisations are selected
+      And filter both priorities are selected
+      And filter all states are selected
+      And the search field is empty
 
   @managing_requests @browser
   Scenario: Using the filters as Roger
@@ -39,49 +47,6 @@ Feature: section "Managing Requests"
     And I enter a search string
     Then the list of requests is adjusted immediately according to the filters chosen
     And the amount of requests found is shown
-
-  @managing_requests @browser
-  Scenario: What to see in section "Requests" as Barbara
-    Given I am Barbara
-    And no requests exist
-    When I navigate to the requests overview page
-    Then I see the headers of the colums of the overview
-    And I see the amount of requests which are listed is 0
-    And I see the current budget period
-    And I see the requested amount per budget period
-    And I see the requested amount per group of each budget period
-    And I see the budget limits of all groups
-    And I see the total of all ordered amounts of each groups
-    And I see the total of all ordered amounts of a budget period
-    And I see the percentage of budget used compared to the budget limit of my group
-    And I see when the requesting phase of this budget period ends
-    And I see when the inspection phase of this budget period ends
-    And I see all procurement groups
-    And not only my requests are shown
-    And the current budget period is selected
-    And all groups are selected
-    And all organisations are selected
-    And both priorities are selected
-    And all states are selected
-    And the search field is empty
-
-  @managing_requests @browser
-  Scenario: Using the filters as Barbara
-    Given I am Barbara
-    And three requests exist from the current budget period
-    And two requests have been created by myself
-    And one request has been created by Roger
-    When I navigate to the requests overview page
-    And I select "only show my own requests"
-    And I select the current budget period
-    And I select all groups
-    And I select all organisations
-    And I select both priorities
-    And I select all states
-    And I enter leave the search string empty
-    Then the list of requests is adjusted immediately
-    And I see both my requests
-    And the amount of requests found is shown as 2
 
   @managing_requests @browser
   Scenario: Creating a request as Roger
@@ -241,7 +206,7 @@ Feature: section "Managing Requests"
       | the total amount |
       | priority         |
       | state            |
-      
+
   @requests @browser
   Scenario Outline: Delete a Request
     Given I am <username>
@@ -293,17 +258,17 @@ Feature: section "Managing Requests"
     Then the entered article name is saved
 
   @requests @browser
-  Scenario: Moving request to another budget period
+  Scenario: Moving request to another budget period as Roger
     Given I am Roger
     And two budget periods exist
     And a request created by myself exists
     And the current date has not yet reached the inspection start date
     When I navigate to the requests page
-    Then I can move the request to the other budget period
+    And I move the request to the other budget period
     And I see a success message
     And the changes are saved successfully to the database
-    
-@requests @browser
+
+  @requests @browser
   Scenario: Moving request to another group
     Given I am Roger
     And two groups exist

@@ -1,6 +1,5 @@
 Feature: Periods and states
 
-#Final - will not change anymore
   @periods_and_states @browser
   Scenario: Creating a budget period
     Given I am Hans Ueli
@@ -13,7 +12,6 @@ Feature: Periods and states
     And I click on save
     Then I see a success message
 
-#Final - will not change anymore
   @periods_and_states @browser
   Scenario: Deleting a Period
     Given I am Hans Ueli
@@ -23,13 +21,12 @@ Feature: Periods and states
     Then this budget period disappears from the list
     And this budget period was deleted from the database
 
-#Final - will not change anymore
   @periods_and_states @browser
   Scenario: Editing a Budget Period
     Given I am Hans Ueli
     And budget periods exist
-    And I navigate to the budget periods
-    When I choose a budget period to edit
+    When I navigate to the budget periods
+    And I choose a budget period to edit
     And I change the name of the budget period
     And I change the inspection start date of the budget period
     And I change the end date of the budget period
@@ -74,38 +71,47 @@ Feature: Periods and states
     Then for every budget period I see the total of all requested articles with status "New"
     And for every budget period I see the total of the order amount of all requests with status "Approved"
 
-#Final - will not change anymore
   @periods_and_states @browser
   Scenario: State "New" - Request Date before Inspection Date
     Given I am Roger
-    Given a request exists
-    Given the current date is before the inspection date
-    Then I see the state "New"
+    And the current date is before the inspection date
+    When I navigate to the new requests page
+    And I fill in the following fields
+    |Article|
+    |Article nr./manufacturer nr.|
+    |Supplier|
+    |Motivation|
+    |Price|
+    |Requested Quantity|
+    And I click on save
+    Then the status of the request saved to the database is "New"
 
-#Final - will not change anymore
   @periods_and_states @browser
   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
     Given I am Roger
-    Given a request exists
-    When the current date is between the inspection date and the budget period end date
-    Then I see the state "In inspection"
+    And a request created by myself exists
+    And the current date is between the inspection date and the budget period end date
+    When I navigate to the requests overview page
+    Then I see the status of my request is "In inspection"
     And I can not modify the request
+    And I can not delete the request
 
-#Final - will not change anymore
     @periods_and_states @browser
     Scenario: Overview of Budget Periods
       Given I am Hans Ueli
-      Given budget periods exist
-      And I navigate to the budget periods
+      And budget periods exist
+      And requests with status "New" exist
+      And requests with status "Approved" exist
+      And requests with status "Partially approved" exist
+      When I navigate to the budget periods
       Then the budget periods are sorted from 0-10 and a-z
-  #??# total required costs instead?
-  #    And the amount of requests per budget period is shown
+      And I see the total of all requested amounts with status "New"
+      And I see the total of all ordered amounts with status "Approved" or "Partially approved"
 
-#Final - will not change anymore
   @periods_and_states @browser
   Scenario Outline: State "In inspection", "Approved", "Denied" "Partially approved" for requester when budget period has ended
     Given I am Roger
-    Given a request exists
+    And a request exists
     When the approved quantity is <quantity>
     And the current date is after the budget period end date
     Then I see the state "<state>"
@@ -116,11 +122,10 @@ Feature: Periods and states
       | smaller than the requested quantity, not equal 0 | Partially approved |
       | equal 0                                          | Denied             |
 
-#Final - will not change anymore
   @periods_and_states @browser
   Scenario Outline: State "New", "Approved", "Denied" "Partially approved" for inspector
     Given I am Barbara
-    Given a request exists
+    And a request exists
     When the approved quantity is <quantity>
     Then I see the state "<state>"
     Examples:
@@ -130,7 +135,6 @@ Feature: Periods and states
       | smaller than the requested quantity, not equal 0 | Partially approved |
       | equal 0                                          | Denied             |
 
-#Final - will not change anymore
   @periods_and_states @browser
   Scenario Outline: No Modification or Deletion after Budget End Period date
     Given I am <username>

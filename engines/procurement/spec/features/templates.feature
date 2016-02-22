@@ -1,6 +1,5 @@
 Feature: Templates
 
-#Final - will not change anymore
   @templates @browser
   Scenario: Create a Template Category
     Given I am Barbara
@@ -37,7 +36,6 @@ Feature: Templates
       Then I see a success message
       And the deleted template category is deleted from the database
 
-    #will not change anymore
   @templates @browser
     Scenario: Deleting an Article
       Given I am Barbara
@@ -66,7 +64,6 @@ Feature: Templates
       Then I see a success message
       And the data modified is saved to the database
 
-##will not change anymore
   @templates @browser
   Scenario: Deleting information of some fields of an article
     Given I am Barbara
@@ -84,7 +81,7 @@ Feature: Templates
     And the deleted data is deleted from the database
 
   @templates @browser
-  Scenario: Sorting of categies and articles
+  Scenario: Sorting of categories and articles
     Given I am Barbara
     And several template categories exist
     And several articles in categories exist

@@ -1,6 +1,5 @@
 Feature: Section Users
 
-#Final - will not change anymore
   @users_and_organisations @browser
   Scenario: Add a requester
     Given I am Hans Ueli
@@ -15,7 +14,6 @@ Feature: Section Users
     Then I see a success message
     And the new requester was created in the database
 
-#Final - will not change anymore
   @users_and_organisations @browser
   Scenario Outline: Requester required fields
     Given I am Hans Ueli
@@ -35,7 +33,6 @@ Feature: Section Users
       | requester name | organization | department     |
       | department     | organization | requester name |
 
-#Final - will not change anymore
   @users_and_organisations @browser
   Scenario: Delete a requester
     Given I am Hans Ueli
@@ -61,7 +58,6 @@ Feature: Section Users
     And I see the successful changes on the page
     And the requester information was changed successfully in the database
 
-#Final - will not change anymore
   @users_and_organisations @browser
   Scenario: Sorting of requester
     Given I am Hans Ueli
@@ -69,7 +65,6 @@ Feature: Section Users
     When I navigate to the users page
     Then the requesters are sorted 0-10 and a-z
 
-#Final - will not change anymore
   @users_and_organisations @browser
   Scenario: Add an Admin
     Given I am Hans Ueli
@@ -86,7 +81,6 @@ Feature: Section Users
     When I navigate to the users page
     Then the admins are sorted alphabetically from a-z
 
-#Final - will not change anymore
   @users_and_organisations @browser
   Scenario: Delete an Admin
     Given I am Hans Ueli
@@ -98,7 +92,6 @@ Feature: Section Users
     Then I see a success message
     And the admin is deleted from the database
 
-#Final - will not change anymore
   @users_and_organisations @browser
   Scenario: View the Organisation Tree
     Given I am Hans Ueli
