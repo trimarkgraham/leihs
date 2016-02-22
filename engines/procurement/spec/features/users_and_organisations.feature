@@ -65,8 +65,18 @@ Feature: Section Users
     Then the requesters are sorted 0-10 and a-z
 
   @users_and_organisations @browser
+  Scenario: Add the first Admin
+    Given I am Gino
+    When I navigate to the users page
+    Then I can add the first admin
+    When I click on save
+    Then I see a success message
+    And the new admin was saved to the database
+
+  @users_and_organisations @browser
   Scenario: Add an Admin
     Given I am Hans Ueli
+    And I am already an admin
     When I navigate to the users page
     Then I can add an admin
     When I click on save
