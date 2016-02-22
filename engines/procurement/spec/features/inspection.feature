@@ -1,6 +1,6 @@
 Feature: Inspection (state-behaviour described in seperate feature-file)
 
-Scenario: What to see in section "Requests" as Barbara
+Scenario: What to see in section "Requests" as inspector
   Given I am Barbara
   And one request exists
   When I navigate to the requests overview page
@@ -36,7 +36,7 @@ Scenario: What to see in section "Requests" as Barbara
   And filter all states are selected
   And the search field is empty
 
-Scenario: Using the filters as Barbara
+Scenario: Using the filters as inspector
   Given I am Barbara
   And three requests exist for the current budget period
   And two requests have been created by myself
@@ -53,7 +53,7 @@ Scenario: Using the filters as Barbara
   And I see both my requests
   And the amount of requests found is shown as 2
 
-  Scenario: Creating a request as Barbara
+  Scenario: Creating a request as inspector
     Given I am Roger
     And a receiver exists
     And a point of delivery exists
@@ -115,27 +115,27 @@ Scenario: Give Reason when Partially Excepting or Denying
   And the status is set to "Partially Approved"
   And the request with all given information was saved successfully in the database
 
-  Scenario: Moving request to another budget period as Barbara
-    Given I am Barbara
-    And two budget periods exist
-    And a request for my inspection group exists
-    And the current date has not yet reached the budget end date
-    When I am navigated to the requests page
-    And I move the request to the other budget period
-    And I am not the inspector of the budget period the request has been moved to
-    Then the following information is deleted
-    | Approved quantity |
-    | Order quantity  |
-    | Inspection comment    |
-    And I see a success message
-    And the changes are saved successfully to the database
+Scenario: Moving request to another budget period as inspector
+  Given I am Barbara
+  And two budget periods exist
+  And a request for my inspection group exists
+  And the current date has not yet reached the budget end date
+  When I am navigated to the requests page
+  And I move the request to the other budget period
+  And I am not the inspector of the budget period the request has been moved to
+  Then the following information is deleted
+  | Approved quantity |
+  | Order quantity  |
+  | Inspection comment    |
+  And I see a success message
+  And the changes are saved successfully to the database
 
-    Scenario: Moving request to another group as Barbara
-      Given I am Barbara
-      And two groups exist
-      And a request created by myself exists
-      And the current date has not yet reached the budget end date
-      When I navigate to the requests page
-      Then I can move the request to the other group
-      And I see a success message
-      And the changes are saved successfully to the database
+Scenario: Moving request to another group as inspector
+  Given I am Barbara
+  And two groups exist
+  And a request created by myself exists
+  And the current date has not yet reached the budget end date
+  When I navigate to the requests page
+  Then I can move the request to the other group
+  And I see a success message
+  And the changes are saved successfully to the database

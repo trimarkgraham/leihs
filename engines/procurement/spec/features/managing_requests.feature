@@ -4,7 +4,7 @@ Feature: section Managing Requests
   Background:
     Given the current budget period exist
 
-    Scenario: What to see in section "Requests" as Roger
+    Scenario: What to see in section "Requests" as requester only
       Given I am Roger
       And one request exists
       When I navigate to the requests overview page
@@ -35,7 +35,7 @@ Feature: section Managing Requests
       And the search field is empty
 
   @managing_requests @browser
-  Scenario: Using the filters as Roger
+  Scenario: Using the filters as requester only
     Given I am Roger
     When I navigate to the requests overview page
     Then I do not see the filter "only show my own requests"
@@ -49,7 +49,7 @@ Feature: section Managing Requests
     And the amount of requests found is shown
 
   @managing_requests @browser
-  Scenario: Creating a request as Roger
+  Scenario: Creating a request as requester only
     Given I am Roger
     And a receiver exists
     And a point of delivery exists
@@ -79,6 +79,7 @@ Feature: section Managing Requests
     And I press on the plus icon of a group
     Then I am navigated to the new request page
     When I enter an article
+    And I enter an amount
     And I enter a reason
     And I choose the option "replacement/new"
     And I click on save
@@ -194,10 +195,10 @@ Feature: section Managing Requests
       | Roger    |
 
   @managing_requests @browser
-  Scenario: sorting requests
+  Scenario Outline: sorting requests
     Given I am <username>
     When I navigate to the requests overview page
-    And I can sort the requests by
+    And I sort the requests by
       | article name     |
       | requester        |
       | organisation     |
@@ -206,6 +207,11 @@ Feature: section Managing Requests
       | the total amount |
       | priority         |
       | state            |
+    Then the data is shown in the according sort order
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
   @requests @browser
   Scenario Outline: Delete a Request
@@ -244,21 +250,24 @@ Feature: section Managing Requests
     Then I can modify my request
     Examples:
       | username |
-#??# Barbara is not defined as a requester. should it be?
       | Barbara  |
       | Roger    |
 
   @requests @browser
-  Scenario: Choosing an existing or non existing Model
-    Given I am Roger
-     When I am navigated to the new request page
+  Scenario Outline: Choosing an existing or non existing Model
+    Given I am <username>
+    When I am navigated to the new request page
     Then I can search a model by typing the article name
     And according to the search result I can choose the article from a list
     When no search result is found
     Then the entered article name is saved
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
   @requests @browser
-  Scenario: Moving request to another budget period as Roger
+  Scenario: Moving request to another budget period as requester only
     Given I am Roger
     And two budget periods exist
     And a request created by myself exists
@@ -269,7 +278,7 @@ Feature: section Managing Requests
     And the changes are saved successfully to the database
 
   @requests @browser
-  Scenario: Moving request to another group as Roger
+  Scenario: Moving request to another group as requester only
     Given I am Roger
     And two groups exist
     And a request created by myself exists
@@ -280,25 +289,33 @@ Feature: section Managing Requests
     And the changes are saved successfully to the database
 
   @requests @browser
-  Scenario: Priority values
-    Given I am Roger
+  Scenario Outline: Priority values
+    Given I am <username>
     When I create a request
     Then the priority value "Normal" is set by default
     And I can choose the following priority values
       | High   |
       | Normal |
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
   @requests @browser
-  Scenario: Prefill field "Replacement / New"
-    Given I am Roger
+  Scenario Outline: Prefill field "Replacement / New"
+    Given I am <username>
     When I create a request
     Then the replacement value "Replacement" is set by default
     And I can choose the following replacement values
       | Replacement |
       | New         |
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
-  Scenario: Delete an attachment
-    Given I am Roger
+  Scenario Outline: Delete an attachment
+    Given I am <username>
     And a request created by myself exists
     And the request includes an attachment
     When I am navigated to the request page
@@ -306,10 +323,14 @@ Feature: section Managing Requests
     And I click on save
     Then I see a success message
     And the attachment is deleted successfully from the database
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
   #This scenario does not work yet! Save button is not enabled after uploading a file
-  Scenario: Download an attachment
-    Given I am Roger
+  Scenario Outline: Download an attachment
+    Given I am <username>
     And a request created by myself exists
     And the request includes an attachment
     When I am navigated to the request page
@@ -317,25 +338,37 @@ Feature: section Managing Requests
     Then The file is downloaded
     Then I see a success message
     And the attachment is deleted successfully from the database
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
-  Scenario: View an attachment .jpg
-    Given I am Roger
+  Scenario Outline: View an attachment .jpg
+    Given I am <username>
     And a request created by myself exists
     And the request includes an attachment with the attribute .jpg
     When I am navigated to the request page
     And I click on the attachment
     Then The content of the file is shown in a viewer
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
-  Scenario: View an attachment .pdf
-    Given I am Roger
+  Scenario Outline: View an attachment .pdf
+    Given I am <username>
     And a request created by myself exists
     And the request includes an attachment with the attribute .pdf
     When I am navigated to the request page
     And I click on the attachment
     Then The content of the file is shown in a viewer
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
-  Scenario: Send an email to a group
-    Given I am Roger
+  Scenario Outline: Send an email to a group
+    Given I am <username>
     And an email for a group exists
     When I am navigated to the request page
     And I click on the email icon
@@ -343,8 +376,12 @@ Feature: section Managing Requests
     And the receiver of the email is the email of the group
     And the subject of the email is "Frage zum Beschaffungsantrag"
     And the group name is placed in () at the end of the subject
+    Examples:
+      | username |
+      | Barbara  |
+      | Roger    |
 
-  Scenario: Additional Fields shown to Roger after budget period has ended
+  Scenario: Additional Fields shown to requester only after budget period has ended
     Given I am Roger
     And the budget period has ended
     And a request created by myself exists

@@ -26,7 +26,6 @@ Feature: Section Users
     And I click on save
     And the "<3rd field>" is marked red
     And the new requester has not been created
-
     Examples:
       | 1st field      | 2nd field    | 3rd field      |
       | requester name | department   | organization   |
