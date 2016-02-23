@@ -1,6 +1,6 @@
 Feature: Procurement Groups
 
-  @procurement_groups @browser
+  @procurement_groups
   Scenario: Creating the procurement groups
     Given I am Hans Ueli
     And a budget period exist
@@ -16,14 +16,14 @@ Feature: Procurement Groups
     And the new group appears in the list
     And the new group was created in the database
 
-  @procurement_groups @browser
+  @procurement_groups
   Scenario: Sorting of Procurement Groups
     Given I am Hans Ueli
     And 3 procurement groups exist
     And I navigate to the groups page
     Then the procurement groups are sorted 0-10 and a-z
 
-  @procurement_groups @browser
+  @procurement_groups
   Scenario: Editing a procurement group
     Given I am Hans Ueli
     And there exists a procurement group
@@ -43,7 +43,7 @@ Feature: Procurement Groups
     And I see a success message
     And all the information of the procurement group was successfully updated in the database
 
-  @procurement_groups @browser
+  @procurement_groups
   Scenario: Deleting a procurement group
     Given I am Hans Ueli
     And there exists a procurement group without any requests
@@ -52,7 +52,7 @@ Feature: Procurement Groups
     Then the group disappears from the list
     And the group was successfully deleted from the database
 
-  @procurement_groups @browser
+  @procurement_groups
   Scenario: Overview of the procurement groups
     Given I am Hans Ueli
     And there exists a procurement group
@@ -61,7 +61,7 @@ Feature: Procurement Groups
     And the group line contains the name of the group's inspectors
     And the group line contains the email of the group
 
-  @procurement_groups @browser
+  @procurement_groups
   Scenario: Procurement group required fields
     Given I am Hans Ueli
     And there does not exist any procurement group yet

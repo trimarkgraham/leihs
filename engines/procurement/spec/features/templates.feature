@@ -1,6 +1,6 @@
 Feature: Templates
 
-  @templates @browser
+  @templates
   Scenario: Create a Template Category
     Given I am Barbara
     And I am responsible for one group
@@ -11,7 +11,7 @@ Feature: Templates
     Then I see a success message
     And the category is saved to the database
 
-  @templates @browser
+  @templates
     Scenario: Create a Template Article
       Given I am Barbara
       And a template category exists
@@ -24,7 +24,7 @@ Feature: Templates
       Then I see a success message
       And the data entered is saved to the database
 
-  @templates @browser
+  @templates
     Scenario: Deleting a Template Category
       Given I am Barbara
       And a template category exists
@@ -36,7 +36,7 @@ Feature: Templates
       Then I see a success message
       And the deleted template category is deleted from the database
 
-  @templates @browser
+  @templates
     Scenario: Deleting an Article
       Given I am Barbara
       And a template category exists
@@ -49,7 +49,7 @@ Feature: Templates
       Then I see a success message
       And the category article is deleted from the database
 
-  @templates @browser
+  @templates
     Scenario: Editing a Template
       Given I am Barbara
       And a template category exists
@@ -64,7 +64,7 @@ Feature: Templates
       Then I see a success message
       And the data modified is saved to the database
 
-  @templates @browser
+  @templates
   Scenario: Deleting information of some fields of an article
     Given I am Barbara
     And a template category exists
@@ -80,7 +80,7 @@ Feature: Templates
     Then I see a success message
     And the deleted data is deleted from the database
 
-  @templates @browser
+  @templates
   Scenario: Sorting of categories and articles
     Given I am Barbara
     And several template categories exist

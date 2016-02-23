@@ -1,6 +1,6 @@
 Feature: Periods and states
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: Creating a budget period
     Given I am Hans Ueli
     And there does not exist any budget period yet
@@ -12,7 +12,7 @@ Feature: Periods and states
     And I click on save
     Then I see a success message
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: Deleting a Period
     Given I am Hans Ueli
     And a budget period without any requests exists
@@ -21,7 +21,7 @@ Feature: Periods and states
     Then this budget period disappears from the list
     And this budget period was deleted from the database
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: Editing a Budget Period
     Given I am Hans Ueli
     And budget periods exist
@@ -35,7 +35,7 @@ Feature: Periods and states
     And the budget period line was updated successfully
     And the data for the budget period was updated successfully in the database
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: Budget Period End Date earlyer than Inspection Start Date
     Given I am Hans Ueli
     And budget periods exist
@@ -46,7 +46,7 @@ Feature: Periods and states
     Then I see an error message
     And the data for the budget period was not saved to the database
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: Mandatory Fields of a Budget Period
     Given I am Hans Ueli
     When I navigate to the budget periods
@@ -55,7 +55,7 @@ Feature: Periods and states
     When I have not filled the mandatory fields
     Then I can not save the data
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: Delete an unsaved Budget Period
     Given I am Hans Ueli
     When I navigate to the budget periods
@@ -64,7 +64,7 @@ Feature: Periods and states
     Then I can delete the line
 
 #!!# already covered by the "Overview of Budget Periods" scenario
-#  @periods_and_states @browser
+#  @periods_and_states
 #  Scenario: Show Totals of each Budget Period
 #    Given I am Hans Ueli
 #    And budget periods exist
@@ -72,7 +72,7 @@ Feature: Periods and states
 #    Then for every budget period I see the total of all requested articles with status "New"
 #    And for every budget period I see the total of the order amount of all requests with status "Approved"
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: State "New" - Request Date before Inspection Date
     Given I am Roger
     And the current date is before the inspection date
@@ -87,7 +87,7 @@ Feature: Periods and states
     And I click on save
     Then the status of the request saved to the database is "New"
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
     Given I am Roger
     And a request created by myself exists
@@ -97,7 +97,7 @@ Feature: Periods and states
     And I can not modify the request
     And I can not delete the request
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario: Overview of Budget Periods
     Given I am Hans Ueli
     And budget periods exist
@@ -109,7 +109,7 @@ Feature: Periods and states
     And for every budget period I see the total of all requested amounts with status "New"
     And for every budget period I see the total of all ordered amounts with status "Approved" or "Partially approved"
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario Outline: State "In inspection", "Approved", "Denied" "Partially approved" for requester when budget period has ended
     Given I am Roger
     And a request exists
@@ -123,7 +123,7 @@ Feature: Periods and states
       | smaller than the requested quantity, not equal 0 | Partially approved |
       | equal 0                                          | Denied             |
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario Outline: State "New", "Approved", "Denied" "Partially approved" for inspector
     Given I am Barbara
     And a request exists
@@ -136,7 +136,7 @@ Feature: Periods and states
       | smaller than the requested quantity, not equal 0 | Partially approved |
       | equal 0                                          | Denied             |
 
-  @periods_and_states @browser
+  @periods_and_states
   Scenario Outline: No Modification or Deletion after Budget End Period date
     Given I am <username>
     Given a request exists

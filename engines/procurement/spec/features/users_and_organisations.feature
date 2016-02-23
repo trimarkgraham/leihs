@@ -1,6 +1,6 @@
 Feature: Section Users
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: Add a requester
     Given I am Hans Ueli
     And there does not exist any requester yet
@@ -14,7 +14,7 @@ Feature: Section Users
     Then I see a success message
     And the new requester was created in the database
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario Outline: Requester required fields
     Given I am Hans Ueli
     And there does not exist any requester yet
@@ -32,7 +32,7 @@ Feature: Section Users
       | requester name | organization | department     |
       | department     | organization | requester name |
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: Delete a requester
     Given I am Hans Ueli
     And there exists a requester
@@ -43,7 +43,7 @@ Feature: Section Users
     Then the requester disappears from the list
     And the requester was successfully deleted from the database
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: Modify a requester
     Given I am Hans Ueli
     And there exists a requester
@@ -57,14 +57,14 @@ Feature: Section Users
     And I see the successful changes on the page
     And the requester information was changed successfully in the database
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: Sorting of requester
     Given I am Hans Ueli
     Given requesters exist
     When I navigate to the users page
     Then the requesters are sorted 0-10 and a-z
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: Add the first Admin
     Given I am Gino
     When I navigate to the users page
@@ -73,7 +73,7 @@ Feature: Section Users
     Then I see a success message
     And the new admin was saved to the database
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: Add an Admin
     Given I am Hans Ueli
     And I am already an admin
@@ -83,14 +83,14 @@ Feature: Section Users
     Then I see a success message
     And the new admin was created in the database
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: Sorting of Admins
     Given I am Hans Ueli
     Given admins exist
     When I navigate to the users page
     Then the admins are sorted alphabetically from a-z
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: Delete an Admin
     Given I am Hans Ueli
 #??# do you mean 'another admin user exists' ?
@@ -101,7 +101,7 @@ Feature: Section Users
     Then I see a success message
     And the admin is deleted from the database
 
-  @users_and_organisations @browser
+  @users_and_organisations
   Scenario: View the Organisation Tree
     Given I am Hans Ueli
     And organisations exist

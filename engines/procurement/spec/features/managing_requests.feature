@@ -4,7 +4,7 @@ Feature: section Managing Requests
   Background:
     Given the current budget period exist
 
-  @managing_requests @browser
+  @managing_requests
   Scenario: What to see in section "Requests" as requester only
     Given I am Roger
     And one request exists
@@ -35,7 +35,7 @@ Feature: section Managing Requests
     And filter all states are selected
     And the search field is empty
 
-  @managing_requests @browser
+  @managing_requests
   Scenario: Using the filters as requester only
     Given I am Roger
     When I navigate to the requests overview page
@@ -49,7 +49,7 @@ Feature: section Managing Requests
     Then the list of requests is adjusted immediately according to the filters chosen
     And the amount of requests found is shown
 
-  @managing_requests @browser
+  @managing_requests
   Scenario: Creating a request as requester only
     Given I am Roger
     And a receiver exists
@@ -73,7 +73,7 @@ Feature: section Managing Requests
     Then I see a success message
     And the request with all given information was created successfully in the database
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Creating a request for a group
     Given I am <username>
     When I navigate to the requests overview page
@@ -91,7 +91,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Creating a request through a budget period selecting a template article
     Given I am <username>
     When I navigate to the requests overview page
@@ -114,7 +114,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Creating a request through a budget period selecting a group
     Given I am <username>
     When I navigate to the requests overview page
@@ -132,7 +132,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Creating a freetext request inside the new request page
     Given I am <username>
     When I am navigated to the new requests page
@@ -147,7 +147,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Creating a request from a group template inside the new request page
     Given I am <username>
     And a template article exists
@@ -172,7 +172,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Request deleted because no information entered
     Given I am <username>
     When I navigate the requests overview page
@@ -195,7 +195,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: sorting requests
     Given I am <username>
     When I navigate to the requests overview page
@@ -214,7 +214,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Delete a Request
     Given I am <username>
     And a request exists created by myself
@@ -242,7 +242,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Modify a Request
     Given I am <username>
     And a request exists created by myself
@@ -253,7 +253,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Choosing an existing or non existing Model
     Given I am <username>
     When I am navigated to the new request page
@@ -266,7 +266,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario: Moving request to another budget period as requester only
     Given I am Roger
     And two budget periods exist
@@ -277,7 +277,7 @@ Feature: section Managing Requests
     And I see a success message
     And the changes are saved successfully to the database
 
-  @managing_requests @browser
+  @managing_requests
   Scenario: Moving request to another group as requester only
     Given I am Roger
     And two groups exist
@@ -288,7 +288,7 @@ Feature: section Managing Requests
     Then I see a success message
     And the changes are saved successfully to the database
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Priority values
     Given I am <username>
     When I create a request
@@ -301,8 +301,8 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
-  @requests @browser
+  @managing_requests
+  @requests
   Scenario Outline: Prefill field "Replacement / New"
     Given I am <username>
     When I create a request
@@ -315,7 +315,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Delete an attachment
     Given I am <username>
     And a request created by myself exists
@@ -331,7 +331,7 @@ Feature: section Managing Requests
       | Roger    |
 
   #This scenario does not work yet! Save button is not enabled after uploading a file
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Download an attachment
     Given I am <username>
     And a request created by myself exists
@@ -346,7 +346,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: View an attachment .jpg
     Given I am <username>
     And a request created by myself exists
@@ -359,7 +359,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: View an attachment .pdf
     Given I am <username>
     And a request created by myself exists
@@ -372,7 +372,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario Outline: Send an email to a group
     Given I am <username>
     And an email for a group exists
@@ -387,7 +387,7 @@ Feature: section Managing Requests
       | Barbara  |
       | Roger    |
 
-  @managing_requests @browser
+  @managing_requests
   Scenario: Additional Fields shown to requester only after budget period has ended
     Given I am Roger
     And the budget period has ended
