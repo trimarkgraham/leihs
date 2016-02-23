@@ -1,11 +1,4 @@
-require_relative 'helpers'
-
 steps_for :managing_requests do
-  include Helpers
-
-  step 'a request exists created by myself' do
-    @request = FactoryGirl.create(:procurement_request, user: @current_user)
-  end
 
   step 'I do not see the budget limits' do
     within '.panel-success .panel-body' do
@@ -273,20 +266,6 @@ steps_for :managing_requests do
     end
   end
 
-  step 'I create a request' do
-    step 'I navigate to the requests page'
-    within '.panel-success .panel-heading',
-           text: Procurement::BudgetPeriod.current.name do
-      find('i.fa-plus-circle').click
-    end
-    within '.panel-body .col-sm-6', text: _('Create request for specific group') do
-      find('a', text: Procurement::Group.first.name).click
-    end
-    within '.sidebar-wrapper' do
-      find('i.fa-plus-circle').click
-    end
-  end
-
   step 'I delete the request' do
     within ".request[data-request_id='#{@request.id}']" do
       find(".btn-group button.dropdown-toggle").click
@@ -363,6 +342,16 @@ steps_for :managing_requests do
         within 'label', text: /^#{_(value)}$/ do
           find("input[type='radio']:checked")
         end
+      end
+    end
+  end
+
+  step 'the filter current budget period is selected' do
+    budget_period = Procurement::BudgetPeriod.current
+    within '#filter_panel' do
+      within 'select[name="filter[budget_period_ids][]"]', visible: false do
+        expect(find "option[value='#{budget_period.id}']", visible: false).to \
+          be_selected
       end
     end
   end

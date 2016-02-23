@@ -148,26 +148,26 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:76
-- name: engines/procurement/spec/features/periods_and_states.feature:91
+- name: engines/procurement/spec/features/periods_and_states.feature:94
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:91
-- name: engines/procurement/spec/features/periods_and_states.feature:101
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:94
+- name: engines/procurement/spec/features/periods_and_states.feature:104
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:101
-- name: engines/procurement/spec/features/periods_and_states.feature:113
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:104
+- name: engines/procurement/spec/features/periods_and_states.feature:116
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:113
-- name: engines/procurement/spec/features/periods_and_states.feature:127
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:116
+- name: engines/procurement/spec/features/periods_and_states.feature:130
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:127
-- name: engines/procurement/spec/features/periods_and_states.feature:140
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:130
+- name: engines/procurement/spec/features/periods_and_states.feature:143
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:140
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/periods_and_states.feature:143
 - name: engines/procurement/spec/features/procurement_groups.feature:4
   scripts:
     test:
@@ -232,10 +232,10 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/templates.feature:68
-- name: engines/procurement/spec/features/templates.feature:84
+- name: engines/procurement/spec/features/templates.feature:85
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/templates.feature:84
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/templates.feature:85
 - name: engines/procurement/spec/features/users_and_organisations.feature:4
   scripts:
     test:

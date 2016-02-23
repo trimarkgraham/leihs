@@ -81,10 +81,6 @@ steps_for :procurement_groups do
     expect(names).to eq sorted_numbers_strings
   end
 
-  step 'there exists a procurement group' do
-    @group = FactoryGirl.create(:procurement_group)
-  end
-
   step 'there exists :count budget limits for the procurement group' do |count|
     @group.budget_limits.delete_all
     count.to_i.times do

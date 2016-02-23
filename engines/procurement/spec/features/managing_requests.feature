@@ -55,14 +55,14 @@ Feature: section Managing Requests
     Given I am Roger
     And a receiver exists
     And a point of delivery exists
-    When I am navigated to the new requests page
-    And I enter the following information
-     |Article|
-     |Article nr./manufacturer nr.|
-     |Supplier|
-     |Motivation|
-     |Price|
-     |Requested Quantity|
+    When I want to create a new request
+    And I fill in the following fields
+      | Article                      |
+      | Article nr. / Producer nr.   |
+      | Supplier                     |
+      | Motivation                   |
+      | Price                        |
+      | Requested quantity           |
     Then the amount and the price are multiplied and the result is shown
     When I upload a file
     And I choose the name of a receiver
@@ -218,7 +218,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Delete a Request
     Given I am <username>
-    And a request exists created by myself
+    And a request created by myself exists
     And the current date has not yet reached the inspection start date
     When I navigate to the requests page
     And I select all budget periods
@@ -238,7 +238,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Modify a Request
     Given I am <username>
-    And a request exists created by myself
+    And a request created by myself exists
     And the current date has not yet reached the inspection start date
     Then I can modify my request
     Examples:
@@ -284,7 +284,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Priority values
     Given I am <username>
-    When I create a request
+    When I want to create a new request
     Then the priority value "Normal" is set by default
     And I can choose the following priority values
       | High   |
@@ -298,7 +298,7 @@ Feature: section Managing Requests
   @requests
   Scenario Outline: Prefill field "Replacement / New"
     Given I am <username>
-    When I create a request
+    When I want to create a new request
     Then the replacement value "Replacement" is set by default
     And I can choose the following replacement values
       | Replacement |

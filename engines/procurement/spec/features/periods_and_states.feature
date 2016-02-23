@@ -75,15 +75,18 @@ Feature: Periods and states
   @periods_and_states
   Scenario: State "New" - Request Date before Inspection Date
     Given I am Roger
+    And the current budget period exist
     And the current date is before the inspection date
-    When I navigate to the new requests page
+    When I want to create a new request
     And I fill in the following fields
-    |Article|
-    |Article nr./manufacturer nr.|
-    |Supplier|
-    |Motivation|
-    |Price|
-    |Requested Quantity|
+      | Article                      |
+      | Article nr. / Producer nr.   |
+      | Supplier                     |
+      | Motivation                   |
+      | Price                        |
+      | Requested quantity           |
+#??# this is also required:
+      | Replacement / New            |
     And I click on save
     Then the status of the request saved to the database is "New"
 

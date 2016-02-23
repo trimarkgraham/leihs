@@ -1,10 +1,10 @@
 ---
 tasks:
-- name: helpers.rb
+- name: common_steps.rb
   scripts:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/helpers.rb
+        engines/procurement/spec/steps/common_steps.rb
 - name: inspection_steps.rb
   scripts:
     test:
@@ -15,11 +15,6 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/managing_requests_steps.rb
-- name: navigation_steps.rb
-  scripts:
-    test:
-      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
-        engines/procurement/spec/steps/navigation_steps.rb
 - name: periods_and_states_steps.rb
   scripts:
     test:

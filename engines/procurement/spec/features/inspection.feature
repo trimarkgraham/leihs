@@ -62,10 +62,10 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     Given I am Roger
     And a receiver exists
     And a point of delivery exists
-    When I am navigated to the new requests page
-    And I fill in the fields
+    When I want to create a new request
+    And I fill in the following fields
       | Article                      |
-      | Article nr./manufacturer nr. |
+      | Article nr. / Producer nr.   |
       | Supplier                     |
       | Motivation                   |
       | Price                        |
