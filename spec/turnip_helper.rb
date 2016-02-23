@@ -32,13 +32,11 @@ RSpec.configure do |config|
 
   config.before(type: :feature) do
     FactoryGirl.create(:setting) unless Setting.first
-  end
 
-  config.before(browser: true) do
     Capybara.current_driver = :firefox
   end
 
-  config.after(browser: true) do
+  config.after(type: :feature) do
     page.driver.quit # OPTIMIZE force close browser popups
     Capybara.current_driver = Capybara.default_driver
   end
