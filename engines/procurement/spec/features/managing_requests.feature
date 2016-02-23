@@ -19,15 +19,16 @@ Feature: section Managing Requests
     And I see all procurement groups
     And only my requests are shown
     And I see the following request information
-    | article name |
-    | name of the requester  |
-    | department    |
-    | organisation    |
-    | price    |
-    | requested amount    |
-    | total amount    |
-    | priority    |
-    | state    |
+      | article name          |
+      | name of the requester |
+      | department            |
+      | organisation          |
+      | price                 |
+      | requested amount      |
+      | total amount          |
+      | priority              |
+      | state                 |
+#??# isn't better to define all the next steps as When and move them before the 'Then I see the headers...'
     And the filter current budget period is selected
     And filter all groups are selected
     And filter all organisations are selected

@@ -35,6 +35,14 @@ steps_for :managing_requests do
     end
   end
 
+  step 'I see all procurement groups' do
+    within '.panel-success .panel-body' do
+      Procurement::Group.all.each do |group|
+        find'.row', text: group.name
+      end
+    end
+  end
+
   step 'I see the amount of requests which are listed is :n' do |n|
     within '#filter_target' do
       find 'h4', text: /^#{n} #{_('Requests')}$/
@@ -64,6 +72,42 @@ steps_for :managing_requests do
     find '#column-titles'
   end
 
+  step 'I see the following request information' do |table|
+    elements = all('[data-request_id]')
+    expect(elements).not_to be_empty
+    elements.each do |element|
+      request = Procurement::Request.find element['data-request_id']
+      within element do
+        table.raw.flatten.each do |value|
+          case value
+            when 'article name'
+              find '.col-sm-2', text: request.article_name
+            when 'name of the requester'
+              find '.col-sm-2', text: request.user.to_s
+            when 'department'
+              find '.col-sm-2', text: request.organization.parent.to_s
+            when 'organisation'
+              find '.col-sm-2', text: request.organization.to_s
+            when 'price'
+              find '.col-sm-1 .total_price', text: request.price.to_i
+            when 'requested amount'
+              find '.col-sm-2.quantities', text: request.requested_quantity
+            when 'total amount'
+              find '.col-sm-1 .total_price',
+                   text: request.total_price(@current_user).to_i
+            when 'priority'
+              find '.col-sm-1', text: _(request.priority.capitalize)
+            when 'state'
+              state = request.state(@current_user)
+              find '.col-sm-1', text: _(state.to_s.humanize)
+            else
+              raise
+          end
+        end
+      end
+    end
+  end
+
   step 'I see the percentage of budget used ' \
        'compared to the budget limit of my group' do
     within '.panel-success .panel-body' do
@@ -90,21 +134,23 @@ steps_for :managing_requests do
   end
 
   step 'I see the requested amount per budget period' do
-    find '.panel-success .panel-heading .label-primary.big_total_price',
-         text: Procurement::BudgetPeriod.current.requests \
+    total = Procurement::BudgetPeriod.current.requests \
                 .where(user_id: @current_user) \
-                .map {|r| r.total_price(@current_user) }.sum
+                .map { |r| r.total_price(@current_user) }.sum
+    find '.panel-success .panel-heading .label-primary.big_total_price',
+         text: total.to_i
   end
 
   step 'I see the requested amount per group of each budget period' do
     within '.panel-success .panel-body' do
       Procurement::Group.all.each do |group|
-        within '.row', text: group.name do
-          find '.label-primary.big_total_price',
-               text: Procurement::BudgetPeriod.current.requests \
+        total = Procurement::BudgetPeriod.current.requests \
                       .where(user_id: @current_user) \
                       .where(group_id: group) \
-                      .map {|r| r.total_price(@current_user) }.sum
+                      .map { |r| r.total_price(@current_user) }.sum
+        within '.row', text: group.name do
+          find '.label-primary.big_total_price',
+               text: total.to_i
         end
       end
     end
@@ -267,6 +313,23 @@ steps_for :managing_requests do
     # page.driver.browser.switch_to.alert.accept
   end
 
+  step 'one request exists' do
+    @request = FactoryGirl.create :procurement_request,
+                                  user: @current_user,
+                                  budget_period: Procurement::BudgetPeriod.current
+    expect(Procurement::Request.where(user_id: @current_user,
+            budget_period_id: Procurement::BudgetPeriod.current).count).to eq 1
+  end
+
+  step 'only my requests are shown' do
+    elements = all('[data-request_id]')
+    expect(elements).not_to be_empty
+    elements.each do |element|
+      request = Procurement::Request.find element['data-request_id']
+      expect(request.user_id).to eq @current_user.id
+    end
+  end
+
   step 'no requests exist' do
     Procurement::Request.destroy_all
     expect(Procurement::Request.count).to be_zero
@@ -276,11 +339,7 @@ steps_for :managing_requests do
     within '.request[data-request_id="new_request"]' do
       el = find '.label.label-primary.total_price'
       total = @price * @quantity
-      expect(el.text).to eq \
-       ActionController::Base.helpers.number_to_currency(
-          total,
-          unit: Setting.local_currency_string,
-          precision: 0)
+      expect(el.text).to eq currency(total)
     end
   end
 

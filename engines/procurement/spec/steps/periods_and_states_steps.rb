@@ -178,11 +178,7 @@ steps_for :periods_and_states do
         total = budget_period.requests \
                 .where(approved_quantity: nil)
                      .map {|r| r.total_price(@current_user) }.sum
-        formatted_string = ActionController::Base.helpers.number_to_currency(
-                            total,
-                            unit: Setting.local_currency_string,
-                            precision: 0)
-        find('.label-info', text: formatted_string)
+        find('.label-info', text: currency(total))
       end
     end
   end
@@ -195,11 +191,7 @@ steps_for :periods_and_states do
         total = budget_period.requests \
                 .where.not(approved_quantity: nil)
                      .map {|r| r.total_price(@current_user) }.sum
-        formatted_string = ActionController::Base.helpers.number_to_currency(
-            total,
-            unit: Setting.local_currency_string,
-            precision: 0)
-        find('.label-success', text: formatted_string)
+        find('.label-success', text: currency(total))
       end
     end
   end

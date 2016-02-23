@@ -15,4 +15,10 @@ module Helpers
     raise 'MySQL current datetime has not been changed' if mysql_now != Date.today
   end
 
+  def currency(amount)
+    ActionController::Base.helpers.number_to_currency(
+        amount,
+        unit: Setting.local_currency_string,
+        precision: 0)
+  end
 end
