@@ -308,6 +308,18 @@ steps_for :managing_requests do
     end
   end
 
+  step 'the request is :result in the database' do |result|
+    case result
+      when 'successfully deleted'
+        step 'I see a success message'
+        expect { @request.reload }.to raise_error ActiveRecord::RecordNotFound
+      when 'not deleted'
+        expect(@request.reload).not_to be_nil
+      else
+        raise
+    end
+  end
+
   private
 
   def get_current_request(user)

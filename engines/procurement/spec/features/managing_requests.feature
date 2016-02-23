@@ -220,27 +220,19 @@ Feature: section Managing Requests
     And a request exists created by myself
     And the current date has not yet reached the inspection start date
     When I navigate to the requests page
-#!!# this is needed
     And I select all budget periods
-#!!# this is needed
     And I select all groups
-#!!# this is needed
     And I open the request
-#!!# just referring to the mentioned request
-#    And I delete my request
     And I delete the request
     Then I receive a message asking me if I am sure I want to delete the data
-#!!# this is not possible, either this
-    When I click on "yes"
-    Then I the request is successfully deleted in the database
-#!!# or this. in alternative we have to write it as outline
-    When I click on "no"
-    Then I am redirected to the requests page
-    And the request is not deleted in the database
+    When I click on "<choice>"
+    Then the request is "<result>" in the database
     Examples:
-      | username |
-      | Barbara  |
-      | Roger    |
+      | username | choice | result               |
+      | Barbara  | yes    | successfully deleted |
+      | Barbara  | no     | not deleted          |
+      | Roger    | yes    | successfully deleted |
+      | Roger    | no     | not deleted          |
 
   @managing_requests
   Scenario Outline: Modify a Request
