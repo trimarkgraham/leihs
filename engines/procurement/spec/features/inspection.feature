@@ -3,7 +3,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: What to see in section "Requests" as inspector
     Given I am Barbara
-    And one request exists
+    And several requests exist
     When I navigate to the requests overview page
     Then I see the headers of the colums of the overview
     And I see the amount of requests which are listed is 1
@@ -40,7 +40,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Using the filters as inspector
     Given I am Barbara
-    And three requests exist for the current budget period
+    And several requests exist for the current budget period
     And two requests have been created by myself
     And one request has been created by Roger
     When I navigate to the requests overview page
@@ -57,9 +57,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
 
   @inspection
   Scenario: Creating a request as inspector
-#??# Roger is a requester, not an inspector
-
-    Given I am Roger
+    Given I am Barbara
     And a receiver exists
     And a point of delivery exists
     When I want to create a new request
@@ -100,7 +98,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Give Reason when Partially Excepting or Denying
     Given I am Barbara
-    And a request exists
+    And several requests exists
     And the requested amount is 2
     When I am navigated to the requests page
     And I set the approved quantity to 0
@@ -124,43 +122,28 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Moving request to another budget period as inspector
     Given I am Barbara
-    And two budget periods exist
-#??# need to be more precise, i.e.:
-#??# Given the current budget period is in inspection phase
-#??# And there is a future budget period
-
-    And a request for my inspection group exists
-#??# And a request for my inspection group and current budget period exists
-
-    And the current date has not yet reached the budget end date
+    And the current budget period is in inspection phase
+    And there is a future budget period
+    And there is a budget period which has already ended
+    And several requests for my inspection group and the current budget period exist
     When I am navigated to the requests page
-    And I move the request to the other budget period
-#??# And I move the request to the future budget period (or to the next budget period)
-
-    And I am not the inspector of the budget period the request has been moved to
-#??# this doesn't make sense
-
-    Then the following information is deleted
-      | Approved quantity  |
-      | Order quantity     |
-      | Inspection comment |
-#??# Then the following information is deleted from the request (-> ref. Step 1)
-
-    And I see a success message
-#??# better to have this step before Step 1,
-#??# so that after the user has the message confirmation, we check the persisted data in the database
-
+    Then I can not move the request to the old budget period
+    When I move the request to the future budget period
+    Then I see a success message
     And the changes are saved successfully to the database
-#??# this is redundant, the Step 1 already checks that
-#??# additionally: And the request is related to the future budget period
+    And I can not save the data
 
   @inspection
-  Scenario: Moving request to another group as inspector
+  Scenario: Moving request as inspector to another group
     Given I am Barbara
-    And two groups exist
-    And a request created by myself exists
-    And the current date has not yet reached the budget end date
+    And several groups exist
+    And the current budget period is in inspection phase
+    And several requests for my inspection group and the current budget period exist
     When I navigate to the requests page
-    Then I can move the request to the other group
-    And I see a success message
+    And I move the request to the other group where I am not inspector
+    Then I see a success message
     And the changes are saved successfully to the database
+    And the following information is deleted from the request
+    | Approved quantity  |
+    | Order quantity     |
+    | Inspection comment |

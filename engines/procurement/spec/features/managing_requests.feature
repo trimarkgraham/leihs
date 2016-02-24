@@ -7,9 +7,15 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: What to see in section "Requests" as requester only
     Given I am Roger
-    And one request exists
+    And several request exist
     When I navigate to the requests overview page
-    Then I see the headers of the colums of the overview
+    And the filter current budget period is selected
+    And filter all groups are selected
+    And filter all organisations are selected
+    And filter both priorities are selected
+    And filter all states are selected
+    And the search field is empty
+    And I see the headers of the colums of the overview
     And I see the amount of requests which are listed is 1
     And I see the current budget period
     And I see the requested amount per budget period
@@ -28,13 +34,6 @@ Feature: section Managing Requests
       | total amount          |
       | priority              |
       | state                 |
-#??# isn't better to define all the next steps as When and move them before the 'Then I see the headers...'
-    And the filter current budget period is selected
-    And filter all groups are selected
-    And filter all organisations are selected
-    And filter both priorities are selected
-    And filter all states are selected
-    And the search field is empty
 
   @managing_requests
   Scenario: Using the filters as requester only
@@ -53,8 +52,8 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Creating a request as requester only
     Given I am Roger
-    And a receiver exists
-    And a point of delivery exists
+    And several receivers exist
+    And several points of delivery exist
     When I want to create a new request
     And I fill in the following fields
       | Article                      |
@@ -151,10 +150,10 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Creating a request from a group template inside the new request page
     Given I am <username>
-    And a template article exists
-    And the template article contains a articlenr/suppliernr
-    And the template article contains a supplier
-    And the template article contains a price
+    And several template articles exist
+    And the template articles contain an articlenr/suppliernr
+    And the template articles contain a supplier
+    And the template articles contain a price
     When I am navigated to the new requests page
     And I click on a category
     And I click on a template article
@@ -172,6 +171,27 @@ Feature: section Managing Requests
       | username |
       | Barbara  |
       | Roger    |
+
+  @managing_requests
+  Scenario Outline: Inserting an already inserted tempalte article
+    Given I am <username>
+    And a request containing a template article exists
+    When I am navigated to the new requests page
+    And I click on the template article which has already been added to the request
+    Then I am navigated to the request containing this template article
+
+  @managing_requests
+  Scenario Outline: Changing an inserted template article
+    Given I am <username>
+    And a request containing a template article exists
+    And the template article contains an articlenr./suppliernr.
+    When I am navigated to the new requests page
+    And I modify the name of the already inserted template article
+    And I modify or delete the articlenr./suppliernr. of the already inserted template article
+    When I click on save
+    Then I see a success message
+    And the request with all given information was created successfully in the database
+    And the template id is nullified in the database
 
   @managing_requests
   Scenario Outline: Request deleted because no information entered
@@ -218,7 +238,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Delete a Request
     Given I am <username>
-    And a request created by myself exists
+    And several requests created by myself exist
     And the current date has not yet reached the inspection start date
     When I navigate to the requests page
     And I select all budget periods
@@ -238,7 +258,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Modify a Request
     Given I am <username>
-    And a request created by myself exists
+    And several requests created by myself exist
     And the current date has not yet reached the inspection start date
     Then I can modify my request
     Examples:
@@ -262,8 +282,8 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Moving request to another budget period as requester only
     Given I am Roger
-    And two budget periods exist
-    And a request created by myself exists
+    And several budget periods exist
+    And several requests created by myself exist
     And the current date has not yet reached the inspection start date
     When I navigate to the requests page
     And I move the request to the other budget period
@@ -273,8 +293,8 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: Moving request to another group as requester only
     Given I am Roger
-    And two groups exist
-    And a request created by myself exists
+    And several groups exist
+    And several requests created by myself exist
     And the current date has not yet reached the inspection start date
     When I navigate to the requests page
     And I move the request to the other group
@@ -327,7 +347,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: Download an attachment
     Given I am <username>
-    And a request created by myself exists
+    And several request created by myself exist
     And the request includes an attachment
     When I am navigated to the request page
     And I download the attachment
@@ -342,7 +362,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: View an attachment .jpg
     Given I am <username>
-    And a request created by myself exists
+    And several request created by myself exist
     And the request includes an attachment with the attribute .jpg
     When I am navigated to the request page
     And I click on the attachment
@@ -355,7 +375,7 @@ Feature: section Managing Requests
   @managing_requests
   Scenario Outline: View an attachment .pdf
     Given I am <username>
-    And a request created by myself exists
+    And several request created by myself exist
     And the request includes an attachment with the attribute .pdf
     When I am navigated to the request page
     And I click on the attachment
@@ -384,7 +404,7 @@ Feature: section Managing Requests
   Scenario: Additional Fields shown to requester only after budget period has ended
     Given I am Roger
     And the budget period has ended
-    And a request created by myself exists
+    And several request created by myself exist
     And the inspector has approved the request
     And the inspector has entered an inspection comment
     When I navigate to the requests overview page

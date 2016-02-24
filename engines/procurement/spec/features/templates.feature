@@ -88,3 +88,15 @@ Feature: Templates
     When I navigate to the templates page
     Then the categories are sorted 0-10 and a-z
     And the articles inside a category are sorted 0-10 and a-z
+
+  Scenario: Nullify id in request when articlename and article nr./supplier nr. have been changed
+    Given I am Barbara
+    And several template categories exist
+    And several articles in categories exist
+    When I navigate to the templates page
+    And I change the name of an article
+    And I change or delete the article nr./supplier nr. of the same article
+    And I click on save
+    Then I see a success message
+    And the data modified is saved to the database
+    And this template id saved in requests is nullified

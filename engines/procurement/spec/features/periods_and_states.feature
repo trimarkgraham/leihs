@@ -63,21 +63,12 @@ Feature: Periods and states
     When I have not saved the data yet
     Then I can delete the line
 
-#!!# already covered by the "Overview of Budget Periods" scenario
-#  @periods_and_states
-#  Scenario: Show Totals of each Budget Period
-#    Given I am Hans Ueli
-#    And budget periods exist
-#    When I navigate to the budget periods
-#    Then for every budget period I see the total of all requested articles with status "New"
-#    And for every budget period I see the total of the order amount of all requests with status "Approved"
-
   @periods_and_states
   Scenario: State "New" - Request Date before Inspection Date
     Given I am Roger
     And the current budget period exist
     And the current date is before the inspection date
-    When I want to create a new request
+    When I create a new request
     And I fill in the following fields
       | Article                      |
       | Article nr. / Producer nr.   |
@@ -85,10 +76,10 @@ Feature: Periods and states
       | Motivation                   |
       | Price                        |
       | Requested quantity           |
-#??# this is also required:
       | Replacement / New            |
     And I click on save
-    Then the status of the request saved to the database is "New"
+    Then I see a success message
+    And the status of the request saved to the database is "New"
 
   @periods_and_states
   Scenario: State "Inspection" - Current Date between Inspection Date and Budget Period End Date
