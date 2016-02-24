@@ -5,6 +5,11 @@ tasks:
     test:
       body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
         engines/procurement/spec/steps/common_steps.rb
+- name: dataset_steps.rb
+  scripts:
+    test:
+      body: bundle exec rubocop -c engines/procurement/.rubocop.yml --except Metrics/ModuleLength
+        engines/procurement/spec/steps/dataset_steps.rb
 - name: inspection_steps.rb
   scripts:
     test:

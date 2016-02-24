@@ -11,7 +11,6 @@ steps_for :periods_and_states do
   end
 
   step 'a request exists' do
-    step 'a procurement admin exists'
     @request = if Procurement::Access.requesters.find_by(user_id: @current_user.id)
                  FactoryGirl.create(:procurement_request, user: @current_user)
                else
@@ -180,20 +179,23 @@ steps_for :periods_and_states do
   end
 
   step 'I fill in the name' do
-    line = find('form table tbody tr')
-    line.find("input[name*='name']").set Time.zone.today.year + 1
+    within 'form table tbody tr' do
+      find("input[name*='name']").set Time.zone.today.year + 1
+    end
   end
 
   step 'I fill in the start date of the inspection period' do
-    line = find('form table tbody tr')
-    line.find("input[name*='inspection_start_date']")
-      .set format_date(Time.zone.today + 1)
+    within 'form table tbody tr' do
+      find("input[name*='inspection_start_date']")
+        .set format_date(Time.zone.today + 1)
+    end
   end
 
   step 'I fill in the end date of the budget period' do
-    line = find('form table tbody tr')
-    line.find("input[name*='end_date']")
-      .set format_date(Time.zone.today + 1.month)
+    within 'form table tbody tr' do
+      find("input[name*='end_date']")
+        .set format_date(Time.zone.today + 1.month)
+    end
   end
 
   step 'I have not filled the mandatory fields' do
@@ -365,8 +367,9 @@ steps_for :periods_and_states do
   end
 
   step 'there is an empty budget period line for creating a new one' do
-    line = find('table tbody tr')
-    line.all('input').each { |i| expect(i.value).to be_blank }
+    within 'table tbody tr' do
+      all('input').each { |i| expect(i.value).to be_blank }
+    end
   end
 
   step 'this budget period disappears from the list' do

@@ -1,8 +1,7 @@
 Feature: section Managing Requests
 
-#!!# we should define a world
   Background:
-    Given the current budget period exist
+    Given the basic dataset is ready
 
   @managing_requests
   Scenario: What to see in section "Requests" as requester only

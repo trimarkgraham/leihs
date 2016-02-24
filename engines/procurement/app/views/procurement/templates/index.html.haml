@@ -20,9 +20,10 @@
             - if template_category.id
               %input{type: :hidden, name: "template_categories[#{template_category.object_id}][id]", value: template_category.id}
               %input{type: :hidden, name: "template_categories[#{template_category.object_id}][_destroy]"}
-            = succeed ':' do
-              = _('Category')
-            %input{name: "template_categories[#{template_category.object_id}][name]", value: template_category.name}
+            %label
+              = succeed ':' do
+                = _('Category')
+              %input{name: "template_categories[#{template_category.object_id}][name]", value: template_category.name}
           .col-xs-1.text-right{style: 'font-size: 1.6em'}
             %i.fa.fa-minus-circle
 

@@ -14,5 +14,16 @@ FactoryGirl.define do
     price { 123 }
     requested_quantity { 5 }
     approved_quantity { nil }
+    template { nil }
+
+    before :create do |request|
+      if request.template
+        request.article_name = request.template.article_name
+        request.article_number = request.template.article_number
+        request.price = request.template.price
+        request.supplier_name = request.template.supplier_name
+      end
+    end
+
   end
 end

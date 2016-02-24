@@ -16,7 +16,6 @@ module PersonasSteps
     # 3.times do
     #   FactoryGirl.create :procurement_request, user: persona
     # end
-    step 'a procurement admin exists'
 
     login_as persona
     #old# visit '/procurement' # TODO separate step
@@ -27,8 +26,6 @@ module PersonasSteps
     persona = create_persona('Barbara')
     FactoryGirl.create(:procurement_group_inspector, user: persona)
     FactoryGirl.create(:procurement_access, :requester, user: persona)
-
-    step 'a procurement admin exists'
 
     login_as persona
     visit '/procurement' # TODO separate step
