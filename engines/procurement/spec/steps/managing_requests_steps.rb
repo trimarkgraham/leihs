@@ -28,7 +28,7 @@ steps_for :managing_requests do
     end
   end
 
-  step 'I see all procurement groups' do
+  step 'I see all groups' do
     within '.panel-success .panel-body' do
       Procurement::Group.all.each do |group|
         find'.row', text: group.name
