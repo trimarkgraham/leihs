@@ -59,70 +59,19 @@ steps_for :periods_and_states do
     end
   end
 
-  step 'I change the name of the budget period' do
-    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
-    @new_name = 'New name'
-    budget_period_line.find("input[name*='name']").set @new_name
-  end
-
-  step 'I change the inspection start date of the budget period' do
-    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
-    @new_inspection_start_date = Time.zone.today + 5.months
-    budget_period_line.find("input[name*='inspection_start_date']")
-        .set format_date(@new_inspection_start_date)
-  end
-
-  step 'I change the end date of the budget period' do
-    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
-    @new_end_date = Time.zone.today + 6.months
-    budget_period_line.find("input[name*='end_date']")
-        .set format_date(@new_end_date)
-  end
-
-  step 'I click on \'delete\' on the line for this budget period' do
-    accept_alert do
-      find('form table tbody tr td:first-child input', exact: @budget_period.name)
-          .find(:xpath, '../..')
-          .click_on _('Delete')
+  step 'I add a new line' do
+    within 'tfoot' do
+      find('i.fa-plus-circle').click
     end
   end
 
-  step 'I edit a budget period' do
-    @budget_period = Procurement::BudgetPeriod.first
-  end
-
-  step 'I fill in the name' do
-    line = find('form table tbody tr')
-    line.find("input[name*='name']").set Time.zone.today.year + 1
-  end
-
-  step 'I fill in the start date of the inspection period' do
-    line = find('form table tbody tr')
-    line.find("input[name*='inspection_start_date']")
-      .set format_date(Time.zone.today + 1)
-  end
-
-  step 'I fill in the end date of the budget period' do
-    line = find('form table tbody tr')
-    line.find("input[name*='end_date']")
-      .set format_date(Time.zone.today + 1.month)
-  end
-
-  step 'I navigate to the budget periods' do
-    within '.navbar' do
-      click_on _('Admin')
-      click_on _('Budget periods')
+  step 'I can delete the line' do
+    elements = all('form table tbody tr')
+    n = elements.count
+    within elements.last do
+      find('.fa-minus-circle').click
     end
-    expect(page).to have_selector('h1', text: _('Budget periods'))
-  end
-
-  step 'I see the state :state' do |state|
-    step 'I navigate to the requests page'
-    step 'I select all budget periods'
-    step 'I select all groups'
-    step 'page has been loaded'
-    @el = find(".list-group-item[data-request_id='#{@request.id}']")
-    @el.find(".label", text: _(state))
+    expect(all('form table tbody tr').count).to be < n
   end
 
   step 'I can not create any request for the budget period which has ended' do
@@ -191,6 +140,99 @@ steps_for :periods_and_states do
     request.update_attributes group: group
     expect(request).to_not be_valid
     expect(request.reload.group).to_not be group
+  end
+
+  step 'I can not save the data' do
+    step 'I click on save'
+    expect(Procurement::BudgetPeriod.exists?).to be false
+  end
+
+  step 'I change the name of the budget period' do
+    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
+    @new_name = 'New name'
+    budget_period_line.find("input[name*='name']").set @new_name
+  end
+
+  step 'I change the inspection start date of the budget period' do
+    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
+    @new_inspection_start_date = Time.zone.today + 5.months
+    budget_period_line.find("input[name*='inspection_start_date']")
+        .set format_date(@new_inspection_start_date)
+  end
+
+  step 'I change the end date of the budget period' do
+    budget_period_line = find_budget_period_line_by_name(@budget_period.name)
+    @new_end_date = Time.zone.today + 6.months
+    budget_period_line.find("input[name*='end_date']")
+        .set format_date(@new_end_date)
+  end
+
+  step 'I click on \'delete\' on the line for this budget period' do
+    accept_alert do
+      find('form table tbody tr td:first-child input', exact: @budget_period.name)
+          .find(:xpath, '../..')
+          .click_on _('Delete')
+    end
+  end
+
+  step 'I edit a budget period' do
+    @budget_period = Procurement::BudgetPeriod.first
+  end
+
+  step 'I fill in the name' do
+    line = find('form table tbody tr')
+    line.find("input[name*='name']").set Time.zone.today.year + 1
+  end
+
+  step 'I fill in the start date of the inspection period' do
+    line = find('form table tbody tr')
+    line.find("input[name*='inspection_start_date']")
+      .set format_date(Time.zone.today + 1)
+  end
+
+  step 'I fill in the end date of the budget period' do
+    line = find('form table tbody tr')
+    line.find("input[name*='end_date']")
+      .set format_date(Time.zone.today + 1.month)
+  end
+
+  step 'I have not filled the mandatory fields' do
+    within all('form table tbody tr').last do
+      all('input[required]').each do |el|
+        expect(el.value).to be_empty
+      end
+    end
+  end
+
+  step 'I have not saved the data yet' do
+    within all('form table tbody tr').last do
+      all('input[required]').each do |el|
+        el.set Faker::Lorem.sentence
+      end
+    end
+  end
+
+  step 'I navigate to the budget periods' do
+    within '.navbar' do
+      click_on _('Admin')
+      click_on _('Budget periods')
+    end
+    expect(page).to have_selector('h1', text: _('Budget periods'))
+  end
+
+  step 'I see the state :state' do |state|
+    step 'I navigate to the requests page'
+    step 'I select all budget periods'
+    step 'I select all groups'
+    step 'page has been loaded'
+    @el = find(".list-group-item[data-request_id='#{@request.id}']")
+    @el.find(".label", text: _(state))
+  end
+
+  step 'I see which fields are mandatory' do
+    step 'the field "name" is marked red'
+    step 'the field "inspection start date" is marked red'
+    step 'the field "end date" is marked red'
   end
 
   step 'I see the status of my request is "In inspection"' do

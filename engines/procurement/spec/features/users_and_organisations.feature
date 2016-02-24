@@ -24,7 +24,7 @@ Feature: Section Users
     When I fill in the <1st field>
     And I fill in the <2nd field>
     And I click on save
-    And the "<3rd field>" is marked red
+    And the field "<3rd field>" is marked red
     And the new requester has not been created
     Examples:
       | 1st field      | 2nd field    | 3rd field      |

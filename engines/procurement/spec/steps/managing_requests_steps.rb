@@ -316,9 +316,8 @@ steps_for :managing_requests do
 
   step 'the amount and the price are multiplied and the result is shown' do
     within '.request[data-request_id="new_request"]' do
-      el = find '.label.label-primary.total_price'
       total = @price * @quantity
-      expect(el.text).to eq currency(total)
+      expect(find('.label.label-primary.total_price').text).to eq currency(total)
     end
   end
 

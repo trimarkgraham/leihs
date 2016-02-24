@@ -37,19 +37,6 @@ steps_for :users_and_organisations do
     expect(requester).to be
   end
 
-  step 'the :field is marked red' do |field|
-    line = find('form table tbody tr')
-    input_field = case field
-                  when 'requester name'
-                    line.find("input[name*='name']")
-                  when 'department'
-                    line.find("input[name*='department']")
-                  when 'organization'
-                    line.find("input[name*='organization']")
-                  end
-    expect(input_field['required']).to eq 'true' # ;-)
-  end
-
   step 'the new requester has not been created' do
     requester = Procurement::Access.requesters.find_by_user_id @user.id
     expect(requester).not_to be

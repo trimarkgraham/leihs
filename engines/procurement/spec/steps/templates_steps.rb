@@ -41,23 +41,23 @@ steps_for :templates do
   #   end
   # end
 
-  step 'I can delete existing information of the fields' do |table|
-    within '.panel-collapse.in' do
-      within(:xpath, "//input[@value='#{@template.article_name}']/ancestor::tr") do
-        table.raw.flatten.each do |value|
-          case value
-            when 'Price'
-              find("input[name*='[price]']").set ''
-            else
-              fill_in _(value), with: ''
-          end
-        end
-      end
-    end
-
-    step 'I click on save'
-    step 'I see a success message'
-  end
+  # step 'I can delete existing information of the fields' do |table|
+  #   within '.panel-collapse.in' do
+  #     within(:xpath, "//input[@value='#{@template.article_name}']/ancestor::tr") do
+  #       table.raw.flatten.each do |value|
+  #         case value
+  #           when 'Price'
+  #             find("input[name*='[price]']").set ''
+  #           else
+  #             fill_in _(value), with: ''
+  #         end
+  #       end
+  #     end
+  #   end
+  #
+  #   step 'I click on save'
+  #   step 'I see a success message'
+  # end
 
   private
 

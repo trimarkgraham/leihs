@@ -8,14 +8,14 @@ module CommonSteps
     click_on _('Save'), match: :first
   end
 
-  step 'I enter the section :section' do |section|
-    case section
-      when 'My requests'
-        step 'I navigate to the requests page'
-      else
-        raise
-    end
-  end
+  # step 'I enter the section :section' do |section|
+  #   case section
+  #     when 'My requests'
+  #       step 'I navigate to the requests page'
+  #     else
+  #       raise
+  #   end
+  # end
 
   step 'I fill in the following fields' do |table|
     table.raw.flatten.each do |value|
@@ -119,6 +119,24 @@ module CommonSteps
 
   step 'the current budget period exist' do
     FactoryGirl.create(:procurement_budget_period)
+  end
+
+  step 'the field :field is marked red' do |field|
+    within all('form table tbody tr').last do
+      input_field = case field
+                      when 'requester name', 'name'
+                        find("input[name*='[name]']")
+                      when 'department'
+                        find("input[name*='[department]']")
+                      when 'organization'
+                        find("input[name*='[organization]']")
+                      when 'inspection start date'
+                        find("input[name*='[inspection_start_date]']")
+                      when 'end date'
+                        find("input[name*='[end_date]']")
+                    end
+      expect(input_field['required']).to eq 'true' # ;-)
+    end
   end
 
   step 'there exists a procurement group' do
