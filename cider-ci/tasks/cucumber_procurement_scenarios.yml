@@ -240,14 +240,14 @@ tasks:
   scripts:
     test:
       body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/templates.feature:68
-- name: engines/procurement/spec/features/templates.feature:85
+- name: engines/procurement/spec/features/templates.feature:101
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/templates.feature:85
-- name: engines/procurement/spec/features/templates.feature:93
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/templates.feature:101
+- name: engines/procurement/spec/features/templates.feature:109
   scripts:
     test:
-      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/templates.feature:93
+      body: DISPLAY=":$XVNC_PORT" bundle exec rspec engines/procurement/spec/features/templates.feature:109
 - name: engines/procurement/spec/features/users_and_organisations.feature:4
   scripts:
     test:

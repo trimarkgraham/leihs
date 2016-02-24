@@ -69,13 +69,30 @@ Feature: Templates
     Given I am Barbara
     And a template category exists
     And the template category has one article
-    And the article name is filled
-    And the article/suppliernr. is filled
-    And the price is filled
-    And the supplier is filled
-    When I delete the article/suppliernr.
-    And I delete the price
-    And I delete the supplier
+
+#!!# this is needed:
+    When I navigate to edit templates of an inspectable group
+
+#!!# merged to a table
+#    And the article name is filled
+#    And the article/suppliernr. is filled
+#    And the price is filled
+#    And the supplier is filled
+    And the following fields are filled
+      | Article                    |
+      | Article nr. / Producer nr. |
+      | Price                      |
+      | Supplier                   |
+
+#!!# merged to a table
+#    When I delete the article/suppliernr.
+#    And I delete the price
+#    And I delete the supplier
+    When I delete the following fields
+      | Article nr. / Producer nr. |
+      | Price                      |
+      | Supplier                   |
+
     And I click on save
     Then I see a success message
     And the deleted data is deleted from the database
