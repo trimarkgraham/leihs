@@ -5,7 +5,14 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     Given I am Barbara
     And several requests exist
     When I navigate to the requests overview page
-    Then I see the headers of the colums of the overview
+    Then the current budget period is selected
+    And only my groups are selected
+    And all organisations are selected
+    And both priorities are selected
+    And all states are selected
+    And the search field is empty
+    And the checkbox "Only show my own request" is not marked
+    And I see the headers of the colums of the overview
     And I see the amount of requests which are listed is 1
     And I see the current budget period
     And I see the requested amount per budget period
@@ -16,8 +23,7 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And I see the percentage of budget used compared to the budget limit of my group
     And I see when the requesting phase of this budget period ends
     And I see when the inspection phase of this budget period ends
-    And I see all procurement groups
-    And not only my requests are shown
+    And I see all groups
     And I see the following request information
       | article name          |
       | name of the requester |
@@ -30,16 +36,11 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
       | total amount          |
       | priority              |
       | state                 |
-    And the filter current budget period is selected
-    And filter all groups are selected
-    And filter all organisations are selected
-    And filter both priorities are selected
-    And filter all states are selected
-    And the search field is empty
 
   @inspection
   Scenario: Using the filters as inspector
     Given I am Barbara
+    And templates for my group exist
     And several requests exist for the current budget period
     And two requests have been created by myself
     And one request has been created by Roger
@@ -54,6 +55,9 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     Then the list of requests is adjusted immediately
     And I see both my requests
     And the amount of requests found is shown as 2
+    When I navigate to the templates page of my group
+    And I navigate back to the request overview page
+    Then the filter settings have not changed
 
   @inspection
   Scenario: Creating a request as inspector

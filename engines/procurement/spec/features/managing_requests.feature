@@ -9,12 +9,13 @@ Feature: section Managing Requests
     Given I am Roger
     And several request exist
     When I navigate to the requests overview page
-    And the filter current budget period is selected
-    And filter all groups are selected
-    And filter all organisations are selected
-    And filter both priorities are selected
-    And filter all states are selected
+    Then the current budget period is selected
+    And all groups in the filter groups are selected
+    And all organisations are selected
+    And both priorities are selected
+    And all states are selected
     And the search field is empty
+    And I do not see the filter "only show my own requests"
     And I see the headers of the colums of the overview
     And I see the amount of requests which are listed is 1
     And I see the current budget period
@@ -22,7 +23,7 @@ Feature: section Managing Requests
     And I see the requested amount per group of each budget period
     And I see when the requesting phase of this budget period ends
     And I see when the inspection phase of this budget period ends
-    And I see all procurement groups
+    And I see all groups
     And only my requests are shown
     And I see the following request information
       | article name          |
