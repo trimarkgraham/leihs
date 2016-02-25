@@ -1,5 +1,94 @@
 steps_for :managing_requests do
 
+  step 'I can change the budget period of my request' do
+    request = get_current_request @current_user
+    visit_request(request)
+    next_budget_period = Procurement::BudgetPeriod. \
+        where("end_date > ?", request.budget_period.end_date).first
+
+    within ".request[data-request_id='#{request.id}']" do
+      find(".btn-group button.dropdown-toggle").click
+      click_on next_budget_period.name
+    end
+
+    expect(page).to have_content _('Request moved')
+    expect(request.reload.budget_period_id).to be next_budget_period.id
+  end
+
+  step 'I can change the procurement group of my request' do
+    request = get_current_request @current_user
+    visit_request(request)
+    other_group = Procurement::Group.where.not(id: request.group_id).first
+
+    within ".request[data-request_id='#{request.id}']" do
+      find(".btn-group button.dropdown-toggle").click
+      click_on other_group.name
+    end
+
+    expect(page).to have_content _('Request moved')
+    expect(request.reload.group_id).to be other_group.id
+  end
+
+  step 'I can choose the following :field values' do |field, table|
+    within '.request[data-request_id="new_request"]' do
+      label = case field
+                when 'priority'
+                  _('Priority')
+                when 'replacement'
+                  "%s / %s" % [_('Replacement'), _('New')]
+                else
+                  raise
+              end
+      within '.form-group', text: label do
+        table.raw.flatten.each do |value|
+          choose _(value)
+        end
+      end
+    end
+  end
+
+  step 'I can delete my request' do
+    @request = get_current_request @current_user
+    visit_request(@request)
+
+    step 'I delete the request'
+
+    expect(page).to have_content _('Deleted')
+    expect{@request.reload}.to raise_error ActiveRecord::RecordNotFound
+  end
+
+  step 'I can modify my request' do
+    request = get_current_request @current_user
+    visit_request(request)
+
+    text = Faker::Lorem.sentence
+    within ".request[data-request_id='#{request.id}']" do
+      fill_in _('Motivation'), with: text
+    end
+
+    step 'I click on save'
+    step 'I see a success message'
+    expect(request.reload.motivation).to eq text
+  end
+
+  step 'I click on :choice' do |choice|
+    case choice
+      when 'yes'
+        page.driver.browser.switch_to.alert.accept
+      when 'no'
+        page.driver.browser.switch_to.alert.dismiss
+      else
+        raise
+    end
+  end
+
+  step 'I delete the request' do
+    within ".request[data-request_id='#{@request.id}']" do
+      find(".btn-group button.dropdown-toggle").click
+      click_on _('Delete')
+    end
+  end
+
   step 'I do not see the budget limits' do
     within '.panel-success .panel-body' do
       Procurement::Group.all.each do |group|
@@ -7,14 +96,6 @@ steps_for :managing_requests do
           expect(has_no_selector? '.budget_limit').to be true
         end
       end
-    end
-  end
-
-  step 'I do not see the filter "only show my own requests"' do
-    within '#filter_panel' do
-      expect(has_no_selector? 'input[name="user_id"]').to be true
-      expect(has_no_selector? 'div',
-                              text: _('Only show my own requests')).to be true
     end
   end
 
@@ -26,6 +107,25 @@ steps_for :managing_requests do
         end
       end
     end
+  end
+
+  step 'I enter the requested amount' do
+    within '.request[data-request_id="new_request"]' do
+      @price = Faker::Number.number(4).to_i
+      @quantity = Faker::Number.number(2).to_i
+      within '.form-group', text: _('Item price') do
+        find('input').set @price
+      end
+      fill_in _('Requested quantity'), with: @quantity
+    end
+  end
+
+  step 'I open the request' do
+    find(".list-group-item[data-request_id='#{@request.id}']").click
+  end
+
+  step 'I receive a message asking me if I am sure I want to delete the data' do
+    # page.driver.browser.switch_to.alert.accept
   end
 
   step 'I see all groups' do
@@ -184,122 +284,6 @@ steps_for :managing_requests do
     end
   end
 
-  step 'I can change the budget period of my request' do
-    request = get_current_request @current_user
-    visit_request(request)
-    next_budget_period = Procurement::BudgetPeriod. \
-        where("end_date > ?", request.budget_period.end_date).first
-
-    within ".request[data-request_id='#{request.id}']" do
-      find(".btn-group button.dropdown-toggle").click
-      click_on next_budget_period.name
-    end
-
-    expect(page).to have_content _('Request moved')
-    expect(request.reload.budget_period_id).to be next_budget_period.id
-  end
-
-  step 'I can change the procurement group of my request' do
-    request = get_current_request @current_user
-    visit_request(request)
-    other_group = Procurement::Group.where.not(id: request.group_id).first
-
-    within ".request[data-request_id='#{request.id}']" do
-      find(".btn-group button.dropdown-toggle").click
-      click_on other_group.name
-    end
-
-    expect(page).to have_content _('Request moved')
-    expect(request.reload.group_id).to be other_group.id
-  end
-
-  step 'I can choose the following :field values' do |field, table|
-    within '.request[data-request_id="new_request"]' do
-      label = case field
-                when 'priority'
-                  _('Priority')
-                when 'replacement'
-                  "%s / %s" % [_('Replacement'), _('New')]
-                else
-                  raise
-              end
-      within '.form-group', text: label do
-        table.raw.flatten.each do |value|
-          choose _(value)
-        end
-      end
-    end
-  end
-
-  step 'I can delete my request' do
-    @request = get_current_request @current_user
-    visit_request(@request)
-
-    step 'I delete the request'
-
-    expect(page).to have_content _('Deleted')
-    expect{@request.reload}.to raise_error ActiveRecord::RecordNotFound
-  end
-
-  step 'I can modify my request' do
-    request = get_current_request @current_user
-    visit_request(request)
-
-    text = Faker::Lorem.sentence
-    within ".request[data-request_id='#{request.id}']" do
-      fill_in _('Motivation'), with: text
-    end
-
-    step 'I click on save'
-    step 'I see a success message'
-    expect(request.reload.motivation).to eq text
-  end
-
-  step 'I click on :choice' do |choice|
-    case choice
-      when 'yes'
-        page.driver.browser.switch_to.alert.accept
-      when 'no'
-        page.driver.browser.switch_to.alert.dismiss
-      else
-        raise
-    end
-  end
-
-  step 'I delete the request' do
-    within ".request[data-request_id='#{@request.id}']" do
-      find(".btn-group button.dropdown-toggle").click
-      click_on _('Delete')
-    end
-  end
-
-  step 'I enter the requested amount' do
-    within '.request[data-request_id="new_request"]' do
-      @price = Faker::Number.number(4).to_i
-      @quantity = Faker::Number.number(2).to_i
-      within '.form-group', text: _('Item price') do
-        find('input').set @price
-      end
-      fill_in _('Requested quantity'), with: @quantity
-    end
-  end
-
-  step 'I open the request' do
-    find(".list-group-item[data-request_id='#{@request.id}']").click
-  end
-
-  step 'I receive a message asking me if I am sure I want to delete the data' do
-    # page.driver.browser.switch_to.alert.accept
-  end
-
-  step 'one request exists' do
-    @request = FactoryGirl.create :procurement_request,
-                                  user: @current_user,
-                                  budget_period: Procurement::BudgetPeriod.current
-    expect(Procurement::Request.where(user_id: @current_user,
-            budget_period_id: Procurement::BudgetPeriod.current).count).to eq 1
-  end
-
   step 'only my requests are shown' do
     elements = all('[data-request_id]')
     expect(elements).not_to be_empty
@@ -312,6 +296,17 @@ steps_for :managing_requests do
   step 'no requests exist' do
     Procurement::Request.destroy_all
     expect(Procurement::Request.count).to be_zero
+  end
+
+  step 'several requests created by myself exist' do
+    n = 3
+    n.times do
+      FactoryGirl.create :procurement_request,
+                         user: @current_user,
+                         budget_period: Procurement::BudgetPeriod.current
+    end
+    expect(Procurement::Request.where(user_id: @current_user,
+                                      budget_period_id: Procurement::BudgetPeriod.current).count).to eq n
   end
 
   step 'the amount and the price are multiplied and the result is shown' do
@@ -341,16 +336,6 @@ steps_for :managing_requests do
         within 'label', text: /^#{_(value)}$/ do
           find("input[type='radio']:checked")
         end
-      end
-    end
-  end
-
-  step 'the filter current budget period is selected' do
-    budget_period = Procurement::BudgetPeriod.current
-    within '#filter_panel' do
-      within 'select[name="filter[budget_period_ids][]"]', visible: false do
-        expect(find "option[value='#{budget_period.id}']", visible: false).to \
-          be_selected
       end
     end
   end

@@ -102,7 +102,10 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Give Reason when Partially Excepting or Denying
     Given I am Barbara
-    And several requests exists
+#!!# typo
+#    And several requests exists
+    And several requests exist
+
     And the requested amount is 2
     When I am navigated to the requests page
     And I set the approved quantity to 0

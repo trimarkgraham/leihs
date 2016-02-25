@@ -32,41 +32,6 @@ module CommonSteps
     end
   end
 
-  step 'I navigate to the requests page' do
-    visit procurement.overview_requests_path
-  end
-
-  step 'I navigate to the requests overview page' do
-    step 'I navigate to the requests page'
-  end
-
-  # step 'I navigate to the users list' do
-  #   visit procurement.users_path
-  # end
-  step 'I navigate to the users page' do
-    within '.navbar' do
-      click_on _('Admin')
-      click_on _('Users')
-    end
-    expect(page).to have_selector('h1', text: _('Users'))
-  end
-
-  step 'I navigate to the organisation tree page' do
-    within '.navbar' do
-      click_on _('Admin')
-      click_on _('Organisations')
-    end
-    expect(page).to have_selector('h1', text: _('Organisations of the requesters'))
-  end
-
-  step 'I navigate to the templates page' do
-    within '.navbar' do
-      click_on _('Templates')
-      click_on @group.name
-    end
-    expect(page).to have_selector('h1', text: _('Templates'))
-  end
-
   step 'I see a success message' do
     #expect(page).to have_content _('Saved')
     find '.flash .alert-success', match: :first
@@ -74,22 +39,6 @@ module CommonSteps
 
   step 'I see an error message' do
     find '.flash .alert-danger', match: :first
-  end
-
-  step 'I select all :string_with_spaces' do |string_with_spaces|
-    text = case string_with_spaces
-             when 'groups'
-               _('Groups')
-             when 'budget periods'
-               _('Budget periods')
-             else
-               raise
-           end
-    within find('.form-group', text: text).find('.btn-group') do
-      find('button.multiselect').click
-      all(:checkbox).each { |x| x.set true }
-      find('button.multiselect').click
-    end
   end
 
   step 'I want to create a new request' do

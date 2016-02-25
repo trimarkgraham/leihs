@@ -6,11 +6,20 @@ Feature: section Managing Requests
   @managing_requests
   Scenario: What to see in section "Requests" as requester only
     Given I am Roger
-    And several request exist
+
+#!!# more precise and reusing existing step
+#    And several request exist
+    And several requests created by myself exist
+
     When I navigate to the requests overview page
     Then the current budget period is selected
     And all groups in the filter groups are selected
+
+#!!# this doesn't make sense.
+#    the organisations filter is not visible for a normal requester
+#    since he is only connected to one organisation unit
     And all organisations are selected
+
     And both priorities are selected
     And all states are selected
     And the search field is empty
@@ -42,7 +51,12 @@ Feature: section Managing Requests
     Then I do not see the filter "only show my own requests"
     When I select one or more budget periods
     And I select one or more groups
+
+#!!# this doesn't make sense.
+#    the organisations filter is not visible for a normal requester
+#    since he is only connected to one organisation unit
     And I select a specific organisation
+
     And I select one ore both priorities
     And I select one or more states
     And I enter a search string
