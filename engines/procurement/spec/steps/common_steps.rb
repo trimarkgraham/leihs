@@ -41,6 +41,16 @@ module CommonSteps
     find '.flash .alert-danger', match: :first
   end
 
+  step 'I see the amount of requests which are listed is :n' do |n|
+    within '#filter_target' do
+      find 'h4', text: /^#{n} #{_('Requests')}$/
+    end
+  end
+
+  step 'I see the headers of the columns of the overview' do
+    find '#column-titles'
+  end
+
   step 'I want to create a new request' do
     step 'there exists a procurement group'
     step 'I navigate to the requests page'

@@ -23,8 +23,8 @@ Feature: section Managing Requests
     And both priorities are selected
     And all states are selected
     And the search field is empty
-    And I do not see the filter "only show my own requests"
-    And I see the headers of the colums of the overview
+    And I do not see the filter "Only show my own requests"
+    And I see the headers of the columns of the overview
     And I see the amount of requests which are listed is 1
     And I see the current budget period
     And I see the requested amount per budget period
@@ -48,7 +48,7 @@ Feature: section Managing Requests
   Scenario: Using the filters as requester only
     Given I am Roger
     When I navigate to the requests overview page
-    Then I do not see the filter "only show my own requests"
+    Then I do not see the filter "Only show my own requests"
     When I select one or more budget periods
     And I select one or more groups
 

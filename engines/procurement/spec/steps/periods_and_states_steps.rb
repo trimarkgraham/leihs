@@ -214,14 +214,6 @@ steps_for :periods_and_states do
     end
   end
 
-  step 'I navigate to the budget periods' do
-    within '.navbar' do
-      click_on _('Admin')
-      click_on _('Budget periods')
-    end
-    expect(page).to have_selector('h1', text: _('Budget periods'))
-  end
-
   step 'I see the state :state' do |state|
     step 'I navigate to the requests page'
     step 'I select all budget periods'

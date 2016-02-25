@@ -136,12 +136,6 @@ steps_for :managing_requests do
     end
   end
 
-  step 'I see the amount of requests which are listed is :n' do |n|
-    within '#filter_target' do
-      find 'h4', text: /^#{n} #{_('Requests')}$/
-    end
-  end
-
   step 'I see the budget limits of all groups' do
     within '.panel-success .panel-body' do
       Procurement::Group.all.each do |group|
@@ -159,10 +153,6 @@ steps_for :managing_requests do
   step 'I see the current budget period' do
     find '.panel-success .panel-heading .h4',
          text: Procurement::BudgetPeriod.current.name
-  end
-
-  step 'I see the headers of the colums of the overview' do
-    find '#column-titles'
   end
 
   step 'I see the following request information' do |table|

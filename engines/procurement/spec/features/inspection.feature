@@ -1,5 +1,8 @@
 Feature: Inspection (state-behaviour described in seperate feature-file)
 
+  Background:
+    Given the basic dataset is ready
+
   @inspection
   Scenario: What to see in section "Requests" as inspector
     Given I am Barbara
@@ -12,8 +15,11 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And all states are selected
     And the search field is empty
     And the checkbox "Only show my own request" is not marked
-    And I see the headers of the colums of the overview
+    And I see the headers of the columns of the overview
+
+#??# why 1?
     And I see the amount of requests which are listed is 1
+
     And I see the current budget period
     And I see the requested amount per budget period
     And I see the requested amount per group of each budget period
@@ -41,20 +47,35 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   Scenario: Using the filters as inspector
     Given I am Barbara
     And templates for my group exist
-    And several requests exist for the current budget period
-    And two requests have been created by myself
-    And one request has been created by Roger
+
+#!!# defining in a single step
+#    And several requests exist for the current budget period
+#    And two requests have been created by myself
+#    And one request has been created by Roger
+    And following requests exist for the current budget period
+      | quantity | user   |
+      | 2        | myself |
+      | 1        | Roger  |
+
     When I navigate to the requests overview page
-    And I select "only show my own requests"
+    And I select "Only show my own requests"
     And I select the current budget period
     And I select all groups
     And I select all organisations
     And I select both priorities
     And I select all states
-    And I enter leave the search string empty
+
+#!!# typo
+#    And I enter leave the search string empty
+    And I leave the search string empty
+
     Then the list of requests is adjusted immediately
     And I see both my requests
-    And the amount of requests found is shown as 2
+
+#!!# reuse already defined step
+#    And the amount of requests found is shown as 2
+    And I see the amount of requests which are listed is 2
+
     When I navigate to the templates page of my group
     And I navigate back to the request overview page
     Then the filter settings have not changed
