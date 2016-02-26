@@ -123,11 +123,13 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
   @inspection
   Scenario: Give Reason when Partially Excepting or Denying
     Given I am Barbara
-#!!# typo
+#!!# need to be more specific
 #    And several requests exists
-    And several requests exist
+#    And the requested amount is 2
+    And requests exist with following data
+      | requested amount |
+      | 2                |
 
-    And the requested amount is 2
     When I am navigated to the requests page
     And I set the approved quantity to 0
     Then the field "inspection comment" is marked red
@@ -153,21 +155,48 @@ Feature: Inspection (state-behaviour described in seperate feature-file)
     And the current budget period is in inspection phase
     And there is a future budget period
     And there is a budget period which has already ended
-    And several requests for my inspection group and the current budget period exist
-    When I am navigated to the requests page
-    Then I can not move the request to the old budget period
-    When I move the request to the future budget period
+
+#!!# reusing step
+#    And several requests for my inspection group and the current budget period exist
+    And following requests exist for the current budget period
+      | quantity | user  | group     |
+      | 3        | Roger | inspected |
+
+#!!# need to be more precise
+#    When I am navigated to the requests page
+    When I navigate to the requests page of Roger
+
+#!!# no specified request
+#    Then I can not move the request to the old budget period
+    Then I can not move any request to the old budget period
+
+#!!# no specified request
+#    When I move the request to the future budget period
+    When I move a request to the future budget period
+
     Then I see a success message
     And the changes are saved successfully to the database
-    And I can not save the data
+
+#!!# more precise
+#    And I can not save the data
+    And I can not submit the data
 
   @inspection
   Scenario: Moving request as inspector to another group
     Given I am Barbara
     And several groups exist
     And the current budget period is in inspection phase
-    And several requests for my inspection group and the current budget period exist
-    When I navigate to the requests page
+
+#!!# reusing step
+#    And several requests for my inspection group and the current budget period exist
+    And following requests exist for the current budget period
+      | quantity | user  | group     |
+      | 3        | Roger | inspected |
+
+#!!# need to be more precise
+#    When I am navigated to the requests page
+    When I navigate to the requests page of Roger
+
     And I move the request to the other group where I am not inspector
     Then I see a success message
     And the changes are saved successfully to the database

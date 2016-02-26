@@ -66,18 +66,11 @@ steps_for :procurement_groups do
     expect(group.budget_limits.first.amount_cents).to eq (@limit * 100)
   end
 
-  step ':count procurement groups exist' do |count|
-    @groups = []
-    count.to_i.times do
-      @groups << FactoryGirl.create(:procurement_group)
-    end
-  end
-
   step 'the procurement groups are sorted 0-10 and a-z' do
     names = all('table tbody tr td:first-child').map(&:text)
 
-    # sorted_numbers_strings = @groups.map(&:name) \
-    #           .partition { |x| not x.is_a? String } \
+    # sorted_numbers_strings = @groups.map(&:name)
+    #           .partition { |x| not x.is_a? String }
     #           .map(&:sort).flatten
     # expect(names).to eq sorted_numbers_strings
 

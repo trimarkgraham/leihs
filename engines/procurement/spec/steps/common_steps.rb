@@ -72,6 +72,19 @@ module CommonSteps
     end
   end
 
+  step ':count groups exist' do |count|
+    n = case count
+          when 'several'
+            3
+          else
+            count.to_i
+        end
+    @groups = []
+    n.times do
+      @groups << FactoryGirl.create(:procurement_group)
+    end
+  end
+
   step 'page has been loaded' do
     expect(has_no_selector?(".spinner")).to be true
   end

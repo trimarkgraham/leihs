@@ -42,11 +42,6 @@ steps_for :users_and_organisations do
     expect(requester).not_to be
   end
 
-  step 'there exists a requester' do
-    @user = create_user(Faker::Name.first_name)
-    FactoryGirl.create(:procurement_access, :requester, user: @user)
-  end
-
   step 'I click on the minus button on the requester line' do
     find('form table tbody tr td:first-child input', exact: @user.name)
       .find(:xpath, '../..')
@@ -122,10 +117,6 @@ steps_for :users_and_organisations do
     expect(Procurement::Access.admins.exists?(@user.id)).to be true
   end
 
-  step 'requesters exist' do
-    step 'there exist 10 requesters'
-  end
-
   step 'the requesters are sorted 0-10 and a-z' do
     within '.panel', text: _('Requesters') do
       texts = all('input[name="requesters[][name]"]').map &:value
@@ -144,12 +135,12 @@ steps_for :users_and_organisations do
     # FactoryGirl.create(:procurement_access, :admin)
 
     @admin = Procurement::Access.admins \
-      # .where.not(user_id: @current_user) \
+      # .where.not(user_id: @current_user)
       .order('RAND()').first.user
   end
 
   step 'I can delete the admin' do
-    find('.token-input-list .token-input-token', text: @admin.name) \
+    find('.token-input-list .token-input-token', text: @admin.name)
       .find('.token-input-delete-token').click
   end
 
@@ -165,8 +156,8 @@ steps_for :users_and_organisations do
   step 'I see the organisation tree according ' \
        'to the organisations assigned to requester' do
     Procurement::Access.requesters.each do |requester|
-      find('li', text: requester.organization.parent.name) \
-        .find('li', text: requester.organization.name) \
+      find('li', text: requester.organization.parent.name)
+        .find('li', text: requester.organization.name)
         .find('li', text: requester.user.name)
     end
   end

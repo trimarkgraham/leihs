@@ -1,5 +1,31 @@
 module NavigationSteps
 
+  step 'I am navigated to the new request page for this username' do
+    # NOTE this doesn't match the query params
+    # expect(current_path).to eq
+
+    # NOTE instead this matches the query params
+    expect(page).to have_current_path \
+      procurement.group_budget_period_user_requests_path(
+        @group,
+        Procurement::BudgetPeriod.current,
+        @user,
+        request_id: :new_request)
+  end
+
+  step 'I am navigated to the requester list' do
+    expect(current_path).to eq \
+      procurement.choose_group_budget_period_users_path(
+        @group,
+        Procurement::BudgetPeriod.current)
+
+    within '.panel-success .list-group' do
+      Procurement::Access.requesters.each do |requester|
+        find('a', text: requester.user.to_s)
+      end
+    end
+  end
+
   step 'I navigate to the requests page' do
     # visit procurement.overview_requests_path
     within '.navbar' do
@@ -14,6 +40,20 @@ module NavigationSteps
   # alias
   step 'I navigate to the requests overview page' do
     step 'I navigate to the requests page'
+  end
+
+  step 'I navigate to the requests page of :name' do |name|
+    user = case name
+             when 'myself' then @current_user
+             else
+               User.find_by(firstname: name)
+           end
+    path = procurement.group_budget_period_user_requests_path(
+                         @group,
+                         Procurement::BudgetPeriod.current,
+                         user)
+    visit path
+    expect(page).to have_current_path path
   end
 
   step 'I navigate to the budget periods' do
@@ -44,6 +84,11 @@ module NavigationSteps
   end
 
   step 'I navigate to the templates page of my group' do
+    # NOTE refresh the page
+    if has_no_selector? '.navbar', text: _('Templates')
+      visit procurement.root_path
+    end
+
     within '.navbar' do
       click_on _('Templates')
       click_on @group.name
@@ -53,6 +98,15 @@ module NavigationSteps
   # alias
   step 'I navigate to the templates page' do
     step 'I navigate to the templates page of my group'
+  end
+
+  step 'I pick a requester' do
+    within '.panel-success .list-group' do
+      requester = Procurement::Access.requesters
+                  .where.not(user_id: @current_user).first
+      @user = requester.user
+      find('a', text: @user.to_s).click
+    end
   end
 
 end

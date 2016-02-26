@@ -19,7 +19,7 @@ Feature: Procurement Groups
   @procurement_groups
   Scenario: Sorting of Procurement Groups
     Given I am Hans Ueli
-    And 3 procurement groups exist
+    And 3 groups exist
     And I navigate to the groups page
     Then the procurement groups are sorted 0-10 and a-z
 

@@ -37,7 +37,7 @@ steps_for :periods_and_states do
     Procurement::BudgetPeriod.all.each do |budget_period|
       next if budget_period.requests.empty?
       within(:xpath, "//input[@value='#{budget_period.name}']/ancestor::tr") do
-        total = budget_period.requests \
+        total = budget_period.requests
                 .where(approved_quantity: nil)
                     .map {|r| r.total_price(@current_user) }.sum
         find('.label-info', text: currency(total))
@@ -50,7 +50,7 @@ steps_for :periods_and_states do
     Procurement::BudgetPeriod.all.each do |budget_period|
       next if budget_period.requests.empty?
       within(:xpath, "//input[@value='#{budget_period.name}']/ancestor::tr") do
-        total = budget_period.requests \
+        total = budget_period.requests
                 .where.not(approved_quantity: nil)
                     .map {|r| r.total_price(@current_user) }.sum
         find('.label-success', text: currency(total))
@@ -101,7 +101,12 @@ steps_for :periods_and_states do
     else
       visit_request(@request)
     end
-    expect(has_no_selector?(".btn-group a", text: _('Delete'))).to be true
+    el = find('.btn-group .fa-gear')
+    btn = el.find(:xpath, ".//parent::button//parent::div")
+    btn.click unless btn['class'] =~ /open/
+    within btn do
+      expect(has_no_selector?('a', text: _('Delete'))).to be true
+    end
   end
 
   step 'I can not modify any request for the budget period which has ended' do
@@ -120,8 +125,13 @@ steps_for :periods_and_states do
 
   step 'I can not move a request to a budget period which has ended' do
     visit_request(@request)
-    budget_period = Procurement::BudgetPeriod.all.select(&:past?).sample
-    expect(has_no_selector?(".btn-group a", text: budget_period)).to be true
+    budget_period = Procurement::BudgetPeriod.all.detect(&:past?)
+    el = find('.btn-group .fa-gear')
+    btn = el.find(:xpath, ".//parent::button//parent::div")
+    btn.click unless btn['class'] =~ /open/
+    within btn do
+      expect(has_no_selector?('a', text: budget_period.to_s)).to be true
+    end
 
     @request.update_attributes budget_period: budget_period
     expect(@request).to_not be_valid
@@ -130,11 +140,17 @@ steps_for :periods_and_states do
 
   step 'I can not move a request of a budget period which has ended to another procurement group' do
     request = Procurement::BudgetPeriod.all
-                  .select{|bp| bp.past? and bp.requests.exists? }
-                  .sample.requests.sample
+                  .detect{|bp| bp.past? and bp.requests.exists? }
+                  .requests.first
     visit_request(request)
-    group = Procurement::Group.where.not(id: request.group).sample
-    expect(has_no_selector?(".btn-group a", text: group)).to be true
+    group = Procurement::Group.where.not(id: request.group).first
+
+    el = find('.btn-group .fa-gear')
+    btn = el.find(:xpath, ".//parent::button//parent::div")
+    btn.click unless btn['class'] =~ /open/
+    within btn do
+      expect(has_no_selector?('a', text: group.to_s)).to be true
+    end
 
     request.update_attributes group: group
     expect(request).to_not be_valid
@@ -206,12 +222,16 @@ steps_for :periods_and_states do
     end
   end
 
-  step 'I have not saved the data yet' do
+  step 'I have filled the mandatory fields' do
     within all('form table tbody tr').last do
       all('input[required]').each do |el|
         el.set Faker::Lorem.sentence
       end
     end
+  end
+
+  step 'I have not saved the data yet' do
+    step 'I have filled the mandatory fields'
   end
 
   step 'I see the state :state' do |state|

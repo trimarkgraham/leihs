@@ -60,7 +60,7 @@ Feature: Section Users
   @users_and_organisations
   Scenario: Sorting of requester
     Given I am Hans Ueli
-    Given requesters exist
+    And there exist 10 requesters
     When I navigate to the users page
     Then the requesters are sorted 0-10 and a-z
 

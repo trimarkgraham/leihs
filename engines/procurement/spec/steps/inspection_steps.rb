@@ -1,13 +1,5 @@
 steps_for :inspection do
 
-  step 'I see both my requests' do
-    within '#filter_target' do
-      Procurement::Request.where(user_id: @current_user).pluck(:id).each do |id|
-        find "[data-request_id='#{id}']"
-      end
-    end
-  end
-
   step 'following requests exist for the current budget period' do |table|
     current_budget_period = Procurement::BudgetPeriod.current
     table.hashes.each do |value|
@@ -16,7 +8,7 @@ steps_for :inspection do
                when 'myself' then @current_user
                else
                  User.find_by(firstname: value['user']) || \
-               begin
+                 begin
                    new_user = create_user(value['user'])
                    FactoryGirl.create :procurement_access,
                                       :requester,
@@ -24,12 +16,67 @@ steps_for :inspection do
                    new_user
                  end
              end
+      group = case value['group']
+                when 'inspected'
+                  step 'I am responsible for one group'
+                  @group
+                else
+                  nil
+              end
+
       n.times do
         FactoryGirl.create :procurement_request,
                            user: user,
+                           group: group,
                            budget_period: current_budget_period
       end
       expect(current_budget_period.requests.where(user_id: user).count).to eq n
+    end
+  end
+
+  step 'I can not move any request to the old budget period' do
+    within '.request', match: :first do
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        expect(has_no_selector?('a', text: @past_budget_period.to_s)).to be true
+      end
+    end
+  end
+
+  step 'I can not submit the data' do
+    find 'button[disabled]', text: _('Save'), match: :first
+  end
+
+  step 'I move a request to the future budget period' do
+    within '.request', match: :first do
+      @request = Procurement::Request.find current_scope['data-request_id']
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        find('a', text: @future_budget_period.to_s).click
+      end
+    end
+  end
+
+  step 'I press on the Userplus icon of a group I am inspecting' do
+    within '#filter_target' do
+      within '.panel-success .panel-body' do
+        step 'I am responsible for one group'
+        within '.row .h4', text: @group.name do
+          find('.fa-user-plus').click
+        end
+      end
+    end
+  end
+
+  step 'I see both my requests' do
+    within '#filter_target' do
+      Procurement::Request.where(user_id: @current_user).pluck(:id).each do |id|
+        find "[data-request_id='#{id}']"
+      end
     end
   end
 
@@ -42,9 +89,7 @@ steps_for :inspection do
   end
 
   step 'templates for my group exist' do
-    @group = Procurement::Group.all.detect do |group|
-      group.inspectable_by?(@current_user)
-    end
+    step 'I am responsible for one group'
     3.times do
       FactoryGirl.create :procurement_template_category,
                          :with_templates,
@@ -52,10 +97,35 @@ steps_for :inspection do
     end
   end
 
+  step 'the changes are saved successfully to the database' do
+    expect(@request.reload.budget_period_id).to eq @future_budget_period.id
+  end
+
+  step 'the current budget period is in inspection phase' do
+    current_budget_period = Procurement::BudgetPeriod.current
+    travel_to_date(current_budget_period.inspection_start_date + 1.day)
+    expect(Time.zone.today).to be > current_budget_period.inspection_start_date
+    expect(Time.zone.today).to be < current_budget_period.end_date
+  end
+
   step 'the list of requests is adjusted immediately' do
     within '#filter_target' do
       expect(has_no_selector? '.spinner').to be true
     end
+  end
+
+  step 'there is a budget period which has already ended' do
+    current_budget_period = Procurement::BudgetPeriod.current
+    @past_budget_period = FactoryGirl.create :procurement_budget_period,
+     inspection_start_date: current_budget_period.inspection_start_date - 2.months,
+     end_date: current_budget_period.inspection_start_date - 1.month
+  end
+
+  step 'there is a future budget period' do
+    current_budget_period = Procurement::BudgetPeriod.current
+    @future_budget_period = FactoryGirl.create :procurement_budget_period,
+     inspection_start_date: current_budget_period.end_date + 1.month,
+     end_date: current_budget_period.end_date + 2.months
   end
 
 end

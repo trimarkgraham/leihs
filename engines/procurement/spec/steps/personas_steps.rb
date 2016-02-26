@@ -4,7 +4,7 @@ module PersonasSteps
     persona = create_persona('Hans Ueli')
     FactoryGirl.create(:procurement_access, :admin, user: persona)
     login_as persona
-    visit '/procurement' # TODO separate step
+    visit procurement.root_path # TODO separate step
   end
 
   # requester
@@ -18,7 +18,7 @@ module PersonasSteps
     # end
 
     login_as persona
-    #old# visit '/procurement' # TODO separate step
+    #old# visit procurement.root_path # TODO separate step
   end
 
   # inspector and requester
@@ -28,7 +28,7 @@ module PersonasSteps
     FactoryGirl.create(:procurement_access, :requester, user: persona)
 
     login_as persona
-    visit '/procurement' # TODO separate step
+    visit procurement.root_path # TODO separate step
   end
 
   # leihs admin
@@ -36,7 +36,7 @@ module PersonasSteps
     persona = create_persona('Gino')
     FactoryGirl.create(:access_right, role: :admin)
     login_as persona
-    visit '/procurement' # TODO separate step
+    visit procurement.root_path # TODO separate step
   end
 
   step 'a procurement admin exists' do
@@ -49,6 +49,11 @@ module PersonasSteps
       || 3.times { FactoryGirl.create(:procurement_access, :admin) }
   end
 
+  step 'there exists a requester' do
+    @user = create_user(Faker::Name.first_name)
+    FactoryGirl.create(:procurement_access, :requester, user: @user)
+  end
+
   step 'there exist :count requesters' do |count|
     count.to_i.times do
       FactoryGirl.create(:procurement_access, :requester)
@@ -58,8 +63,6 @@ module PersonasSteps
   step 'I am responsible for one group' do
     @group = Procurement::Group.all.detect {|g| g.inspectable_by?(@current_user) }
     expect(@group).not_to be_nil
-    # OPTIMIZE just refreshing the header menu
-    visit '/procurement'
   end
 
   def create_user(firstname)

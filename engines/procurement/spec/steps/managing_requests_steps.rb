@@ -7,8 +7,12 @@ steps_for :managing_requests do
         where("end_date > ?", request.budget_period.end_date).first
 
     within ".request[data-request_id='#{request.id}']" do
-      find(".btn-group button.dropdown-toggle").click
-      click_on next_budget_period.name
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        click_on next_budget_period.name
+      end
     end
 
     expect(page).to have_content _('Request moved')
@@ -21,8 +25,12 @@ steps_for :managing_requests do
     other_group = Procurement::Group.where.not(id: request.group_id).first
 
     within ".request[data-request_id='#{request.id}']" do
-      find(".btn-group button.dropdown-toggle").click
-      click_on other_group.name
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        click_on other_group.name
+      end
     end
 
     expect(page).to have_content _('Request moved')
@@ -84,8 +92,12 @@ steps_for :managing_requests do
 
   step 'I delete the request' do
     within ".request[data-request_id='#{@request.id}']" do
-      find(".btn-group button.dropdown-toggle").click
-      click_on _('Delete')
+      el = find('.btn-group .fa-gear')
+      btn = el.find(:xpath, ".//parent::button//parent::div")
+      btn.click unless btn['class'] =~ /open/
+      within btn do
+        click_on _('Delete')
+      end
     end
   end
 
@@ -140,8 +152,8 @@ steps_for :managing_requests do
     within '.panel-success .panel-body' do
       Procurement::Group.all.each do |group|
         within '.row', text: group.name do
-          amount = group.budget_limits \
-                    .find_by(budget_period_id: Procurement::BudgetPeriod.current) \
+          amount = group.budget_limits
+                    .find_by(budget_period_id: Procurement::BudgetPeriod.current)
                     .try(:amount) || 0
           find '.budget_limit',
                text: amount
@@ -196,11 +208,11 @@ steps_for :managing_requests do
     within '.panel-success .panel-body' do
       Procurement::Group.all.each do |group|
         within '.row', text: group.name do
-          amount = group.budget_limits \
-                    .find_by(budget_period_id: Procurement::BudgetPeriod.current) \
+          amount = group.budget_limits
+                    .find_by(budget_period_id: Procurement::BudgetPeriod.current)
                     .try(:amount) || 0
-          used = Procurement::BudgetPeriod.current.requests \
-                      .where(group_id: group) \
+          used = Procurement::BudgetPeriod.current.requests
+                      .where(group_id: group)
                       .map {|r| r.total_price(@current_user) }.sum
           percentage = if amount > 0
                          used * 100 / amount
@@ -217,8 +229,8 @@ steps_for :managing_requests do
   end
 
   step 'I see the requested amount per budget period' do
-    total = Procurement::BudgetPeriod.current.requests \
-                .where(user_id: @current_user) \
+    total = Procurement::BudgetPeriod.current.requests
+                .where(user_id: @current_user)
                 .map { |r| r.total_price(@current_user) }.sum
     find '.panel-success .panel-heading .label-primary.big_total_price',
          text: total.to_i
@@ -227,9 +239,9 @@ steps_for :managing_requests do
   step 'I see the requested amount per group of each budget period' do
     within '.panel-success .panel-body' do
       Procurement::Group.all.each do |group|
-        total = Procurement::BudgetPeriod.current.requests \
-                      .where(user_id: @current_user) \
-                      .where(group_id: group) \
+        total = Procurement::BudgetPeriod.current.requests
+                      .where(user_id: @current_user)
+                      .where(group_id: group)
                       .map { |r| r.total_price(@current_user) }.sum
         within '.row', text: group.name do
           find '.label-primary.big_total_price',
@@ -241,7 +253,7 @@ steps_for :managing_requests do
 
   step 'I see the total of all ordered amounts of a budget period' do
     find '.panel-success .panel-heading .label-primary.big_total_price',
-         text: Procurement::BudgetPeriod.current.requests \
+         text: Procurement::BudgetPeriod.current.requests
                 .map {|r| r.total_price(@current_user) }.sum
   end
 
@@ -250,8 +262,8 @@ steps_for :managing_requests do
       Procurement::Group.all.each do |group|
         within '.row', text: group.name do
           find '.label-primary.big_total_price',
-               text: Procurement::BudgetPeriod.current.requests \
-                      .where(group_id: group) \
+               text: Procurement::BudgetPeriod.current.requests
+                      .where(group_id: group)
                       .map {|r| r.total_price(@current_user) }.sum
         end
       end
