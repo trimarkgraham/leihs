@@ -12,7 +12,7 @@ development: &DEVEL
   database: leihs2_dev
   pool: 5
   username: root
-  password:
+  password: 
   # for Debian and Ubuntu:
   #socket: /var/run/mysqld/mysqld.sock
   # for Mac OS X:
